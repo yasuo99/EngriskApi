@@ -25,17 +25,17 @@ namespace Engrisk.Data
             var subject = dbSet.FindAsync(id);
             dbSet.Remove(subject);
         }
-        public void Delete<T>(T subject) where T:class
+        public void Delete<T>(T subject) where T : class
         {
             _db.Remove(subject);
         }
 
-        public bool Exists<T>(Dictionary<dynamic,dynamic> properties) where T : class
+        public bool Exists<T>(Dictionary<dynamic, dynamic> properties) where T : class
         {
             var _dbSet = _db.Set<T>();
-            foreach(var item in _dbSet.ToList())
+            foreach (var item in _dbSet.AsNoTracking().ToList())
             {
-                if(item.CompareProperties(properties))
+                if (item.CompareProperties(properties))
                 {
                     return true;
                 }
@@ -62,59 +62,94 @@ namespace Engrisk.Data
         //     {
         //         queryableDbSet =  orderBy(queryableDbSet);
         //     }
-            
+
         //     return await PagingList<T>.OnCreateAsync(queryableDbSet, subjectParams.CurrentPage, subjectParams.PageSize);
         // }
 
-        public async Task<PagingList<T>> GetAll<T>(SubjectParams subjectParams = null, string includeProperties = "") where T:class
+        public async Task<PagingList<T>> GetAll<T>(SubjectParams subjectParams = null,Expression<Func<T, bool>> expression = null , string includeProperties = "") where T : class
+        {
+            var dbSet = _db.Set<T>();
+            var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
+            if (includeProperties != null)
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    queryableDbSet = queryableDbSet.Include(property);
+                }
+            }
+            return await PagingList<T>.OnCreateAsync(queryableDbSet, subjectParams.CurrentPage, subjectParams.PageSize);
+        }
+        public async Task<IEnumerable<T>> GetAll<T>(Expression<Func<T, bool>> expression, string includeProperties = "") where T : class
+        {
+            var dbSet = _db.Set<T>();
+            var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
+            if (includeProperties != null)
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    queryableDbSet.Include(property);
+                }
+            }
+            if (expression != null)
+            {
+                queryableDbSet.Where(expression);
+            }
+            return await queryableDbSet.ToListAsync();
+        }
+        public async Task<T> GetOneWithCondition<T>(Expression<Func<T, bool>> expression, string includeProperties) where T : class
+        {
+            var dbSet = _db.Set<T>();
+            var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
+            if (expression != null)
+            {
+                queryableDbSet = queryableDbSet.Where(expression);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    queryableDbSet = queryableDbSet.Include(property);
+                }
+            }
+            return await queryableDbSet.AsNoTracking().FirstOrDefaultAsync();
+        }
+
+        public async Task<T> GetOneWithConditionTracking<T>(Expression<Func<T, bool>> expression = null, string includeProperties = "") where T : class
         {
              var dbSet = _db.Set<T>();
             var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
-            if(includeProperties != null)
+            if (expression != null)
             {
-                foreach(var property in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                queryableDbSet = queryableDbSet.Where(expression);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                   queryableDbSet =  queryableDbSet.Include(property);
+                    queryableDbSet = queryableDbSet.Include(property);
                 }
-            }          
-            return await PagingList<T>.OnCreateAsync(queryableDbSet, subjectParams.CurrentPage, subjectParams.PageSize);
-        }
-        public async Task<T> GetOneWithCondition<T>(Expression<Func<T,bool>> expression, string includeProperties) where T : class
-        {
-           var dbSet = _db.Set<T>();
-            var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
-           if(expression != null)
-           {
-               queryableDbSet = queryableDbSet.Where(expression);
-           }
-           if(includeProperties != null)
-           {
-               foreach(var property in includeProperties.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
-               {
-                   queryableDbSet = queryableDbSet.Include(property);
-               }
-           }
-           return await queryableDbSet.AsNoTracking().FirstOrDefaultAsync();
+            }
+            return await queryableDbSet.FirstOrDefaultAsync();
         }
 
         public IEnumerable<T> GetWithProperties<T>(Dictionary<dynamic, dynamic> properties, Expression<Func<T, bool>> expression, string includeProperties = "") where T : class
         {
             var dbSet = _db.Set<T>();
             var queryableDbSet = dbSet.Take(dbSet.Count());
-            if(expression != null)
+            if (expression != null)
             {
                 queryableDbSet = queryableDbSet.Where(expression);
             }
-            if(includeProperties != null)
+            if (includeProperties != null)
             {
-                foreach(var property in includeProperties.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
+                foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     queryableDbSet = queryableDbSet.Include(property);
                 }
             }
-            foreach(var subject in queryableDbSet)
+            foreach (var subject in queryableDbSet)
             {
-                if(subject.CompareProperties(properties))
+                if (subject.CompareProperties(properties))
                 {
                     yield return subject;
                 }
@@ -128,7 +163,7 @@ namespace Engrisk.Data
 
         public void Update<T>(T subject) where T : class
         {
-            if(_db.Attach(subject).State == EntityState.Detached)
+            if (_db.Attach(subject).State == EntityState.Detached)
             {
                 _db.Attach(subject);
             }

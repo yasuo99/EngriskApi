@@ -8,7 +8,8 @@ namespace Engrisk.Models
         public string WordCategory { get; set; }
         public string WordImg { get; set; }
         public string Eng  { get; set; }
-        public string Vni { get; set; }
+        public string Vie { get; set; }
         public virtual IEnumerable<WordExample> Examples{get;set;}
+        public virtual IEnumerable<WordGroup> Groups { get; set; }
     }
 }

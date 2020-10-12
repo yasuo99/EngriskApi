@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Engrisk.Helper;
 using Engrisk.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Engrisk.Data
@@ -9,36 +11,38 @@ namespace Engrisk.Data
     public class AuthRepo : IAuthRepo
     {
         private readonly ApplicationDbContext _db;
-        public AuthRepo(ApplicationDbContext db)
+        private readonly UserManager<Account> _userManager;
+        public AuthRepo(ApplicationDbContext db, UserManager<Account> userManager)
         {
+            _userManager = userManager;
             _db = db;
         }
         public async Task<Account> CreateAccount(Account account)
         {
-            _db.Add(account);
+            await _userManager.CreateAsync(account);
             return account;
         }
 
-        public void DeleteAccount(int id)
+        public async Task DeleteAccount(int id)
         {
             var accountFromDb = _db.Accounts.FirstOrDefault(u => u.Id == id);
-            _db.Remove(accountFromDb);
+            await _userManager.DeleteAsync(accountFromDb);
         }
 
-        public void DeleteAccount(string username)
+        public async Task DeleteAccount(string username)
         {
-            var accountFromDb = _db.Accounts.FirstOrDefault(u => u.Username.Equals(username));
-            _db.Remove(accountFromDb);
+            var accountFromDb = _db.Accounts.FirstOrDefault(u => u.UserName.Equals(username));
+            await _userManager.DeleteAsync(accountFromDb);
         }
 
         public bool Exists(string identify)
         {
-            return _db.Accounts.Any(u => u.Email.Equals(identify));
+            return _db.Accounts.Any(u => u.Email.Equals(identify) || u.UserName.Equals(identify) || u.PhoneNumber.Equals(identify));
         }
 
         public async Task<Account> GetAccountDetail(string identify)
         {
-            var accountFromDb = await _db.Accounts.FirstOrDefaultAsync(u => u.Username.Equals(identify) || u.Email.Equals(identify));
+            var accountFromDb = await _db.Accounts.FirstOrDefaultAsync(u => u.UserName.Equals(identify) || u.Email.Equals(identify));
             return accountFromDb;
         }
 
@@ -48,9 +52,10 @@ namespace Engrisk.Data
             return accountFromDb;
         }
 
-        public async Task<IEnumerable<Account>> GetAll()
+        public async Task<PagingList<Account>> GetAll(SubjectParams subjectParams)
         {
-            return await _db.Accounts.Include(u => u.Histories).ToListAsync();
+            var account = _db.Accounts.Include(u => u.Histories).AsQueryable();
+            return await PagingList<Account>.OnCreateAsync(account, subjectParams.CurrentPage, subjectParams.PageSize);
         }
 
         public async Task<bool> SaveAll()

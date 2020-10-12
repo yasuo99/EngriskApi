@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Engrisk.Models
@@ -11,7 +12,10 @@ namespace Engrisk.Models
         public int QuizId { get; set; }
         [ForeignKey("QuizzId")]
         public virtual Quiz Quiz { get; set; }
-        public int Time { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime DoneDate{get;set;}
+        public bool IsDone { get; set; }
+        public int TimeSpent { get; set; }
         public int Score { get; set; }
     }
 }

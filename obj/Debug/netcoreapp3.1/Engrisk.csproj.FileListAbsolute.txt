@@ -1,6 +1,5 @@
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\appsettings.json
-C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Engrisk.exe
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Engrisk.deps.json
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Engrisk.runtimeconfig.json
@@ -13,8 +12,6 @@ C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Castle.Core.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
-C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Bcl.HashCode.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Abstractions.dll
@@ -23,9 +20,7 @@ C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.EntityFramework
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Abstractions.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
-C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.dll
@@ -67,3 +62,16 @@ C:\Users\Thanh\Desktop\Engrisk\obj\Debug\netcoreapp3.1\Engrisk.dll
 C:\Users\Thanh\Desktop\Engrisk\obj\Debug\netcoreapp3.1\Engrisk.pdb
 C:\Users\Thanh\Desktop\Engrisk\obj\Debug\netcoreapp3.1\Engrisk.genruntimeconfig.cache
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\CloudinaryDotNet.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Bcl.HashCode.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Data\AdminAccount.json
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Data\DailyMission.json
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Data\Role.json

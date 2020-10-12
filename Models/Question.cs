@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Engrisk.Models
 {
     public class Question
@@ -10,5 +12,7 @@ namespace Engrisk.Models
         public string D { get; set; }
         public string Answer { get; set; }
         public bool IsListeningQuestion { get; set; }
+        public int Score { get; set; }
+        public virtual IEnumerable<QuizQuestion> Quizes { get; set; }
     }
 }

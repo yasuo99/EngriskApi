@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Engrisk.Models
 {
-    public class Role
+    public class Role: IdentityRole<int>
     {
-        public string RoleId { get; set; }
-        public string RoleName { get; set; }
         public virtual IEnumerable<AccountRole> Accounts { get; set; }
     }
 }

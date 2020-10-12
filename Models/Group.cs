@@ -8,6 +8,6 @@ namespace Engrisk.Models
         public int AccountId { get; set; }
         public virtual Account Account { get; set; }
         public string GroupName { get; set; }
-        public virtual IEnumerable<Word> Words { get; set; }
+        public virtual IEnumerable<WordGroup> Words { get; set; }
     }
 }

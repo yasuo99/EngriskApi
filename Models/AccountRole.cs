@@ -1,14 +1,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Engrisk.Models
 {
-    public class AccountRole
+    public class AccountRole: IdentityUserRole<int>
     {
-        public int AccountId { get; set; }
-        [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
-        public string RoleId { get; set; }
-        [ForeignKey("RoleId")]
+
         public virtual Role Role { get; set; }
     }
 }

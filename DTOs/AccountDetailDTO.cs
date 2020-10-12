@@ -16,7 +16,6 @@ namespace Engrisk.DTOs
         public int Age { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
-        public virtual Level Level { get; set; }
         public string LevelName { get; set; }
         public int Exp { get; set; }
         public int Point { get; set; }
