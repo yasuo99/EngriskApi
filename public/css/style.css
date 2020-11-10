@@ -1,0 +1,147 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url('https://fonts.googleapis.com/css?family=Arimo|Quicksand:400,700&display=swap');
+*{box-sizing: border-box}
+body {color: #123064;font-family: 'Quicksand', sans-serif;}
+h1, h2, h3, h4, h5, h6 {font-family: 'Quicksand', sans-serif; font-weight: 800; }
+p {font-family: 'Arimo', sans-serif; font-size: 14px; color: #777;}
+.text-primary{color: #77B748!important}
+.btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px}
+.btn-primary{background-color: #77B748!important}
+a.text-primary:hover{color: #48871B}
+.btn-primary:hover{background-color:#48871B!important}
+.btn-primary-border:hover{background-color:#48871B!important;color: #fff}
+.bg-primary{background-color: #77B748 !important}
+.text1{color: #273051}
+.text2{color: #4F4F4F}
+.text3{color: #828282}
+.img-100{width: 100% auto}
+
+#menu-chinh{border-bottom: 2px solid #ccc;}
+#menu-chinh .navbar-nav{font-weight: bold;font-size: 20px}
+#menu-chinh .sub1 .dropdown-item{width: 230px;padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
+#menu-chinh .dropdown-menu{left: -50px}
+#menu-chinh .sub2{width: 250px;left:-50px}
+#menu-chinh .sub3{width: 350px;left: -100px}
+#menu-chinh .sub3 .thongbao{border-bottom: 2px solid #ccc;height: 50px}
+#menu-chinh .sub3 .taikhoan .dropdown-item{border-bottom: 2px solid #ccc;height: 50px; font-weight: bold;padding-left: 10px;padding-top:10px;color: #068CE1}
+#menu-chinh .nav-link:active{color: #77B748;}
+#menu-chinh .sub3 .taikhoan .dropdown-item:active{color: #fff;}
+#menu-chinh .dropdown-menu a:active{background-color: #77B748;color: #fff;}
+
+
+#trangchu .nen-xam{height: 140px;width: 140px;border-radius: 50%;position: relative;background-color: #ccc;}
+#trangchu .vongtron-tim{background-color:#ad5ca0b4;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
+#trangchu .nen-vang{height: 140px;width: 140px;border-radius: 50%;position: relative;background-color: #F5F403;}
+#trangchu .vongtron-vang{background-color:#F5F403;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
+#trangchu .vongtron-xanhla{background-color:#18B80B;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
+#trangchu .vongtron-vang{background-color:#F5F403;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
+#trangchu .vongtron-xanhduong{background-color:#068CE1;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
+#trangchu .img-item{position: absolute;top:25%;left: 28%;}
+#trangchu .img-item:hover{animation: dh-img_item 1s 1;}
+#trangchu .tieude{position: absolute;top: 100%;width: 140px;text-align: center;}
+#trangchu .duongke{border-bottom: 3px solid #ccc;top: -40px;}
+#trangchu .img-vuongniem{width: 100%;position: relative;padding-left: 10px;}
+#trangchu .nd{position: absolute;margin-top: -55px; margin-left: 40px;}
+#trangchu a{color: #828282;}
+#trangchu a:hover{color: #77B748}
+
+.giadauvang{border: 3px solid #ccc; border-radius: 10px;height: 450px}
+.gachchan{border-bottom:2px solid #ccc; margin-top: 30px}
+.img-xephang{padding-left:30%}
+.nd-xephang .nd{font-size:24px; text-align:center}
+
+.banbe{border: 3px solid #ccc; border-radius: 10px;height: 300px; margin-top: 40px;}
+.banbe .row{border-bottom:2px solid #ccc;margin:20px 0}
+.btn-banbe ,.btn1, .btn2, .btn3{
+        display: inline-block;
+        font-weight: 400;
+        color: #212529;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 10px;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.banbe .btn-banbe .btn1{width: 300px;border:2px solid #ccc;margin-bottom: 20px;}
+.banbe .btn-banbe .btn2{width: 145px;border:2px solid #ccc;margin-right: 10px;}
+.banbe .btn-banbe .btn3{width: 145px;border:2px solid #ccc;}
+
+footer .kechan{border-top: 3px solid #ccc;}
+footer a{color: #828282}
+footer a:hover{color: #77B748;text-decoration: none;}
+/* -----------------------------------THẢO LUẬN------------------------------- */
+/* --------------------------------------------------------------------------- */
+#thaoluan h2{font-weight: bold}
+#thaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 20px;font-weight: bold;}
+#thaoluan .img-thaoluan{width: 90px;width:90px;border-radius: 50%;}
+#thaoluan a{color:#495057; font-weight:bold}
+#thaoluan a:hover{text-decoration: none;color: #77B748;}
+#thaoluan .tab-content .row{border-bottom: 2px solid #ccc; margin-top: 10px;}
+#thaoluan .form-control{border-radius: 15px;font-size: 16px;height: 60px;}
+
+#thaoluan .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
+#thaoluan .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
+#thaoluan .nd-theodoi:hover{background-color: #ccc}
+/* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
+/* --------------------------------------------------------------------------- */
+#chitietthaoluan p{font-size: 16px;}
+#chitietthaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 20px;border-radius: 20px;font-weight: bold;color: #77B748;font-size: 20px;}
+#chitietthaoluan .kechan{border-bottom: 3px solid #ccc;}
+#chitietthaoluan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
+#chitietthaoluan .diendan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
+#chitietthaoluan .diendan i{font-size: 20px;font-weight: bold;}
+#chitietthaoluan .img-chitietthaoluan{border-radius: 50%}
+#chitietthaoluan .nd-img{padding: 0;}
+#chitietthaoluan .chude-binhluan .baocao{float:  right}
+#chitietthaoluan .chude-binhluan .baocao a{font-size: 20px; font-weight: bold; color: #828282}
+#chitietthaoluan .chude-binhluan .baocao a:hover{text-decoration: none;color: #77B748;}
+#chitietthaoluan textarea{border: 3px solid #ccc;font-size: 16px;padding: 10px;border-radius: 10px;outline: none;}
+#chitietthaoluan .binhluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 10px;font-weight: bold;color: #fff;font-size: 20px;}
+#chitietthaoluan .sub-sapxep .dropdown-item{width: 280px;padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
+#chitietthaoluan .sub-sapxep .dropdown-item:active{background-color: #77B748;color: #fff;}
+#chitietthaoluan .nav-item a{color: #828282;font-weight: bold;font-size: 20px}
+#chitietthaoluan li{list-style: none;}
+#chitietthaoluan .sapxep{padding-left: 150px;margin:0;}
+#chitietthaoluan .phanhoi-binhluan .baocao{margin-left:100px}
+#chitietthaoluan .phanhoi-binhluan a{font-size:20px;font-weight: bold;text-decoration: none;color: #828282;}
+#chitietthaoluan .phanhoi-binhluan a:hover{color: #77B748;}
+#chitietthaoluan .phanhoi-binhluan .kechan{border-bottom: 2px solid #ccc;margin:20px 0;}
+
+/* -----------------------------------CỬA HÀNG------------------------------- */
+/* -------------------------------------------------------------------------- */
+#cuahang .duolingoPlus{height: 250px;background-color: #1cb0f6;border-radius: 10px;}
+#cuahang .duolingo{float: left;width: 160px;padding: 20px 10px 10px 10px;color: #fff;}
+#cuahang .plus{width: 80px;background-color: #068CE1;color: #fff;text-align: center;border-radius: 5px; float: left;margin-top: 25px;}
+#cuahang .nd-duolingo{padding: 5px 10px;color: #fff;font-size: 16px;}
+#cuahang .btn{margin-left: 10px;color: #1cb0f6;font-weight: bold;border-radius: 10px;box-shadow: 3px 3px 3px #eee}
+#cuahang .kechan{border-top: 3px solid #ccc;margin: 30px 0;}
+#cuahang .tangsucmanh p{font-size: 16px;}
+#cuahang .tangsucmanh .btn{font-size: 18px;padding: 10px; border: 3px solid #ccc;color: red;font-weight: bold;border-radius: 15px;box-shadow: 3px 3px 3px #eee;}
+#cuahang .luyentap p{font-size: 16px;}
+#cuahang .luyentap .btn{font-size: 18px;padding: 10px; border: 3px solid #ccc;color: red;font-weight: bold;border-radius: 15px;box-shadow: 3px 3px 3px #eee;}
+#cuahang .lingot{font-size: 20px;}
+#cuahang .img-duolingo{float: right;margin-top: 100px;margin-right: 10px;}
+
+/* -----------------------------------TỪ ĐIỂN------------------------------- */
+/* -------------------------------------------------------------------------- */
+#tudien{margin-top: 200px; margin-bottom: 200px;}
+#tudien p{font-size: 20px;}
+#tudien .form-control{height: 80px;border-radius: 20px;font-size: 20px;}
+
+form .inner-form {background: #fff;display: flex;width: 100%;align-items: center;box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);border-radius: 3px;}
+form .inner-form .input-field.first-wrap {width: 80px;margin-left: 10px;}
+form .inner-form .input-field {height: 80px;padding-top: 8px}
+form .inner-form .input-field input {height:100%;display: block;width: 460px;padding: 10px 32px;font-size: 20px;color: #555;margin-right: 20px;border: 0;outline: none;}
+form .inner-form .input-field.third-wrap .btn {padding: 15px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;left: 350px;}
+
+/* -----------------------------------TỪ VỰNG------------------------------- */
+/* -------------------------------------------------------------------------- */
+#tuvung table{font-size: 16px;}
+#tuvung table a{color: #828282;}
+#tuvung table a:hover{text-decoration: none;}
