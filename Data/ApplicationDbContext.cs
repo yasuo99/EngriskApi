@@ -20,25 +20,33 @@ namespace Engrisk.Data
         public DbSet<ReportError> ReportErrors { get; set; }
         public DbSet<Quiz> Quiz { get; set; }
         public DbSet<Level> Levels { get; set; }
-        public DbSet<Group> Groups { get; set; }    
+        public DbSet<Group> Groups { get; set; }
         public DbSet<DailyMission> DailyMissions { get; set; }
         public DbSet<Badge> Badges { get; set; }
         public DbSet<History> Histories { get; set; }
         public DbSet<WordGroup> WordGroups { get; set; }
         public DbSet<WordExample> WordExamples { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<PostUpvote> PostUpvotes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentReply> CommentReplies { get; set; }
         public DbSet<AccountBadge> AccountBadges { get; set; }
         public DbSet<AccountMission> AccountMissions { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
         public DbSet<AccountAttendance> AccountAttendances { get; set; }
+        public DbSet<StringFilter> StringFilters { get; set; }
+        public DbSet<Banner> Banners { get; set; }
+        public DbSet<Footer> Footers { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<Account>().HasIndex(acc => acc.Email).IsUnique();
             builder.Entity<Account>().HasIndex(acc => acc.UserName).IsUnique();
             builder.Entity<Account>().HasIndex(acc => acc.PhoneNumber).IsUnique();
-            builder.Entity<AccountRole>(role => {
-                role.HasKey(key => new {key.UserId, key.RoleId});
+            builder.Entity<AccountRole>(role =>
+            {
+                role.HasKey(key => new { key.UserId, key.RoleId });
                 role.HasOne(o => o.Account)
                     .WithMany(m => m.Roles)
                     .HasForeignKey(key => key.UserId)
@@ -93,16 +101,53 @@ namespace Engrisk.Data
                                         .WithMany(m => m.Groups)
                                         .HasForeignKey(key => key.WordId)
                                         .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<AccountStorage>().HasKey(key => new {key.AccountId, key.ItemId});
+            builder.Entity<AccountStorage>().HasKey(key => new { key.AccountId, key.ItemId });
             builder.Entity<AccountStorage>().HasOne(o => o.Account)
                                         .WithMany(m => m.Storage)
                                         .HasForeignKey(key => key.AccountId)
                                         .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<AccountStorage>().HasOne(o => o.Item)
                                         .WithMany(m => m.Accounts)
-                                        .HasForeignKey(key => key.ItemId)  
-                                        .OnDelete(DeleteBehavior.Restrict);                    
-        }
+                                        .HasForeignKey(key => key.ItemId)
+                                        .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<CommentReply>().HasOne(o => o.Comment)
+                                        .WithMany(m => m.Comments)
+                                        .HasForeignKey(key => key.CommentId)
+                                        .OnDelete(DeleteBehavior.ClientCascade);
+            builder.Entity<CommentReply>().HasOne(o => o.Reply)
+                                        .WithMany(m => m.Replies)
+                                        .HasForeignKey(key => key.ReplyId)
+                                        .OnDelete(DeleteBehavior.ClientCascade);
+            builder.Entity<Comment>().HasOne(o => o.Account)
+                                    .WithMany(m => m.Comments)
+                                    .HasForeignKey(key => key.AccountId)
+                                    .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Comment>().HasOne(o => o.Post)
+                                    .WithMany(m => m.Comments)
+                                    .HasForeignKey(key => key.PostId)
+                                    .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<PostUpvote>().HasKey(key => new {key.AccountId, key.PostId});
+            builder.Entity<PostUpvote>().HasOne(o => o.Account)
+                                    .WithMany(m => m.PostUpvotes)
+                                    .HasForeignKey(k => k.AccountId)
+                                    .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<PostUpvote>().HasOne(o => o.Post)
+                                    .WithMany(m => m.PostUpvotes)
+                                    .HasForeignKey(k => k.PostId)
+                                    .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<LikedPost>().HasKey(key => new {key.AccountId, key.PostId});
+            builder.Entity<LikedPost>().HasOne(o => o.Account)
+                                    .WithMany(m => m.LikedPosts)
+                                    .HasForeignKey(key => key.AccountId)
+                                    .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<LikedPost>().HasOne(o => o.Post)
+                                    .WithMany(m => m.LikedPosts)
+                                    .HasForeignKey(key => key.PostId)
+                                    .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<LikedComment>().HasKey(key => new {key.AccountId, key.CommentId});
+            builder.Entity<LikedComment>().HasOne(o => o.Account).WithMany(m => m.LikedComments).HasForeignKey(key => key.AccountId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<LikedComment>().HasOne(o => o.Comment).WithMany(m => m.LikedComments).HasForeignKey(key => key.CommentId).OnDelete(DeleteBehavior.Restrict);
+        }   
 
     }
 }

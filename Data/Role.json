@@ -1,20 +1,17 @@
 [
   {
-    "name": "LEARNER"
+    "name": "learner"
   },
   {
-    "name": "SUPERADMIN"
+    "name": "superadmin"
   },
   {
-    "name": "MANAGER"
+    "name": "manager"
   },
   {
-    "name": "FORUMADMIN"
+    "name": "forumadmin"
   },
   {
-    "name": "FORUMMOD"
-  },
-  {
-      "name": "Thanh"
+    "name": "forummod"
   }
 ]

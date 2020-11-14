@@ -169,6 +169,19 @@ namespace Engrisk.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StringFilters",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Word = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StringFilters", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Word",
                 columns: table => new
                 {
@@ -228,6 +241,7 @@ namespace Engrisk.Migrations
                     Fullname = table.Column<string>(nullable: true),
                     DateOfBirth = table.Column<DateTime>(nullable: false),
                     Address = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
                     Exp = table.Column<int>(nullable: false),
                     Point = table.Column<int>(nullable: false),
                     Locked = table.Column<DateTime>(nullable: false),
@@ -493,7 +507,8 @@ namespace Engrisk.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(nullable: false),
-                    GroupName = table.Column<string>(nullable: true)
+                    GroupName = table.Column<string>(nullable: true),
+                    Created_At = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -536,6 +551,31 @@ namespace Engrisk.Migrations
                         principalTable: "Quiz",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    UpVote = table.Column<int>(nullable: false),
+                    DownVote = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    IsLocked = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -586,6 +626,138 @@ namespace Engrisk.Migrations
                         name: "FK_WordGroups_Word_WordId",
                         column: x => x.WordId,
                         principalTable: "Word",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PostId = table.Column<int>(nullable: false),
+                    AccountId = table.Column<int>(nullable: false),
+                    Content = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Like = table.Column<int>(nullable: false),
+                    Dislike = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LikedPost",
+                columns: table => new
+                {
+                    AccountId = table.Column<int>(nullable: false),
+                    PostId = table.Column<int>(nullable: false),
+                    Like_At = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LikedPost", x => new { x.AccountId, x.PostId });
+                    table.ForeignKey(
+                        name: "FK_LikedPost_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LikedPost_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostUpvotes",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false),
+                    AccountId = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostUpvotes", x => new { x.AccountId, x.PostId });
+                    table.ForeignKey(
+                        name: "FK_PostUpvotes_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PostUpvotes_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommentReplies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CommentId = table.Column<int>(nullable: false),
+                    ReplyId = table.Column<int>(nullable: false),
+                    IsEdited = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentReplies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CommentReplies_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CommentReplies_Comments_ReplyId",
+                        column: x => x.ReplyId,
+                        principalTable: "Comments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LikedComment",
+                columns: table => new
+                {
+                    AccountId = table.Column<int>(nullable: false),
+                    CommentId = table.Column<int>(nullable: false),
+                    Like_at = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LikedComment", x => new { x.AccountId, x.CommentId });
+                    table.ForeignKey(
+                        name: "FK_LikedComment_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LikedComment_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -643,6 +815,13 @@ namespace Engrisk.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_LevelId",
                 table: "AspNetUsers",
                 column: "LevelId");
@@ -660,6 +839,40 @@ namespace Engrisk.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_PhoneNumber",
+                table: "AspNetUsers",
+                column: "PhoneNumber",
+                unique: true,
+                filter: "[PhoneNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserName",
+                table: "AspNetUsers",
+                column: "UserName",
+                unique: true,
+                filter: "[UserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentReplies_CommentId",
+                table: "CommentReplies",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentReplies_ReplyId",
+                table: "CommentReplies",
+                column: "ReplyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_AccountId",
+                table: "Comments",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Groups_AccountId",
                 table: "Groups",
                 column: "AccountId");
@@ -673,6 +886,26 @@ namespace Engrisk.Migrations
                 name: "IX_Histories_QuizzId",
                 table: "Histories",
                 column: "QuizzId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LikedComment_CommentId",
+                table: "LikedComment",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LikedPost_PostId",
+                table: "LikedPost",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_AccountId",
+                table: "Posts",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostUpvotes_PostId",
+                table: "PostUpvotes",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuizQuestion_QuestionId",
@@ -730,16 +963,31 @@ namespace Engrisk.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CommentReplies");
+
+            migrationBuilder.DropTable(
                 name: "Histories");
 
             migrationBuilder.DropTable(
+                name: "LikedComment");
+
+            migrationBuilder.DropTable(
+                name: "LikedPost");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
+
+            migrationBuilder.DropTable(
+                name: "PostUpvotes");
 
             migrationBuilder.DropTable(
                 name: "QuizQuestion");
 
             migrationBuilder.DropTable(
                 name: "ReportErrors");
+
+            migrationBuilder.DropTable(
+                name: "StringFilters");
 
             migrationBuilder.DropTable(
                 name: "WordExamples");
@@ -763,6 +1011,9 @@ namespace Engrisk.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "Quiz");
 
             migrationBuilder.DropTable(
@@ -776,6 +1027,9 @@ namespace Engrisk.Migrations
 
             migrationBuilder.DropTable(
                 name: "Word");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

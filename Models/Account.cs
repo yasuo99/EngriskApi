@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Engrisk.Models
 {
-    public class Account: IdentityUser<int>
+    public class Account : IdentityUser<int>
     {
         public string Fullname { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
+        public string Phone { get; set; }
         public int Exp { get; set; }
         public int Point { get; set; }
         public DateTime Locked { get; set; }
@@ -24,5 +25,10 @@ namespace Engrisk.Models
         public virtual IEnumerable<AccountMission> Missions { get; set; }
         public virtual IEnumerable<AccountStorage> Storage { get; set; }
         public virtual IEnumerable<AccountAttendance> Attendences { get; set; }
+        public virtual IEnumerable<Post> Posts { get; set; }
+        public virtual IEnumerable<Comment> Comments { get; set; }
+        public virtual IEnumerable<PostUpvote> PostUpvotes { get; set; }
+        public virtual IEnumerable<LikedPost> LikedPosts { get; set; }
+        public virtual IEnumerable<LikedComment> LikedComments { get; set; }
     }
 }

@@ -65,11 +65,16 @@ namespace Engrisk
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:TokenSecret").Value)),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
                 };
             }
             );
-            
+            // services.AddAuthorization(opts => {
+            //     opts.
+            //     opts.AddPolicy("RequireSuperadminRole", policy => policy.RequireRole("SUPERADMIN"));
+            //     opts.AddPolicy("RequireManagerRole", policy => policy.RequireRole("MANAGER"));
+            //     opts.AddPolicy("RequireForumRole", policy => policy.RequireRole("forumadmin","forummod"));
+            // });
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers(opts => {
                 // var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

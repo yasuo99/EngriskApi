@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Engrisk.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201011065030_updatetest")]
-    partial class updatetest
+    [Migration("20201113050935_Test")]
+    partial class Test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,6 +78,9 @@ namespace Engrisk.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -271,6 +274,65 @@ namespace Engrisk.Migrations
                     b.ToTable("Badges");
                 });
 
+            modelBuilder.Entity("Engrisk.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Dislike")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Like")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.CommentReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsEdited")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ReplyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("ReplyId");
+
+                    b.ToTable("CommentReplies");
+                });
+
             modelBuilder.Entity("Engrisk.Models.DailyMission", b =>
                 {
                     b.Property<int>("Id")
@@ -322,6 +384,9 @@ namespace Engrisk.Migrations
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("GroupName")
                         .HasColumnType("nvarchar(max)");
@@ -421,6 +486,42 @@ namespace Engrisk.Migrations
                     b.ToTable("Levels");
                 });
 
+            modelBuilder.Entity("Engrisk.Models.LikedComment", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Like_at")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AccountId", "CommentId");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("LikedComment");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.LikedPost", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Like_At")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AccountId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("LikedPost");
+                });
+
             modelBuilder.Entity("Engrisk.Models.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -443,6 +544,59 @@ namespace Engrisk.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DownVote")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UpVote")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.PostUpvote", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AccountId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostUpvotes");
                 });
 
             modelBuilder.Entity("Engrisk.Models.Question", b =>
@@ -590,6 +744,21 @@ namespace Engrisk.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.StringFilter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Word")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StringFilters");
                 });
 
             modelBuilder.Entity("Engrisk.Models.Word", b =>
@@ -814,6 +983,36 @@ namespace Engrisk.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Engrisk.Models.Comment", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("Comments")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Engrisk.Models.CommentReply", b =>
+                {
+                    b.HasOne("Engrisk.Models.Comment", "Comment")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Comment", "Reply")
+                        .WithMany("Replies")
+                        .HasForeignKey("ReplyId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Engrisk.Models.Group", b =>
                 {
                     b.HasOne("Engrisk.Models.Account", "Account")
@@ -834,6 +1033,60 @@ namespace Engrisk.Migrations
                     b.HasOne("Engrisk.Models.Quiz", "Quiz")
                         .WithMany()
                         .HasForeignKey("QuizzId");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.LikedComment", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("LikedComments")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Comment", "Comment")
+                        .WithMany("LikedComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Engrisk.Models.LikedPost", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Post", "Post")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Engrisk.Models.Post", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("Posts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Engrisk.Models.PostUpvote", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("PostUpvotes")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Post", "Post")
+                        .WithMany("PostUpvotes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Engrisk.Models.QuizQuestion", b =>

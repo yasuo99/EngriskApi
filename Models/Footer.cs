@@ -1,0 +1,12 @@
+namespace Engrisk.Models
+{
+    public class Footer
+    {
+        public int Id { get; set; }
+        public string PhoneContact { get; set; }
+        public string Description { get; set; }
+        public string FacebookLink1 { get; set; }
+        public string FacebookLink2 { get; set; }
+        public int MyProperty { get; set; }
+    }
+}

@@ -29,13 +29,13 @@ namespace Engrisk.Helper
             int samePropertiesCount = 0;
             foreach (var property in subject.GetType().GetProperties())
             {
-                if(properties.CompareKey(property.Name))
+                if (properties.CompareKey(property.Name))
                 {
                     if (property.GetValue(subject).Equals(properties[property.Name]))
-                {
-                    samePropertiesCount++;
+                    {
+                        samePropertiesCount++;
+                    }
                 }
-                }    
             }
             if (samePropertiesCount == properties.Count)
             {
@@ -43,11 +43,11 @@ namespace Engrisk.Helper
             }
             return false;
         }
-        public static bool CompareKey(this Dictionary<dynamic,dynamic> properties, dynamic key)
+        public static bool CompareKey(this Dictionary<dynamic, dynamic> properties, dynamic key)
         {
-            foreach(var propKey in properties.Keys)
+            foreach (var propKey in properties.Keys)
             {
-                if(propKey.Equals(key))
+                if (propKey.Equals(key))
                 {
                     return true;
                 }
@@ -78,7 +78,7 @@ namespace Engrisk.Helper
         {
             var hours = endDate.Date.Hour - startDate.Date.Hour;
             var minutes = endDate.Date.Minute - startDate.Date.Minute;
-            return hours*60 + minutes;
+            return hours * 60 + minutes;
         }
     }
 }

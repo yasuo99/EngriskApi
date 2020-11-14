@@ -17,7 +17,7 @@ namespace Engrisk.Controllers
             _repo = repo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll(SubjectParams subjectParams){
+        public async Task<IActionResult> GetAll([FromQuery]SubjectParams subjectParams){
             var examplesFromDb = await _repo.GetAll<Example>(subjectParams);
             return Ok(examplesFromDb);
         }

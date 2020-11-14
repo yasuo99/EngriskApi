@@ -126,21 +126,33 @@ namespace Engrisk.Controllers
                 {
                     var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     var accountFromDb = await _repo.GetOneWithConditionTracking<Account>(acc => acc.Id == accountId);
-                    accountFromDb.Exp += examFromDb.ExpGain;
+                    var item = await _repo.GetOneWithCondition<AccountStorage>(store => store.AccountId == accountId && store.IsUsing == true, "Item");
+                    switch (item.Item.ItemName.ToLower())
+                    {
+                        case "x2 exp":
+                            accountFromDb.Exp += examFromDb.ExpGain * 2;
+                            break;
+                        default:
+                            accountFromDb.Exp += examFromDb.ExpGain;
+                        break;
+                    }
+
                     var historyFromDb = await _repo.GetOneWithConditionTracking<History>(history => history.QuizId == id && history.AccountId == accountFromDb.Id && history.IsDone == false);
                     historyFromDb.DoneDate = DateTime.Now;
                     historyFromDb.TimeSpent = DateTime.Now.MinusDate(historyFromDb.StartDate);
                     historyFromDb.IsDone = true;
                     historyFromDb.Score = score;
-                    await _repo.SaveAll();
                 }
-
             }
-            return Ok(new
+            if (await _repo.SaveAll())
             {
-                score = score,
-                answers = answers
-            });
+                return Ok(new
+                {
+                    score = score,
+                    answers = answers
+                });
+            }
+            return StatusCode(500);
         }
     }
 }

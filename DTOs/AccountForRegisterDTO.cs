@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Engrisk.DTOs
@@ -17,5 +18,7 @@ namespace Engrisk.DTOs
         [Phone, MaxLength(10), MinLength(10)]
         public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
+        [Required]
+        public IEnumerable<string> Roles { get; set; }
     }
 }

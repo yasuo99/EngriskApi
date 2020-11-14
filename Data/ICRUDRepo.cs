@@ -18,6 +18,7 @@ namespace Engrisk.Data
          void Update<T>(T subject) where T:class;
          void Delete<T>(dynamic id) where T:class;
          void Delete<T>(T subject) where T:class;
+         void Delete<T>(IEnumerable<T> subjects) where T:class;
          bool Exists<T>(Dictionary<dynamic,dynamic> properties) where T:class;
          Task<bool> SaveAll();
     }

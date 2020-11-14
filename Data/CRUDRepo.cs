@@ -30,6 +30,15 @@ namespace Engrisk.Data
             _db.Remove(subject);
         }
 
+        public void Delete<T>(IEnumerable<T> subjects) where T : class
+        {
+            var _dbSet = _db.Set<T>();
+            foreach (var subject in subjects)
+            {
+                _dbSet.Remove(subject);
+            }
+        }
+
         public bool Exists<T>(Dictionary<dynamic, dynamic> properties) where T : class
         {
             var _dbSet = _db.Set<T>();
@@ -66,7 +75,7 @@ namespace Engrisk.Data
         //     return await PagingList<T>.OnCreateAsync(queryableDbSet, subjectParams.CurrentPage, subjectParams.PageSize);
         // }
 
-        public async Task<PagingList<T>> GetAll<T>(SubjectParams subjectParams = null,Expression<Func<T, bool>> expression = null , string includeProperties = "") where T : class
+        public async Task<PagingList<T>> GetAll<T>(SubjectParams subjectParams = null, Expression<Func<T, bool>> expression = null, string includeProperties = "") where T : class
         {
             var dbSet = _db.Set<T>();
             var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
@@ -116,7 +125,7 @@ namespace Engrisk.Data
 
         public async Task<T> GetOneWithConditionTracking<T>(Expression<Func<T, bool>> expression = null, string includeProperties = "") where T : class
         {
-             var dbSet = _db.Set<T>();
+            var dbSet = _db.Set<T>();
             var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
             if (expression != null)
             {

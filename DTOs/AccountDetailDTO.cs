@@ -21,9 +21,15 @@ namespace Engrisk.DTOs
         public int Point { get; set; }
         public DateTime Locked { get; set; }
         public bool  IsDisabled { get; set; }
+         public virtual IEnumerable<AccountBadge> AccountBadges { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
-        public virtual IEnumerable<AccountRole> Roles { get; set; }
+        public virtual IEnumerable<string> Roles { get; set; }
         public virtual IEnumerable<History> Histories { get; set; }
         public virtual IEnumerable<AccountMission> Missions { get; set; }
+        public virtual IEnumerable<AccountStorage> Storage { get; set; }
+        public virtual IEnumerable<AccountAttendance> Attendences { get; set; }
+        public virtual IEnumerable<AccountPostDTO> Posts { get; set; }
+        public virtual IEnumerable<AccountCommentDTO> Comments { get; set; }
+        public virtual IEnumerable<PostUpvoteDTO> PostUpvotes { get; set; }
     }
 }

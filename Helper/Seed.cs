@@ -23,7 +23,10 @@ namespace Engrisk.Helper
                 var roles = JsonConvert.DeserializeObject<IEnumerable<Role>>(rolesData);
                 foreach (var gift in dailyMissions)
                 {
-                    db.DailyMissions.Add(gift);
+                    if (!db.DailyMissions.Any(dm => dm.Name == gift.Name))
+                    {
+                        db.DailyMissions.Add(gift);
+                    }
                 }
                 foreach (var account in superAdminAccounts)
                 {
@@ -39,11 +42,24 @@ namespace Engrisk.Helper
                         userManager.CreateAsync(newAccount, account.Password).GetAwaiter().GetResult();
                     }
                 }
-                foreach(var role in roles)
+                foreach (var role in roles)
                 {
-                    if(!roleManager.RoleExistsAsync(role.Name).GetAwaiter().GetResult())
+                    if (!roleManager.RoleExistsAsync(role.Name).GetAwaiter().GetResult())
                     {
-                        roleManager.CreateAsync(new Role(){Name = role.Name}).GetAwaiter().GetResult();
+                        roleManager.CreateAsync(new Role() { Name = role.Name }).GetAwaiter().GetResult();
+                    }
+                }
+                //create admin User
+                if (!db.Accounts.Any(acc => acc.UserName == "Admin"))
+                {
+                    var admin = new Account()
+                    {
+                        UserName = "Admin"
+                    };
+                    var result = userManager.CreateAsync(admin, "Thanhpro1@").Result;
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(admin, "superadmin").GetAwaiter().GetResult();
                     }
                 }
                 db.SaveChanges();

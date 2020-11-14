@@ -20,7 +20,7 @@ namespace Engrisk.Controllers
             _repo = repo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll(SubjectParams subjectParams)
+        public async Task<IActionResult> GetAll([FromQuery] SubjectParams subjectParams)
         {
             var levels = await _repo.GetAll<Level>(subjectParams);
             Response.AddPaginationHeader(levels.CurrentPage, levels.PageSize, levels.TotalItems, levels.TotalPages);
@@ -33,7 +33,7 @@ namespace Engrisk.Controllers
             property.Add("LevelName", level.LevelName);
             if (_repo.Exists<Level>(property))
             {
-                return StatusCode(409);
+                return Conflict();
             }
             _repo.Create(level);
             if (await _repo.SaveAll())
@@ -54,7 +54,7 @@ namespace Engrisk.Controllers
             property.Add("LevelName", updateLevel.LevelName);
             if(_repo.Exists<Level>(property))
             {
-                return StatusCode(409);
+                return Conflict();
             }
             _repo.Update(updateLevel);
             if(await _repo.SaveAll()){

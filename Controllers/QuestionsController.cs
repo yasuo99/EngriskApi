@@ -38,7 +38,7 @@ namespace Engrisk.Controllers
             properties.Add("Content", question.Content);
             if (_repo.Exists<Question>(properties))
             {
-                return BadRequest("Already have that question");
+                return Conflict();
             }
             _repo.Create(question);
             if (await _repo.SaveAll())
@@ -60,6 +60,20 @@ namespace Engrisk.Controllers
                 return Ok();
             }
             return BadRequest("Error on updating question");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteQuestion(int id)
+        {
+            var questionFromDb = await _repo.GetOneWithCondition<Question>(ques => ques.Id == id);
+            if(questionFromDb == null)
+            {
+                return NotFound();
+            }
+            _repo.Delete(questionFromDb);
+            if(await _repo.SaveAll()){
+                return Ok();
+            }
+            return StatusCode(500);
         }
 
     }
