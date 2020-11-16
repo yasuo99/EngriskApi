@@ -28,7 +28,7 @@ namespace Engrisk.Controllers
         [HttpGet("{wordId}")]
         public async Task<IActionResult> GetWord(int wordId)
         {
-            var word = await _repo.GetOneWithCondition<Word>(word => word.Id == wordId);
+            var word = await _repo.GetOneWithCondition<Word>(word => word.Id == wordId,"Examples,Groups");
             if (word == null)
             {
                 return NotFound();

@@ -28,7 +28,7 @@ namespace Engrisk.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllQuizzes([FromQuery] SubjectParams subjectParams)
         {
-            return Ok(await _repo.GetAll<Quiz>());
+            return Ok(await _repo.GetAll<Quiz>(subjectParams,null,"Questions"));
         }
         [HttpPost("new")]
         public async Task<IActionResult> CreateQuiz(Quiz quiz)
