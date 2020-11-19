@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import SignIn from "./../../components/auth/SignIn"
-
+import Facebook from '../../components/facebook/Facebook'
+import Google from '../../components/google/Google'
 class SignInPage extends Component {
 
   render() {
@@ -15,6 +16,8 @@ class SignInPage extends Component {
           <h3 className="text-primary">Đăng Nhập</h3>
         </div>
         <SignIn />
+        <Facebook/>
+        <Google/>
        </div>
     </div>
       );
