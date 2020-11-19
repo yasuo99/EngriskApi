@@ -5,6 +5,10 @@ import ThaoLuanChiTietPage from './pages/ThaoLuanPage/ThaoLuanChiTietPage';
 import CuaHangPage from './pages/CuaHangPage/CuaHangPage';
 import TuDienPage from './pages/XemThemPage/TuDienPage';
 import TuVungPage from './pages/XemThemPage/TuVungPage';
+import SignInPage from './pages/AuthPage/SignInPage';
+import SignUpPage from './pages/AuthPage/SignUpPage';
+import Admin from './pages/Admin/Admin';
+import Management from './pages/Admin/Management';
 
 const routes = [
     {
@@ -36,6 +40,26 @@ const routes = [
         path: '/tuvung',
         exact: true,
         main: () => <TuVungPage />
+    },
+    {
+        path: '/signin',
+        exact: true,
+        main: () => <SignInPage />
+    },
+    {
+        path: '/signup',
+        exact: true,
+        main: () => <SignUpPage />
+    },
+    {
+        path: '/admin',
+        exact: true,
+        main: () => <Admin />
+    },
+    {
+        path: '/management',
+        exact: true,
+        main: () => <Management />
     },
 ];
 

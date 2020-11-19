@@ -138,7 +138,7 @@ form .inner-form {background: #fff;display: flex;width: 100%;align-items: center
 form .inner-form .input-field.first-wrap {width: 80px;margin-left: 10px;}
 form .inner-form .input-field {height: 80px;padding-top: 8px}
 form .inner-form .input-field input {height:100%;display: block;width: 460px;padding: 10px 32px;font-size: 20px;color: #555;margin-right: 20px;border: 0;outline: none;}
-form .inner-form .input-field.third-wrap .btn {padding: 15px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;left: 350px;}
+form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;}
 
 /* -----------------------------------TỪ VỰNG------------------------------- */
 /* -------------------------------------------------------------------------- */
