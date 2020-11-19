@@ -75,6 +75,7 @@ a.text-primary:hover{color: #48871B}
 footer .kechan{border-top: 3px solid #ccc;}
 footer a{color: #828282}
 footer a:hover{color: #77B748;text-decoration: none;}
+footer h6{font-size: 15px;}
 /* -----------------------------------THẢO LUẬN------------------------------- */
 /* --------------------------------------------------------------------------- */
 #thaoluan h2{font-weight: bold}
@@ -145,3 +146,23 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #tuvung table{font-size: 16px;}
 #tuvung table a{color: #828282;}
 #tuvung table a:hover{text-decoration: none;}
+
+
+/* ------------------------------HỌC QUA HÌNH ẢNH--------------------------- */
+/* ------------------------------------------------------------------------- */
+#hoc-hinhanh .card-hoc{width: 200px;height: 250px;border: 2px solid #ccc;border-radius: 10px;}
+#hoc-hinhanh .card-hoc:active{background-color: #77B748;}
+#hoc-hinhanh .card-hoc .img-hoc{padding-left: 37px;padding-top: 40px;}
+#hoc-hinhanh .kechan{border-bottom: 2px solid #ccc; padding-bottom: 60px;}
+#hoc-hinhanh .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
+
+/* ---------------------------------HỌC 2------------------------------------ */
+/* -------------------------------------------------------------------------- */
+#hoc2 .dapan{border: 1px solid #ccc; width: 300px; height: 50px;margin-bottom: 20px;}
+#hoc2 .kechan{border-bottom: 2px solid #ccc; padding-bottom: 60px;}
+#hoc2 .dapan:active{background-color: #77B748;}
+#hoc2 .dapan:hover{background-color: #77B748;}
+#hoc2 .dapan p:active{color: #fff;}
+#hoc2 .dapan p:hover{color: #fff;}
+#hoc2 .dapan p{font-size: 16px;padding: 10px;}
+#hoc2 .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}

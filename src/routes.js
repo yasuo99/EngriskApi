@@ -9,6 +9,8 @@ import SignInPage from './pages/AuthPage/SignInPage';
 import SignUpPage from './pages/AuthPage/SignUpPage';
 import Admin from './pages/Admin/Admin';
 import Management from './pages/Admin/Management';
+import HocHinhAnh from './pages/HocPage/HocHinhAnh';
+import Hoc from './pages/HocPage/Hoc';
 
 const routes = [
     {
@@ -40,6 +42,16 @@ const routes = [
         path: '/tuvung',
         exact: true,
         main: () => <TuVungPage />
+    },
+    {
+        path: '/hochinhanh',
+        exact: true,
+        main: () => <HocHinhAnh />
+    },
+    {
+        path: '/hoc',
+        exact: true,
+        main: () => <Hoc />
     },
     {
         path: '/signin',
