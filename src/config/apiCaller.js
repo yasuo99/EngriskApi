@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_URL = 'https://5f9a835e9d94640016f70d07.mockapi.io/api/Account';
+export const API_URL = 'https://5f9a835e9d94640016f70d07.mockapi.io/api';
 
 export default function callApi(endpoint, method = 'GET', body){
     return axios({

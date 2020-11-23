@@ -11,6 +11,8 @@ import Admin from './pages/Admin/Admin';
 import Management from './pages/Admin/Management';
 import HocHinhAnh from './pages/HocPage/HocHinhAnh';
 import Hoc from './pages/HocPage/Hoc';
+import CaiDatMatKhau from './pages/CaiDatPage/CaiDatMatKhau';
+import CaiDatTaiKhoan from './pages/CaiDatPage/CaiDatTaiKhoan';
 
 const routes = [
     {
@@ -52,6 +54,16 @@ const routes = [
         path: '/hoc',
         exact: true,
         main: () => <Hoc />
+    },
+    {
+        path: '/caidatmatkhau',
+        exact: true,
+        main: () => <CaiDatMatKhau />
+    },
+    {
+        path: '/caidattaikhoan',
+        exact: true,
+        main: () => <CaiDatTaiKhoan />
     },
     {
         path: '/signin',

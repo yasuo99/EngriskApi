@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {signIn} from "./../../actions/authActions"
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 
 class SignIn extends Component {
     state = {
@@ -21,9 +21,6 @@ class SignIn extends Component {
     };
 
     render() {
-    // const { uid } = this.props;
-    // console.log(uid)
-    // if(uid) return <Redirect to="/"/>
     return (
       <form className="login100-form validate-form"
       autoComplete="off"
@@ -54,10 +51,10 @@ class SignIn extends Component {
 }
     
 const mapStateToProps = (state) => {
-  // const uid = state.data.Account.id
+  // const uid = state.auth.id;
   // return {
   //   uid: uid,
-  // };
+  // }
 };
     
 const mapDispatchToProps = (dispatch) => {

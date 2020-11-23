@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {signUp} from "./../../actions/authActions"
-
+import {Redirect} from "react-router-dom"
 class SignUp extends Component {
   state = {
     email: "",
@@ -141,8 +141,8 @@ class SignUp extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    authError_Email: state.authError_Email,
-    authError_Pass: state.authError_Pass,
+    authError_Email: state.auth.authError_Email,
+    authError_Pass: state.auth.authError_Pass,
   };
 };
 const mapDispatchToProps = (dispatch) => {

@@ -19,17 +19,19 @@ a.text-primary:hover{color: #48871B}
 .img-100{width: 100% auto}
 
 #menu-chinh{border-bottom: 2px solid #ccc;}
+#menu-chinh .logo{height: 80px;}
+#menu-chinh .col-8 .a-hoc{width: 140px;}
+#menu-chinh .col-8 a{width: 210px;}
 #menu-chinh .navbar-nav{font-weight: bold;font-size: 20px}
 #menu-chinh .sub1 .dropdown-item{width: 230px;padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
 #menu-chinh .dropdown-menu{left: -50px}
 #menu-chinh .sub2{width: 250px;left:-50px}
-#menu-chinh .sub3{width: 350px;left: -100px}
+#menu-chinh .sub3{width: 350px;left: -150px}
 #menu-chinh .sub3 .thongbao{border-bottom: 2px solid #ccc;height: 50px}
 #menu-chinh .sub3 .taikhoan .dropdown-item{border-bottom: 2px solid #ccc;height: 50px; font-weight: bold;padding-left: 10px;padding-top:10px;color: #068CE1}
 #menu-chinh .nav-link:active{color: #77B748;}
 #menu-chinh .sub3 .taikhoan .dropdown-item:active{color: #fff;}
 #menu-chinh .dropdown-menu a:active{background-color: #77B748;color: #fff;}
-
 
 #trangchu .nen-xam{height: 140px;width: 140px;border-radius: 50%;position: relative;background-color: #ccc;}
 #trangchu .vongtron-tim{background-color:#ad5ca0b4;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
@@ -166,3 +168,20 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #hoc2 .dapan p:hover{color: #fff;}
 #hoc2 .dapan p{font-size: 16px;padding: 10px;}
 #hoc2 .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
+
+/* ---------------------------------Cài đặt---------------------------------- */
+/* -------------------------------------------------------------------------- */
+#caidat .btn{border: none;border-radius: 10px;font-size: 18px;font-weight: bold;padding: 10px;}
+#caidat form .nd{margin-left: 20px;margin-top: 50px;}
+#caidat span{font-size: 16px;font-weight: bold;}
+#caidat input{width: 460px;height: 50px;font-size: 16px;border-radius: 10px;border: 2px solid #ccc;outline: none;padding: 0 10px;}
+#caidat .caidat-taikhoan{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
+#caidat .caidat-taikhoan a{color: #828282; font-weight:bold;}
+#caidat .caidat-taikhoan a:hover{color: #4f4f4f;text-decoration: none;}
+.chucnang .bg-active{background-color: #ccc;}
+.chucnang .text-active{color: #4f4f4f!important}
+.chucnang .nd-chucnang{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;margin: 5px 20px;}
+.chucnang .nd-chucnang:hover{background-color: #ccc}
+#caidat .caidat-matkhau{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
+#caidat .caidat-matkhau a{color: #828282; font-weight:bold;}
+#caidat .caidat-matkhau a:hover{color: #4f4f4f;text-decoration: none;}

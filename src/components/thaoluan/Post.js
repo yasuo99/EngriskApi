@@ -1,0 +1,18 @@
+import React, { Component } from "react"
+import { Link } from 'react-router-dom';
+
+class Post extends Component {
+    render() {
+        return (
+            <div className="row">
+                <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
+                <div className="col-md-8 pt-3">
+                    <h5><Link to="/thaoluanchitiet">Tìm hiểu về những loại bánh ngọt trên thế giới</Link></h5>
+                    <p>3 ngày trước từ ChorlesVenn</p>
+                </div>
+                <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
+            </div>
+        )
+    }
+}
+export default Post;

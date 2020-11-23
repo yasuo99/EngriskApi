@@ -1,10 +1,9 @@
 import {toast} from "react-toastify"
 const initState = {
   authError_Email: null,
-  authError_Pass: null
+  authError_Pass: null,
 } 
 const authReducer = (state = initState, action) => {
-
   switch (action.type) {
     case "SIGN_IN": {
       toast("Xin chào bạn đã đến với Duolingo");
@@ -24,6 +23,7 @@ const authReducer = (state = initState, action) => {
     }
     case "SIGN_UP": {
       toast("Xin chào bạn đã đến với Duolingo");
+      state = action.user;
       return state;
     }
     case "SIGN_UP_ERR_EMAIL": {    
