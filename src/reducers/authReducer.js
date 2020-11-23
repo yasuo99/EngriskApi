@@ -1,12 +1,17 @@
 import {toast} from "react-toastify"
 const initState = {
   authError_Email: null,
-  authError_Pass: null,
+  authError_Pass: null
 } 
 const authReducer = (state = initState, action) => {
+
   switch (action.type) {
     case "SIGN_IN": {
       toast("Xin chào bạn đã đến với Duolingo");
+      return state;
+    }
+    case "SIGN_IN_ERR": {
+      toast("Tài khoản hoặc mật khẩu không đúng");
       return state;
     }
     case "SIGN_IN_ERR_PASS": {
@@ -23,7 +28,10 @@ const authReducer = (state = initState, action) => {
     }
     case "SIGN_UP": {
       toast("Xin chào bạn đã đến với Duolingo");
-      state = action.user;
+      return state;
+    }
+    case "SIGN_UP_ERR": {
+      toast("Lỗi");
       return state;
     }
     case "SIGN_UP_ERR_EMAIL": {    

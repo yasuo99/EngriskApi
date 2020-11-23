@@ -1,22 +1,33 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import FacebookLogin from 'react-facebook-login';
-export default class Facebook extends Component {
+import { facebookSignIn } from '../../actions/authActions';
+class Facebook extends Component {
     state = {
         isLoggedIn: false,
         userID: '',
         name: '',
         email: '',
-        picture: ''
+        picture: '',
+        token: ''
     }
-    responseFacebook = (response) => {
-        this.setState({
-            isLoggedIn: true,
-            userID: response.userID,
-            name: response.name,
-            email: response.email,
-            picture: response.picture.data.url
-        });
+    responseFacebook = async (response) => {
         console.log(response);
+        if (response.status !== "unknown") {
+            this.setState({
+                isLoggedIn: true,
+                userID: response.userID,
+                name: response.name,
+                email: response.email,
+                picture: response.picture.data.url,
+                token: response.accessToken
+            });
+            const token = {
+                token: this.state.token
+            };
+            await this.props.facebookSignIn(token);
+            console.log(response);
+        }
     }
     componentClicked = () => console.log('ok');
 
@@ -33,15 +44,30 @@ export default class Facebook extends Component {
         } else {
             fbContent = (<FacebookLogin
                 appId="2760969430891401"
-                autoLoad={true}
+                autoLoad={false}
                 fields="name,email,picture"
                 onClick={this.componentClicked}
-                callback={this.responseFacebook} />);
+                callback={this.responseFacebook}
+                icon="fa-facebook"
+            />);
         }
         return (
-            <div style={{margin: 'auto'}}>
+            <div style={{ margin: 'auto' }}>
                 {fbContent}
             </div>
         )
     }
 }
+const mapStateToProps = (state) => {
+    // const uid = state.data.Account.id
+    // return {
+    //   uid: uid,
+    // };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        facebookSignIn: (cred) => dispatch(facebookSignIn(cred))
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Facebook);

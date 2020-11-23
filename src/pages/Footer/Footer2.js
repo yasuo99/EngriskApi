@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "react"
 
 const Footer2 = () => {
     return (
@@ -7,24 +6,24 @@ const Footer2 = () => {
             <div className="container">
                 <div className="row">
                     <div className="col-12 mt-5">
-                        <div className="row kechan pt-3">
+                        <div className="row kechan pt-5 ">
                             <div className="col-2 text-center">
-                                <h6><Link to="#">GIỚI THIỆU</Link></h6>
+                                <h6><a href="#">GIỚI THIỆU</a></h6>
                             </div>
                             <div className="col-2 text-center">
-                                <h6><Link to="#">HỌC ĐƯỜNG</Link></h6>
+                                <h6><a href="#">HỌC ĐƯỜNG</a></h6>
                             </div>
                             <div className="col-2 text-center">
-                                <h6><Link to="#">ỨNG DỤNG</Link></h6>
+                                <h6><a href="#">ỨNG DỤNG</a></h6>
                             </div>
                             <div className="col-2 text-center">
-                                <h6><Link to="#">TRỢ GIÚP</Link></h6>
+                                <h6><a href="#">TRỢ GIÚP</a></h6>
                             </div>
                             <div className="col-2 text-center">
-                                <h6><Link to="#">ĐIỀU KHOẢN</Link></h6>
+                                <h6><a href="#">ĐIỀU KHOẢN</a></h6>
                             </div>
                             <div className="col-2 text-center">
-                                <h6><Link to="#">QUYỀN RIÊNG TƯ</Link></h6>
+                                <h6><a href="#">QUYỀN RIÊNG TƯ</a></h6>
                             </div>
                         </div>
                     </div>

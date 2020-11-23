@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import SignIn from "./../../components/auth/SignIn"
 import Facebook from '../../components/facebook/Facebook'
 import Google from '../../components/google/Google'
+import Paypal from "../../components/paypal/Paypal";
 class SignInPage extends Component {
 
   render() {
@@ -13,11 +14,12 @@ class SignInPage extends Component {
       <div className="container-login100">
       <div className="wrap-login100">
         <div className="login100-form-title">
-          <h3 className="text-primary">Đăng Nhập</h3>
+          <h3 className="text-primary">Đăng nhập</h3>
         </div>
         <SignIn />
         <Facebook/>
         <Google/>
+        <Paypal/>
        </div>
     </div>
       );

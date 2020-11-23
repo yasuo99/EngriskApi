@@ -1,58 +1,137 @@
-import React, {Component} from 'react';
-import Word from '../../components/xemthem/Word';
-import ListWord from '../../components/xemthem/ListWord';
-import { connect } from 'react-redux';
-import Header from '../Header/Header';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Footer2 from '../Footer/Footer2';
-import {actFetchWordsRequest} from "../../actions/xemThemActions"
+import Header from '../Header/Header';
 
-
-class TuVungPage extends Component{
-
-    componentDidMount(){
-        this.props.fetchAllWords();
-     }
-    render(){
-        var { words } = this.props;
-        return(
+class TuVungPage extends Component {
+    render() {
+        return (
             <div>
-                <Header></Header>           
-                <ListWord>
-                    {this.showWords(words)}
-                </ListWord>
+               <Header></Header>
+                <main id="tuvung">
+                    <div className="container mt-5">
+                        <h2 className="pb-3">Đã học từ vựng Tiếng Anh</h2>
+                        <table className="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Từ vựng</th>
+                                    <th>Từ loại</th>
+                                    <th>Lần cuối luyện tập</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">Places</a></td>
+                                    <td>Noun</td>
+                                    <td>3 ngày trước</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
                 <Footer2></Footer2>
-            </div>
+                 </div>
         );
     }
-    showWords = (words)=>{
-        var result = null;
-        if( words.length > 0 ){
-            result = words.map((word, index) => {
-                return(
-                   <Word
-                        key = {index}
-                        word = {word}
-                        index = {index}
-                   
-                   />
-                )
-            })
-        }
-        return result;
-    }
 }
-const mapStateToProps = state => {
-    return{
-        words : state.xemthem
-    }
-}
-const mapDispatchToProps = (dispatch, props) => {
-    return {
-        fetchAllWords : () => {
-            dispatch(actFetchWordsRequest());
-        },
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(TuVungPage);
-
+export default TuVungPage;
