@@ -13,7 +13,7 @@ const Header = () => {
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu"> </button>
                 <div className="collapse navbar-collapse" id="menu">
                   <ul className="navbar-nav">
-                    <li className="nav-item active mr-1"> <Link className="nav-link a-hoc" to="/"><img src="image/shooting-stars.png" />&nbsp;&nbsp; HỌC</Link> </li>
+                    <li className="nav-item active mr-1"> <Link className="nav-link a-hoc" to="/home"><img src="image/shooting-stars.png" />&nbsp;&nbsp; HỌC</Link> </li>
                     <li className="nav-item"> <Link className="nav-link " to="/thaoluan"><img src="image/book.png" />&nbsp;&nbsp;
                         THẢO LUẬN</Link> </li>
                     <li className="nav-item"> <Link className="nav-link" to="/cuahang"><img src="image/shop.png" />&nbsp;&nbsp;
