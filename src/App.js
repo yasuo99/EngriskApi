@@ -15,14 +15,14 @@ class App extends Component {
           <ToastContainer />
           <menu></menu>
           <div>
-            {this.showContenMenus(routes)}
+            {this.showContentMenus(routes)}
           </div>
           </Router>
           </BrowserRouter>
         </div>
       );
   }
-  showContenMenus= (routes)=>{
+  showContentMenus= (routes)=>{
     var result = null;
     if(routes.length > 0){
       result = routes.map((route, index) =>{

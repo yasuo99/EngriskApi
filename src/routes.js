@@ -49,9 +49,9 @@ const routes = [
         main: () => <HocHinhAnh />
     },
     {
-        path: '/hoc/:id',
+        path: '/baihoc/:quizId',
         exact: true,
-        main: () => <Hoc/>
+        main: (match) => <Hoc match={match}/>,
     },
     {
         path: '/signin',
