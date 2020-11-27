@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Engrisk.DTOs;
 using Engrisk.Helper;
 using Engrisk.Models;
 
@@ -14,6 +15,10 @@ namespace Engrisk.Data
         Task DeleteAccount(int id);
         Task DeleteAccount(string username);
         Task<bool> SaveAll();
+        Task<AuthenticateRequestDTO> GenerateToken(Account account, string ipAddress);
+        RefreshToken GenerateRefreshToken(string ipAddress);
+        Task<bool> RevokeToken(string token, string ipAddress);
+        Task<AuthenticateRequestDTO> RefreshToken(string token, string ipAddress);
         bool Exists(string identify);
     }
 }

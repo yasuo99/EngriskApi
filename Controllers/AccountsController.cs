@@ -13,13 +13,14 @@ using Engrisk.Data;
 using Engrisk.DTOs;
 using Engrisk.Helper;
 using Engrisk.Models;
+using Engrisk.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 namespace Engrisk.Controllers
 {
@@ -31,13 +32,15 @@ namespace Engrisk.Controllers
         private readonly IAuthRepo _repo;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
-        private Cloudinary _cloud;
+        private readonly IAuthService _googleService;
+        private readonly IAuthService _facebookService;
+        private CloudinaryHelper _cloud;
         private readonly ICRUDRepo _cRUDRepo;
         private readonly UserManager<Models.Account> _userManager;
         private readonly RoleManager<Models.Role> _roleManager;
         private readonly SignInManager<Models.Account> _signinManager;
         public AccountsController(IAuthRepo repo, ICRUDRepo cRUDRepo,
-        IMapper mapper, IConfiguration config, IOptions<CloudinarySettings> cloudinarySettings,
+        IMapper mapper, IConfiguration config, IOptions<CloudinarySettings> cloudinarySettings, Func<ServiceEnum, IAuthService> serviceResolver,
 
         UserManager<Models.Account> userManager, RoleManager<Models.Role> roleManager,
         SignInManager<Models.Account> signinManager)
@@ -47,6 +50,8 @@ namespace Engrisk.Controllers
             _userManager = userManager;
             _cRUDRepo = cRUDRepo;
             _config = config;
+            _googleService = serviceResolver(ServiceEnum.Google);
+            _facebookService = serviceResolver(ServiceEnum.Facebook);
             _mapper = mapper;
             _repo = repo;
             var account = new CloudinaryDotNet.Account()
@@ -55,7 +60,7 @@ namespace Engrisk.Controllers
                 ApiKey = cloudinarySettings.Value.ApiKey,
                 ApiSecret = cloudinarySettings.Value.ApiSecret
             };
-            _cloud = new Cloudinary(account);
+            _cloud = new CloudinaryHelper(account);
         }
         [HttpGet]
         [Authorize(Roles = "superadmin")]
@@ -71,6 +76,7 @@ namespace Engrisk.Controllers
             var accounts = await _repo.GetAll(subjectParams);
             var temp = accounts.Where(account => account.Id != id);
             var returnAccounts = _mapper.Map<IEnumerable<AccountDetailDTO>>(temp);
+            Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize, accounts.TotalItems, accounts.TotalPages);
             return Ok(returnAccounts);
         }
         [HttpGet("detail/{id}")]
@@ -153,9 +159,14 @@ namespace Engrisk.Controllers
             {
                 accountFromDb = await _repo.GetAccountDetail(accountLogin.LoginMethod);
             }
-            if(accountFromDb.IsDisabled)
+            if (accountFromDb == null)
             {
-                return BadRequest(new {
+                return BadRequest("Tài khoản không tồn tại");
+            }
+            if (accountFromDb.IsDisabled)
+            {
+                return BadRequest(new
+                {
                     error = "Tài khoản của bạn đã bị khóa vui lòng liên hệ admin!"
                 });
             }
@@ -163,16 +174,17 @@ namespace Engrisk.Controllers
             if (result.Succeeded)
             {
                 var accountForDetail = _mapper.Map<AccountDetailDTO>(accountFromDb);
-                var token = CreateToken(accountFromDb).Result;
+                var token = await _repo.GenerateToken(accountFromDb,ipAddress());
+                setTokenCookie(token.RefreshToken);
                 return Ok(new
                 {
                     account = accountForDetail,
-                    token = token
+                    token = token.Token
                 });
             }
             else
             {
-                return BadRequest("Wrong email or password");
+                return BadRequest("Sai mật khẩu");
             }
             // if (ComparePassword(accountLogin.Password, accountFromDb.PasswordHashed, accountFromDb.PasswordSalt))
             // {
@@ -184,6 +196,84 @@ namespace Engrisk.Controllers
             //         Account = returnAccount
             //     });
             // }
+        }
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(){
+            var refreshToken = Request.Cookies["refreshToken"];
+            var response = await _repo.RefreshToken(refreshToken, ipAddress());
+
+            if (response == null)
+                return Unauthorized(new { message = "Invalid token" });
+
+            setTokenCookie(response.Token);
+
+            return Ok(response);
+        }
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken([FromBody] RequestTokenDTO requestToken)
+        {
+            var token = requestToken.RequestToken ?? Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
+
+            var response = await _repo.RevokeToken(token, ipAddress());
+
+            if (!response)
+                return NotFound(new { message = "Token not found" });
+
+            return Ok(new { message = "Token revoked" });
+        }
+        [HttpGet("{accountId}/refresh-tokens")]
+        public async Task<IActionResult> GetRefreshToken(int accountId){
+            var accountFromDb = await _repo.GetAccountDetail(accountId);
+            if(accountFromDb == null){
+                return NotFound();
+            }
+            return Ok(accountFromDb.RefreshTokens);
+        }
+        [HttpPost("login/google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] UserLoginRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values.SelectMany(it => it.Errors).Select(it => it.ErrorMessage));
+            var account = await _googleService.Authenticate(request);
+            if (account == null)
+            {
+                return BadRequest("Phiên đăng nhập hết hạn");
+            }
+            var token = await _repo.GenerateToken(account,ipAddress());
+            var accountForDetail = _mapper.Map<AccountDetailDTO>(account);
+            return Ok(new
+            {
+                account = accountForDetail,
+                token = token.Token
+            });
+        }
+        [HttpPost("login/facebook")]
+        public async Task<IActionResult> FacebookLogin([FromBody] UserLoginRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Values.SelectMany(it => it.Errors).Select(it => it.ErrorMessage));
+            }
+            var account = await _facebookService.Authenticate(request);
+            if (account == null)
+            {
+                return BadRequest();
+            }
+            var accountForDetail = _mapper.Map<AccountDetailDTO>(account);
+            var token = await _repo.GenerateToken(account,ipAddress());
+            return Ok(new
+            {
+                account = accountForDetail,
+                token = token.Token
+            });
+        }
+        [HttpPut("{accountId}/changepw")]
+        public async Task<IActionResult> UpdatePassword(int accountId, [FromBody] string newPassword)
+        {
+            return Ok();
         }
         [HttpPut("{accountId}")]
         public async Task<IActionResult> UpdateAccount(int accountId, [FromBody] AccountForUpdateDTO accountUpdate)
@@ -204,26 +294,49 @@ namespace Engrisk.Controllers
             }
             throw new Exception("Error on updating account information");
         }
-        [HttpPut("{accountId}/ban")]
-        public async Task<IActionResult> BanAccount(int accountId, [FromBody] int hour){
+        [HttpPut("{accountId}/avatar")]
+        public async Task<IActionResult> UpdateAvatar(int accountId, [FromForm] PhotoDTO photoDTO){
             var accountFromDb = await _repo.GetAccountDetail(accountId);
             if(accountFromDb == null){
                 return NotFound();
             }
-            accountFromDb.Locked = DateTime.Now.AddHours(hour);
+            if(string.IsNullOrEmpty(accountFromDb.PhotoUrl)){
+                _cloud.DeleteImage(accountFromDb.PublicId);
+            }
+            var result = _cloud.UploadImage(photoDTO.File);
+            accountFromDb.PhotoUrl = result.PublicUrl;
+            accountFromDb.PublicId = result.PublicId;
             if(await _repo.SaveAll()){
+                return Ok();
+            }
+            return StatusCode(500);
+        }
+        [HttpPut("{accountId}/ban")]
+        public async Task<IActionResult> BanAccount(int accountId, [FromBody] int hour)
+        {
+            var accountFromDb = await _repo.GetAccountDetail(accountId);
+            if (accountFromDb == null)
+            {
+                return NotFound();
+            }
+            accountFromDb.Locked = DateTime.Now.AddHours(hour);
+            if (await _repo.SaveAll())
+            {
                 return NoContent();
             }
             return StatusCode(500);
         }
         [HttpPut("{accountId}/disable")]
-        public async Task<IActionResult> DisableAccount(int accountId){
+        public async Task<IActionResult> DisableAccount(int accountId)
+        {
             var accountFromDb = await _repo.GetAccountDetail(accountId);
-            if(accountFromDb == null){
+            if (accountFromDb == null)
+            {
                 return NotFound();
             }
             accountFromDb.IsDisabled = true;
-            if(await _repo.SaveAll()){
+            if (await _repo.SaveAll())
+            {
                 return NoContent();
             }
             return StatusCode(500);
@@ -234,11 +347,11 @@ namespace Engrisk.Controllers
             try
             {
                 var accountFromDb = await _repo.GetAccountDetail(accountId);
-                if(accountFromDb == null)
+                if (accountFromDb == null)
                 {
                     return NotFound();
                 }
-                var result = await _userManager.AddToRolesAsync(accountFromDb,roles);
+                var result = await _userManager.AddToRolesAsync(accountFromDb, roles);
                 if (result.Succeeded)
                 {
                     return Ok();
@@ -251,18 +364,21 @@ namespace Engrisk.Controllers
             }
         }
         [HttpDelete("{accountId}/roles/{roleId}")]
-        public async Task<IActionResult> RemoveRole(int accountId, int roleId){
+        public async Task<IActionResult> RemoveRole(int accountId, int roleId)
+        {
             var accountFromDb = await _repo.GetAccountDetail(accountId);
-            if(accountFromDb == null)
+            if (accountFromDb == null)
             {
                 return NotFound();
             }
             var roleFromDb = await _cRUDRepo.GetOneWithCondition<Models.Role>(role => role.Id == roleId);
-            if(roleFromDb == null){
+            if (roleFromDb == null)
+            {
                 return NotFound();
             }
-            var result = await _userManager.RemoveFromRoleAsync(accountFromDb,roleFromDb.Name);
-            if(result.Succeeded){
+            var result = await _userManager.RemoveFromRoleAsync(accountFromDb, roleFromDb.Name);
+            if (result.Succeeded)
+            {
                 return NoContent();
             }
             return StatusCode(500);
@@ -425,8 +541,8 @@ namespace Engrisk.Controllers
             }
             return BadRequest("Error on buying");
         }
-        [HttpPut("{accountId}/topup")]
-        public async Task<IActionResult> Topup(int accountId, [FromBody] int topupAmount)
+        [HttpPut("{accountId}/topup/paypal")]
+        public async Task<IActionResult> TopupWithPaypal(int accountId, [FromBody] PaypalDTO paypal)
         {
             var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (accountId != id)
@@ -434,13 +550,33 @@ namespace Engrisk.Controllers
                 return Unauthorized();
             }
             var accountFromDb = await _repo.GetAccountDetail(accountId);
-            accountFromDb.Point += topupAmount;
+            accountFromDb.Point += paypal.Payer.Purchase.Amount.Value;
+
             if (await _repo.SaveAll())
             {
-                return Ok();
+                var topupHistory = new TopupHistory()
+                {
+                    OrderId = paypal.Id,
+                    AccountId = accountFromDb.Id,
+                    TopupDate = DateTime.Now,
+                    PaymentMethod = "Paypal",
+                    Amount = paypal.Payer.Purchase.Amount.Value,
+                    Currency = paypal.Payer.Purchase.Amount.Currency,
+                    Status = paypal.Status
+                };
+                _cRUDRepo.Create(topupHistory);
+                if (await _cRUDRepo.SaveAll())
+                {
+                    return Ok();
+                }
+                return StatusCode(500);
             }
             return StatusCode(500);
         }
+        // [HttpPut("{accountId}/topup/stripe")]
+        // public async Task<IActionResult> TopupWithStripe(int accountId){
+
+        // }
         [HttpPut("{accountId}/use/{itemId}")]
         public async Task<IActionResult> UseItem(int accountId, int itemId)
         {
@@ -542,22 +678,9 @@ namespace Engrisk.Controllers
             {
                 await DeletePhoto(account);
             }
-            var file = photo.File;
-            var uploadResult = new ImageUploadResult();
-            if (file.Length > 0)
-            {
-                using (var fileStream = file.OpenReadStream())
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, fileStream),
-                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
-                    };
-                    uploadResult = _cloud.Upload(uploadParams);
-                };
-            }
-            account.PhotoUrl = uploadResult.Url.ToString();
-            account.PublicId = uploadResult.PublicId.ToString();
+            var result = _cloud.UploadImage(photo.File);
+            account.PhotoUrl = result.PublicUrl;
+            account.PublicId = result.PublicId;
             if (await _repo.SaveAll())
             {
                 return Ok(new
@@ -570,43 +693,18 @@ namespace Engrisk.Controllers
         public async Task<bool> DeletePhoto(Engrisk.Models.Account account)
         {
             var deleteParams = new DeletionParams(account.PublicId);
-            var result = _cloud.Destroy(deleteParams);
-            if (result.Result != "OK")
+            if (_cloud.DeleteImage(account.PublicId))
             {
+                account.PhotoUrl = null;
+                account.PublicId = null;
+                if (await (_repo.SaveAll()))
+                {
+                    return true;
+                };
                 return false;
             }
-            account.PhotoUrl = null;
-            account.PublicId = null;
-            if (await (_repo.SaveAll()))
-            {
-                return true;
-            };
             return false;
         }
-        private async Task<string> CreateToken(Engrisk.Models.Account accountFromDb)
-        {
-            var roles = await _userManager.GetRolesAsync(accountFromDb);
-            var claims = new List<Claim>{
-                new Claim(ClaimTypes.NameIdentifier,accountFromDb.Id.ToString()),
-                new Claim(ClaimTypes.Name,accountFromDb.UserName)
-            };
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:TokenSecret").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(60),
-                SigningCredentials = creds
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
         private bool ComparePassword(string password, byte[] passwordHashed, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
@@ -634,6 +732,22 @@ namespace Engrisk.Controllers
                 passwordSalt = hmac.Key;
                 passwordHashed = hmac.ComputeHash(Encoding.ASCII.GetBytes(password));
             }
+        }
+        private void setTokenCookie(string token)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7),
+            };
+            Response.Cookies.Append("refreshToken", token, cookieOptions);
+        }
+        private string ipAddress()
+        {
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                return Request.Headers["X-Forwarded-For"];
+            else
+                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
         }
     }
 }

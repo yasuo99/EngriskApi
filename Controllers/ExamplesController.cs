@@ -19,6 +19,7 @@ namespace Engrisk.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery]SubjectParams subjectParams){
             var examplesFromDb = await _repo.GetAll<Example>(subjectParams);
+            Response.AddPaginationHeader(examplesFromDb.CurrentPage,examplesFromDb.PageSize,examplesFromDb.TotalItems,examplesFromDb.TotalPages);
             return Ok(examplesFromDb);
         }
         [HttpGet("{exampleId}")]

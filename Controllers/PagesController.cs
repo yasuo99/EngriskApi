@@ -17,53 +17,101 @@ namespace Engrisk.Controllers
     public class PagesController : ControllerBase
     {
         private readonly ICRUDRepo _repo;
-        private readonly CloudinaryDotNet.Account account;
-        private readonly CloudinaryDotNet.Cloudinary _cloudinary;
         private readonly CloudinaryHelper _cloudHelper;
         public PagesController(ICRUDRepo repo, IOptions<CloudinarySettings> cloudinarySettings)
         {
-            account = new CloudinaryDotNet.Account(){
+            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account()
+            {
                 ApiKey = cloudinarySettings.Value.ApiKey,
                 ApiSecret = cloudinarySettings.Value.ApiSecret,
                 Cloud = cloudinarySettings.Value.CloudName
             };
-            _cloudinary = new CloudinaryDotNet.Cloudinary(account);
-            _cloudHelper = new CloudinaryHelper(_cloudinary);
+            _cloudHelper = new CloudinaryHelper(account);
             _repo = repo;
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllBanner(){
-            var banners = await _repo.GetAll<Banner>();
+        [HttpGet("banners")]
+        public async Task<IActionResult> GetAllBanner([FromQuery] SubjectParams subjectParams)
+        {
+            var banners = await _repo.GetAll<Banner>(subjectParams);
             return Ok(banners);
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateBanner(BannerDTO banner){
+        [HttpGet("banners/{id}")]
+        public async Task<IActionResult> GetBanner(int id)
+        {
+            var bannerFromDb = await _repo.GetOneWithCondition<Banner>(banner => banner.Id == id);
+            if (bannerFromDb == null)
+            {
+                return NotFound();
+            }
+            return Ok(bannerFromDb);
+        }
+        [HttpGet("banners/published")]
+        public async Task<IActionResult> GetPublishedBanner([FromQuery] SubjectParams subjectParams)
+        {
+            var banners = await _repo.GetAll<Banner>(subjectParams, banner => banner.IsPublished == true);
+            return Ok(banners);
+        }
+        [HttpPost("banners")]
+        public async Task<IActionResult> CreateBanner([FromForm] BannerDTO banner)
+        {
             var file = banner.File;
             var result = _cloudHelper.UploadImage(file);
-            if(result != null){
-                 var createdBanner = new Banner(){
-                    PublicId = result.GetType().GetProperties().First(prop => prop.Name == "PublicId").GetValue(result,null).ToString(),
-                    PhotoUrl = result.GetType().GetProperties().First(prop => prop.Name == "PhotoUrl").GetValue(result,null).ToString(),
+            if (result != null)
+            {
+                var createdBanner = new Banner()
+                {
+                    PublicId = result.PublicId,
+                    PhotoUrl = result.PublicUrl,
                     IsPublished = false
                 };
-                if(await _repo.SaveAll()){
+                _repo.Create(createdBanner);
+                if (await _repo.SaveAll())
+                {
                     return Ok();
                 }
                 return StatusCode(500);
             }
             return StatusCode(500);
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBanner(int id){
+        [HttpDelete("banner/{id}")]
+        public async Task<IActionResult> DeleteBanner(int id)
+        {
             var bannerFromDb = await _repo.GetOneWithCondition<Banner>(banner => banner.Id == id);
-            if(bannerFromDb == null)
+            if (bannerFromDb == null)
             {
                 return NotFound();
             }
-            if(_cloudHelper.DeleteImage(bannerFromDb.PublicId)){
-                return NoContent();
+            if (_cloudHelper.DeleteImage(bannerFromDb.PublicId))
+            {
+                _repo.Delete(bannerFromDb);
+                if (await _repo.SaveAll())
+                {
+                    return NoContent();
+                }
+                return StatusCode(500);
             }
             return StatusCode(500);
+        }
+        [HttpPut("banners/{id}/publish")]
+        public async Task<IActionResult> PublishBanner(int id)
+        {
+            var bannerFromDb = await _repo.GetOneWithCondition<Banner>(banner => banner.Id == id);
+            if (bannerFromDb == null)
+            {
+                return NotFound();
+            }
+            bannerFromDb.IsPublished = true;
+            if (await _repo.SaveAll())
+            {
+                return Ok();
+            }
+            return StatusCode(500);
+        }
+        [HttpGet("footer")]
+        public async Task<IActionResult> GetAllFooter([FromQuery] SubjectParams subjectParams)
+        {
+            var footersFromDb = await _repo.GetAll<Footer>(subjectParams);
+            return Ok(footersFromDb);
         }
     }
 }

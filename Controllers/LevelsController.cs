@@ -26,6 +26,14 @@ namespace Engrisk.Controllers
             Response.AddPaginationHeader(levels.CurrentPage, levels.PageSize, levels.TotalItems, levels.TotalPages);
             return Ok(levels);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetail(int id){
+            var levelFromDb = await _repo.GetOneWithCondition<Level>(level => level.Id == id);
+            if(levelFromDb == null){
+                return NotFound();
+            }
+            return Ok(levelFromDb);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateLevel(Level level)
         {

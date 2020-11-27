@@ -75,3 +75,12 @@ C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Conf
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Data\AdminAccount.json
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Data\DailyMission.json
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Data\Role.json
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Google.Apis.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Google.Apis.Auth.PlatformServices.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Google.Apis.Auth.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Google.Apis.Core.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\MegaApiClient.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Google.Apis.Drive.v3.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Dropbox.Api.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\MimeMapping.dll

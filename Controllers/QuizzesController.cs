@@ -10,7 +10,7 @@ using Engrisk.Helper;
 using Engrisk.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Options;
 namespace Engrisk.Controllers
 {
     [ApiController]
@@ -19,20 +19,33 @@ namespace Engrisk.Controllers
     {
         private readonly ICRUDRepo _repo;
         private readonly IMapper _mapper;
-        public QuizzesController(ICRUDRepo repo, IMapper mapper)
+        private readonly CloudinaryHelper _cloud;
+        public QuizzesController(ICRUDRepo repo, IMapper mapper, IOptions<CloudinarySettings> cloudinarySettings)
         {
             _mapper = mapper;
             _repo = repo;
-
+            var account = new CloudinaryDotNet.Account(){
+                ApiKey = cloudinarySettings.Value.ApiKey,
+                ApiSecret = cloudinarySettings.Value.ApiSecret,
+                Cloud = cloudinarySettings.Value.CloudName
+            };
+            _cloud = new CloudinaryHelper(account);
         }
         [HttpGet]
         public async Task<IActionResult> GetAllQuizzes([FromQuery] SubjectParams subjectParams)
         {
-            return Ok(await _repo.GetAll<Quiz>(subjectParams,null,"Questions"));
+            return Ok(await _repo.GetAll<Quiz>(subjectParams,null,""));
         }
-        [HttpPost("new")]
-        public async Task<IActionResult> CreateQuiz(Quiz quiz)
+        [HttpPost]
+        public async Task<IActionResult> CreateQuiz([FromForm] QuizDTO quizDTO)
         {
+            Quiz quiz = new Quiz();
+            quiz = _mapper.Map(quizDTO, quiz);
+            var result = _cloud.UploadImage(quizDTO.File);
+            if(result != null){
+                quiz.PublicId = result.PublicId;
+                quiz.QuizPhoto = result.PublicUrl;
+            };
             _repo.Create(quiz);
             if (await _repo.SaveAll())
             {
@@ -40,7 +53,7 @@ namespace Engrisk.Controllers
             }
             throw new Exception("Error on create new quiz");
         }
-        [HttpPut("update/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQuiz(int id, Quiz quiz)
         {
             if (id != quiz.Id)
@@ -74,7 +87,7 @@ namespace Engrisk.Controllers
             }
             throw new Exception("Error on deleting quiz");
         }
-        [HttpGet("exam/{id}/do")]
+        [HttpGet("{id}/do")]
         public async Task<IActionResult> DoExam(int id)
         {
             var examFromDb = await _repo.GetOneWithConditionTracking<Quiz>(quiz => quiz.Id == id, "Questions");
@@ -97,7 +110,7 @@ namespace Engrisk.Controllers
             }
             return Ok(returnQuestions);
         }
-        [HttpPost("exam/{id}/done")]
+        [HttpPost("{id}/done")]
         public async Task<IActionResult> DoneExam(int id, List<AnswerDTO> answers)
         {
             var examFromDb = await _repo.GetOneWithConditionTracking<Quiz>(quiz => quiz.Id == id, "Questions");

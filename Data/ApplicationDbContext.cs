@@ -38,6 +38,7 @@ namespace Engrisk.Data
         public DbSet<StringFilter> StringFilters { get; set; }
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Footer> Footers { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

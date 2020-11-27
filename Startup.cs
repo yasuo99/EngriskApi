@@ -7,6 +7,7 @@ using AutoMapper;
 using Engrisk.Data;
 using Engrisk.Helper;
 using Engrisk.Models;
+using Engrisk.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -30,7 +31,6 @@ namespace Engrisk
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -60,6 +60,7 @@ namespace Engrisk
             identityBuider.AddSignInManager<SignInManager<Account>>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
+                options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
@@ -67,6 +68,7 @@ namespace Engrisk
                     ValidateIssuer = false,
                     ValidateAudience = false,
                 };
+                options.SaveToken = true;
             }
             );
             // services.AddAuthorization(opts => {
@@ -76,17 +78,38 @@ namespace Engrisk
             //     opts.AddPolicy("RequireForumRole", policy => policy.RequireRole("forumadmin","forummod"));
             // });
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddControllers(opts => {
+            services.AddControllers(opts =>
+            {
                 // var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 // opts.Filters.Add(new AuthorizeFilter(policy));
             })
             .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddScoped<IAuthRepo, AuthRepo>();
             services.AddScoped<ICRUDRepo, CRUDRepo>();
+            services.AddScoped<IAuthService, GoogleAuthService>();
+            services.AddHttpClient<IAuthService, FacebookAuthService>();
+            services.AddScoped<IAuthService, FacebookAuthService>();
+            services.AddScoped<IUploadService,DropBoxService>();
+            services.AddTransient<GoogleAuthService>();
+            services.AddTransient<FacebookAuthService>();
+            services.AddTransient<Func<ServiceEnum, IAuthService>>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case ServiceEnum.Google:
+                        return serviceProvider.GetService<GoogleAuthService>();
+                    case ServiceEnum.Facebook:
+                        return serviceProvider.GetService<FacebookAuthService>();
+                    default:
+                        return null;
+                }
+            });
             services.AddAutoMapper(typeof(AuthRepo).Assembly).AddAutoMapper(typeof(ICRUDRepo).Assembly);
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.Configure<GoogleAuthConfig>(Configuration.GetSection("Google"));
+            services.Configure<FacebookAuthConfig>(Configuration.GetSection("Facebook"));
+            services.Configure<DropBoxSettings>(Configuration.GetSection("Dropbox"));
             services.AddCors();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Engrisk.Models;
 
 namespace Engrisk.DTOs
@@ -31,5 +32,7 @@ namespace Engrisk.DTOs
         public virtual IEnumerable<AccountPostDTO> Posts { get; set; }
         public virtual IEnumerable<AccountCommentDTO> Comments { get; set; }
         public virtual IEnumerable<PostUpvoteDTO> PostUpvotes { get; set; }
+        [JsonIgnore]
+        public string RefreshToken { get; set; }
     }
 }

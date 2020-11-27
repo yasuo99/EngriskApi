@@ -141,6 +141,19 @@ namespace Engrisk.Data
             return await queryableDbSet.FirstOrDefaultAsync();
         }
 
+        public async Task<T> GetOneWithManyToMany<T>(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IQueryable<T>> eagerLoad = null) where T:class
+        {
+            var dbSet = _db.Set<T>();
+            var queryableDbSet = dbSet.Take(dbSet.Count());
+            if(expression != null){
+                queryableDbSet = queryableDbSet.Where(expression);
+            }
+            if(eagerLoad != null){
+                return await eagerLoad(queryableDbSet).FirstOrDefaultAsync();
+            }
+            return await queryableDbSet.FirstOrDefaultAsync();
+        }
+
         public IEnumerable<T> GetWithProperties<T>(Dictionary<dynamic, dynamic> properties, Expression<Func<T, bool>> expression, string includeProperties = "") where T : class
         {
             var dbSet = _db.Set<T>();

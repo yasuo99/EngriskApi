@@ -18,6 +18,7 @@ namespace Engrisk.Helper
             .ForMember(gift => gift.Type, options => options.MapFrom(src => src.Attendance.Type))
             .ForMember(gift => gift.Value, options => options.MapFrom(src => src.Attendance.Value));
             CreateMap<Question, QuestionDTO>();
+            CreateMap<QuestionDTO,Question>();
             CreateMap<Quiz,ExamDTO>();
             CreateMap<QuizQuestion, QuestionDTO>()
             .ForMember(question => question.Id, options => options.MapFrom(src => src.Question.Id))
@@ -27,7 +28,9 @@ namespace Engrisk.Helper
             .ForMember(question => question.D, options => options.MapFrom(src => src.Question.D))
             .ForMember(question => question.Content, options => options.MapFrom(src => src.Question.Content))
             .ForMember(question => question.IsListeningQuestion, options => options.MapFrom(src => src.Question.IsListeningQuestion))
-            .ForMember(question => question.Score, options => options.MapFrom(src => src.Question.Score));
+            .ForMember(question => question.Score, options => options.MapFrom(src => src.Question.Score))
+            .ForMember(question => question.Answer, opts => opts.MapFrom(src => src.Question.Answer))
+            .ForMember(question => question.PhotoUrl, opts => opts.MapFrom(src => src.Question.PhotoUrl));
             CreateMap<Post,PostDTO>()
             .ForMember(post => post.PostUpvotes, options => options.MapFrom(src => src.PostUpvotes.Select(u => new UpvoteDTO(){Id = u.AccountId,Username = u.Account.UserName})))
             .ForMember(post => post.AccountUserName, opts => opts.MapFrom(src => src.Account.UserName));
@@ -39,6 +42,7 @@ namespace Engrisk.Helper
             CreateMap<PostUpvote,PostUpvoteDTO>().ForMember(upvote => upvote.PostTitle,options => options.MapFrom(src => src.Post.Title))
             .ForMember(upvote => upvote.TotalUpvote,opts => opts.MapFrom(src => src.Post.UpVote));
             CreateMap<Group,GroupDTO>().ForMember(group => group.AccountUsername, opts => opts.MapFrom(src => src.Account.UserName));
+            CreateMap<QuizDTO,Quiz>();
         }
     }
 }

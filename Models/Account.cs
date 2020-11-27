@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Engrisk.Models
@@ -17,6 +18,9 @@ namespace Engrisk.Models
         public bool IsDisabled { get; set; }
         public string PhotoUrl { get; set; }
         public string PublicId { get; set; }
+        /// <summary>DoWork is a method in the TestClass class.
+        /// <para>Here's how you could make a second paragraph in a description. <see cref="System.Console.WriteLine(System.String)"/> for information about output statements.</para>
+        /// </summary>
         public bool Streak { get; set; }
         public virtual IEnumerable<AccountBadge> AccountBadges { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
@@ -30,5 +34,10 @@ namespace Engrisk.Models
         public virtual IEnumerable<PostUpvote> PostUpvotes { get; set; }
         public virtual IEnumerable<LikedPost> LikedPosts { get; set; }
         public virtual IEnumerable<LikedComment> LikedComments { get; set; }
+        ///<summary>
+        ///<para>Danh sách refresh token</para>
+        ///</summary>
+        [JsonIgnore]
+        public virtual List<RefreshToken> RefreshTokens { get; set; }
     }
 }

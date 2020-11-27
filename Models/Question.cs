@@ -5,6 +5,8 @@ namespace Engrisk.Models
     public class Question
     {
         public int Id { get; set; }
+        public string PhotoUrl { get; set; }
+        public string PublicId { get; set; }
         public string Content { get; set; }
         public string A { get; set; }
         public string B { get; set; }

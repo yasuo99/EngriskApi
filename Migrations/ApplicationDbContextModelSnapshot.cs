@@ -272,6 +272,27 @@ namespace Engrisk.Migrations
                     b.ToTable("Badges");
                 });
 
+            modelBuilder.Entity("Engrisk.Models.Banner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
+                });
+
             modelBuilder.Entity("Engrisk.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -371,6 +392,36 @@ namespace Engrisk.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Examples");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.Footer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacebookLink1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FacebookLink2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneContact")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaxCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Footers");
                 });
 
             modelBuilder.Entity("Engrisk.Models.Group", b =>
@@ -625,6 +676,12 @@ namespace Engrisk.Migrations
                     b.Property<bool>("IsListeningQuestion")
                         .HasColumnType("bit");
 
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
@@ -661,8 +718,17 @@ namespace Engrisk.Migrations
                     b.Property<int>("PassScore")
                         .HasColumnType("int");
 
+                    b.Property<string>("PublicId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("QuizName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QuizPhoto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RequireLogin")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TotalScore")
                         .HasColumnType("int");
@@ -904,6 +970,47 @@ namespace Engrisk.Migrations
                     b.HasOne("Engrisk.Models.Level", null)
                         .WithMany("Accounts")
                         .HasForeignKey("LevelId");
+
+                    b.OwnsMany("Engrisk.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<int>("AccountId")
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime>("Created")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("CreatedByIp")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("Expires")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("ReplacedByToken")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime?>("Revoked")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("RevokedByIp")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Token")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("AccountId");
+
+                            b1.ToTable("RefreshTokens");
+
+                            b1.WithOwner("Account")
+                                .HasForeignKey("AccountId");
+                        });
                 });
 
             modelBuilder.Entity("Engrisk.Models.AccountAttendance", b =>

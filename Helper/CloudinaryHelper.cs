@@ -1,5 +1,6 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Engrisk.DTOs;
 using Microsoft.AspNetCore.Http;
 
 namespace Engrisk.Helper
@@ -7,12 +8,15 @@ namespace Engrisk.Helper
     public class CloudinaryHelper
     {
         private readonly Cloudinary _cloud;
-        public CloudinaryHelper(Cloudinary cloud)
+        public CloudinaryHelper(Account account)
         {
-            _cloud = cloud;
+            _cloud = new Cloudinary(account);
         }
-        public object UploadImage(IFormFile file)
+        public CloudinaryDTO UploadImage(IFormFile file)
         {
+            if(file == null){
+                return null;
+            }
             var uploadResult = new ImageUploadResult();
             if (file.Length > 0)
             {
@@ -26,8 +30,11 @@ namespace Engrisk.Helper
                     uploadResult = _cloud.Upload(uploadParams);
                 };
             }
-            if(uploadResult.StatusCode == System.Net.HttpStatusCode.Created){
-                return new {
+            else{
+                return null;
+            }
+            if(uploadResult.StatusCode == System.Net.HttpStatusCode.OK){
+                return new CloudinaryDTO{
                     PublicId = uploadResult.PublicId,
                     PublicUrl = uploadResult.Url.ToString()
                 };

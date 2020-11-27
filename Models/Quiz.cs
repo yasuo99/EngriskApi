@@ -5,6 +5,8 @@ namespace Engrisk.Models
     public class Quiz
     {
         public int Id { get; set; }
+        public string PublicId { get; set; }
+        public string QuizPhoto { get; set; }
         public string QuizName { get; set; }
         public int DifficultLevel { get; set; }
         public int ExpGain { get; set; }
@@ -14,6 +16,7 @@ namespace Engrisk.Models
         public int TotalScore { get; set; }
         public int PassScore { get; set; }
         public int DurationTime { get; set; }
+        public bool RequireLogin { get; set; }
         public virtual IEnumerable<QuizQuestion> Questions { get; set; }
 
     }
