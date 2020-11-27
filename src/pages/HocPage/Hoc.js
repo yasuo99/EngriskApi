@@ -1,4 +1,4 @@
-import React, { PureComponent, Suspense } from 'react';
+import React, { PureComponent, Suspense, useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { getQuestion, submitQuestion } from '../../actions/questionActions';
 import { doQuiz } from '../../actions/quizActions';
@@ -6,6 +6,45 @@ import Header from '../Header/Header';
 import Loader from 'react-loader-spinner';
 import { connect } from 'react-redux';
 import { ButtonToolbar, ProgressBar } from 'react-bootstrap';
+import ReactPlayer from 'react-player';
+
+const useAudio = url => {
+    const [isMounted, setIsMounted] = useState(false)
+    const [audio] = useState(new Audio(url));
+    const [playing, setPlaying] = useState(false);
+
+    const toggle = () => setPlaying(!playing);
+
+    useEffect(() => {
+        setIsMounted(true);
+        playing ? audio.play() : audio.pause();
+        if(isMounted === false){
+            audio.pause();
+        }
+    },
+        [playing]
+    );
+
+    useEffect(() => {
+        audio.addEventListener('ended', () => setPlaying(false));
+        return () => {
+            audio.removeEventListener('ended', () => setPlaying(false));
+            setIsMounted(false);
+        };
+    }, []);
+
+    return [playing, toggle];
+};
+
+const Player = ({ url }) => {
+    const [playing, toggle] = useAudio(url);
+
+    return (
+        <div>
+            <button onClick={toggle}><i className="fas fa-volume-up"></i> {playing ? "Pause" : "Play"}</button>
+        </div>
+    );
+};
 class Hoc extends PureComponent {
     constructor(props) {
         super(props);
@@ -26,7 +65,6 @@ class Hoc extends PureComponent {
             result: false,
             done: false,
         }
-        console.log(this.props.account);
     }
     async componentDidMount() {
         const { match: { match: { params } } } = this.props;
@@ -169,12 +207,14 @@ class Hoc extends PureComponent {
                             </div>
                             <div className="row kechan mt-5 kechan">
                                 <div className="col-8 offset-2">
-                                    <div className="row">
-                                        <div className="col-5"><h2>{currentQuestion.content}</h2>
-                                            <p className="mb-5">Có nghĩa là?</p></div>
-                                        <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div>
-                                    </div>
-
+                                    {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
+                                        <p className="mb-5">Có nghĩa là?</p></div>
+                                        <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
+                                        {currentQuestion.isListeningQuestion === true && 
+                                        <div className="row">
+                                            <b>Chọn đáp án đúng</b>
+                                            <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px"/>
+                                            </div>}
                                     <div className="row mt-2">
                                         <div className="col-6">
                                             <div className="dapan" style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
@@ -223,8 +263,7 @@ class Hoc extends PureComponent {
     }
 }
 const mapStateToProps = (state) => {
-    const {auth} = state;
-    console.log(state);
+    const { auth } = state;
     return {
         account: auth.account
     }

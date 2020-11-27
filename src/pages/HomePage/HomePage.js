@@ -51,7 +51,7 @@ class HomePage extends Component {
                     <div className="col-4 offset-4 ">
                       <div className="nen-xam ml-4">
                         <div className="vongtron-tim" />
-                        <Link to="#">
+                        <Link to="/baihoc/2">
                           <img src="image/easter-egg.png" className="img-item" />
                           <h5 className="tieude">Cơ bản 1</h5>
                         </Link>
@@ -62,7 +62,7 @@ class HomePage extends Component {
                     <div className="col-4 offset-2">
                       <div className="nen-xam ml-4">
                         <div className="vongtron-tim" />
-                        <Link to="#">
+                        <Link to="/baihoc/3">
                           <img src="image/easter-egg.png" className="img-item" />
                           <h5 className="tieude">Cơ bản 2</h5>
                         </Link>
