@@ -185,3 +185,125 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #caidat .caidat-matkhau{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
 #caidat .caidat-matkhau a{color: #828282; font-weight:bold;}
 #caidat .caidat-matkhau a:hover{color: #4f4f4f;text-decoration: none;}
+
+
+/* -------------------------------Landing Page--------------------------------- */
+/* ---------------------------------------------------------------------------- */
+#duolingo{background:url(./../image/bg.jpg);background-size: cover;height: 100vh}
+#duolingo ul .ring-1 {position: absolute;top:90px;left:110px;width: 400px;height: 400px;border: 1px solid rgba(33, 150, 243, 0.5);border-radius: 50%;animation: rotate360 210s linear infinite}
+#duolingo ul.ring-2 {position: absolute;top:145px;left: 155px;width: 300px;height: 300px;border: 1px solid rgba(33, 150, 243, 0.5);border-radius: 50%; animation: rotate360 180s linear infinite;z-index: 1;}
+#duolingo ul.ring-3 {position: absolute;top:200px;left: 210px;width: 200px;height: 200px;border: 1px solid rgba(33, 150, 243, 0.5);border-radius: 50%;}
+#duolingo .orbit-center {position: relative;top: 230px;left: 220px;z-index: 5;font-size: 30px;width: 160px;height: 90px;text-align: center;border-radius: 50%;}
+#duolingo .orbit-icon1 {position: absolute;width: 100px;top: 10px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo .orbit-icon2 {position: absolute;width: 100px;top: 150px;left:-30px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo .orbit-icon3 {position: absolute;width: 120px;top: 300px;left:260px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo .orbit-icon4 {position: absolute;width: 100px;top: -10px;left:190px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo li {list-style: none;}
+#duolingo .nd{top: 130px;right: 100px;}
+#duolingo .btn{box-shadow: 1px 3px 1px #48871B;outline: none;border: 0;width: 350px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
+
+#nd-duolingo .cachhoc p{font-size: 16px;}
+#nd-duolingo .kechan{border-bottom: 2px solid #ccc;}
+
+#footer-duolingo{background:url(./../image/bg.jpg);background-size: cover;height: 50vh}
+#footer-duolingo .btn{box-shadow: 1px 3px 1px #48871B;outline: none;border: 0;width: 200px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
+
+#conference-timeline {position: relative;width: 100%;margin: 0 auto; }
+#conference-timeline .timeline-start,#conference-timeline .timeline-end {display: table;font-size: 18px;font-weight: 900;text-transform: uppercase;background: #77B748;padding: 15px 23px;color: #fff;max-width: 15%;width: 100%;text-align: center;margin: 0 auto;}
+#conference-timeline .conference-center-line {position: absolute; width: 3px;height: 100%;top: 0;left: 50%;margin-left: -2px;background: #77B748;z-index: -1;}
+#conference-timeline .conference-timeline-content {padding-top: 67px;padding-bottom: 67px;}
+.timeline-article {width: 100%;height: 100%;position: relative;overflow: hidden;margin: 20px 0;}
+.timeline-article .content-left-container,
+.timeline-article .content-right-container {max-width: 44%;width: 100%;}
+.timeline-article .content-left,
+.timeline-article .content-right {position: relative;width: auto;border: 1px solid #77B748;background-color: #fff;box-shadow: 0 1px 3px rgba(0,0,0,.03);padding: 27px 25px;}
+.timeline-article p {margin: 0 0 0 60px;padding: 0; font-weight: 400;color: #242424;font-size: 14px;line-height: 24px;position: relative;}
+.timeline-article p span.article-number {position: absolute;font-weight: 300;font-size: 44px;top: 10px;left: -60px;color: #77B748;}
+.timeline-article .content-left-container {float: left;}
+.timeline-article .content-right-container {float: right;}
+.timeline-article .content-left:before,
+.timeline-article .content-right:before{position: absolute;top: 20px;font-size: 23px;font-family: "FontAwesome";color: #fff;}
+.timeline-article .meta-date {position: absolute;top: 0;left: 50%;width: 62px;height: 62px;margin-left: -31px;color: #fff;border-radius: 100%;background: #77B748;}
+
+      @media only screen and (max-width: 768px) {
+        #conference-timeline .timeline-start,
+        #conference-timeline .timeline-end {
+          margin: 0;
+        }
+        #conference-timeline .conference-center-line {
+          margin-left: 0;
+          left: 50px;
+        }
+        .timeline-article .meta-date {
+          margin-left: 0;
+          left: 20px;
+        }
+        .timeline-article .content-left-container,
+        .timeline-article .content-right-container {
+          max-width: 100%;
+          width: auto;
+          float: none;
+          margin-left: 110px;
+          min-height: 53px;
+        }
+        .timeline-article .content-left-container {
+          margin-bottom: 20px;
+        }
+        .timeline-article .content-left,
+        .timeline-article .content-right {
+          padding: 10px 25px;
+          min-height: 65px;
+        }
+      }
+      @media only screen and (max-width: 480px) {
+        .timeline-article p {
+          margin: 0;
+        }
+        .timeline-article p span.article-number {
+          display: none;
+        }
+        
+      }
+
+/* ---------------------Nạp tiền---------------------- */
+/* --------------------------------------------------- */
+#thanhtoan .col-8{display: inherit;}
+#thanhtoan input{height:100%;display: block;width: 300px;padding: 10px;font-size: 16px;color: #555;margin-right: 10px;outline: none;border: 2px solid #ccc; border-radius: 5px;}
+#thanhtoan input:focus{border: 2px solid #ccc!important;}
+#thanhtoan .btn{padding: 10px;outline: none!important;border: none;}
+#thanhtoan .dropdown-item{width: 190px;padding: 10px;}
+#thanhtoan .nd{height: 300px;border: 1px solid #77B748;}
+
+/* ---------------------------------FLASH CARD------------------------------ */
+/* ------------------------------------------------------------------------- */
+#flashcard .bg-flashcard{
+  background-image: linear-gradient(45deg, rgba(38, 79, 121, 0.7) 55%, rgba(30,66,88,0.7)), url("/image/banner.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 90vh;
+  /* view height */
+  background-attachment: fixed;
+}
+#flashcard .bg-flashcard{ height: 500px;position: relative}
+#flashcard .bg-flashcard span{position: absolute; top: 430px;font-size: 80px;color: #fff;left: 47%;}
+#flashcard .flip-container {perspective: 1000;float: left;cursor:pointer;position: absolute;top: 150px;left: 170px;}
+#flashcard .flippable {transition: 0.5s;transform-style: preserve-3d;position: relative;}
+#flashcard .flipme {transform: rotateY(180deg);}
+#flashcard .flip-container, .front, .back {width: 500px;height: 200px;text-align: center;font-size: 40px;border-radius: 5px;}
+      
+#flashcard .front, .back {backface-visibility: hidden;position: absolute;box-shadow: 8px 8px 8px rgba(5, 45, 70, 0.9)}
+      
+      
+#flashcard .front { z-index: 2;color: white;}
+#flashcard .front h2{margin-top: 40px;}
+#flashcard .front p{font-size: 16px;}
+#flashcard .back {transform: rotateY(180deg);background-color: #fff;}
+#flashcard .back p{font-size: 24px;margin-top: 80px;}
+      
+#flashcard .flashcard .front{background:#fff;}
+
+#flashcard ol{ height:500px;overflow-x:hidden; overflow-y:auto;background-color: #77B748;}
+#flashcard li{font-weight: bold;}
+#flashcard li:hover{background-color: #48871B}
+#flashcard a{text-decoration: none; color: #eee;font-size: 16px; padding-left: 20px;font-weight: bold;}
+#flashcard .img-100{width: 100%;}

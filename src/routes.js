@@ -11,12 +11,22 @@ import Admin from './pages/Admin/Admin';
 import Management from './pages/Admin/Management';
 import HocHinhAnh from './pages/HocPage/HocHinhAnh';
 import Hoc from './pages/HocPage/Hoc';
-
+import CaiDatMatKhau from './pages/CaiDatPage/CaiDatMatKhau';
+import CaiDatTaiKhoan from './pages/CaiDatPage/CaiDatTaiKhoan';
+import LandingPage from './pages/LandingPage/LandingPage';
+import NapTienPage from './pages/NapTienPage/NapTienPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
+import FlashCardPage from './pages/FlashCardPage/FlashCardPage';
 const routes = [
+    {
+        path: '/home',
+        exact: true,
+        main: () => <HomePage />
+    },
     {
         path: '/',
         exact: true,
-        main: () => <HomePage />
+        main: () => <LandingPage />
     },
     {
         path: '/thaoluan',
@@ -49,6 +59,30 @@ const routes = [
         main: () => <HocHinhAnh />
     },
     {
+        path: '/hoc',
+        exact: true,
+        main: () => <Hoc />
+    },
+    {
+        path: '/naptien',
+        exact: true,
+        main: () => <NapTienPage />
+    },
+    {
+        path: '/flashcard',
+        exact: true,
+        main: () => <FlashCardPage />
+    },
+    {
+        path: '/caidatmatkhau',
+        exact: true,
+        main: () => <CaiDatMatKhau />
+    },
+    {
+        path: '/caidattaikhoan',
+        exact: true,
+        main: () => <CaiDatTaiKhoan />
+    },
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
@@ -73,6 +107,11 @@ const routes = [
         exact: true,
         main: () => <Management />
     },
+    {
+        path: '/loi',
+        exact: false,
+        main: () => <NotFoundPage />
+    }
 ];
 
 export default routes;
