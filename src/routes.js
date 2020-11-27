@@ -59,11 +59,6 @@ const routes = [
         main: () => <HocHinhAnh />
     },
     {
-        path: '/hoc',
-        exact: true,
-        main: () => <Hoc />
-    },
-    {
         path: '/naptien',
         exact: true,
         main: () => <NapTienPage />
@@ -83,6 +78,7 @@ const routes = [
         exact: true,
         main: () => <CaiDatTaiKhoan />
     },
+    {
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
