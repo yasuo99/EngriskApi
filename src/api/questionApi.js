@@ -12,6 +12,11 @@ const questionApi = {
         const url = '/questions';
         return axiosClient.post(url,body);
     },
+    submitQuestion: (id,body) => {
+        const url = `/questions/${id}/check`;
+        return axiosClient.post(url,body);
+    }
+    ,
     updateQuestion: (id, body) => {
         const url = `/questions/${id}`;
         return axiosClient.put(url, body);

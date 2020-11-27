@@ -38,13 +38,16 @@ class SignIn extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.signIn(this.state);
+    const result = this.props.signIn(this.state);
+    // if(result.token){
+    //   localStorage.setItem('token',result.token);
+    //   localStorage.setItem('account',result.account);
+    // }
   };
 
   render() {
-    // const { uid } = this.props;
-    // console.log(uid)
-    // if(uid) return <Redirect to="/"/>
+    const { email } = this.props;
+    if(email) return <Redirect to="/"/>
     return (
       <form className="login100-form validate-form"
         autoComplete="off"
@@ -75,10 +78,10 @@ class SignIn extends Component {
 }
 
 const mapStateToProps = (state) => {
-  // const uid = state.data.Account.id
-  // return {
-  //   uid: uid,
-  // };
+  const email = state.auth.account.email
+  return {
+    email: email,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
