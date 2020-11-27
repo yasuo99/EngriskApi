@@ -17,7 +17,7 @@ export const facebookSignIn = (token) => {
         axiosClient.post(url,token).then(response => {
             console.log(response);
             return (
-                dispatch({ type: "SIGN_IN" }))
+                dispatch({ type: "SIGN_IN", account: response.account, token: response.token }))
         });
     }
 }
@@ -28,8 +28,10 @@ export const signIn = (user) => {
             .then(res => {
                 console.log(res)
                 if (res) {
+                    localStorage.setItem('account',JSON.stringify(res.account));
+                    localStorage.setItem('token',res.token);
                     return (
-                        dispatch({ type: "SIGN_IN" }))
+                        dispatch({ type: "SIGN_IN", account: res.account, token: res.token }))
                 }
                 // for (var i = 0; i < users.length; i++) {
                 //     if (users[i].Email === user.email) {

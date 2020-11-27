@@ -83,6 +83,10 @@ const routes = [
         exact: true,
         main: () => <CaiDatTaiKhoan />
     },
+        path: '/baihoc/:quizId',
+        exact: true,
+        main: (match) => <Hoc match={match}/>,
+    },
     {
         path: '/signin',
         exact: true,

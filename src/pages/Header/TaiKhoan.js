@@ -6,7 +6,7 @@ const TaiKhoan = ({status}) => {
             <div>
                 <div className="thongbao">
                           <div className="row mt-2">
-                            <div className="col-2"><img src="image/gem.png" className="pl-2" /></div>
+                            <div className="col-2"><img src="/image/gem.png" className="pl-2" /></div>
                             <div className="col-10">
                               <p className="pl-2">Bạn nhận được phần thưởng là 10 lingot vì giữ được 7 ngày steak</p>
                             </div>
@@ -39,7 +39,7 @@ const TaiKhoan = ({status}) => {
             <div>
                 <div className="thongbao">
                           <div className="row mt-2">
-                            <div className="col-2"><img src="image/gem.png" className="pl-2" /></div>
+                            <div className="col-2"><img src="/image/gem.png" className="pl-2" /></div>
                             <div className="col-10">
                               <p className="pl-2">Bạn nhận được phần thưởng là 10 lingot vì giữ được 7 ngày steak</p>
                             </div>
@@ -58,7 +58,7 @@ const TaiKhoan = ({status}) => {
                           <Link className="dropdown-item" to="#">Hỗ trợ</Link>
                         </div>
                         <div className="taikhoan">
-                          <Link className="dropdown-item" to="#">Đăng Nhập</Link>
+                          <Link className="dropdown-item" to="/signin">Đăng Nhập</Link>
                         </div>
                        
             </div>

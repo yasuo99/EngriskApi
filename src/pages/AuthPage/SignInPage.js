@@ -5,6 +5,7 @@ import SignIn from "./../../components/auth/SignIn"
 import Facebook from '../../components/facebook/Facebook'
 import Google from '../../components/google/Google'
 import Paypal from "../../components/paypal/Paypal";
+import Stripe from "../../components/stripe/Stripe";
 class SignInPage extends Component {
 
   render() {
@@ -20,6 +21,7 @@ class SignInPage extends Component {
         <Facebook/>
         <Google/>
         <Paypal/>
+        <Stripe/>
        </div>
     </div>
       );
