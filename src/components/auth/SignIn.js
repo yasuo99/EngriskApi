@@ -6,7 +6,7 @@ import wordApi from '../../api/wordApi';
 class SignIn extends Component {
   state = {
     loginMethod: "",
-    password: "",
+    password: ""
   };
 
 
@@ -46,8 +46,8 @@ class SignIn extends Component {
   };
 
   render() {
-    const { email } = this.props;
-    if(email) return <Redirect to="/"/>
+    const token = localStorage.getItem('token');
+    if(this.props.isLoggedIn) return <Redirect to="/"/>
     return (
       <form className="login100-form validate-form"
         autoComplete="off"
@@ -78,10 +78,12 @@ class SignIn extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const email = state.auth.account.email
+  console.log(state);
+  const {isLoggedIn} = state.auth;
+  console.log(isLoggedIn);
   return {
-    email: email,
-  };
+    isLoggedIn: isLoggedIn
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
