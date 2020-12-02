@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../Header/Header';
+import ListPost from '../../components/thaoluan/ListPost'
+import Post from '../../components/thaoluan/Post';
+import DangTheoDoi from '../../components/thaoluan/DangTheoDoi';
 
 class ThaoLuanPage extends Component {
     render() {
@@ -26,170 +29,45 @@ class ThaoLuanPage extends Component {
                                 </ul>
                                 <div className="tab-content mt-3">
                                     <div className="tab-pane fade show active" id="tabone" role="tabpanel">
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><Link to="/thaoluanchitiet">Tìm hiểu về những loại bánh ngọt trên thế giới</Link></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
+                                        <Post></Post>
                                     </div>
+                                       
                                     <div className="tab-pane fade" id="tabtwo" role="tabpanel">
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
+                                    <Post></Post>
                                     </div>
                                     <div className="tab-pane fade" id="tabthree" role="tabpanel">
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src="image/imag-01.jpg" /></div>
-                                            <div className="col-md-8 pt-3">
-                                                <h5><a href="#">Tìm hiểu về những loại bánh ngọt trên thế giới</a></h5>
-                                                <p>3 ngày trước từ ChorlesVenn</p>
-                                            </div>
-                                            <div className="col-2 text-right pt-3"><img src="image/iconfinder___Message_1904663.png" /> 47</div>
-                                        </div>
+                                    <Post></Post>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-4 mt-5">
                                 <input className="form-control" type="text" placeholder="Tìm kiếm" aria-label="Search" />
-                                <div className="theodoi mt-4">
-                                    <div className="row pt-3">
-                                        <div className="col-8">
-                                            <h4>Đang Theo Dõi:</h4>
-                                        </div>
-                                        <div className="col-4 pt-2"><a href="#">SỬA ĐỔI</a></div>
-                                    </div>
-                                    <div className="nd-theodoi mt-2">
-                                        <img src="image/united-states.png" className="pr-3" />
-                                        <a href="#">Duolingo</a>
-                                    </div>
-                                    <div className="nd-theodoi mt-2">
-                                        <img src="image/united-states.png" className="pr-3" />
-                                        <a href="#">Duolingo</a>
-                                    </div>
-                                    <div className="nd-theodoi mt-2">
-                                        <img src="image/united-states.png" className="pr-3" />
-                                        <a href="#">Duolingo</a>
-                                    </div>
-                                </div>
+                                <DangTheoDoi></DangTheoDoi>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
         );
+
     }
+    // showWords = (posts)=>{
+    //     var result = null;
+    //     if( posts.length > 0 ){
+    //         result = posts.map((post, index) => {
+    //             return(
+    //                <Post
+    //                     key = {index}
+    //                     post = {post}
+    //                     index = {index}
+                   
+    //                />
+    //             )
+    //         })
+    //     }
+    //     return result;
+    // }
+
 }
 export default ThaoLuanPage;
 

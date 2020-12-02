@@ -17,6 +17,7 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import NapTienPage from './pages/NapTienPage/NapTienPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 import FlashCardPage from './pages/FlashCardPage/FlashCardPage';
+import ManagementWord from './pages/Admin/ManagementWord';
 const routes = [
     {
         path: '/home',
@@ -102,6 +103,11 @@ const routes = [
         path: '/management',
         exact: true,
         main: () => <Management />
+    },
+    {
+        path: '/managementword',
+        exact: true,
+        main: () => <ManagementWord />
     },
     {
         path: '/loi',
