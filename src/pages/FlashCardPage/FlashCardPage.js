@@ -45,14 +45,15 @@ class FlashCardPage extends Component {
         return await getAllWord();
     }
     selectWord = (e) => {
-        e.preventDefault();
-        console.log(e.target.id);
+        const index = e.target.id;
+        console.log(index);
         this.setState({
-            index: e.target.id - 1,
-            currentWord: this.state.words[e.target.id - 1]
+            index: index,
+            currentWord: this.state.words[index]
         });
     }
-    previousWord = () => {
+    previousWord = (e) => {
+        e.preventDefault();
         const index = this.state.index - 1;
         if(index >= 0){
             this.setState({
@@ -61,9 +62,10 @@ class FlashCardPage extends Component {
             });
         }
     }
-    nextWord = () => {
+    nextWord = (e) => {
+        e.preventDefault();
         const index = this.state.index + 1;
-        if (index < this.state.words.length) {
+        if (index <= this.state.words.length) {
             this.setState({
                 index: index,
                 currentWord: this.state.words[index]
@@ -72,14 +74,14 @@ class FlashCardPage extends Component {
     }
     render() {
         const listWord = this.state.words.map((word) =>
-            <li key={word.id} id={word.id} onClick={this.selectWord}><a href="#">{word.eng}</a></li>
+            <li key={word.id} id={word.id - 1} className="text-center word-list" onClick={this.selectWord}>{word.eng}</li>
         );
         const examples = this.state.currentWord.examples.map((example) =>
             <p key={example.exampleId}>{example.example.eng}</p>
         );
         const { currentWord ,index} = this.state;
 
-        console.log(currentWord.examples);
+        console.log(index);
         return (
             <div>
                 <Header></Header>
@@ -108,7 +110,7 @@ class FlashCardPage extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <span className="fa fa-caret-down" onClick={this.nextWord} />
+                                {index < this.state.words.length -1 && <span className="fa fa-caret-down" onClick={this.nextWord} />}
                             </div>
                         </div>
                     </div>
