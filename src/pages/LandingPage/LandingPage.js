@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Footer2 from "../Footer/Footer2"
 
 
@@ -60,8 +61,8 @@ class LandingPage extends Component {
               </div>
               <div className="col-6 nd text-center">
                 <h3 className="text-center text-primary">The limits of my language mean the limits of my world.</h3>
-                <button type="button" className="btn btn-primary mt-4">Bắt Đầu</button>
-                <button type="button" className="btn btn-primary mt-4">Tôi Đã Có Tài Khoản</button>
+                <Link type="button" className="btn btn-primary mt-4" to="/home">Bắt Đầu</Link>
+                <Link type="button" className="btn btn-primary mt-4" to="/signin">Tôi Đã Có Tài Khoản</Link>
               </div>
             </div>
           </div>

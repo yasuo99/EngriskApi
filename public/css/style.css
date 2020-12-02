@@ -16,7 +16,7 @@ a.text-primary:hover{color: #48871B}
 .text1{color: #273051}
 .text2{color: #4F4F4F}
 .text3{color: #828282}
-.img-100{width: 100% auto}
+.img-100{width: 100%; height: 90%}
 
 #menu-chinh{border-bottom: 2px solid #ccc;}
 #menu-chinh .logo{height: 80px;}
@@ -285,7 +285,8 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
   background-attachment: fixed;
 }
 #flashcard .bg-flashcard{ height: 500px;position: relative}
-#flashcard .bg-flashcard span{position: absolute; top: 430px;font-size: 80px;color: #fff;left: 47%;}
+#flashcard .bg-flashcard .fa-caret-up{position: absolute;font-size: 80px;color: #fff;left: 47%;}
+#flashcard .bg-flashcard .fa-caret-down{position: absolute; top: 430px;font-size: 80px;color: #fff;left: 47%;}
 #flashcard .flip-container {perspective: 1000;float: left;cursor:pointer;position: absolute;top: 150px;left: 170px;}
 #flashcard .flippable {transition: 0.5s;transform-style: preserve-3d;position: relative;}
 #flashcard .flipme {transform: rotateY(180deg);}

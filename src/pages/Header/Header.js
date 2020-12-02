@@ -1,20 +1,25 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { connect, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import TaiKhoan from "./TaiKhoan";
 import { useJwt } from "react-jwt";
 const Header = () => {
-  let isLoggedIn = false;
+  const [loggedIn, setLoggedIn] = useState(false);
+  const {isLoggedIn} = useSelector((state) => state.auth.isLoggedIn);
   const token = localStorage.getItem('token');
-  const { decodedToken, isExpired } = useJwt(token);
-  if (isExpired) {
-    localStorage.removeItem('account');
-    localStorage.removeItem('token');
-    isLoggedIn = false;
-  }
-  else {
-    isLoggedIn = true;
-  }
+  let account;
+  const { isExpired } = useJwt(token);
+  useEffect(() => {
+    if (isExpired || isLoggedIn == false) {
+      localStorage.removeItem('account');
+      localStorage.removeItem('token');
+      setLoggedIn(false);
+    }
+    else {
+      setLoggedIn(true);
+      account = localStorage.getItem('account')
+    }
+  })
   return (
     <section id="menu-chinh">
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -52,27 +57,9 @@ const Header = () => {
                       </div>
                     </div>
                   </li>
-                  <li className="nav-item dropdown ml-3"> <Link className="nav-link " to="#" data-toggle="dropdown"><img src="/image/user.png" /></Link>
+                  <li className="nav-item dropdown ml-3"><Link className="nav-link " to="#" data-toggle="dropdown"><img src="/image/user.png" /></Link>
                     <div className="dropdown-menu sub3">
-                      <div className="thongbao">
-                        <div className="row pt-2">
-                          <div className="col-6">
-                            <h5 className="pl-2">Thông báo</h5>
-                          </div>
-                          <div className="col-6"><Link to="#" className="text-right">
-                            <h5 className="pr-2">Xem tất cả</h5>
-                          </Link></div>
-                        </div>
-                      </div>
-                      <div className="thongbao">
-                        <div className="row mt-2">
-                          <div className="col-2"> <img src="/image/gem.png" className="pl-2" /></div>
-                          <div className="col-10">
-                            <p className="pl-2">Bạn nhận được phần thưởng là 10 lingot vì giữ được 7 ngày steak</p>
-                          </div>
-                        </div>
-                      </div>
-                      <TaiKhoan status={isLoggedIn}></TaiKhoan>
+                      <TaiKhoan status={loggedIn} account={account}></TaiKhoan>
                     </div>
                   </li>
                 </ul>

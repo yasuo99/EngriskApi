@@ -47,7 +47,7 @@ class SignIn extends Component {
 
   render() {
     const token = localStorage.getItem('token');
-    if(this.props.isLoggedIn) return <Redirect to="/"/>
+    if(this.props.isLoggedIn) return <Redirect to="/home"/>
     return (
       <form className="login100-form validate-form"
         autoComplete="off"
@@ -80,7 +80,6 @@ class SignIn extends Component {
 const mapStateToProps = (state) => {
   console.log(state);
   const {isLoggedIn} = state.auth;
-  console.log(isLoggedIn);
   return {
     isLoggedIn: isLoggedIn
   }

@@ -1,6 +1,11 @@
 import React from "react"
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-const TaiKhoan = ({status}) => {
+import {logOut} from '../../actions/authActions';
+
+const TaiKhoan = ({status,account}) => {
+  const dispatch = useDispatch();
+  const dispatchLogout = () => dispatch(logOut())
     if(status === true){
         return(
             <div>
@@ -28,7 +33,7 @@ const TaiKhoan = ({status}) => {
                           <Link className="dropdown-item" to="#">Hỗ trợ</Link>
                         </div>
                         <div className="taikhoan">
-                          <Link className="dropdown-item" to="#">Đăng xuất</Link>
+                          <button className="dropdown-item" onClick={dispatchLogout}>Đăng xuất</button>
                         </div>
                        
             </div>
