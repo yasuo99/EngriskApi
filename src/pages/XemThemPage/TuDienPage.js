@@ -1,41 +1,23 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Footer2 from '../Footer/Footer2';
-import Header from '../Header/Header';
+import HeaderClient from '../../components/client/HeaderClient';
+import SubMenuClient from '../../components/client/SubMenuClient';
+import Search from '../../components/xemthem/Search';
+import Footer from '../Footer/Footer';
 
 class TuDienPage extends Component {
     render() {
         return (
-            <div>
-               <Header></Header>
-                <main id="tudien">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-8 offset-2">
-                                <div className="nd-tudien text-center">
-                                    <h4>Dịch Tiếng Anh-Tiếng Việt</h4>
-                                    <p>Xem giải nghĩa từ, ví dụ câu và nhiều điều khác.</p>
-                                </div>
-                                <form>
-                                    <div className="inner-form">
-                                        <div className="input-field first-wrap">
-                                            <img src="image/english-language.png" />
-                                        </div>
-                                        <div className="input-field second-wrap">
-                                            <input id="search" type="text" placeholder="Nhập bằng Tiếng Anh hoặc Tiếng Việt" />
-                                        </div>
-                                        <div className="input-field third-wrap">
-                                            <button className="btn btn-primary" type="button">
-                                                DỊCH NGHĨA
-                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+            <div id="wrapper">
+                <SubMenuClient></SubMenuClient>
+                <div id="content-wrapper" className="d-flex flex-column">
+                    <div id="content">
+                        <HeaderClient></HeaderClient>
+                        <Search></Search>
+                        <Footer></Footer>
                     </div>
-                </main>
-                <Footer2></Footer2>
+                </div>          
+                
                </div>
         );
     }

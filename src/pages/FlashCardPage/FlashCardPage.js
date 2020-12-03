@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import Header from '../Header/Header';
 import { getAllWord } from '../../actions/wordActions';
 import $ from "jquery";
+import HeaderClient from '../../components/client/HeaderClient';
+import SubMenuClient from '../../components/client/SubMenuClient';
+import Footer from '../Footer/Footer';
 
 class FlashCardPage extends Component {
     constructor(props) {
@@ -83,9 +85,12 @@ class FlashCardPage extends Component {
 
         console.log(index);
         return (
-            <div>
-                <Header></Header>
-                <main id="flashcard">
+              <div id="wrapper">
+              <SubMenuClient></SubMenuClient>
+              <div id="content-wrapper" className="d-flex flex-column">
+                  <div id="content">
+                      <HeaderClient></HeaderClient>
+                      <main id="flashcard">
                     <div className="container pt-5">
                         <div className="row">
                             <div className="col-3 bg-xam">
@@ -115,7 +120,12 @@ class FlashCardPage extends Component {
                         </div>
                     </div>
                 </main>
-            </div>
+          
+                      <Footer></Footer>
+                  </div>
+              </div>          
+              
+             </div>
         )
     }
 }

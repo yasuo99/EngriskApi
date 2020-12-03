@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 class CuaHangPage extends Component {
     render() {
         return (
             <div>
-              <Header></Header>
+              {/* <Header></Header> */}
               <section id="cuahang">
                     <div className="container">
                         <div className="row">

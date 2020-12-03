@@ -1,7 +1,7 @@
 import React,{Component} from "react"
 import {Link} from "react-router-dom"
 
-class FormAdmin extends Component{
+class TaiKhoanAdmin extends Component{
     render(){
         return(
             <li className="nav-item dropdown no-arrow">
@@ -33,4 +33,4 @@ class FormAdmin extends Component{
         )
     }
 }
-export default FormAdmin;
+export default TaiKhoanAdmin;

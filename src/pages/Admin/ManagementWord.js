@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import SubMenu from '../../components/admin/SubMenu'
-import QLListTuVung from "../../components/admin/QLListTuVung";
+import QLThemTuVung from "../../components/admin/QLThemTuVung";
 import { Link } from "react-router-dom";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
 
@@ -14,16 +14,9 @@ class Management extends Component {
                         <div id="content">
                             <HeaderAdmin></HeaderAdmin>
                             <div className="container-fluid">
-                                <h1 className="h3 mb-2 text-gray-800">Tables</h1>
-                                <p className="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <Link target="_blank" to="https://datatables.net">official DataTables documentation</Link>.</p>
-                                <div className="card shadow mb-4">
-                                    <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                                    </div>
+                              <div className="card shadow mb-4">
                                     <div className="card-body">
-                                        <div className="table-responsive">
-                                            <QLListTuVung></QLListTuVung>
-                                        </div>
+                                        <QLThemTuVung></QLThemTuVung>
                                     </div>
                                 </div>
                             </div>

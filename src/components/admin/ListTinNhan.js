@@ -1,5 +1,5 @@
 import React,{Component} from "react"
-import TinNhan from "./TinNhan";
+import TinNhanAdmin from "./TinNhanAdmin";
 
 class ListTinNhan extends Component{
     render(){
@@ -13,7 +13,7 @@ class ListTinNhan extends Component{
               <h6 className="dropdown-header">
                 Message Center
               </h6>
-             <TinNhan></TinNhan>
+             <TinNhanAdmin></TinNhanAdmin>
              <a className="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
             </div>
           </li>

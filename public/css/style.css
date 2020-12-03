@@ -18,37 +18,20 @@ a.text-primary:hover{color: #48871B}
 .text3{color: #828282}
 .img-100{width: 100%; height: 90%}
 .word-list{cursor: pointer;}
-
-#menu-chinh{border-bottom: 2px solid #ccc;}
-#menu-chinh .logo{height: 80px;}
-#menu-chinh .col-8 .a-hoc{width: 140px;}
-#menu-chinh .col-8 a{width: 210px;}
-#menu-chinh .navbar-nav{font-weight: bold;font-size: 20px}
-#menu-chinh .sub1 .dropdown-item{width: 230px;padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
-#menu-chinh .dropdown-menu{left: -50px}
-#menu-chinh .sub2{width: 250px;left:-50px}
-#menu-chinh .sub3{width: 350px;left: -150px}
-#menu-chinh .sub3 .thongbao{border-bottom: 2px solid #ccc;height: 50px}
-#menu-chinh .sub3 .taikhoan .dropdown-item{border-bottom: 2px solid #ccc;height: 50px; font-weight: bold;padding-left: 10px;padding-top:10px;color: #068CE1}
-#menu-chinh .nav-link:active{color: #77B748;}
-#menu-chinh .sub3 .taikhoan .dropdown-item:active{color: #fff;}
-#menu-chinh .dropdown-menu a:active{background-color: #77B748;color: #fff;}
-
-#trangchu .nen-xam{height: 140px;width: 140px;border-radius: 50%;position: relative;background-color: #ccc;}
-#trangchu .vongtron-tim{background-color:#ad5ca0b4;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
-#trangchu .nen-vang{height: 140px;width: 140px;border-radius: 50%;position: relative;background-color: #F5F403;}
-#trangchu .vongtron-vang{background-color:#F5F403;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
-#trangchu .vongtron-xanhla{background-color:#18B80B;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
-#trangchu .vongtron-vang{background-color:#F5F403;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
-#trangchu .vongtron-xanhduong{background-color:#068CE1;height: 120px;width: 120px;border: 10px solid #fff; border-radius: 50%;position: absolute;top:7%;left: 7%;}
-#trangchu .img-item{position: absolute;top:25%;left: 28%;}
-#trangchu .img-item:hover{animation: dh-img_item 1s 1;}
-#trangchu .tieude{position: absolute;top: 100%;width: 140px;text-align: center;}
-#trangchu .duongke{border-bottom: 3px solid #ccc;top: -40px;}
-#trangchu .img-vuongniem{width: 100%;position: relative;padding-left: 10px;}
-#trangchu .nd{position: absolute;margin-top: -55px; margin-left: 40px;}
-#trangchu a{color: #828282;}
-#trangchu a:hover{color: #77B748}
+#subMenu span{font-size: 16px;color: #fff;}
+#content-wrapper .nav-link:hover{background-color: #fff!important;}
+#wrapper{ background-size: cover;
+  height: 100vh;
+  background-attachment: fixed;}
+  #trangchu{margin-top: 50px;}
+  #trangchu .progress-bar{
+    background-color: #77B748!important;
+  }
+  #trangchu a{color: #828282;}
+  #trangchu a:hover{color: #77B748;text-decoration: none;}
+  #trangchu .card-hoc{background-color: #fff;width: 100%;height: 80px;border-radius: 10px;box-shadow: 5px 5px 5px #d0e2f7;}
+  #trangchu .card-hoc a{font-weight: bold;font-size: 18px;}
+  #trangchu .card-hoc .img-hoc{width: 60px;height: 60px;border-radius: 50%;}
 
 .giadauvang{border: 3px solid #ccc; border-radius: 10px;height: 450px}
 .gachchan{border-bottom:2px solid #ccc; margin-top: 30px}
@@ -136,7 +119,6 @@ footer h6{font-size: 15px;}
 /* -------------------------------------------------------------------------- */
 #tudien{margin-top: 200px; margin-bottom: 200px;}
 #tudien p{font-size: 20px;}
-#tudien .form-control{height: 80px;border-radius: 20px;font-size: 20px;}
 
 form .inner-form {background: #fff;display: flex;width: 100%;align-items: center;box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);border-radius: 3px;}
 form .inner-form .input-field.first-wrap {width: 80px;margin-left: 10px;}
@@ -169,7 +151,12 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #hoc2 .dapan p:hover{color: #fff;}
 #hoc2 .dapan p{font-size: 16px;padding: 10px;}
 #hoc2 .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
-
+#hoc2 .active{background-color: #77B748;}
+#hoc2 .active p{color: #fff;}
+.thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 130px;padding-top: 30px;border-radius: 20px;}
+.thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 130px;padding-top: 30px;border-radius: 20px;}
+.thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;}
+.thongbao-ketquasai p{font-size: 16px;color: #4f4f4f;}
 /* ---------------------------------Cài đặt---------------------------------- */
 /* -------------------------------------------------------------------------- */
 #caidat .btn{border: none;border-radius: 10px;font-size: 18px;font-weight: bold;padding: 10px;}
@@ -310,3 +297,87 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #flashcard a{text-decoration: none; color: #eee;font-size: 16px; padding-left: 20px;font-weight: bold;}
 #flashcard .img-100{width: 100%;}
 
+/* ---------------------------------Thêm bài viết----------------------------- */
+/* --------------------------------------------------------------------------- */
+#thembaiviet h2{font-weight: bold}
+#thembaiviet .btn{color:#77B748;outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px 0;border-radius: 10px;font-weight: bold;width: 80px;}
+#thembaiviet .btn:hover{background-color: #77B748;color: #fff;}
+#thembaiviet .form-baiviet .tieude{width: 100%;height: 80px;border: 2px solid#ccc;border-radius: 5px;margin-top: 20px;outline: none;}
+#thembaiviet .form-baiviet .noidung{width: 100%;height:300px;border: 2px solid#ccc;border-radius: 5px;margin-top: 20px;outline: none;}
+#thembaiviet .img-thaoluan{width: 90px;width:90px;border-radius: 50%;}
+#thembaiviet a{color:#495057; font-weight:bold}
+#thembaiviet a:hover{text-decoration: none;color: #77B748;}
+#thembaiviet .tab-content .row{border-bottom: 2px solid #ccc; margin-top: 10px;}
+#thembaiviet .form-control{border-radius: 15px;font-size: 16px;height: 60px;}
+
+#thembaiviet .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
+#thembaiviet .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
+#thembaiviet .nd-theodoi:hover{background-color: #ccc}
+/* -------------------------------KẾT QUẢ TÌM KIẾM--------------------------- */
+/* -------------------------------------------------------------------------- */
+#ketquatracuu{margin-top: 40px; margin-bottom: 40px;}
+#ketquatracuu form .inner-form {background: #fff;display: flex;width: 100%;align-items: center;box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);border-radius: 10px;}
+#ketquatracuu form .inner-form .input-field.first-wrap {width: 80px;margin-left: 10px;}
+#ketquatracuu form .inner-form .input-field {height: 80px;padding-top: 8px;margin-left: -15px;}
+#ketquatracuu form .inner-form .input-field input {height:100%;display: block;width: 650px;padding: 10px 32px;font-size: 20px;color: #555;margin-right: 20px;border: 0;outline: none;}
+#ketquatracuu form .inner-form .input-field.third-wrap .btn {padding: 15px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;left: 350px;margin-right: 10px;width: 150px;}
+#ketquatracuu .kechan{border-bottom: 2px solid #ccc;margin-bottom:30px;padding: 20px 0;}
+#ketquatracuu .gachchan{border-bottom: 2px solid #77B748;margin-bottom:30px;padding: 20px 0;border-bottom-style: dotted;width: 300px;}
+
+.dropbtn {
+  background-image: url('../image/plus.png');
+  background-position: 5px 10px;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+  background-color: #77B748;
+  color: white;
+  padding: 10px 10px 10px 35px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #48871B;
+  outline: none;
+}
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url('../image/search.png');
+  background-position: 18px 18px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}

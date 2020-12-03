@@ -17,6 +17,11 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import NapTienPage from './pages/NapTienPage/NapTienPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 import FlashCardPage from './pages/FlashCardPage/FlashCardPage';
+import ManagementWord from './pages/Admin/ManagementWord';
+import ThemBaiViet from './pages/ThaoLuanPage/ThemBaiViet';
+import KetQuaTraCuu from './pages/XemThemPage/KetQuaTraCuu';
+import DapAnSai from './pages/HocPage/DapAnSai';
+import DapAnDung from './pages/HocPage/DapAnDung';
 const routes = [
     {
         path: '/home',
@@ -34,6 +39,11 @@ const routes = [
         main: () => <ThaoLuanPage />
     },
     {
+        path: '/thembaiviet',
+        exact: true,
+        main: () => <ThemBaiViet />
+    },
+    {
         path: '/thaoluanchitiet',
         exact: true,
         main: () => <ThaoLuanChiTietPage />
@@ -47,6 +57,26 @@ const routes = [
         path: '/tudien',
         exact: true,
         main: () => <TuDienPage />
+    },
+    {
+        path: '/ketquatracuu',
+        exact: true,
+        main: () => <KetQuaTraCuu />
+    },
+    {
+        path: '/dapansai',
+        exact: true,
+        main: () => <DapAnSai />
+    },
+    {
+        path: '/dapandung',
+        exact: true,
+        main: () => <DapAnDung />
+    },
+    {
+        path: '/ketquatracuu',
+        exact: true,
+        main: () => <KetQuaTraCuu />
     },
     {
         path: '/tuvung',
@@ -102,6 +132,11 @@ const routes = [
         path: '/management',
         exact: true,
         main: () => <Management />
+    },
+    {
+        path: '/managementword',
+        exact: true,
+        main: () => <ManagementWord />
     },
     {
         path: '/loi',

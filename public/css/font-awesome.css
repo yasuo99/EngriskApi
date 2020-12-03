@@ -426,6 +426,7 @@
   content: "\f053";
 }
 .fa-chevron-right:before {
+  color: #ccc;
   content: "\f054";
 }
 .fa-plus-circle:before {
