@@ -2,11 +2,13 @@ import React, { PureComponent, Suspense, useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { getQuestion, submitQuestion } from '../../actions/questionActions';
 import { doQuiz } from '../../actions/quizActions';
-import Header from '../Header/Header';
 import Loader from 'react-loader-spinner';
 import { connect } from 'react-redux';
 import { ButtonToolbar, ProgressBar } from 'react-bootstrap';
 import ReactPlayer from 'react-player';
+import HeaderClient from '../../components/client/HeaderClient';
+import SubMenuClient from '../../components/client/SubMenuClient';
+import Footer from '../Footer/Footer';
 
 const useAudio = url => {
     const [isMounted, setIsMounted] = useState(false)
@@ -18,7 +20,7 @@ const useAudio = url => {
     useEffect(() => {
         setIsMounted(true);
         playing ? audio.play() : audio.pause();
-        if(isMounted === false){
+        if (isMounted === false) {
             audio.pause();
         }
     },
@@ -179,81 +181,96 @@ class Hoc extends PureComponent {
         const { quizId, currentQuestion, loading, rightAnswer, checked, quiz, index, done } = this.state;
         if (loading) {
             return (
-                <div>
-                    <Header />
-                    <main id="hoc2">
-                        <div className="container">
-                            <div className="row kechan mt-5 kechan d-flex">
-                                <div className="col-8 offset-5">
-                                    <Loader type="Oval"
-                                        color="#00BFFF"
-                                        height={200}
-                                        width={200} />
+                <div id="wrapper">
+                    <SubMenuClient></SubMenuClient>
+                    <div id="content-wrapper" className="d-flex flex-column">
+                        <div id="content">
+                            <HeaderClient></HeaderClient>
+                            <main id="hoc2">
+                                <div className="container">
+                                    <div className="row kechan mt-5 kechan d-flex">
+                                        <div className="col-8 offset-5">
+                                            <Loader type="Oval"
+                                                color="#00BFFF"
+                                                height={200}
+                                                width={200} />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </main>
+
+                            <Footer></Footer>
                         </div>
-                    </main>
+                    </div>
+
                 </div>
             )
         }
         else {
             return (
-                <div>
-                    <Header />
-                    <main id="hoc2">
-                        <div className="container">
-                            <div className="mt-4">
-                                <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
-                            </div>
-                            <div className="row kechan mt-5 kechan">
-                                <div className="col-8 offset-2">
-                                    {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
-                                        <p className="mb-5">Có nghĩa là?</p></div>
-                                        <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
-                                        {currentQuestion.isListeningQuestion === true && 
-                                        <div className="row">
-                                            <b>Chọn đáp án đúng</b>
-                                            <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px"/>
-                                            </div>}
-                                    <div className="row mt-2">
-                                        <div className="col-6">
-                                            <div className="dapan" style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
-                                                <p>{currentQuestion.a}</p>
+                <div id="wrapper">
+                    <SubMenuClient></SubMenuClient>
+                    <div id="content-wrapper" className="d-flex flex-column">
+                        <div id="content">
+                            <HeaderClient></HeaderClient>
+                            <main id="hoc2">
+                                <div className="container">
+                                    <div className="mt-4">
+                                        <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
+                                    </div>
+                                    <div className="row kechan mt-5 kechan">
+                                        <div className="col-8 offset-2">
+                                            {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
+                                                <p className="mb-5">Có nghĩa là?</p></div>
+                                                <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
+                                            {currentQuestion.isListeningQuestion === true &&
+                                                <div className="row">
+                                                    <b>Chọn đáp án đúng</b>
+                                                    <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
+                                                </div>}
+                                            <div className="row mt-2">
+                                                <div className="col-6">
+                                                    <div className="dapan" style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
+                                                        <p>{currentQuestion.a}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="col-6">
+                                                    <div className="dapan" style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
+                                                        <p>{currentQuestion.b}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="col-6">
-                                            <div className="dapan" style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
-                                                <p>{currentQuestion.b}</p>
+                                            <div className="row">
+                                                <div className="col-6">
+                                                    <div className="dapan" style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
+                                                        <p>{currentQuestion.c}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="col-6">
+                                                    <div className="dapan" style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
+                                                        <p>{currentQuestion.d}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-6">
-                                            <div className="dapan" style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
-                                                <p>{currentQuestion.c}</p>
-                                            </div>
-                                        </div>
-                                        <div className="col-6">
-                                            <div className="dapan" style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
-                                                <p>{currentQuestion.d}</p>
-                                            </div>
+                                    <div className="row mt-5">
+                                        <div className="col-3"><button className="btn btn-primary" onClick={this.nextQuestion}>Bỏ qua</button></div>
+                                        <div className="col-6"></div>
+                                        <div className="col-3 text-right">
+                                            {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
+                                            {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (quizId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
+                                            {done && <Link className="btn btn-primary" to="/">Kết thúc</Link>}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="row mt-5">
-                                <div className="col-3"><button className="btn btn-primary" onClick={this.nextQuestion}>Bỏ qua</button></div>
-                                <div className="col-6"></div>
-                                <div className="col-3 text-right">
-                                    {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
-                                    {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (quizId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
-                                    {done && <Link className="btn btn-primary" to="/">Kết thúc</Link>}
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                </div>
+                            </main>
 
+                            <Footer></Footer>
+                        </div>
+                    </div>
+
+                </div>
             )
         }
 

@@ -9776,7 +9776,7 @@ a:focus {
 }
 
 #wrapper #content-wrapper {
-  background-color: #f8f9fc;
+  background-color: #F2F7FD;
   width: 100%;
   overflow-x: hidden;
 }
@@ -10548,6 +10548,7 @@ a:focus {
   .sidebar.toggled .nav-item .nav-link span {
     font-size: 0.65rem;
     display: block;
+    margin-left: -8px;
   }
   .sidebar.toggled .nav-item .nav-link i {
     margin-right: 0;
@@ -11219,8 +11220,7 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
-form{margin-left: 100px;}
-.card-input{width: 700px;}
-.card-input input{float: right;width: 450px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
-.card-button{margin-left: 250px;margin-top: 30px;}
-.card-input input:focus{border: 2px solid #ccc!important}
+.thembaiviet form{margin-left: 100px;}
+.thembaiviet .card-input{width: 700px;}
+.thembaiviet .card-input input{float: right;width: 450px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.thembaiviet .card-button{margin-left: 250px;margin-top: 30px;}

@@ -5,6 +5,7 @@ class QLThemTuVung extends Component {
         return (
             <div>
             <h3 className="text-primary text-center">THÊM TỪ VỰNG</h3>
+            <div className="thembaiviet">
             <form>
               <div className="card-input mt-4">
                 <span>English</span><input type="text" />
@@ -29,6 +30,7 @@ class QLThemTuVung extends Component {
                 <button type="submit" className="btn btn-primary">Thêm từ vựng</button>
               </div>
             </form>
+            </div>
           </div>
         )
     }

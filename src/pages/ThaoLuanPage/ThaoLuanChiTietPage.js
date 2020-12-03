@@ -3,14 +3,19 @@ import { Link } from 'react-router-dom';
 import BinhLuanPost from '../../components/thaoluan/BinhLuanPost';
 import ContentPost from '../../components/thaoluan/ContentPost';
 import PhanHoiPost from '../../components/thaoluan/PhanHoiPost';
-import Header from '../Header/Header';
+import HeaderClient from '../../components/client/HeaderClient';
+import SubMenuClient from '../../components/client/SubMenuClient';
+import Footer from '../Footer/Footer';
 
 class ThaoLuanChiTietPage extends Component {
     render() {
         return (
-            <div>
-               <Header></Header>
-                <section id="chitietthaoluan">
+            <div id="wrapper">
+            <SubMenuClient></SubMenuClient>
+            <div id="content-wrapper" className="d-flex flex-column">
+                <div id="content">
+                    <HeaderClient></HeaderClient>
+                    <section id="chitietthaoluan">
                     <div className="container pt-3">
                         <div className="row kechan">
                             <div className="col-6 diendan mt-5 mb-5">
@@ -47,7 +52,11 @@ class ThaoLuanChiTietPage extends Component {
                     </div>
                 </section>
 
-            </div>
+                    <Footer></Footer>
+                </div>
+            </div>          
+            
+           </div>
         );
     }
 }

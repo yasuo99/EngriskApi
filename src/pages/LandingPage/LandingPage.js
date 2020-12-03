@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Footer2 from "../Footer/Footer2"
+import Footer from "../Footer/Footer"
 
 
 class LandingPage extends Component {
@@ -166,7 +166,7 @@ class LandingPage extends Component {
                 <button type="button" className="btn btn-primary">BẮT ĐẦU</button>
               </div>
             </div>
-            <Footer2></Footer2>
+            <Footer></Footer>
            </div>
         </footer>
       </div>

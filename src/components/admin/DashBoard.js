@@ -1,12 +1,18 @@
 import React, { Component } from "react"
-
+import {Link} from "react-router-dom"
+import { appendScript } from '../../config/appendScript'
 class DashBoard extends Component {
+    componentDidMount() {
+        appendScript("/js/Chart.min.js");
+        appendScript("/js/chart-area-demo.js");
+        appendScript("js/chart-pie-demo.js");
+    };
     render() {
         return (
             <div className="container-fluid">
                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
-                    <a href="#" className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i className="fa fa-download fa-sm text-white-50" /> Generate Report</a>
+                    <Link to="#" className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i className="fa fa-download fa-sm text-white-50" /> Generate Report</Link>
                 </div>
                 <div className="row">
                     <div className="col-xl-3 col-md-6 mb-4">
@@ -78,15 +84,15 @@ class DashBoard extends Component {
                             <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 className="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                                 <div className="dropdown no-arrow">
-                                    <a className="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <Link className="dropdown-toggle" to="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i className="fa fa-ellipsis-v fa-sm fa-fw text-gray-400" />
-                                    </a>
+                                    </Link>
                                     <div className="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                         <div className="dropdown-header">Dropdown Header:</div>
-                                        <a className="dropdown-item" href="#">Action</a>
-                                        <a className="dropdown-item" href="#">Another action</a>
+                                        <Link className="dropdown-item" to="#">Action</Link>
+                                        <Link className="dropdown-item" to="#">Another action</Link>
                                         <div className="dropdown-divider" />
-                                        <a className="dropdown-item" href="#">Something else here</a>
+                                        <Link className="dropdown-item" to="#">Something else here</Link>
                                     </div>
                                 </div>
                             </div>
@@ -104,15 +110,15 @@ class DashBoard extends Component {
                             <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 className="m-0 font-weight-bold text-primary">Revenue Sources</h6>
                                 <div className="dropdown no-arrow">
-                                    <a className="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <Link className="dropdown-toggle" to="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i className="fa fa-ellipsis-v fa-sm fa-fw text-gray-400" />
-                                    </a>
+                                    </Link>
                                     <div className="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                         <div className="dropdown-header">Dropdown Header:</div>
-                                        <a className="dropdown-item" href="#">Action</a>
-                                        <a className="dropdown-item" href="#">Another action</a>
+                                        <Link className="dropdown-item" to="#">Action</Link>
+                                        <Link className="dropdown-item" to="#">Another action</Link>
                                         <div className="dropdown-divider" />
-                                        <a className="dropdown-item" href="#">Something else here</a>
+                                        <Link className="dropdown-item" to="#">Something else here</Link>
                                     </div>
                                 </div>
                             </div>
