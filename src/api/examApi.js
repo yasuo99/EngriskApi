@@ -5,6 +5,10 @@ const examApi = {
         const url = "/exams";
         return axiosClient.get(url);
     },
+    getExam: (id) => {
+        const url = `/exams/${id}`;
+        return axiosClient.get(url);
+    },
     doExam: (id) =>  {
         const url = `/exams/${id}/do`;
         return axiosClient.get(url);
@@ -12,6 +16,14 @@ const examApi = {
     submitExam: (id, body) => {
         const url = `/exams/${id}/done`;
         return axiosClient.post(url,body);
+    },
+    deleteExam: (id) => {
+        const url = `/exams/${id}`;
+        return axiosClient.delete(url);
+    },
+    updateExam: (id,body) => {
+        const url = `/exams/${id}`;
+        return axiosClient.put(url,body);
     }
 }
 export default examApi;
