@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import { signIn } from "./../../actions/authActions"
 import { Redirect } from "react-router-dom";
 import wordApi from '../../api/wordApi';
+import { useJwt } from "react-jwt";
+import jwtDecode from "jwt-decode";
+
 class SignIn extends Component {
   state = {
     loginMethod: "",
     password: ""
   };
-
-
   handleChange = (e) => {
     // const fetchWordList = async () => {
     //   try {
@@ -38,16 +39,21 @@ class SignIn extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const result = this.props.signIn(this.state);
-    // if(result.token){
-    //   localStorage.setItem('token',result.token);
-    //   localStorage.setItem('account',result.account);
-    // }
+    this.props.signIn(this.state);
   };
-
   render() {
     const token = localStorage.getItem('token');
-    if(this.props.isLoggedIn) return <Redirect to="/home"/>
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if(Array.isArray(decodedToken.role)){
+        if(decodedToken.role.includes("superadmin") || decodedToken.role.includes("manager"))
+        {
+          return <Redirect to="/management"/>
+        }
+      }
+      console.log(decodedToken);
+    }
+    if (this.props.isLoggedIn) return <Redirect to="/home" />
     return (
       <form className="login100-form validate-form"
         autoComplete="off"
@@ -79,7 +85,7 @@ class SignIn extends Component {
 
 const mapStateToProps = (state) => {
   console.log(state);
-  const {isLoggedIn} = state.auth;
+  const { isLoggedIn } = state.auth;
   return {
     isLoggedIn: isLoggedIn
   }

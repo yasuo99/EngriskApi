@@ -34,27 +34,27 @@ const routes = [
         main: () => <LandingPage />
     },
     {
-        path: '/thaoluan',
+        path: '/thao-luan',
         exact: true,
         main: () => <ThaoLuanPage />
     },
     {
-        path: '/thembaiviet',
+        path: '/thao-luan/them-bai-viet',
         exact: true,
         main: () => <ThemBaiViet />
     },
     {
-        path: '/thaoluanchitiet',
+        path: '/thao-luan-chi-tiet',
         exact: true,
         main: () => <ThaoLuanChiTietPage />
     },
     {
-        path: '/cuahang',
+        path: '/cua-hang',
         exact: true,
         main: () => <CuaHangPage />
     },
     {
-        path: '/tudien',
+        path: '/tu-dien',
         exact: true,
         main: () => <TuDienPage />
     },
@@ -79,7 +79,7 @@ const routes = [
         main: () => <KetQuaTraCuu />
     },
     {
-        path: '/tuvung',
+        path: '/tu-vung',
         exact: true,
         main: () => <TuVungPage />
     },
@@ -89,7 +89,7 @@ const routes = [
         main: () => <HocHinhAnh />
     },
     {
-        path: '/naptien',
+        path: '/nap-tien',
         exact: true,
         main: () => <NapTienPage />
     },

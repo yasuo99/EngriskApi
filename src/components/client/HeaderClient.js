@@ -5,21 +5,23 @@ import ThongBaoClient from "./ThongBaoClient";
 import TaiKhoanClient from "./TaiKhoanClient"
 const HeaderClient = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const {isLoggedIn} = useSelector((state) => state.auth.isLoggedIn);
+  const [account, setAccount] = useState();
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const token = localStorage.getItem('token');
-  let account;
   const { isExpired } = useJwt(token);
   useEffect(() => {
     if (isExpired || isLoggedIn == false) {
       localStorage.removeItem('account');
       localStorage.removeItem('token');
       setLoggedIn(false);
+      setAccount(null);
     }
     else {
       setLoggedIn(true);
-      account = localStorage.getItem('account')
+      const temp = JSON.parse(localStorage.getItem('account'));
+      setAccount(temp)
     }
-  })
+  },[isLoggedIn])
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
     <ul className="navbar-nav ml-auto">
