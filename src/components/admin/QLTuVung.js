@@ -11,9 +11,9 @@ class QLTuVung extends Component {
                 <td><img src="../image/fish.png"></img></td>
                 <td>I like eat fish <br/> Tôi thích ăn cá</td>
                 <td>
-                    <a href className="btn btn-success mr-2"><i className="fa fa-info" /></a>
-                    <a href className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
-                    <a href className="btn btn-danger"><i className="fa fa-trash" /></a>
+                    <a href="#" className="btn btn-success mr-2"><i className="fa fa-info" /></a>
+                    <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
+                    <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
                 </td>
             </tr>
         );

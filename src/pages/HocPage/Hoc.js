@@ -10,43 +10,6 @@ import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 
-const useAudio = url => {
-    const [isMounted, setIsMounted] = useState(false)
-    const [audio] = useState(new Audio(url));
-    const [playing, setPlaying] = useState(false);
-
-    const toggle = () => setPlaying(!playing);
-
-    useEffect(() => {
-        setIsMounted(true);
-        playing ? audio.play() : audio.pause();
-        if (isMounted === false) {
-            audio.pause();
-        }
-    },
-        [playing]
-    );
-
-    useEffect(() => {
-        audio.addEventListener('ended', () => setPlaying(false));
-        return () => {
-            audio.removeEventListener('ended', () => setPlaying(false));
-            setIsMounted(false);
-        };
-    }, []);
-
-    return [playing, toggle];
-};
-
-const Player = ({ url }) => {
-    const [playing, toggle] = useAudio(url);
-
-    return (
-        <div>
-            <button onClick={toggle}><i className="fas fa-volume-up"></i> {playing ? "Pause" : "Play"}</button>
-        </div>
-    );
-};
 class Hoc extends PureComponent {
     constructor(props) {
         super(props);
@@ -67,8 +30,10 @@ class Hoc extends PureComponent {
             result: false,
             done: false,
         }
+        this.handleUnload = this.handleUnload.bind(this);
     }
     async componentDidMount() {
+        window.addEventListener('beforeunload', this.handleUnload);
         const { match: { match: { params } } } = this.props;
         this.isComponentMounted = true;
         try {
@@ -277,6 +242,13 @@ class Hoc extends PureComponent {
     }
     componentWillUnmount() {
         this.isComponentMounted = false;
+        window.removeEventListener('beforeunload', this.handleUnload);
+    }
+    handleUnload(e) {
+        var message = "\o/";
+
+        (e || window.event).returnValue = message; //Gecko + IE
+        return message;
     }
 }
 const mapStateToProps = (state) => {

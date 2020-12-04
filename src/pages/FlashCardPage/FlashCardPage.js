@@ -47,16 +47,16 @@ class FlashCardPage extends Component {
         return await getAllWord();
     }
     selectWord = (e) => {
-        const index = e.target.id;
+        const index = parseInt(e.target.id);
         console.log(index);
         this.setState({
             index: index,
             currentWord: this.state.words[index]
         });
     }
-    previousWord = (e) => {
-        e.preventDefault();
+    previousWord = () => {
         const index = this.state.index - 1;
+        console.log(index);
         if(index >= 0){
             this.setState({
                 index: index,
@@ -64,9 +64,9 @@ class FlashCardPage extends Component {
             });
         }
     }
-    nextWord = (e) => {
-        e.preventDefault();
-        const index = this.state.index + 1;
+    nextWord = () => {
+        let index = this.state.index + 1;
+        console.log(index);
         if (index <= this.state.words.length) {
             this.setState({
                 index: index,
@@ -82,8 +82,6 @@ class FlashCardPage extends Component {
             <p key={example.exampleId}>{example.example.eng}</p>
         );
         const { currentWord ,index} = this.state;
-
-        console.log(index);
         return (
               <div id="wrapper">
               <SubMenuClient></SubMenuClient>

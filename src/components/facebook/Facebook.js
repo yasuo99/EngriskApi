@@ -12,7 +12,6 @@ class Facebook extends Component {
         token: ''
     }
     responseFacebook = async (response) => {
-        console.log(response);
         if (response.status !== "unknown") {
             this.setState({
                 isLoggedIn: true,
@@ -29,40 +28,20 @@ class Facebook extends Component {
             console.log(response);
         }
     }
-    componentClicked = () => console.log('ok');
-
     render() {
-        let fbContent;
-        if (this.state.isLoggedIn) {
-            fbContent = (
-                <div style={{ width: '400px', margin: 'auto', background: '#f4f4f4', padding: '20px' }}>
-                    <img src={this.state.picture} alt={this.state.name} />
-                    <h2>Welcome {this.state.name}</h2>
-                    <p>Email: {this.state.email}</p>
-                </div>
-            );
-        } else {
-            fbContent = (<FacebookLogin
+        return (
+            <FacebookLogin
                 appId="2760969430891401"
                 autoLoad={false}
                 fields="name,email,picture"
-                onClick={this.componentClicked}
                 callback={this.responseFacebook}
                 icon="fa-facebook"
-            />);
-        }
-        return (
-            <div style={{ margin: 'auto' }}>
-                {fbContent}
-            </div>
+            />
         )
     }
 }
 const mapStateToProps = (state) => {
-    // const uid = state.data.Account.id
-    // return {
-    //   uid: uid,
-    // };
+    return({})
 };
 
 const mapDispatchToProps = (dispatch) => {
