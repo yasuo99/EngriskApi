@@ -20,8 +20,6 @@ class SignInPage extends Component {
         <SignIn />
         <Facebook/>
         <Google/>
-        <Paypal/>
-        <Stripe/>
        </div>
     </div>
       );

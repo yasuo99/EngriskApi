@@ -11,15 +11,15 @@ class DangTheoDoi extends Component {
                     <div className="col-4 pt-2"><a href="#">SỬA ĐỔI</a></div>
                 </div>
                 <div className="nd-theodoi mt-2">
-                    <img src="image/united-states.png" className="pr-3" />
+                    <img src="/image/united-states.png" className="pr-3" />
                     <a href="#">Duolingo</a>
                 </div>
                 <div className="nd-theodoi mt-2">
-                    <img src="image/united-states.png" className="pr-3" />
+                    <img src="/image/united-states.png" className="pr-3" />
                     <a href="#">Duolingo</a>
                 </div>
                 <div className="nd-theodoi mt-2">
-                    <img src="image/united-states.png" className="pr-3" />
+                    <img src="/image/united-states.png" className="pr-3" />
                     <a href="#">Duolingo</a>
                 </div>
             </div>

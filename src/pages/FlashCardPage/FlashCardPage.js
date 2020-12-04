@@ -1,83 +1,129 @@
 import React, { Component } from 'react'
-import Header from '../Header/Header';
+import { getAllWord } from '../../actions/wordActions';
 import $ from "jquery";
-    
-   
-class FlashCardPage extends Component {
-    componentDidMount() {
-        $(".flippable").on('click',function(){
-            $(this).toggleClass("flipme")
-          });
-      }
+import HeaderClient from '../../components/client/HeaderClient';
+import SubMenuClient from '../../components/client/SubMenuClient';
+import Footer from '../Footer/Footer';
 
+class FlashCardPage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            words: [],
+            index: 0,
+            currentWord: { examples: [] },
+            loading: false
+        }
+        this.isComponentMounted = false;
+    }
+    componentDidMount = async () => {
+        $(".flippable").on('click', function () {
+            $(this).toggleClass("flipme")
+        });
+        this.setState({
+            loading: true
+        });
+        this.isComponentMounted = true;
+        if (this.isComponentMounted) {
+            const result = await this.fetchWord();
+            this.setState({
+                words: result,
+                currentWord: result[this.state.index],
+                loading: false
+            })
+            console.log(this.state);
+        }
+
+    }
+    examples = () => {
+        this.state.currentWord.examples.map((example) =>
+            <p>{example.eng}</p>
+        )
+    };
+    componentWillUnmount() {
+        this.isComponentMounted = false;
+    }
+    fetchWord = async () => {
+        return await getAllWord();
+    }
+    selectWord = (e) => {
+        const index = parseInt(e.target.id);
+        console.log(index);
+        this.setState({
+            index: index,
+            currentWord: this.state.words[index]
+        });
+    }
+    previousWord = () => {
+        const index = this.state.index - 1;
+        console.log(index);
+        if(index >= 0){
+            this.setState({
+                index: index,
+                currentWord: this.state.words[index]
+            });
+        }
+    }
+    nextWord = () => {
+        let index = this.state.index + 1;
+        console.log(index);
+        if (index <= this.state.words.length) {
+            this.setState({
+                index: index,
+                currentWord: this.state.words[index]
+            });
+        }
+    }
     render() {
+        const listWord = this.state.words.map((word) =>
+            <li key={word.id} id={word.id - 1} className="text-center word-list" onClick={this.selectWord}>{word.eng}</li>
+        );
+        const examples = this.state.currentWord.examples.map((example) =>
+            <p key={example.exampleId}>{example.example.eng}</p>
+        );
+        const { currentWord ,index} = this.state;
         return (
-            <div>
-                <Header></Header>
-                <main id="flashcard">
+              <div id="wrapper">
+              <SubMenuClient></SubMenuClient>
+              <div id="content-wrapper" className="d-flex flex-column">
+                  <div id="content">
+                      <HeaderClient></HeaderClient>
+                      <main id="flashcard">
                     <div className="container pt-5">
                         <div className="row">
                             <div className="col-3 bg-xam">
-                            <ol type="1">
-                                    <li><a href="#">abide by</a></li>
-                                    <li><a href="#">agreement</a></li>
-                                    <li><a href="#">assurance</a></li>
-                                    <li><a href="#">cancellation</a></li>
-                                    <li><a href="#">determine</a></li>
-                                    <li><a href="#">engage</a></li>
-                                    <li><a href="#">establish</a></li>
-                                    <li><a href="#">abide by</a></li>
-                                    <li><a href="#">agreement</a></li>
-                                    <li><a href="#">assurance</a></li>
-                                    <li><a href="#">cancellation</a></li>
-                                    <li><a href="#">determine</a></li>
-                                    <li><a href="#">engage</a></li>
-                                    <li><a href="#">establish</a></li>
-                                    <li><a href="#">abide by</a></li>
-                                    <li><a href="#">agreement</a></li>
-                                    <li><a href="#">assurance</a></li>
-                                    <li><a href="#">cancellation</a></li>
-                                    <li><a href="#">determine</a></li>
-                                    <li><a href="#">engage</a></li>
-                                    <li><a href="#">establish</a></li>
-                                    <li><a href="#">abide by</a></li>
-                                    <li><a href="#">agreement</a></li>
-                                    <li><a href="#">assurance</a></li>
-                                    <li><a href="#">cancellation</a></li>
-                                    <li><a href="#">determine</a></li>
-                                    <li><a href="#">engage</a></li>
-                                    <li><a href="#">establish</a></li>
-                                    <li><a href="#">abide by</a></li>
-                                    <li><a href="#">agreement</a></li>
-                                    <li><a href="#">assurance</a></li>
-                                    <li><a href="#">cancellation</a></li>
-                                    <li><a href="#">determine</a></li>
-                                    <li><a href="#">engage</a></li>
-                                    <li><a href="#">establish</a></li>
+                                <ol type="1">
+                                    {listWord}
                                 </ol>
                             </div>
                             <div className="col-9 bg-flashcard">
+                                {index > 0 && <span className="fa fa-caret-up" onClick={this.previousWord}></span>}
                                 <div className="flip-container">
                                     <div className="flippable flashcard">
                                         <div className="front">
-                                            <h2 className="text-primary">abide by</h2>
-                                            <p>/ əˈbaɪd baɪ /</p>
-                                            <p>To cooperate with that company, he had to abide by the contract's conditions.</p>
+                                            <h2 className="text-primary">{currentWord.eng}</h2>
+                                            <p>/ {currentWord.spelling} /</p>
+                                            {examples}
                                         </div>
                                         <div className="back">
                                             <div className="row">
-                                                <div className="col-8"><img src="image/card.jpeg" className="img-100" /></div>
-                                                <div className="col-4"> <p>tuân theo</p></div>
+                                                <div className="col-8"><img src={currentWord.wordImg || "image/card.jpeg"} className="img-100 card-img-top" /></div>
+                                                <div className="col-4"> <p>{currentWord.vie}</p></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <span className="fa fa-caret-down" />
+                                {index < this.state.words.length -1 && <span className="fa fa-caret-down" onClick={this.nextWord} />}
                             </div>
                         </div>
                     </div>
                 </main>
-                </div>
+          
+                      <Footer></Footer>
+                  </div>
+              </div>          
+              
+             </div>
         )
     }
 }

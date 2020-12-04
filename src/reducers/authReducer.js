@@ -44,10 +44,6 @@ const authReducer = (state = initState, action) => {
       toast("Tài khoản không tồn tại")
       return state;
     }
-    case "SIGN_OUT": {
-      toast("Bạn đã đăng xuất");
-      return state;
-    }
     case "SIGN_UP": {
       toast("Xin chào bạn đã đến với Duolingo");
       return state;
@@ -61,6 +57,17 @@ const authReducer = (state = initState, action) => {
     }
     case "SIGN_UP_ERR_PASS": {
       return { authError_Pass: 'Mật khẩu xác nhận không đúng' }
+    }
+    case "SIGN_OUT": {
+      localStorage.removeItem('account');
+      localStorage.removeItem('token');
+      toast("Đăng xuất thành công");
+      return ({
+        ...state,
+        isLoggedIn: false,
+        account: {},
+        token: ''
+      });
     }
     default:
       return state;

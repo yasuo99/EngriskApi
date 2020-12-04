@@ -17,6 +17,11 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import NapTienPage from './pages/NapTienPage/NapTienPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 import FlashCardPage from './pages/FlashCardPage/FlashCardPage';
+import ManagementWord from './pages/Admin/ManagementWord';
+import ThemBaiViet from './pages/ThaoLuanPage/ThemBaiViet';
+import KetQuaTraCuu from './pages/XemThemPage/KetQuaTraCuu';
+import DapAnSai from './pages/HocPage/DapAnSai';
+import DapAnDung from './pages/HocPage/DapAnDung';
 const routes = [
     {
         path: '/home',
@@ -29,27 +34,52 @@ const routes = [
         main: () => <LandingPage />
     },
     {
-        path: '/thaoluan',
+        path: '/thao-luan',
         exact: true,
         main: () => <ThaoLuanPage />
     },
     {
-        path: '/thaoluanchitiet',
+        path: '/thao-luan/them-bai-viet',
+        exact: true,
+        main: () => <ThemBaiViet />
+    },
+    {
+        path: '/thao-luan-chi-tiet',
         exact: true,
         main: () => <ThaoLuanChiTietPage />
     },
     {
-        path: '/cuahang',
+        path: '/cua-hang',
         exact: true,
         main: () => <CuaHangPage />
     },
     {
-        path: '/tudien',
+        path: '/tu-dien',
         exact: true,
         main: () => <TuDienPage />
     },
     {
-        path: '/tuvung',
+        path: '/ketquatracuu',
+        exact: true,
+        main: () => <KetQuaTraCuu />
+    },
+    {
+        path: '/dapansai',
+        exact: true,
+        main: () => <DapAnSai />
+    },
+    {
+        path: '/dapandung',
+        exact: true,
+        main: () => <DapAnDung />
+    },
+    {
+        path: '/ketquatracuu',
+        exact: true,
+        main: () => <KetQuaTraCuu />
+    },
+    {
+        path: '/tu-vung',
         exact: true,
         main: () => <TuVungPage />
     },
@@ -59,12 +89,7 @@ const routes = [
         main: () => <HocHinhAnh />
     },
     {
-        path: '/hoc',
-        exact: true,
-        main: () => <Hoc />
-    },
-    {
-        path: '/naptien',
+        path: '/nap-tien',
         exact: true,
         main: () => <NapTienPage />
     },
@@ -83,6 +108,7 @@ const routes = [
         exact: true,
         main: () => <CaiDatTaiKhoan />
     },
+    {
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
@@ -106,6 +132,11 @@ const routes = [
         path: '/management',
         exact: true,
         main: () => <Management />
+    },
+    {
+        path: '/managementword',
+        exact: true,
+        main: () => <ManagementWord />
     },
     {
         path: '/loi',

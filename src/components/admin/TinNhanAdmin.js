@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-class TinNhan extends Component{
+class TinNhanAdmin extends Component{
     render(){
         return(
            
@@ -19,4 +19,4 @@ class TinNhan extends Component{
         )
     }
 }
-export default TinNhan;
+export default TinNhanAdmin;

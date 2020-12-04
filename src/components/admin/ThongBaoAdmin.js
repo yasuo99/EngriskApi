@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-class ThongBao extends Component{
+class ThongBaoAdmin extends Component{
     render(){
         return(
             <li className="nav-item dropdown no-arrow mx-1">
@@ -52,4 +52,4 @@ class ThongBao extends Component{
         )
     }
 }
-export default ThongBao;
+export default ThongBaoAdmin;

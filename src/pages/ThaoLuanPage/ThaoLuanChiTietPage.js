@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../Header/Header';
+import BinhLuanPost from '../../components/thaoluan/BinhLuanPost';
+import ContentPost from '../../components/thaoluan/ContentPost';
+import PhanHoiPost from '../../components/thaoluan/PhanHoiPost';
+import HeaderClient from '../../components/client/HeaderClient';
+import SubMenuClient from '../../components/client/SubMenuClient';
+import Footer from '../Footer/Footer';
 
 class ThaoLuanChiTietPage extends Component {
     render() {
         return (
-            <div>
-               <Header></Header>
-                <section id="chitietthaoluan">
+            <div id="wrapper">
+            <SubMenuClient></SubMenuClient>
+            <div id="content-wrapper" className="d-flex flex-column">
+                <div id="content">
+                    <HeaderClient></HeaderClient>
+                    <section id="chitietthaoluan">
                     <div className="container pt-3">
                         <div className="row kechan">
                             <div className="col-6 diendan mt-5 mb-5">
@@ -16,34 +24,11 @@ class ThaoLuanChiTietPage extends Component {
                             <div className="col-6 theodoi text-right mt-4"><button type="button" className="btn btn-light">THEO DÕI THẢO
                       LUẬN</button></div>
                         </div>
-                        <div className="chude-binhluan">
-                            <div className="row mt-5">
-                                <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src="image/imag-01.jpg" /></div>
-                                <div className="col-md-11 pt-3">
-                                    <h4>Tìm hiểu về những loại bánh ngọt trên thế giới</h4>
-                                    <a href="#">Lap</a>
-                                    <p className="mt-3">Mong rằng doulingo có chức năng call giao tiếp để mọi người cùng luyện nói tiếng
-                        anh với nhau</p>
-                                </div>
-                                <div className="baocao">
-                                    <a href="#" className="mr-3">BÁO CÁO</a>
-                                    <a href="#">TẶNG LINGOT</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="binhluan">
-                            <div className="row mt-5">
-                                <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src="image/imag-01.jpg" /></div>
-                                <div className="col-md-11">
-                                    <textarea rows={4} cols={140} placeholder="Gửi một bình luận mới" defaultValue={""} />
-                                    <button type="button" className="btn btn-primary mr-3 mt-2">ĐĂNG</button>
-                                    <button type="button" className="btn btn-primary mt-2">HỦY</button>
-                                </div>
-                            </div>
-                        </div>
+                        <ContentPost></ContentPost>
+                        <BinhLuanPost></BinhLuanPost>
                         <div className="row mt-5 kechan">
                             <div className="col-6">
-                                <h3>1 NHẬN XÉT</h3>
+                                <h3>NHẬN XÉT</h3>
                             </div>
                             <div className="col-6 sapxep">
                                 <div className="navbar navbar-expand-lg navbar-light">
@@ -62,50 +47,16 @@ class ThaoLuanChiTietPage extends Component {
                             </div>
                         </div>
                         <div className="phanhoi-binhluan">
-                            <div className="row mt-3 kechan">
-                                <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src="image/imag-01.jpg" /></div>
-                                <div className="col-md-11 pt-3">
-                                    <a href="#">Lap</a>
-                                    <p className="mt-3">Mong rằng doulingo có chức năng call giao tiếp để mọi người cùng luyện nói tiếng
-                        anh với nhau</p>
-                                </div>
-                                <div className="baocao">
-                                    <a href="#" className="mr-3">TRẢ LỜI</a>
-                                    <a href="#" className="mr-3">BÁO CÁO</a>
-                                    <a href="#">TẶNG LINGOT</a>
-                                </div>
-                            </div>
-                            <div className="row mt-3 kechan">
-                                <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src="image/imag-01.jpg" /></div>
-                                <div className="col-md-11 pt-3">
-                                    <a href="#">Lap</a>
-                                    <p className="mt-3">Mong rằng doulingo có chức năng call giao tiếp để mọi người cùng luyện nói tiếng
-                        anh với nhau</p>
-                                </div>
-                                <div className="baocao">
-                                    <a href="#" className="mr-3">TRẢ LỜI</a>
-                                    <a href="#" className="mr-3">BÁO CÁO</a>
-                                    <a href="#">TẶNG LINGOT</a>
-                                </div>
-                            </div>
-                            <div className="row mt-3 kechan">
-                                <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src="image/imag-01.jpg" /></div>
-                                <div className="col-md-11 pt-3">
-                                    <a href="#">Lap</a>
-                                    <p className="mt-3">Mong rằng doulingo có chức năng call giao tiếp để mọi người cùng luyện nói tiếng
-                        anh với nhau</p>
-                                </div>
-                                <div className="baocao">
-                                    <a href="#" className="mr-3">TRẢ LỜI</a>
-                                    <a href="#" className="mr-3">BÁO CÁO</a>
-                                    <a href="#">TẶNG LINGOT</a>
-                                </div>
-                            </div>
+                           <PhanHoiPost></PhanHoiPost>
                         </div>
                     </div>
                 </section>
 
-            </div>
+                    <Footer></Footer>
+                </div>
+            </div>          
+            
+           </div>
         );
     }
 }

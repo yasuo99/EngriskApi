@@ -1,7 +1,11 @@
 import wordApi from '../api/wordApi';
 
 export const getAllWord = (params) => {
-    return wordApi.getAll(params);
+    return  wordApi.getAll(params).then(response => {
+        return response;
+    }).catch(error => {
+        console.log(error);
+    });
 }
 export const getWord = (id) => wordApi.getDetail(id);
 
