@@ -27,15 +27,17 @@ namespace Engrisk.Controllers
             return Ok(levels);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDetail(int id){
+        public async Task<IActionResult> GetDetail(int id)
+        {
             var levelFromDb = await _repo.GetOneWithCondition<Level>(level => level.Id == id);
-            if(levelFromDb == null){
+            if (levelFromDb == null)
+            {
                 return NotFound();
             }
             return Ok(levelFromDb);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateLevel(Level level)
+        public async Task<IActionResult> CreateLevel([FromBody] Level level)
         {
             var property = new Dictionary<dynamic, dynamic>();
             property.Add("LevelName", level.LevelName);
@@ -43,43 +45,63 @@ namespace Engrisk.Controllers
             {
                 return Conflict();
             }
+            else
+            {
+                property.Remove("LevelName");
+                property.Add("StartExp", level.StartExp);
+                property.Add("EndExp", level.EndExp);
+                if (_repo.Exists<Level>(property))
+                {
+                    return Conflict();
+                }
+            }
             _repo.Create(level);
             if (await _repo.SaveAll())
             {
-                return Ok();
+                return CreatedAtAction("GetDetail", new { id = level.Id }, level);
             }
             return BadRequest("Error on creating");
         }
         [HttpPut("{levelId}")]
-        public async Task<IActionResult> UpdateLevel(int levelId, Level updateLevel)
+        public async Task<IActionResult> UpdateLevel(int levelId, [FromBody] Level updateLevel)
         {
-            var levelFromDb = await _repo.GetOneWithCondition<Level>(level => level.Id == levelId);
-            if (levelFromDb == null)
+            try
             {
-                return NotFound();
+                var levelFromDb = await _repo.GetOneWithCondition<Level>(level => level.Id == levelId);
+                if (levelFromDb == null)
+                {
+                    return NotFound();
+                }
+                var property = new Dictionary<dynamic, dynamic>();
+                property.Add("LevelName", updateLevel.LevelName);
+                if (_repo.Exists<Level>(property))
+                {
+                    return Conflict();
+                }
+                _repo.Update(updateLevel);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return BadRequest("Error on updating");
             }
-            var property = new Dictionary<dynamic, dynamic>();
-            property.Add("LevelName", updateLevel.LevelName);
-            if(_repo.Exists<Level>(property))
+            catch (System.Exception e)
             {
-                return Conflict();
+                throw e;
             }
-            _repo.Update(updateLevel);
-            if(await _repo.SaveAll()){
-                return Ok();
-            }
-            return BadRequest("Error on updating");
+
         }
         [HttpDelete("{levelId}")]
         public async Task<IActionResult> DeleteLevel(int levelId)
         {
             var levelFromDb = await _repo.GetOneWithCondition<Level>(lv => lv.Id == levelId);
-            if(levelFromDb == null)
+            if (levelFromDb == null)
             {
                 return NotFound();
             }
             _repo.Delete(levelFromDb);
-            if(await _repo.SaveAll()){
+            if (await _repo.SaveAll())
+            {
                 return Ok();
             }
             return BadRequest("Error on deleting");

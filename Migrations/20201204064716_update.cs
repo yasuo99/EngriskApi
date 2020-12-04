@@ -2,22 +2,21 @@
 
 namespace Engrisk.Migrations
 {
-    public partial class UpdateQuizEntity : Migration
+    public partial class update : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "RequireLogin",
-                table: "Quiz",
-                nullable: false,
-                defaultValue: false);
+            migrationBuilder.AddColumn<string>(
+                name: "Type",
+                table: "Notifications",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "RequireLogin",
-                table: "Quiz");
+                name: "Type",
+                table: "Notifications");
         }
     }
 }

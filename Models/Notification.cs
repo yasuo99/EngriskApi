@@ -10,5 +10,6 @@ namespace Engrisk.Models
         public string Url { get; set; }
         public DateTime PublishedDate { get; set; }
         public bool IsPublish { get; set; }
+        public string Type { get; set; }
      }
 }

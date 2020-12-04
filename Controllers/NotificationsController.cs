@@ -31,6 +31,21 @@ namespace Engrisk.Controllers
             Response.AddPaginationHeader(notifications.CurrentPage, notifications.PageSize, notifications.TotalItems, notifications.TotalPages);
             return Ok(returnNotifications);
         }
+        [HttpGet("publishing")]
+        public async Task<IActionResult> GetPublishing([FromQuery] SubjectParams subjectParams){
+            var notifications = await _repo.GetAll<Notification>(subjectParams, noti => noti.IsPublish);
+            var returnNotifications = notifications.OrderByDescending(noti => noti.PublishedDate);
+            Response.AddPaginationHeader(notifications.CurrentPage, notifications.PageSize, notifications.TotalItems, notifications.TotalPages);
+            return Ok(returnNotifications);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetail(int id){
+            var notify = await _repo.GetOneWithCondition<Notification>(n => n.Id == id);
+            if(notify == null){
+                return NotFound();
+            }
+            return Ok(notify);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateNotify(NotificationCreateDTO notification)
         {

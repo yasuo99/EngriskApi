@@ -24,7 +24,8 @@ namespace Engrisk.Controllers
         {
             _mapper = mapper;
             _repo = repo;
-            var account = new CloudinaryDotNet.Account(){
+            var account = new CloudinaryDotNet.Account()
+            {
                 ApiKey = cloudinarySettings.Value.ApiKey,
                 ApiSecret = cloudinarySettings.Value.ApiSecret,
                 Cloud = cloudinarySettings.Value.CloudName
@@ -34,7 +35,7 @@ namespace Engrisk.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllQuizzes([FromQuery] SubjectParams subjectParams)
         {
-            return Ok(await _repo.GetAll<Quiz>(subjectParams,null,""));
+            return Ok(await _repo.GetAll<Quiz>(subjectParams, null, ""));
         }
         [HttpPost]
         public async Task<IActionResult> CreateQuiz([FromForm] QuizDTO quizDTO)
@@ -42,7 +43,8 @@ namespace Engrisk.Controllers
             Quiz quiz = new Quiz();
             quiz = _mapper.Map(quizDTO, quiz);
             var result = _cloud.UploadImage(quizDTO.File);
-            if(result != null){
+            if (result != null)
+            {
                 quiz.PublicId = result.PublicId;
                 quiz.QuizPhoto = result.PublicUrl;
             };
@@ -124,7 +126,6 @@ namespace Engrisk.Controllers
                 var question = examFromDb.Questions.FirstOrDefault(question => question.QuestionId == answer.Id);
                 if (answer.Answer.Equals(question.Question.Answer))
                 {
-                    score += question.Question.Score;
                     answer.IsRightAnswer = true;
                 }
                 else
@@ -147,12 +148,12 @@ namespace Engrisk.Controllers
                             break;
                         default:
                             accountFromDb.Exp += examFromDb.ExpGain;
-                        break;
+                            break;
                     }
 
                     var historyFromDb = await _repo.GetOneWithConditionTracking<History>(history => history.QuizId == id && history.AccountId == accountFromDb.Id && history.IsDone == false);
                     historyFromDb.DoneDate = DateTime.Now;
-                    historyFromDb.TimeSpent = DateTime.Now.MinusDate(historyFromDb.StartDate);
+                    historyFromDb.TimeSpent = (int)Math.Round(DateTime.Now.MinusDate(historyFromDb.StartDate));
                     historyFromDb.IsDone = true;
                     historyFromDb.Score = score;
                 }

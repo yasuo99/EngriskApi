@@ -13,12 +13,11 @@ namespace Engrisk.Models
         public virtual Account Account { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public int UpVote { get; set; }
-        public int DownVote { get; set; }
+        public int Rating { get; set; }
         public DateTime Date { get; set; }
         public bool IsLocked { get; set; }
         public virtual IEnumerable<Comment> Comments { get; set; }
-        public virtual IEnumerable<PostUpvote> PostUpvotes { get; set; }
+        public virtual IEnumerable<PostRating> PostRatings { get; set; }
         public virtual IEnumerable<LikedPost> LikedPosts { get; set; }
     }
 }

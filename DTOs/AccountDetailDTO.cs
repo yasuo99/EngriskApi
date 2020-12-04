@@ -31,7 +31,7 @@ namespace Engrisk.DTOs
         public virtual IEnumerable<AccountAttendance> Attendences { get; set; }
         public virtual IEnumerable<AccountPostDTO> Posts { get; set; }
         public virtual IEnumerable<AccountCommentDTO> Comments { get; set; }
-        public virtual IEnumerable<PostUpvoteDTO> PostUpvotes { get; set; }
+        public virtual IEnumerable<PostRatingDTO> PostRatings { get; set; }
         [JsonIgnore]
         public string RefreshToken { get; set; }
     }

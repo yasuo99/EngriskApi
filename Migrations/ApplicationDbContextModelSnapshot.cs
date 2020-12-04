@@ -169,6 +169,9 @@ namespace Engrisk.Migrations
                     b.Property<int>("BadgeId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("AccountId", "BadgeId");
 
                     b.HasIndex("BadgeId");
@@ -264,7 +267,7 @@ namespace Engrisk.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BadgeLogo")
+                    b.Property<string>("BadgeName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -337,6 +340,9 @@ namespace Engrisk.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
 
@@ -376,6 +382,85 @@ namespace Engrisk.Migrations
                     b.ToTable("DailyMissions");
                 });
 
+            modelBuilder.Entity("Engrisk.Models.Exam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Create_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Exam");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.ExamHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("End_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Exp")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDoing")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Start_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TotalTime")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("ExamId");
+
+                    b.ToTable("ExamHistories");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.ExamQuestion", b =>
+                {
+                    b.Property<int>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExamId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("ExamQuestions");
+                });
+
             modelBuilder.Entity("Engrisk.Models.Example", b =>
                 {
                     b.Property<int>("Id")
@@ -385,6 +470,9 @@ namespace Engrisk.Migrations
 
                     b.Property<string>("Eng")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Inserted")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Vie")
                         .HasColumnType("nvarchar(max)");
@@ -409,6 +497,9 @@ namespace Engrisk.Migrations
 
                     b.Property<string>("FacebookLink2")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Inserted")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
@@ -524,6 +615,9 @@ namespace Engrisk.Migrations
                     b.Property<int>("EndExp")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Inserted")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LevelName")
                         .HasColumnType("nvarchar(max)");
 
@@ -587,6 +681,9 @@ namespace Engrisk.Migrations
                     b.Property<DateTime>("PublishedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
@@ -611,17 +708,14 @@ namespace Engrisk.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DownVote")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UpVote")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -630,7 +724,7 @@ namespace Engrisk.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Engrisk.Models.PostUpvote", b =>
+            modelBuilder.Entity("Engrisk.Models.PostRating", b =>
                 {
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -641,11 +735,14 @@ namespace Engrisk.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
                     b.HasKey("AccountId", "PostId");
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("PostUpvotes");
+                    b.ToTable("PostRatings");
                 });
 
             modelBuilder.Entity("Engrisk.Models.Question", b =>
@@ -673,6 +770,15 @@ namespace Engrisk.Migrations
                     b.Property<string>("D")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Inserted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFillOutQuestion")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsListeningQuestion")
                         .HasColumnType("bit");
 
@@ -681,9 +787,6 @@ namespace Engrisk.Migrations
 
                     b.Property<string>("PublicId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -750,7 +853,7 @@ namespace Engrisk.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuizQuestion");
+                    b.ToTable("QuizQuestions");
                 });
 
             modelBuilder.Entity("Engrisk.Models.ReportError", b =>
@@ -817,12 +920,50 @@ namespace Engrisk.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Inserted")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Word")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("StringFilters");
+                });
+
+            modelBuilder.Entity("Engrisk.Models.TopupHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TopupDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("TopupHistories");
                 });
 
             modelBuilder.Entity("Engrisk.Models.Word", b =>
@@ -833,6 +974,12 @@ namespace Engrisk.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Eng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Spelling")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Vie")
@@ -1118,6 +1265,36 @@ namespace Engrisk.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Engrisk.Models.ExamHistory", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("ExamHistories")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Exam", "Exam")
+                        .WithMany()
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Engrisk.Models.ExamQuestion", b =>
+                {
+                    b.HasOne("Engrisk.Models.Exam", "Exam")
+                        .WithMany("Questions")
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Engrisk.Models.Question", "Question")
+                        .WithMany("Exams")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Engrisk.Models.Group", b =>
                 {
                     b.HasOne("Engrisk.Models.Account", "Account")
@@ -1179,16 +1356,16 @@ namespace Engrisk.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Engrisk.Models.PostUpvote", b =>
+            modelBuilder.Entity("Engrisk.Models.PostRating", b =>
                 {
                     b.HasOne("Engrisk.Models.Account", "Account")
-                        .WithMany("PostUpvotes")
+                        .WithMany("PostRatings")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Engrisk.Models.Post", "Post")
-                        .WithMany("PostUpvotes")
+                        .WithMany("PostRatings")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1205,7 +1382,7 @@ namespace Engrisk.Migrations
                     b.HasOne("Engrisk.Models.Quiz", "Quiz")
                         .WithMany("Questions")
                         .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1220,6 +1397,15 @@ namespace Engrisk.Migrations
                     b.HasOne("Engrisk.Models.Question", "Question")
                         .WithMany()
                         .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Engrisk.Models.TopupHistory", b =>
+                {
+                    b.HasOne("Engrisk.Models.Account", "Account")
+                        .WithMany("TopupHistories")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

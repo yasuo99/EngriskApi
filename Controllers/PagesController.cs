@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -107,11 +108,23 @@ namespace Engrisk.Controllers
             }
             return StatusCode(500);
         }
-        [HttpGet("footer")]
+        [HttpGet("footers")]
         public async Task<IActionResult> GetAllFooter([FromQuery] SubjectParams subjectParams)
         {
             var footersFromDb = await _repo.GetAll<Footer>(subjectParams);
             return Ok(footersFromDb);
+        }
+        [HttpGet("footers/{id}")]
+        public async Task<IActionResult> GetFooter(int id){
+            var footer = await _repo.GetOneWithCondition<Footer>(f => f.Id == id);
+            if(footer == null){
+                return NotFound();
+            }
+            return Ok(footer);
+        }
+        [HttpPost("foooters")]
+        public async Task<IActionResult> CreateFooter([FromBody] Footer footer){
+            return Ok();
         }
     }
 }

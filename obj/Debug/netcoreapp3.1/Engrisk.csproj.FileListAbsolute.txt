@@ -84,3 +84,5 @@ C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\MegaApiClient.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Google.Apis.Drive.v3.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\Dropbox.Api.dll
 C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\MimeMapping.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\ExcelDataReader.dll
+C:\Users\Thanh\Desktop\Engrisk\bin\Debug\netcoreapp3.1\ExcelDataReader.DataSet.dll

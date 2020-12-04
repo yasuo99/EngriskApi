@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Engrisk.Models
@@ -11,6 +12,7 @@ namespace Engrisk.Models
         public int ReplyId { get; set; }
         [ForeignKey("ReplyId")]
         public virtual Comment Reply { get; set; }
+        public DateTime Date { get; set; }
         public bool IsEdited { get; set; }
     }
 }

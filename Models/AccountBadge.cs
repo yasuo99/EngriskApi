@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Engrisk.Models
@@ -10,5 +11,6 @@ namespace Engrisk.Models
         public int BadgeId { get; set; }
         [ForeignKey("BadgeId")]
         public virtual Badge Badge { get; set; }
+        public DateTime Date { get; set; }
     }
 }

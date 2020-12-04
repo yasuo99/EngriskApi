@@ -26,16 +26,45 @@ namespace Engrisk.Controllers
             _repo = repo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllPost([FromQuery] SubjectParams subjectParams)
+        public async Task<IActionResult> GetAllPosts([FromQuery] SubjectParams subjectParams)
         {
             var posts = await _repo.GetAll<Post>(subjectParams, null, "Account");
             var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
             return Ok(returnPosts);
         }
+        [HttpGet("rating")]
+        public async Task<IActionResult> GetHighRatePosts([FromQuery] SubjectParams subjectParams)
+        {
+            var posts = await _repo.GetAll<Post>(subjectParams, null, "Account", order => order.OrderByDescending(post => post.Rating));
+            var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
+            return Ok(returnPosts);
+        }
+        [HttpGet("new")]
+        public async Task<IActionResult> GetNewPosts([FromQuery] SubjectParams subjectParams)
+        {
+            var posts = await _repo.GetAll<Post>(subjectParams, null, "Account", order => order.OrderByDescending(post => post.Date));
+            var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
+            return Ok(returnPosts);
+        }
+        [Authorize]
+        [HttpGet("following")]
+        public async Task<IActionResult> GetFollowingPosts([FromQuery] SubjectParams subjectParams){
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var posts = await _repo.GetAll<Post>(subjectParams, post => post.PostRatings.Any(account => account.AccountId == userId), "Account");
+            var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
+            return Ok(returnPosts);
+        }
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchPosts([FromQuery] SubjectParams subjectParams, [FromBody] SearchDTO searchDTO){
+            var postsFromDb = await _repo.GetAll<Post>(subjectParams, post => post.Title.ToLower().Contains(searchDTO.Search.ToLower().Trim()) || post.Content.ToLower().Contains(searchDTO.Search.ToLower().Trim()),"Account");
+            var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(postsFromDb);
+            return Ok(returnPosts);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
-            var post = await _repo.GetOneWithConditionTracking<Post>(pos => pos.Id == id, "Account,Comments");
+            var post = await _repo.GetOneWithConditionTracking<Post>(pos => pos.Id == id, "Account,PostRatings");
             if (post == null)
             {
                 return NotFound();
@@ -148,27 +177,31 @@ namespace Engrisk.Controllers
             }
             return StatusCode(500);
         }
-        [HttpPost("{id}/upvote")]
-        public async Task<IActionResult> UpDownVotePost(int id)
+        [Authorize]
+        [HttpPost("{id}/rating")]
+        public async Task<IActionResult> UpDownVotePost(int id, [FromBody] RatingDTO rating)
         {
+            if(id != rating.Id){
+                return NotFound();
+            }
             var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var post = await _repo.GetOneWithCondition<Post>(post => post.Id == id);
-            var postUpvoteFromDb = await _repo.GetOneWithCondition<PostUpvote>(post => post.AccountId == accountId && post.PostId == id);
-            if (postUpvoteFromDb == null)
+            var postRatingFromDb = await _repo.GetOneWithCondition<PostRating>(post => post.AccountId == accountId && post.PostId == id);
+            if (postRatingFromDb == null)
             {
-                post.UpVote++;
-                var postUpvote = new PostUpvote()
+                var postUpvote = new PostRating()
                 {
                     PostId = id,
                     AccountId = accountId,
+                    Rating = rating.Rating,
                     Date = DateTime.Now
                 };
                 _repo.Create(postUpvote);
             }
             else
             {
-                post.UpVote--;
-                post.DownVote++;
+                postRatingFromDb.Rating = rating.Rating;
+                postRatingFromDb.Date = DateTime.Now;
             }
             if (await _repo.SaveAll())
             {

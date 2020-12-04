@@ -17,6 +17,18 @@ namespace Engrisk.Services
         {
             _client = new DropboxClient(dropBoxSettings.Value.AccessToken);
         }
+
+        public async Task<bool> DeleteFile(string path, string filename)
+        {
+            var deletedResult = await _client.Files.ListFolderAsync(path,includeDeleted: true);
+            var file = deletedResult.Entries.FirstOrDefault(file => file.Name.Equals(filename)).AsDeleted;
+            _client.Dispose();
+            if(file != null){
+                return true;
+            }
+            return false;
+        }
+
         public async Task<DropboxDTO> UploadFile(IFormFile file, string folder)
         {
             if (file.Length > 0)
@@ -34,12 +46,11 @@ namespace Engrisk.Services
                         var sharedResult = await _client.Sharing.CreateSharedLinkWithSettingsAsync(folder + "/" + file.FileName);
                         sharedUrl = sharedResult.Url;
                     }
-                    catch (DropboxException ex)
+                    catch (DropboxException)
                     {
                         var sharedResult = await _client.Sharing.ListSharedLinksAsync(folder + "/" + file.FileName);
                         sharedUrl = sharedResult.Links.First().Url;
                     }
-                    
                     _client.Dispose();
                     if (!string.IsNullOrEmpty(result.Rev))
                     {

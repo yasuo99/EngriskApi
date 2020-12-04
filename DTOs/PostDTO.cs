@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Engrisk.Models;
+using Newtonsoft.Json;
 
 namespace Engrisk.DTOs
 {
@@ -12,10 +13,8 @@ namespace Engrisk.DTOs
         public string AccountUserName { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public int UpVote { get; set; }
-        public int DownVote { get; set; }
         public DateTime Date { get; set; }
-        public virtual IEnumerable<AccountCommentDTO> Comments { get; set; }
-        public virtual IEnumerable<UpvoteDTO> PostUpvotes { get; set; }
+        public int TotalComment { get; set; }
+        public double Rating { get; set; }
     }
 }

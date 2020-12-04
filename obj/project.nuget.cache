@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "l9e9+O8CoDLHJLaNID/58DS0HBCTvAGbApzdcF8VuGfnUY+my6B84oWBAu003WbE7do4JLwGm4HV8G9WgSm8ZQ==",
+  "dgSpecHash": "fcpJTIHYHOkMQIIYuJkpw6Jyad4sk1Nxzc85sN06Y+nvWrRpEuwT2no+dHj3826n/Q+MQS3tyYpQdTIkv1HEQA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Thanh\\Desktop\\Engrisk\\Engrisk.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,8 @@
     "C:\\Users\\Thanh\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\Thanh\\.nuget\\packages\\cloudinarydotnet\\1.13.1\\cloudinarydotnet.1.13.1.nupkg.sha512",
     "C:\\Users\\Thanh\\.nuget\\packages\\dropbox.api\\5.5.0\\dropbox.api.5.5.0.nupkg.sha512",
+    "C:\\Users\\Thanh\\.nuget\\packages\\exceldatareader\\3.6.0\\exceldatareader.3.6.0.nupkg.sha512",
+    "C:\\Users\\Thanh\\.nuget\\packages\\exceldatareader.dataset\\3.6.0\\exceldatareader.dataset.3.6.0.nupkg.sha512",
     "C:\\Users\\Thanh\\.nuget\\packages\\google.apis\\1.49.0\\google.apis.1.49.0.nupkg.sha512",
     "C:\\Users\\Thanh\\.nuget\\packages\\google.apis.auth\\1.49.0\\google.apis.auth.1.49.0.nupkg.sha512",
     "C:\\Users\\Thanh\\.nuget\\packages\\google.apis.core\\1.49.0\\google.apis.core.1.49.0.nupkg.sha512",

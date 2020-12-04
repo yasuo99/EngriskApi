@@ -1,7 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace Engrisk.Helper
@@ -74,11 +80,55 @@ namespace Engrisk.Helper
             }
             return age;
         }
-        public static int MinusDate(this DateTime startDate, DateTime endDate)
+        public static double MinusDate(this DateTime startDate, DateTime endDate)
         {
-            var hours = endDate.Date.Hour - startDate.Date.Hour;
-            var minutes = endDate.Date.Minute - startDate.Date.Minute;
-            return hours * 60 + minutes;
+            var timestamp = (endDate.Subtract(startDate)).TotalSeconds;
+            return timestamp;
+        }
+        public static async Task<IEnumerable<JToken>> DeserializeJson(this IFormFile file)
+        {
+            try
+            {
+                using (var fileStream = file.OpenReadStream())
+                {
+                    using (var result = new StreamReader(fileStream))
+                    {
+                        using (var json = new JsonTextReader(result))
+                        {
+                            var jResult = await JToken.ReadFromAsync(json);
+                            return jResult.Children().ToList();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        public static async Task<IEnumerable<T>> Test<T>(this IFormFile file, T dest) where T : class
+        {
+
+            return null;
+        }
+        public static async Task<DataSet> ReadExcel(this IFormFile file)
+        {
+            using (var stream = file.OpenReadStream())
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        UseColumnDataType = true,
+                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+                    return result;
+                }
+            }
         }
     }
 }

@@ -28,21 +28,25 @@ namespace Engrisk.Helper
             .ForMember(question => question.D, options => options.MapFrom(src => src.Question.D))
             .ForMember(question => question.Content, options => options.MapFrom(src => src.Question.Content))
             .ForMember(question => question.IsListeningQuestion, options => options.MapFrom(src => src.Question.IsListeningQuestion))
-            .ForMember(question => question.Score, options => options.MapFrom(src => src.Question.Score))
-            .ForMember(question => question.Answer, opts => opts.MapFrom(src => src.Question.Answer))
             .ForMember(question => question.PhotoUrl, opts => opts.MapFrom(src => src.Question.PhotoUrl));
             CreateMap<Post,PostDTO>()
-            .ForMember(post => post.PostUpvotes, options => options.MapFrom(src => src.PostUpvotes.Select(u => new UpvoteDTO(){Id = u.AccountId,Username = u.Account.UserName})))
-            .ForMember(post => post.AccountUserName, opts => opts.MapFrom(src => src.Account.UserName));
+            .ForMember(post => post.Rating, opts => opts.MapFrom(src => src.PostRatings.Sum(s => s.Rating)/(src.PostRatings.Count() == 0 ? 1 : src.PostRatings.Count())))
+            .ForMember(post => post.TotalComment, opts => opts.MapFrom(src => src.Comments.Count()));
             CreateMap<Account,AdminAccountDTO>()
             .ForMember(account => account.Roles, options => options.MapFrom(src => src.Roles.Select(r => r.Role.Name)));
             CreateMap<Post,AccountPostDTO>();
             CreateMap<Comment,AccountCommentDTO>()
             .ForMember(cmt => cmt.AccountUsername,opts => opts.MapFrom(src => src.Account.UserName));
-            CreateMap<PostUpvote,PostUpvoteDTO>().ForMember(upvote => upvote.PostTitle,options => options.MapFrom(src => src.Post.Title))
-            .ForMember(upvote => upvote.TotalUpvote,opts => opts.MapFrom(src => src.Post.UpVote));
+            CreateMap<PostRating,PostRatingDTO>().ForMember(rating => rating.PostTitle,options => options.MapFrom(src => src.Post.Title))
+            .ForMember(upvote => upvote.TotalRating,opts => opts.MapFrom(src => src.Post.Rating));
             CreateMap<Group,GroupDTO>().ForMember(group => group.AccountUsername, opts => opts.MapFrom(src => src.Account.UserName));
             CreateMap<QuizDTO,Quiz>();
+            CreateMap<WordDTO,Word>();
+            CreateMap<WordExample,ExampleDTO>()
+            .ForMember(example => example.Eng, opts => opts.MapFrom(src => src.Example.Eng))
+            .ForMember(example => example.Vie,opts => opts.MapFrom(src => src.Example.Vie))
+            .ForMember(example => example.Id,opts => opts.MapFrom(src => src.ExampleId))
+            .ForMember(example => example.Inserted, opts => opts.MapFrom(src => src.Example.Inserted));
         }
     }
 }

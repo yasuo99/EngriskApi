@@ -17,7 +17,7 @@ namespace Engrisk.DTOs
         public string PublicId { get; set; }
         public virtual IEnumerable<AccountRole> Roles { get; set; }
         public virtual IEnumerable<Comment> Comments { get; set; }
-        public virtual IEnumerable<PostUpvote> PostUpvotes { get; set; }
+        public virtual IEnumerable<PostRating> PostRatings { get; set; }
 
 
     }

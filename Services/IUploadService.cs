@@ -7,5 +7,6 @@ namespace Engrisk.Services
     public interface IUploadService
     {
          Task<DropboxDTO> UploadFile(IFormFile file, string folder);
+         Task<bool> DeleteFile(string path, string filename);
     }
 }

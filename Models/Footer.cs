@@ -1,3 +1,6 @@
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Engrisk.Models
 {
     public class Footer
@@ -9,5 +12,6 @@ namespace Engrisk.Models
         public string FacebookLink1 { get; set; }
         public string FacebookLink2 { get; set; }
         public bool IsPublished { get; set; }
+        public DateTime Inserted { get; set; }
     }
 }

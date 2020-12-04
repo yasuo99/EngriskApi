@@ -24,12 +24,16 @@ namespace Engrisk.Data
         public DbSet<DailyMission> DailyMissions { get; set; }
         public DbSet<Badge> Badges { get; set; }
         public DbSet<History> Histories { get; set; }
+        public DbSet<ExamHistory> ExamHistories { get; set; }
+        public DbSet<TopupHistory> TopupHistories { get; set; }
         public DbSet<WordGroup> WordGroups { get; set; }
         public DbSet<WordExample> WordExamples { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<PostUpvote> PostUpvotes { get; set; }
+        public DbSet<PostRating> PostRatings { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<ExamQuestion> ExamQuestions { get; set; }
+        public DbSet<QuizQuestion> QuizQuestions { get; set; }
         public DbSet<CommentReply> CommentReplies { get; set; }
         public DbSet<AccountBadge> AccountBadges { get; set; }
         public DbSet<AccountMission> AccountMissions { get; set; }
@@ -42,9 +46,24 @@ namespace Engrisk.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            //Account Entity
             builder.Entity<Account>().HasIndex(acc => acc.Email).IsUnique();
             builder.Entity<Account>().HasIndex(acc => acc.UserName).IsUnique();
             builder.Entity<Account>().HasIndex(acc => acc.PhoneNumber).IsUnique();
+            builder.Entity<Account>().HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.AccountBadges).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.Attendences).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.Posts).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.LikedPosts).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.LikedComments).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.Comments).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.Groups).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.Histories).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>().HasMany(m => m.Storage).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+
+            //Account Role
             builder.Entity<AccountRole>(role =>
             {
                 role.HasKey(key => new { key.UserId, key.RoleId });
@@ -57,6 +76,7 @@ namespace Engrisk.Data
                     .HasForeignKey(key => key.RoleId)
                     .IsRequired();
             });
+            //AccountBadge Entity
             builder.Entity<AccountBadge>().HasKey(key => new { key.AccountId, key.BadgeId });
             builder.Entity<AccountBadge>().HasOne(o => o.Account)
                                         .WithMany(m => m.AccountBadges)
@@ -66,6 +86,8 @@ namespace Engrisk.Data
                                         .WithMany(m => m.Accounts)
                                         .HasForeignKey(key => key.BadgeId)
                                         .OnDelete(DeleteBehavior.Restrict);
+
+            //QuizQuestion Entity
             builder.Entity<QuizQuestion>().HasKey(key => new { key.QuizId, key.QuestionId });
             builder.Entity<QuizQuestion>().HasOne(o => o.Question)
                                         .WithMany(m => m.Quizes)
@@ -75,6 +97,20 @@ namespace Engrisk.Data
                                         .WithMany(m => m.Questions)
                                         .HasForeignKey(key => key.QuizId)
                                         .OnDelete(DeleteBehavior.Restrict);
+            //Quiz entity
+            builder.Entity<Quiz>().HasMany(m => m.Questions).WithOne(o => o.Quiz).OnDelete(DeleteBehavior.Cascade);
+
+            //ExamQuestion Entity
+            builder.Entity<ExamQuestion>(exam =>
+            {
+                exam.HasKey(key => new { key.ExamId, key.QuestionId });
+                exam.HasOne(o => o.Exam).WithMany(m => m.Questions).OnDelete(DeleteBehavior.Restrict);
+                exam.HasOne(o => o.Question).WithMany(m => m.Exams).OnDelete(DeleteBehavior.Restrict);
+            });
+            //Exam Entity
+            builder.Entity<Exam>().HasMany(m => m.Questions).WithOne(o => o.Exam).OnDelete(DeleteBehavior.Cascade);
+
+            //AccountMission Entity
             builder.Entity<AccountMission>().HasKey(key => new { key.AccountId, key.DailyMissionId });
             builder.Entity<AccountMission>().HasOne(o => o.Account)
                                         .WithMany(m => m.Missions)
@@ -119,6 +155,7 @@ namespace Engrisk.Data
                                         .WithMany(m => m.Replies)
                                         .HasForeignKey(key => key.ReplyId)
                                         .OnDelete(DeleteBehavior.ClientCascade);
+            //comment
             builder.Entity<Comment>().HasOne(o => o.Account)
                                     .WithMany(m => m.Comments)
                                     .HasForeignKey(key => key.AccountId)
@@ -127,16 +164,22 @@ namespace Engrisk.Data
                                     .WithMany(m => m.Comments)
                                     .HasForeignKey(key => key.PostId)
                                     .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<PostUpvote>().HasKey(key => new {key.AccountId, key.PostId});
-            builder.Entity<PostUpvote>().HasOne(o => o.Account)
-                                    .WithMany(m => m.PostUpvotes)
+            
+            //Post
+            builder.Entity<Post>().HasMany(m => m.Comments).WithOne(o => o.Post).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Post>().HasMany(m => m.PostRatings).WithOne(o => o.Post).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Post>().HasMany(m => m.LikedPosts).WithOne(o => o.Post).OnDelete(DeleteBehavior.Cascade);
+            //PostRating Entity
+            builder.Entity<PostRating>().HasKey(key => new { key.AccountId, key.PostId });
+            builder.Entity<PostRating>().HasOne(o => o.Account)
+                                    .WithMany(m => m.PostRatings)
                                     .HasForeignKey(k => k.AccountId)
                                     .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<PostUpvote>().HasOne(o => o.Post)
-                                    .WithMany(m => m.PostUpvotes)
+            builder.Entity<PostRating>().HasOne(o => o.Post)
+                                    .WithMany(m => m.PostRatings)
                                     .HasForeignKey(k => k.PostId)
                                     .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<LikedPost>().HasKey(key => new {key.AccountId, key.PostId});
+            builder.Entity<LikedPost>().HasKey(key => new { key.AccountId, key.PostId });
             builder.Entity<LikedPost>().HasOne(o => o.Account)
                                     .WithMany(m => m.LikedPosts)
                                     .HasForeignKey(key => key.AccountId)
@@ -145,10 +188,12 @@ namespace Engrisk.Data
                                     .WithMany(m => m.LikedPosts)
                                     .HasForeignKey(key => key.PostId)
                                     .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<LikedComment>().HasKey(key => new {key.AccountId, key.CommentId});
+
+            
+            builder.Entity<LikedComment>().HasKey(key => new { key.AccountId, key.CommentId });
             builder.Entity<LikedComment>().HasOne(o => o.Account).WithMany(m => m.LikedComments).HasForeignKey(key => key.AccountId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<LikedComment>().HasOne(o => o.Comment).WithMany(m => m.LikedComments).HasForeignKey(key => key.CommentId).OnDelete(DeleteBehavior.Restrict);
-        }   
+        }
 
     }
 }

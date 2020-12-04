@@ -72,7 +72,7 @@ namespace Engrisk.Services
             }
             catch (InvalidJwtException e)
             {
-                return null;
+                throw e;
             }
         }
     }

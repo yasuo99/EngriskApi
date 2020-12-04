@@ -26,12 +26,14 @@ namespace Engrisk.Models
         public virtual IEnumerable<Group> Groups { get; set; }
         public virtual IEnumerable<AccountRole> Roles { get; set; }
         public virtual IEnumerable<History> Histories { get; set; }
+        public virtual IEnumerable<ExamHistory> ExamHistories { get; set; }
+        public virtual IEnumerable<TopupHistory> TopupHistories { get; set; }
         public virtual IEnumerable<AccountMission> Missions { get; set; }
         public virtual IEnumerable<AccountStorage> Storage { get; set; }
         public virtual IEnumerable<AccountAttendance> Attendences { get; set; }
         public virtual IEnumerable<Post> Posts { get; set; }
         public virtual IEnumerable<Comment> Comments { get; set; }
-        public virtual IEnumerable<PostUpvote> PostUpvotes { get; set; }
+        public virtual IEnumerable<PostRating> PostRatings { get; set; }
         public virtual IEnumerable<LikedPost> LikedPosts { get; set; }
         public virtual IEnumerable<LikedComment> LikedComments { get; set; }
         ///<summary>

@@ -19,8 +19,8 @@ namespace Engrisk.DTOs
         public string B { get; set; }
         public string C { get; set; }
         public string D { get; set; }
-        public string Answer { get; set; }
         public bool IsListeningQuestion { get; set; }
+        public bool IsFillOutQuestion { get; set; }
         public int Score { get; set; }
     }
 }
