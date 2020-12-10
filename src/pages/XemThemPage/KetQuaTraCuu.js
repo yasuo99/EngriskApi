@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Footer from '../Footer/Footer';
+import { appendScript } from '../../config/appendScript'
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import queryString from 'querystring';
