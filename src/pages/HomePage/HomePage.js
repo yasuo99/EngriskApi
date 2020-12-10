@@ -6,6 +6,22 @@ import Footer from '../Footer/Footer';
 
 
 class HomePage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sections: []
+    };
+    this.isComponentMounted = false;
+  }
+  componentDidMount = async () => {
+    this.isComponentMounted = true;
+    if(this.isComponentMounted){
+
+    }
+  }
+  fetchSections = async () => {
+    
+  }
   render() {
     return (
       <div id="wrapper">

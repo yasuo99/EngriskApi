@@ -13,12 +13,23 @@ class TuDienPage extends Component {
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
                         <HeaderClient></HeaderClient>
-                        <Search></Search>
-                        <Footer></Footer>
+                        <div id="tudien">
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-8 offset-2">
+                                        <div className="nd-tudien text-center">
+                                            <h4>Dịch Tiếng Anh-Tiếng Việt</h4>
+                                            <p>Xem giải nghĩa từ, ví dụ câu và nhiều điều khác.</p>
+                                        </div>
+                                        <Search></Search>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>          
-                
-               </div>
+                </div>
+
+            </div>
         );
     }
 }

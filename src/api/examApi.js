@@ -1,9 +1,9 @@
 import axiosClient from "../config/axiosClient"
 
 const examApi = {
-    getAll: () => {
+    getAll: (params) => {
         const url = "/exams";
-        return axiosClient.get(url);
+        return axiosClient.get(url,{params});
     },
     getExam: (id) => {
         const url = `/exams/${id}`;
