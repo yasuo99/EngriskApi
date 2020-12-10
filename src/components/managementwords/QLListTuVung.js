@@ -7,12 +7,12 @@ class QLListTuVung extends Component {
             <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                 <thead>
                     <tr>
-                        <th>English</th>
-                        <th>Việt Nam</th>
-                        <th>Loại từ vựng</th>
-                        <th>Ví dụ</th>
-                        <th>Hình ảnh</th>
-                        <th />
+                        <th className="english">English</th>
+                        <th className="vietnam">Việt Nam</th>
+                        <th className="loaitu">Loại từ vựng</th>
+                        <th >Ví dụ</th>
+                        <th className="hinhanh">Hình ảnh</th>
+                        <th className="chucnang"/>
                     </tr>
                 </thead>
                 <tbody>

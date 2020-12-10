@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Footer from '../Footer/Footer';
-import { appendScript } from '../../config/appendScript'
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import queryString from 'querystring';
@@ -68,17 +67,14 @@ class KetQuaTraCuu extends Component {
                                         <div className="row">
                                             <div className="col-8"><h1 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h1></div>
                                             <div className="col-4 mt-4 text-right">
-                                                <div className="dropdown text-left">
-                                                    <button onClick={this.myFunction} className="dropbtn ">Thêm vào danh sách</button>
-                                                    <div id="myDropdown" className="dropdown-content">
-                                                        <input type="text" placeholder="Search.." id="myInput" onKeyUp={this.filterFunction} />
-                                                        <a href="#about">About</a>
-                                                        <a href="#base">Base</a>
-                                                        <a href="#blog">Blog</a>
-                                                        <a href="#contact">Contact</a>
-                                                        <a href="#custom">Custom</a>
-                                                        <a href="#support">Support</a>
-                                                        <a href="#tools">Tools</a>
+                                                <div className="dropdown">
+                                                    <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Thêm vào danh sách
+                </button>
+                                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a className="dropdown-item" href="#">Từ vựng học tập</a>
+                                                        <a className="dropdown-item" href="#">Từ vựng vui chơi</a>
+                                                        <a className="dropdown-item" href="#">Từ vựng gia đinh</a>
                                                     </div>
                                                 </div>
                                             </div>

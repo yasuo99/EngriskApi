@@ -2,7 +2,11 @@ import React, { Component } from "react"
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
+import { appendScript } from '../../config/appendScript'
 class DapAnSai extends Component {
+    componentDidMount() {
+        appendScript("https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js");
+    };
     render() {
         return (
              <div id="wrapper">
@@ -42,7 +46,9 @@ class DapAnSai extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="row mt-3 thongbao-ketqua">
+                        <div className="row mt-3 thongbao-ketqua mb-3">
+                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_REOnx3.json"  background="transparent"  speed="1" hover loop  autoplay>            
+                        </lottie-player>
                             <div className="col-6"><img src="/image/checked.png" className="float-left mr-2" /> <h4 className="mt-3">Tuyệt vời</h4></div>
                             <div className="col-6 text-right"><button className="btn btn-primary mt-3">Tiếp theo</button></div>
                         </div>
