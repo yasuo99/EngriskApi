@@ -10911,10 +10911,12 @@ form.user .btn-user {
 }
 
 .error {
+  margin-top: 100px;
   color: #5a5c69;
   position: relative;
   line-height: 1;
   width: 12.5rem;
+  font-size: 81px;
 }
 
 @-webkit-keyframes noise-anim {
@@ -11052,7 +11054,7 @@ form.user .btn-user {
 .error:after {
   content: attr(data-text);
   position: absolute;
-  left: 2px;
+  left: 30px;
   text-shadow: -1px 0 #e74a3b;
   top: 0;
   color: #5a5c69;
@@ -11194,19 +11196,6 @@ form.user .btn-user {
   }
 }
 
-.error:before {
-  content: attr(data-text);
-  position: absolute;
-  left: -2px;
-  text-shadow: 1px 0 #4e73df;
-  top: 0;
-  color: #5a5c69;
-  background: #f8f9fc;
-  overflow: hidden;
-  clip: rect(0, 900px, 0, 0);
-  animation: noise-anim-2 3s infinite linear alternate-reverse;
-}
-
 footer.sticky-footer {
   padding: 2rem 0;
   flex-shrink: 0;
@@ -11220,7 +11209,16 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
-.thembaiviet form{margin-left: 100px;}
+.sidebar .nav-item .nav-link{padding: 10px;}
+.thembaiviet form{margin-left: 150px;}
 .thembaiviet .card-input{width: 700px;}
-.thembaiviet .card-input input{float: right;width: 450px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
-.thembaiviet .card-button{margin-left: 250px;margin-top: 30px;}
+.thembaiviet .card-input select{float: right;width: 500px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.thembaiviet .card-input input{float: right;width: 500px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.thembaiviet .card-button{margin-left: 200px;margin-top: 30px;}
+/* .thembaiviet .card-input input:active{border: 2px solid #ccc!important;} */
+.thembaiviet .card-input input:focus{border: 2px solid #ccc!important;}
+.nd-baiviet{width: 350px;}
+.img-baiviet{height: 150px;width: 300px;}
+.checked {
+  color: orange;
+}

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import SubMenu from '../../components/admin/SubMenu'
-import QLListTuVung from "../../components/managementwords/QLListTuVung";
+import QLListThongBao from "../../components/managementinfors/QLListThongBao";
 import { Link } from "react-router-dom";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
 
-class ManagementWord extends Component {
+class ManagementInfor extends Component {
     render() {
         return (
             <div>
@@ -16,11 +16,11 @@ class ManagementWord extends Component {
                             <div className="container-fluid">
                                   <div className="card shadow mb-4">
                                     <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Quản lý từ vựng</h6>
+                                        <h6 className="m-0 font-weight-bold text-primary">Quản lý thông báo</h6>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">
-                                            <QLListTuVung></QLListTuVung>
+                                            <QLListThongBao></QLListThongBao>
                                         </div>
                                     </div>
                                 </div>
@@ -52,4 +52,4 @@ class ManagementWord extends Component {
         )
     }
 }
-export default ManagementWord;
+export default ManagementInfor;

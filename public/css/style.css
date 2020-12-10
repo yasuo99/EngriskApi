@@ -153,8 +153,8 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #hoc2 .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
 #hoc2 .active{background-color: #77B748;}
 #hoc2 .active p{color: #fff;}
-.thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 130px;padding-top: 30px;border-radius: 20px;}
-.thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 130px;padding-top: 30px;border-radius: 20px;}
+.thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 150px;border-radius: 20px;}
+.thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 150px;padding-top: 30px;border-radius: 20px;}
 .thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;}
 .thongbao-ketquasai p{font-size: 16px;color: #4f4f4f;}
 /* ---------------------------------Cài đặt---------------------------------- */
@@ -313,6 +313,7 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #thembaiviet .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
 #thembaiviet .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
 #thembaiviet .nd-theodoi:hover{background-color: #ccc}
+#thembaiviet input:active{border: 2px solid #ccc!important;}
 /* -------------------------------KẾT QUẢ TÌM KIẾM--------------------------- */
 /* -------------------------------------------------------------------------- */
 #ketquatracuu{margin-top: 40px; margin-bottom: 40px;}
@@ -324,60 +325,115 @@ form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px
 #ketquatracuu .kechan{border-bottom: 2px solid #ccc;margin-bottom:30px;padding: 20px 0;}
 #ketquatracuu .gachchan{border-bottom: 2px solid #77B748;margin-bottom:30px;padding: 20px 0;border-bottom-style: dotted;width: 300px;}
 
-.dropbtn {
-  background-image: url('../image/plus.png');
-  background-position: 5px 10px;
-  background-repeat: no-repeat;
-  border-radius: 5px;
+.dropdown-menu{
+  width: 200px;
+}
+.dropdown-menu .dropdown-item{
+  border-bottom: 1px solid #77B748 ;
+  border-style: dotted;
+  padding: 10px;
+}
+.dropdown-menu .dropdown-item:active{
   background-color: #77B748;
-  color: white;
-  padding: 10px 10px 10px 35px;
+  color: #fff!important;
+}
+
+/* -------------------------------KẾT QUẢ EXAM------------------------------- */
+/* -------------------------------------------------------------------------- */
+#ketquaexam .ketquacauhoi{
+  margin-bottom: 20px;
+}
+#ketquaexam .ketquacauhoi .cauhoi{
+  font-size: 18px;
+  color:#212529;
+  font-weight: 400;
+}
+#ketquaexam .ketquacauhoi .dapan li{
   font-size: 16px;
-  border: none;
+  color: #828282;
   cursor: pointer;
+}
+#ketquaexam .ketquacauhoi .ketqua .btn{
+  border: 0px;
   margin-bottom: 10px;
 }
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #48871B;
-  outline: none;
-}
-
-#myInput {
-  box-sizing: border-box;
-  background-image: url('../image/search.png');
-  background-position: 18px 18px;
-  background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 14px 20px 12px 45px;
+#ketquaexam .ketquacauhoi .ketqua p{
+  font-size: 16px!important;
   border: none;
-  border-bottom: 1px solid #ddd;
 }
-
-#myInput:focus {outline: 3px solid #ddd;}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
+#ketquaexam .ketquacauhoi .dapan{
+  margin-top: 10px;
+  margin-left: 10px;
+  border-left: 3px solid #ccc;
 }
+/* -------------------------------QUYỀN TRUY CẬP----------------------------- */
+/* -------------------------------------------------------------------------- */
+#trangloitruycap{margin-top: 50px;margin-bottom: 100px;}
 
-.dropdown-content {
-  display: none;
+/* -------------------------------MODAL-------------------------------------- */
+/* -------------------------------------------------------------------------- */
+.modal form{margin-left: 150px;}
+.modal .card-input{width: 760px;padding-left: 10px;}
+.modal .card-input select{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.modal .card-input input{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.modal .card-button{margin-left: 300px;margin-top: 30px;}
+.modal .card-button .btn{border: 0px;}
+.modal {
+  background: rgba(0, 0, 0, 0.6);
+}
+.modal-container {
   position: absolute;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 1;
+  width: 60%;
+  background: #ffffff;
+  left: 25%;
+  top: 5%;
+  padding: 20px;
+  height: 580px;
+  overflow-x: hidden;
 }
+.modal .card-input input:focus{border: 2px solid #ccc!important;}
+.modal-tuvung{height: 300px;}
+/* -------------------------------QUẢN LÝ CÂU HỎI---------------------------
+/* -------------------------------------------------------------------------- */
+.dapAn{width: 200px;}
+.cautraA{width: 120px;}
+.cautraB{width: 120px;}
+.cautraC{width: 120px;}
+.cautraD{width: 120px;}
+/* -------------------------------QUẢN LÝ TÀI LIỆU---------------------------- */
+/* -------------------------------------------------------------------------- */
+.tieudeTL{width: 200px;}
+.fileTL{width: 250px;}
+/* -------------------------------QUẢN LÝ TỪ VỰNG---------------------------- */
+/* -------------------------------------------------------------------------- */
+.english{width: 120px;}
+.vietnam{width: 120px;}
+.loaitu{width: 120px;}
+.hinhanh{width: 200px;}
+/* ------------------------------QUẢN LÝ THÔNG BÁO--------------------------- */
+/* -------------------------------------------------------------------------- */
+.tieudeTB{width: 200px;}
+.ngayTB{width: 200px;}
+/* ------------------------------QUẢN LÝ NẠP TIỀN--------------------------- */
+/* -------------------------------------------------------------------------- */
+.taikhoan{width: 300px;}
+.thoigian{width: 200px;}
+.hinhthuc{width: 200px;}
+/* ---------------------------QUẢN LÝ QUIZ - EXAM---------------------------- */
+/* -------------------------------------------------------------------------- */
+.chucnang{width: 180px;}
+.nav-tabs .nav-item{cursor: pointer;}
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+.form-group-account{
+  background: url(../image/banner.jpg);
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: cover;
+  height: 400px;
+  width: 100%;
+  padding-left: 230px;
+  padding-top: 30px; 
+  font-size: 18px;
+  font-weight: 400;
+  margin-top: 30px;
 }
-
-.dropdown a:hover {background-color: #ddd;}
-
-.show {display: block;}

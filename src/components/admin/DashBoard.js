@@ -5,7 +5,7 @@ class DashBoard extends Component {
     componentDidMount() {
         appendScript("/js/Chart.min.js");
         appendScript("/js/chart-area-demo.js");
-        appendScript("js/chart-pie-demo.js");
+        appendScript("/js/chart-pie-demo.js");
     };
     render() {
         return (
