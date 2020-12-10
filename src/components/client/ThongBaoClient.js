@@ -11,20 +11,22 @@ class ThongBaoClient extends Component {
     }
     this.isComponentMounted = false;
   }
-  componentDidMount = async () => {
+  async componentDidMount() {
     Moment.locale("en");
     this.isComponentMounted = true;
+    const result = await this.fetchNotifications();
     if (this.isComponentMounted) {
-      await this.fetchNotifications();
+      if (result) {
+        this.setState({
+          notifications: result
+        });
+      }
     }
   }
   fetchNotifications = async () => {
     try {
       const notifications = await notificationApi.getPublishing();
-      this.setState({
-        notifications: notifications
-      });
-      console.log(notifications);
+      return notifications;
     } catch (error) {
       console.log(error);
     }

@@ -9,6 +9,8 @@ import ReactPlayer from 'react-player';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
+import Countdown from 'react-countdown';
+
 
 class Hoc extends PureComponent {
     constructor(props) {
@@ -29,11 +31,13 @@ class Hoc extends PureComponent {
             checked: false,
             result: false,
             done: false,
+            isRight: false
         }
         this.handleUnload = this.handleUnload.bind(this);
     }
     async componentDidMount() {
         window.addEventListener('beforeunload', this.handleUnload);
+        console.log(this.props);
         const { match: { match: { params } } } = this.props;
         this.isComponentMounted = true;
         try {
@@ -98,11 +102,13 @@ class Hoc extends PureComponent {
         })
         if (!result.isRightAnswer) {
             this.setState({
-                remainQuestion: [...this.state.remainQuestion, this.state.currentQuestion]
+                remainQuestion: [...this.state.remainQuestion, this.state.currentQuestion],
+                isRight: false
             })
         } else {
             this.setState({
-                rightAnswer: this.state.rightAnswer + 1
+                rightAnswer: this.state.rightAnswer + 1,
+                isRight: true
             })
         }
         if (this.reachEnd()) {
@@ -142,8 +148,26 @@ class Hoc extends PureComponent {
             })
         }
     }
+    skipQuestion = () => {
+        this.setState({
+            index: this.state.index + 1,
+            remainQuestion: [...this.state.remainQuestion, this.state.currentQuestion]
+        })
+        let tempIndex = this.state.index + 1;
+        let remainQuestion = [...this.state.remainQuestion, this.state.currentQuestion]
+        if (!this.reachEnd()) {
+            this.setState({
+                currentQuestion: this.state.questions[tempIndex],
+                checked: false,
+                result: false,
+                questions: [...this.state.questions, ...remainQuestion],
+                remainQuestion: []
+            })
+            console.log(this.state);
+        }
+    }
     render() {
-        const { quizId, currentQuestion, loading, rightAnswer, checked, quiz, index, done } = this.state;
+        const { quizId, currentQuestion, loading, rightAnswer, checked, quiz, index, done, isRight } = this.state;
         if (loading) {
             return (
                 <div id="wrapper">
@@ -184,6 +208,7 @@ class Hoc extends PureComponent {
                                         <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
                                     </div>
                                     <div className="row kechan mt-5 kechan">
+                                        <div className="col-3">Thời gian còn lại: <Countdown date={Date.now() + quiz.durationTime*60*1000} onComplete={() => console.log('dkm')} /></div>
                                         <div className="col-8 offset-2">
                                             {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
                                                 <p className="mb-5">Có nghĩa là?</p></div>
@@ -195,32 +220,34 @@ class Hoc extends PureComponent {
                                                 </div>}
                                             <div className="row mt-2">
                                                 <div className="col-6">
-                                                    <div className="dapan" style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
+                                                    <div className={currentQuestion.a ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
                                                         <p>{currentQuestion.a}</p>
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <div className="dapan" style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
+                                                    <div className={currentQuestion.b ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
                                                         <p>{currentQuestion.b}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-6">
-                                                    <div className="dapan" style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
+                                                    <div className={currentQuestion.c ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
                                                         <p>{currentQuestion.c}</p>
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <div className="dapan" style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
+                                                    <div className={currentQuestion.d ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
                                                         <p>{currentQuestion.d}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="row mt-5">
-                                        <div className="col-3"><button className="btn btn-primary" onClick={this.nextQuestion}>Bỏ qua</button></div>
+                                    <div className={isRight == true?"row mt-3 thongbao-ketqua":"row mt-3"}>
+                                        <div className="col-3">
+                                            {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
+                                        </div>
                                         <div className="col-6"></div>
                                         <div className="col-3 text-right">
                                             {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}

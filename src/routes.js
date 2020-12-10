@@ -22,6 +22,9 @@ import ThemBaiViet from './pages/ThaoLuanPage/ThemBaiViet';
 import KetQuaTraCuu from './pages/XemThemPage/KetQuaTraCuu';
 import DapAnSai from './pages/HocPage/DapAnSai';
 import DapAnDung from './pages/HocPage/DapAnDung';
+import ExamPage from './pages/Exam/ExamPage';
+import Exam from './pages/Exam/Exam';
+
 const routes = [
     {
         path: '/home',
@@ -61,7 +64,7 @@ const routes = [
     {
         path: '/ketquatracuu',
         exact: true,
-        main: () => <KetQuaTraCuu />
+        main: (location) => <KetQuaTraCuu location={location} />
     },
     {
         path: '/dapansai',
@@ -112,6 +115,15 @@ const routes = [
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
+    },{
+        path: '/exam',
+        exact: true,
+        main: () => <Exam/>
+    }
+    ,{
+        path: '/exam/:examId',
+        exact: true,
+        main: (match) => <ExamPage match={match}/>
     },
     {
         path: '/signin',
