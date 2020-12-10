@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import {appendScript} from '../../config/appendScript'
+import { appendScript } from '../../config/appendScript'
 
 class SubMenu extends Component {
-  componentDidMount () {
+  componentDidMount() {
     appendScript("/js/sb-admin-2.min.js");
-}
+  }
   render() {
     return (
       <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -16,15 +16,44 @@ class SubMenu extends Component {
           <div className="sidebar-brand-text mx-3">SB Admin</div>
         </Link>
         <hr className="sidebar-divider my-0" />
-        <li className="nav-item active">
-          <Link className="nav-link" to="#">
-            <i className="fa fa-fw fa-tachometer-alt" />
-            <span>Dashboard</span></Link>
-        </li>
         <hr className="sidebar-divider" />
         <div className="sidebar-heading">
           Interface
             </div>
+            <li className="nav-item">
+          <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseUtilities1" aria-expanded="true" aria-controls="collapseUtilities">
+            <i className="fa fa-fw fa-wrench" />
+            <span>Nội dung học tập</span>
+          </Link>
+          <div id="collapseUtilities1" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div className="bg-white py-2 collapse-inner rounded">
+              <h6 className="collapse-header">Quản lý nội dung:</h6>
+              <Link className="collapse-item" to="/quanly-tailieu">Tài liệu</Link>
+              <Link className="collapse-item" to="/quanly-tuvung">Từ vựng</Link>
+              <Link className="collapse-item" to="/quanly-cauhoi">Câu hỏi</Link>
+              <Link className="collapse-item" to="/quanly-exam">Bài exam</Link>
+              <Link className="collapse-item" to="/quanly-quiz">Bài quiz</Link>
+
+            </div>
+          </div>
+        </li>
+     
+        <li className="nav-item">
+          <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+            <i className="fa fa-fw fa-wrench" />
+            <span>Nội dung khác</span>
+          </Link>
+          <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div className="bg-white py-2 collapse-inner rounded">
+              <h6 className="collapse-header">Quản lý nội dung:</h6>
+              <Link className="collapse-item" to="/quanly-thongbao">Thông báo</Link>
+              <Link className="collapse-item" to="/quanly-naptien">Lịch sử nạp</Link>
+              <Link className="collapse-item" to="/quanly-taikhoan">Tài khoản</Link>
+              <Link className="collapse-item" to="/quanly-phanquyen">Phân quyền</Link>
+              <Link className="collapse-item" to="/quanly-bangdiem">Quy đổi điểm</Link>
+            </div>
+          </div>
+        </li>
         <li className="nav-item">
           <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i className="fa fa-fw fa-cog" />
@@ -35,24 +64,6 @@ class SubMenu extends Component {
               <h6 className="collapse-header">Tùy chỉnh giao diện:</h6>
               <Link className="collapse-item" to="#">Banner</Link>
               <Link className="collapse-item" to="#">Footer</Link>
-            </div>
-          </div>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link collapsed" to="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-            <i className="fa fa-fw fa-wrench" />
-            <span>Content</span>
-          </Link>
-          <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div className="bg-white py-2 collapse-inner rounded">
-              <h6 className="collapse-header">Quản lý nội dung:</h6>
-              <Link className="collapse-item" to="#">Tài khoản</Link>
-              <Link className="collapse-item" to="#">Bài tập</Link>
-              <Link className="collapse-item" to="#">Thông báo</Link>
-              <Link className="collapse-item" to="#">Từ vựng</Link>
-              <Link className="collapse-item" to="#">Ví dụ</Link>
-              <Link className="collapse-item" to="#">Lịch sử nạp</Link>
-              <Link className="collapse-item" to="#">Báo lỗi</Link>
             </div>
           </div>
         </li>

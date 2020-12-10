@@ -6,6 +6,9 @@ export const getAllExam = () => {
 export const doExam = id => {
     return examApi.doExam(id);
 }
+export const doneExam = (id,body) => {
+    return examApi.submitExam(id,body);
+}
 export const getExam = id => {
     return examApi.getExam(id);
 }

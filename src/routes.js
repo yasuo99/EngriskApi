@@ -8,7 +8,7 @@ import TuVungPage from './pages/XemThemPage/TuVungPage';
 import SignInPage from './pages/AuthPage/SignInPage';
 import SignUpPage from './pages/AuthPage/SignUpPage';
 import Admin from './pages/Admin/Admin';
-import Management from './pages/Admin/Management';
+import ManagementWord from './pages/Admin/ManagementWord';
 import HocHinhAnh from './pages/HocPage/HocHinhAnh';
 import Hoc from './pages/HocPage/Hoc';
 import CaiDatMatKhau from './pages/CaiDatPage/CaiDatMatKhau';
@@ -17,11 +17,23 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import NapTienPage from './pages/NapTienPage/NapTienPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 import FlashCardPage from './pages/FlashCardPage/FlashCardPage';
-import ManagementWord from './pages/Admin/ManagementWord';
 import ThemBaiViet from './pages/ThaoLuanPage/ThemBaiViet';
 import KetQuaTraCuu from './pages/XemThemPage/KetQuaTraCuu';
 import DapAnSai from './pages/HocPage/DapAnSai';
 import DapAnDung from './pages/HocPage/DapAnDung';
+import ExamPage from './pages/Exam/ExamPage';
+import Exam from './pages/Exam/Exam';
+import KetQuaExam from './pages/HocPage/KetQuaExam';
+import QuyenTruyCap from './pages/NotFoundPage/QuyenTruyCap';
+import ManagementInfor from './pages/Admin/ManagementInfor';
+import ManagementPost from './pages/Admin/ManagementPost';
+import ManagementDoc from './pages/Admin/ManagementDoc';
+import ManagementQuestion from './pages/Admin/ManagementQuestion';
+import ManagementPayment from './pages/Admin/ManagementPayment';
+import ManagementQuiz from './pages/Admin/ManagementQuiz';
+import ManagementExam from './pages/Admin/ManagementExam';
+import ManagementAccount from './pages/Admin/ManagementAccount';
+
 const routes = [
     {
         path: '/home',
@@ -61,7 +73,7 @@ const routes = [
     {
         path: '/ketquatracuu',
         exact: true,
-        main: () => <KetQuaTraCuu />
+        main: (location) => <KetQuaTraCuu location={location} />
     },
     {
         path: '/dapansai',
@@ -94,6 +106,11 @@ const routes = [
         main: () => <NapTienPage />
     },
     {
+        path: '/ketqua-exam',
+        exact: true,
+        main: () => <KetQuaExam />
+    },
+    {
         path: '/flashcard',
         exact: true,
         main: () => <FlashCardPage />
@@ -112,6 +129,15 @@ const routes = [
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
+    },{
+        path: '/exam',
+        exact: true,
+        main: () => <Exam/>
+    }
+    ,{
+        path: '/exam/:examId',
+        exact: true,
+        main: (match) => <ExamPage match={match}/>
     },
     {
         path: '/signin',
@@ -129,20 +155,60 @@ const routes = [
         main: () => <Admin />
     },
     {
-        path: '/management',
-        exact: true,
-        main: () => <Management />
-    },
-    {
-        path: '/managementword',
+        path: '/quanly-tuvung',
         exact: true,
         main: () => <ManagementWord />
+    },
+    {
+        path: '/quanly-thongbao',
+        exact: true,
+        main: () => <ManagementInfor />
+    },
+    {
+        path: '/quanly-tailieu',
+        exact: true,
+        main: () => <ManagementDoc />
+    },
+    {
+        path: '/quanly-cauhoi',
+        exact: true,
+        main: () => <ManagementQuestion />
+    },
+    {
+        path: '/quanly-naptien',
+        exact: true,
+        main: () => <ManagementPayment />
+    },
+    {
+        path: '/quanly-quiz',
+        exact: true,
+        main: () => <ManagementQuiz/>
+    },
+    {
+        path: '/quanly-exam',
+        exact: true,
+        main: () => <ManagementExam/>
+    },
+    {
+        path: '/quanly-taikhoan',
+        exact: true,
+        main: () => <ManagementAccount/>
+    },
+    {
+        path: '/quanly-baiviet',
+        exact: true,
+        main: () => <ManagementPost />
     },
     {
         path: '/loi',
         exact: false,
         main: () => <NotFoundPage />
-    }
+    },
+    {
+        path: '/quyentruycap',
+        exact: true,
+        main: () => <QuyenTruyCap />
+    },
 ];
 
 export default routes;

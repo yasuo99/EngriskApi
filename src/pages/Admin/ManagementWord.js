@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import SubMenu from '../../components/admin/SubMenu'
-import QLThemTuVung from "../../components/admin/QLThemTuVung";
+import QLListTuVung from "../../components/managementwords/QLListTuVung";
 import { Link } from "react-router-dom";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
 
-class Management extends Component {
+class ManagementWord extends Component {
     render() {
         return (
             <div>
@@ -14,20 +14,18 @@ class Management extends Component {
                         <div id="content">
                             <HeaderAdmin></HeaderAdmin>
                             <div className="container-fluid">
-                              <div className="card shadow mb-4">
+                                  <div className="card shadow mb-4">
+                                    <div className="card-header py-3">
+                                        <h6 className="m-0 font-weight-bold text-primary">Quản lý từ vựng</h6>
+                                    </div>
                                     <div className="card-body">
-                                        <QLThemTuVung></QLThemTuVung>
+                                        <div className="table-responsive">
+                                            <QLListTuVung></QLListTuVung>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <footer className="sticky-footer bg-white">
-                            <div className="container my-auto">
-                                <div className="copyright text-center my-auto">
-                                    <span>Copyright © Your Website 2020</span>
-                                </div>
-                            </div>
-                        </footer>
                     </div>
                 </div>
                 <Link className="scroll-to-top rounded" to="#page-top">
@@ -37,15 +35,15 @@ class Management extends Component {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <h5 className="modal-title" id="exampleModalLabel">Bạn có chắc chắn muốn đăng xuất không?</h5>
                                 <button className="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
-                            <div className="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                            <div className="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn đã sẵn sàng kết thúc phiên hiện tại của mình.</div>
                             <div className="modal-footer">
-                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <Link className="btn btn-primary" to="login.html">Logout</Link>
+                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                                <Link className="btn btn-primary" to="login.html">Đăng xuất</Link>
                             </div>
                         </div>
                     </div>
@@ -54,4 +52,4 @@ class Management extends Component {
         )
     }
 }
-export default Management;
+export default ManagementWord;

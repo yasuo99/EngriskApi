@@ -7,6 +7,7 @@ import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import postApi from '../../api/postApi';
+import Paypal from '../../components/paypal/Paypal';
 class ThaoLuanPage extends Component {
     constructor(props) {
         super(props);
@@ -19,22 +20,21 @@ class ThaoLuanPage extends Component {
     }
     componentDidMount = async () => {
         this.isComponentMounted = true;
+        var posts =  await this.fetchAllPosts();
+        var newPosts = await this.fetchNewPosts();
         if (this.isComponentMounted) {
-            await this.fetchAllPosts();
-            await this.fetchNewPosts();
+            this.setState({
+                allPosts: posts,
+                newPosts: newPosts
+            });
         }
     }
     fetchAllPosts = async () => {
-        var posts = await postApi.getAll();
-        this.setState({
-            allPosts: posts
-        });
+        return await postApi.getAll();
     }
     fetchNewPosts = async () => {
-        var newPosts = await postApi.getNewPost();
-        this.setState({
-            newPosts: newPosts
-        });
+        return await postApi.getNewPost();
+        
     }
     fetchRatingPosts = async () => {
         var highRatePosts = await postApi.getHighRate();

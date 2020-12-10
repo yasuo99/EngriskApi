@@ -6,14 +6,14 @@ const quizApi = {
     },
     getDetail: (id) => {
         const url = `/quizzes/${id}`;
-        return axiosClient.get(url);
+        return axiosClient.get(url, {validateStatus: () => true});
     },
     create: (body) => {
         const url = "/quizzes";
         return axiosClient.post(url, body)
     },
     doQuiz: (id) => {
-        const url = `/quizzes/${id}/do`;
+        const url = `sections/1/quizzes/${id}/do`;
         return axiosClient.get(url);
     },
     doneQuiz: (id, body) => {
