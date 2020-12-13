@@ -3,6 +3,7 @@ import SubMenu from '../../components/admin/SubMenu'
 import QLListQuiz from "../../components/managementquizs/QLListQuiz";
 import { Link } from "react-router-dom";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
+import ModalLogOut from "../../components/modal/ModalLogOut";
 
 class ManagementQuiz extends Component {
     render() {
@@ -31,23 +32,7 @@ class ManagementQuiz extends Component {
                 <Link className="scroll-to-top rounded" to="#page-top">
                     <i className="fa fa-angle-up" />
                 </Link>
-                <div className="modal fade" id="logoutModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Bạn có chắc chắn muốn đăng xuất không?</h5>
-                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn đã sẵn sàng kết thúc phiên hiện tại của mình.</div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                                <Link className="btn btn-primary" to="login.html">Đăng xuất</Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ModalLogOut></ModalLogOut>
             </div>
         )
     }
