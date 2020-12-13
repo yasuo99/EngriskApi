@@ -27,8 +27,8 @@ class ExamPage extends Component {
             selected: null, //Đáp án lựa chọn
             answer: '', //Lưu đáp án để submit
             checked: false, //Câu hỏi đã được submit để kiểm tra
-            result: false, //Kết quả trả về cho câu hỏi
-            done: false, //Trả lời đúng hết các câu hỏi
+            submitted: false, //Kết quả trả về cho câu hỏi
+            done: false, //Câu hỏi cuối
             empty: false,
             start: Date.now()
         }
@@ -51,7 +51,6 @@ class ExamPage extends Component {
     fetchQuestions = async (examId) => {
         try {
             const exam = await doExam(examId);
-            console.log(exam);
             if (exam.questions.length > 0) {
                 this.setState({
                     examId: examId,
@@ -161,9 +160,10 @@ class ExamPage extends Component {
     // }
     submitExam = async (e) => {
         console.log(this.state.answers);
-        console.log(this.state);
-        var result = await doneExam(this.state.examId, this.state.answers);
-        console.log(result);
+        this.props.doneExam(this.state.examId, this.state.answers);
+        this.setState({
+            submitted: true
+        })
     }
     reachEnd = () => {
         if (this.state.index < this.state.questions.length) {
@@ -219,7 +219,7 @@ class ExamPage extends Component {
         }
     }
     render() {
-        const { examId, currentQuestion, loading, rightAnswer, checked, exam, index, done, empty } = this.state;
+        const { examId, currentQuestion, loading, rightAnswer, checked, exam, index, done, submitted } = this.state;
         if (loading) {
             return (
                 <div id="wrapper">
@@ -262,9 +262,9 @@ class ExamPage extends Component {
                                         <ProgressBar animated now={rightAnswer} max={exam.questions.length} variant="success" />
                                     </div>
                                     <div className="row kechan mt-5">
-                                        <div className="col-3">Time left: <Countdown date={this.state.start + exam.duration*60*1000} onComplete={this.submitExam}/></div>
+                                        <div className="col-3">Time left: <Countdown date={this.state.start + exam.duration * 60 * 1000} onComplete={this.submitExam} /></div>
                                         <div className="col-8 offset-2">
-                                            Câu {currentQuestion.id}
+                                            Câu {index + 1}
                                             {currentQuestion.isListeningQuestion === false && currentQuestion.isFillOutQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
                                                 <p className="mb-5">Có nghĩa là?</p></div>
                                                 <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
@@ -307,7 +307,8 @@ class ExamPage extends Component {
                                         <div className="col-6"></div>
                                         <div className="col-3 text-right">
                                             {done === false && <Link className="btn btn-primary" to="#" onClick={this.nextQuestion}>Tiếp theo</Link>}
-                                            {done && <button className="btn btn-primary" onClick={this.submitExam}>Nộp bài</button>}
+                                            {done && submitted === false && <button className="btn btn-primary" onClick={this.submitExam}>Nộp bài</button>}
+                                            {submitted && <Link className="btn btn-primary" to={"/ketqua-exam/"+examId}>Xem đáp án</Link>}
                                         </div>
                                     </div>
                                 </div>
@@ -324,7 +325,6 @@ class ExamPage extends Component {
     }
     handleUnload(e) {
         var message = "\o/";
-
         (e || window.event).returnValue = message; //Gecko + IE
         return message;
     }
@@ -332,5 +332,12 @@ class ExamPage extends Component {
         this.isComponentMounted = false;
     }
 }
-
-export default ExamPage
+const mapStateToProps = (state) => {
+    return ({})
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        doneExam: (id, body) => dispatch(doneExam(id, body))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ExamPage)

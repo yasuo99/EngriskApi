@@ -1,15 +1,24 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toggleSidenav } from '../../actions/sidenavAction';
 import { appendScript } from '../../config/appendScript'
 
 class SubMenuClient extends Component {
+  constructor(props){
+    super(props);
+    this.toggle = this.toggle.bind(this)
+  }
   componentDidMount() {
     appendScript("/js/sb-admin-2.min.js");
+  }
+  toggle(){
+    this.props.toggleSidenav(this.props.collapse);
   }
   render() {
     return (
       <div id="subMenu">
-        <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul className={this.props.collapse ? "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" : "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"} id="accordionSidebar">
           <li className="nav-item">
             <Link className="nav-link text-center" to="/home">
               <img src="/image/world.png" className="mr-3" />
@@ -17,11 +26,6 @@ class SubMenuClient extends Component {
             </Link>
           </li>
           <hr className="sidebar-divider my-0" />
-          <li className="nav-item active">
-            <a className="nav-link" href="/home">
-              <i className="fa fa-fw fa-tachometer-alt"></i>
-              <span>Dashboard</span></a>
-          </li>
           <li className="nav-item">
             <Link className="nav-link" to="/flashcard">
               <img src="/image/shooting-stars.png" className="mr-2" />
@@ -52,11 +56,22 @@ class SubMenuClient extends Component {
               <span>Từ vựng</span></Link>
           </li>
           <div className="text-center d-none d-md-inline mt-5">
-            <button className="rounded-circle border-0 fa fa-chevron-right " id="sidebarToggle" />
+            <button className="rounded-circle border-0 fa fa-chevron-right " id="sidebarToggle" onClick={this.toggle}/>
           </div>
         </ul>
       </div>
     )
   }
 }
-export default SubMenuClient;
+const mapStateToProps = (state) => {
+  const {collapse} = state.sidenav
+  return {
+    collapse: collapse
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    toggleSidenav: (collapse) => dispatch(toggleSidenav(collapse))
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SubMenuClient);

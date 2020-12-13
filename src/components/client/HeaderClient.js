@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { useJwt } from "react-jwt";
 import ThongBaoClient from "./ThongBaoClient";
 import TaiKhoanClient from "./TaiKhoanClient"
+
 const HeaderClient = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [account, setAccount] = useState();
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const token = localStorage.getItem('token');
   const { isExpired } = useJwt(token);
