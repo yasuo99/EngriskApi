@@ -7,6 +7,7 @@ import Footer from '../Footer/Footer';
 class QuyenTruyCap extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props);
         if (this.props.location.location.state !== undefined) {
             this.state = {
                 url: this.props.location.location.state.url
@@ -21,7 +22,6 @@ class QuyenTruyCap extends Component {
     render() {
         return (
             <div id="wrapper">
-                <SubMenuClient></SubMenuClient>
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
                         <HeaderClient></HeaderClient>
@@ -32,6 +32,7 @@ class QuyenTruyCap extends Component {
                                         <h1 className="title-loitruycap">Bạn cần phải có quyền truy cập</h1>
                                         <p className="text-loitruycap mb-5 mt-2">Hãy yêu cầu quyền truy cập hoặc chuyển qua tài khoản khác có quyền truy cập</p>
                                         <Link className="btn btn-primary mt-5" to={this.state.url || ""}>Trở lại</Link>
+                                        <Link className="btn btn-primary ml-4 mt-5" to="/">Trang chủ</Link>
                                     </div>
                                     <div className="col-6 text-center">
                                         <img src="/image/lock.png" />

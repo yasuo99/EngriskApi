@@ -40,237 +40,237 @@ const routes = [
         exact: true,
         main: () => <HomePage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/',
         exact: true,
         main: () => <LandingPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/thao-luan',
         exact: true,
         main: () => <ThaoLuanPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/thao-luan/them-bai-viet',
         exact: true,
         main: () => <ThemBaiViet />,
         guard: true,
-        role: []
+        roles: []
     },
     {
         path: '/thao-luan-chi-tiet',
         exact: true,
         main: () => <ThaoLuanChiTietPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/cua-hang',
         exact: true,
         main: () => <CuaHangPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/tu-dien',
         exact: true,
         main: () => <TuDienPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/ketquatracuu',
         exact: true,
         main: (location) => <KetQuaTraCuu location={location} />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/dapansai',
         exact: true,
         main: () => <DapAnSai />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/dapandung',
         exact: true,
         main: () => <DapAnDung />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/tu-vung',
         exact: true,
         main: () => <TuVungPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/hochinhanh',
         exact: true,
         main: () => <HocHinhAnh />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/nap-tien',
         exact: true,
         main: () => <NapTienPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/ketqua-exam/:examId',
         exact: true,
         main: (match) => <KetQuaExam match={match} />,
         guard: true,
-        role: []
+        roles: []
     },
     {
         path: '/flashcard',
         exact: true,
         main: () => <FlashCardPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/caidatmatkhau',
         exact: true,
         main: () => <CaiDatMatKhau />,
         guard: true,
-        role: []
+        roles: []
     },
     {
         path: '/caidattaikhoan',
         exact: true,
         main: () => <CaiDatTaiKhoan />,
         guard: true,
-        role: []
+        roles: []
     },
     {
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
         guard: false,
-        role: []
+        roles: []
     },{
         path: '/exam',
         exact: true,
         main: () => <Exam/>,
         guard: false,
-        role: []
+        roles: []
     }
     ,{
         path: '/exam/:examId',
         exact: true,
         main: (match) => <ExamPage match={match}/>,
         guard: true,
-        role: []
+        roles: []
     },
     {
         path: '/signin',
         exact: true,
         main: (location) => <SignInPage location={location}/>,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/signup',
         exact: true,
         main: () => <SignUpPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/admin',
         exact: true,
         main: () => <Admin />,
         guard: true,
-        role: []
+        roles: []
     },
     {
         path: '/quanly-tuvung',
         exact: true,
         main: () => <ManagementWord />,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-thongbao',
         exact: true,
         main: () => <ManagementInfor />,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-tailieu',
         exact: true,
         main: () => <ManagementDoc />,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-cauhoi',
         exact: true,
         main: () => <ManagementQuestion />,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-naptien',
         exact: true,
         main: () => <ManagementPayment />,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-quiz',
         exact: true,
         main: () => <ManagementQuiz/>,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-exam',
         exact: true,
         main: () => <ManagementExam/>,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-taikhoan',
         exact: true,
         main: () => <ManagementAccount/>,
         guard: true,
-        role: []
+        roles: ["superadmin"]
     },
     {
         path: '/quanly-baiviet',
         exact: true,
         main: () => <ManagementPost />,
         guard: true,
-        role: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/loi',
         exact: false,
         main: () => <NotFoundPage />,
         guard: false,
-        role: []
+        roles: []
     },
     {
         path: '/access-denied',
         exact: true,
         main: (location) => <QuyenTruyCap location={location}/>,
         guard: false,
-        role: []
+        roles: []
     },
 ];
 

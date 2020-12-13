@@ -45,10 +45,11 @@ class SignIn extends Component {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
       if(Array.isArray(decodedToken.role)){
         if(decodedToken.role.includes("superadmin") || decodedToken.role.includes("manager"))
         {
-          return <Redirect to="/management"/>
+          return <Redirect to="/admin"/>
         }
       }
       console.log(decodedToken);
