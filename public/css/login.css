@@ -15,12 +15,12 @@ body, html {
 h1, h2, h3, h4, h5, h6 {font-family: 'Quicksand', sans-serif; font-weight: 800; }
 p {font-family: 'Arimo', sans-serif; font-size: 14px; color: #777;}
 .text-primary{color: #77B748!important}
-.btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px}
-.btn-primary{background-color: #77B748!important}
+/* .btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px}
+.btn-primary{background-color: #77B748!important} */
 a.text-primary:hover{color: #48871B}
-.btn-primary:hover{background-color:#48871B!important}
-.btn-primary-border:hover{background-color:#48871B!important;color: #fff}
-.bg-primary{background-color: #77B748!important}
+/* .btn-primary:hover{background-color:#48871B!important}
+.btn-primary-border:hover{background-color:#48871B!important;color: #fff} */
+/* .bg-primary{background-color: #77B748!important} */
 /* ------------------------addtask------------------------ */
 .container-addtask{
   width: 100%; 

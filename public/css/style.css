@@ -7,11 +7,12 @@ body {color: #123064;font-family: 'Quicksand', sans-serif;}
 h1, h2, h3, h4, h5, h6 {font-family: 'Quicksand', sans-serif; font-weight: 800; }
 p {font-family: 'Arimo', sans-serif; font-size: 14px; color: #777;}
 .text-primary{color: #77B748!important}
-.btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px}
-.btn-primary{background-color: #77B748!important}
+/* .btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px} */
+/* .btn-primary{background-color: #77B748!important} */
 a.text-primary:hover{color: #48871B}
-.btn-primary:hover{background-color:#48871B!important}
-.btn-primary-border:hover{background-color:#48871B!important;color: #fff}
+/* .btn-primary:hover{background-color:#48871B!important}
+.btn-primary-border:hover{background-color:#48871B!important;color: #fff} */
+.btn-primary{color:#fff}
 .bg-primary{background-color: #77B748 !important}
 .text1{color: #273051}
 .text2{color: #4F4F4F}
@@ -24,12 +25,13 @@ a.text-primary:hover{color: #48871B}
 #wrapper{ background-size: cover;
   height: 100vh;
   background-attachment: fixed;}
+  #trangchu .link-title{color: black}
   #trangchu{margin-top: 20px;width: 100%; position: relative;overflow: auto;}
   #trangchu .progress-bar{
     background-color: #77B748!important;
   }
-  #trangchu a{color: #828282;}
-  #trangchu a:hover{color: #77B748;text-decoration: none;}
+  #trangchu a{color: #fff;}
+  #trangchu a:hover{color: #fff;text-decoration: none;}
   #trangchu .card-hoc{background-color: #fff;width: 90%;height: 110px;border-radius: 10px;box-shadow: 5px 5px 5px #d0e2f7;}
   #trangchu .card-hoc a{font-weight: bold;font-size: 18px;}
   #trangchu .card-hoc .img-hoc{width: 60px;height: 60px;border-radius: 50%;position: relative; top: 50%;
@@ -190,7 +192,7 @@ form ul .suggest{list-style-type: none;}
 #duolingo .orbit-icon4 {position: absolute;width: 100px;top: -10px;left:190px;height: 70px;border-radius: 50%;z-index: 99;}
 #duolingo li {list-style: none;}
 #duolingo .nd{top: 130px;right: 100px;}
-#duolingo .btn{box-shadow: 1px 3px 1px #48871B;outline: none;border: 0;width: 350px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
+#duolingo .btn{box-shadow: 1px 3px 1px #007bff;outline: none;border: 0;width: 350px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
 
 #nd-duolingo .cachhoc p{font-size: 16px;}
 #nd-duolingo .kechan{border-bottom: 2px solid #ccc;}
@@ -330,7 +332,7 @@ form ul .suggest{list-style-type: none;}
 .dropdown-menu{
   width: 200px;
 }
-.dropdown-menu .dropdown-item{
+/* .dropdown-menu .dropdown-item{
   border-bottom: 1px solid #77B748 ;
   border-style: dotted;
   padding: 10px;
@@ -338,7 +340,7 @@ form ul .suggest{list-style-type: none;}
 .dropdown-menu .dropdown-item:active{
   background-color: #77B748;
   color: #fff!important;
-}
+} */
 
 /* -------------------------------KẾT QUẢ EXAM------------------------------- */
 /* -------------------------------------------------------------------------- */
