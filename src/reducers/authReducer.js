@@ -20,11 +20,19 @@ const initState = {
   token: '',
   refreshToken: ''
 }
-const authReducer = (state = initState, action) => {
+const initialState = () => {
+  return {
+    ...initialState,
+    isLoggedIn: localStorage.getItem('account') ? true: false,
+    account: localStorage.getItem('account'),
+    token: localStorage.getItem('token')
+  }
+}
+const authReducer = (state = initialState(), action) => {
 
   switch (action.type) {
     case "SIGN_IN": {
-      toast("Xin chào bạn đã đến với Duolingo");
+      toast("Xin chào bạn đã đến với website");
       return {
         ...state,
         isLoggedIn: true,
@@ -45,7 +53,8 @@ const authReducer = (state = initState, action) => {
       return state;
     }
     case "SIGN_UP": {
-      toast("Xin chào bạn đã đến với Duolingo");
+      toast("Đăng ký thành công");
+      toast("Xin chào bạn đã đến với website");
       return state;
     }
     case "SIGN_UP_ERR": {
@@ -62,6 +71,17 @@ const authReducer = (state = initState, action) => {
       localStorage.removeItem('account');
       localStorage.removeItem('token');
       toast("Đăng xuất thành công");
+      return ({
+        ...state,
+        isLoggedIn: false,
+        account: {},
+        token: ''
+      });
+    }
+    case "TIME_OUT":{
+      localStorage.removeItem('account');
+      localStorage.removeItem('token');
+      toast("Đăng nhập để tiếp tục");
       return ({
         ...state,
         isLoggedIn: false,

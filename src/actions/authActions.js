@@ -35,8 +35,7 @@ export const signIn = (user) => {
         const url = "/accounts/login";
         axiosClient.post(url, user)
             .then(res => {
-                console.log(res)
-                if (res.token) {
+                if (res) {
                     localStorage.setItem('account', JSON.stringify(res.account));
                     localStorage.setItem('token', res.token);
                     return (
@@ -56,7 +55,7 @@ export const signIn = (user) => {
                 // console.log("a");
                 // return(dispatch({ type: "SIGN_IN_ERR_EMAIL" }))
             }, error => {
-                return (dispatch({ type: "SIGN_IN_ERR_PASS" }));
+                return (dispatch({ type: "SIGN_IN_ERR" }));
             }).catch((error) => {
                 console.log(error);
             });
@@ -81,5 +80,10 @@ export const signUp = (user) => {
 export const logOut = () => {
     return( {
         type: "SIGN_OUT"
+    })
+}
+export const timeOut = () => {
+    return({
+        type: "TIME_OUT"
     })
 }

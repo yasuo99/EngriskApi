@@ -38,176 +38,239 @@ const routes = [
     {
         path: '/home',
         exact: true,
-        main: () => <HomePage />
+        main: () => <HomePage />,
+        guard: false,
+        role: []
     },
     {
         path: '/',
         exact: true,
-        main: () => <LandingPage />
+        main: () => <LandingPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/thao-luan',
         exact: true,
-        main: () => <ThaoLuanPage />
+        main: () => <ThaoLuanPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/thao-luan/them-bai-viet',
         exact: true,
-        main: () => <ThemBaiViet />
+        main: () => <ThemBaiViet />,
+        guard: true,
+        role: []
     },
     {
         path: '/thao-luan-chi-tiet',
         exact: true,
-        main: () => <ThaoLuanChiTietPage />
+        main: () => <ThaoLuanChiTietPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/cua-hang',
         exact: true,
-        main: () => <CuaHangPage />
+        main: () => <CuaHangPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/tu-dien',
         exact: true,
-        main: () => <TuDienPage />
+        main: () => <TuDienPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/ketquatracuu',
         exact: true,
-        main: (location) => <KetQuaTraCuu location={location} />
+        main: (location) => <KetQuaTraCuu location={location} />,
+        guard: false,
+        role: []
     },
     {
         path: '/dapansai',
         exact: true,
-        main: () => <DapAnSai />
+        main: () => <DapAnSai />,
+        guard: false,
+        role: []
     },
     {
         path: '/dapandung',
         exact: true,
-        main: () => <DapAnDung />
-    },
-    {
-        path: '/ketquatracuu',
-        exact: true,
-        main: () => <KetQuaTraCuu />
+        main: () => <DapAnDung />,
+        guard: false,
+        role: []
     },
     {
         path: '/tu-vung',
         exact: true,
-        main: () => <TuVungPage />
+        main: () => <TuVungPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/hochinhanh',
         exact: true,
-        main: () => <HocHinhAnh />
+        main: () => <HocHinhAnh />,
+        guard: false,
+        role: []
     },
     {
         path: '/nap-tien',
         exact: true,
-        main: () => <NapTienPage />
+        main: () => <NapTienPage />,
+        guard: false,
+        role: []
     },
     {
-        path: '/ketqua-exam',
+        path: '/ketqua-exam/:examId',
         exact: true,
-        main: () => <KetQuaExam />
+        main: (match) => <KetQuaExam match={match} />,
+        guard: true,
+        role: []
     },
     {
         path: '/flashcard',
         exact: true,
-        main: () => <FlashCardPage />
+        main: () => <FlashCardPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/caidatmatkhau',
         exact: true,
-        main: () => <CaiDatMatKhau />
+        main: () => <CaiDatMatKhau />,
+        guard: true,
+        role: []
     },
     {
         path: '/caidattaikhoan',
         exact: true,
-        main: () => <CaiDatTaiKhoan />
+        main: () => <CaiDatTaiKhoan />,
+        guard: true,
+        role: []
     },
     {
         path: '/baihoc/:quizId',
         exact: true,
         main: (match) => <Hoc match={match}/>,
+        guard: false,
+        role: []
     },{
         path: '/exam',
         exact: true,
-        main: () => <Exam/>
+        main: () => <Exam/>,
+        guard: false,
+        role: []
     }
     ,{
         path: '/exam/:examId',
         exact: true,
-        main: (match) => <ExamPage match={match}/>
+        main: (match) => <ExamPage match={match}/>,
+        guard: true,
+        role: []
     },
     {
         path: '/signin',
         exact: true,
-        main: () => <SignInPage />
+        main: (location) => <SignInPage location={location}/>,
+        guard: false,
+        role: []
     },
     {
         path: '/signup',
         exact: true,
-        main: () => <SignUpPage />
+        main: () => <SignUpPage />,
+        guard: false,
+        role: []
     },
     {
         path: '/admin',
         exact: true,
-        main: () => <Admin />
+        main: () => <Admin />,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-tuvung',
         exact: true,
-        main: () => <ManagementWord />
+        main: () => <ManagementWord />,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-thongbao',
         exact: true,
-        main: () => <ManagementInfor />
+        main: () => <ManagementInfor />,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-tailieu',
         exact: true,
-        main: () => <ManagementDoc />
+        main: () => <ManagementDoc />,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-cauhoi',
         exact: true,
-        main: () => <ManagementQuestion />
+        main: () => <ManagementQuestion />,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-naptien',
         exact: true,
-        main: () => <ManagementPayment />
+        main: () => <ManagementPayment />,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-quiz',
         exact: true,
-        main: () => <ManagementQuiz/>
+        main: () => <ManagementQuiz/>,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-exam',
         exact: true,
-        main: () => <ManagementExam/>
+        main: () => <ManagementExam/>,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-taikhoan',
         exact: true,
-        main: () => <ManagementAccount/>
+        main: () => <ManagementAccount/>,
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-baiviet',
         exact: true,
-        main: () => <ManagementPost />
+        main: () => <ManagementPost />,
+        guard: true,
+        role: []
     },
     {
         path: '/loi',
         exact: false,
-        main: () => <NotFoundPage />
+        main: () => <NotFoundPage />,
+        guard: false,
+        role: []
     },
     {
-        path: '/quyentruycap',
+        path: '/access-denied',
         exact: true,
-        main: () => <QuyenTruyCap />
+        main: (location) => <QuyenTruyCap location={location}/>,
+        guard: false,
+        role: []
     },
 ];
 

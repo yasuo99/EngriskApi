@@ -84,13 +84,13 @@ export default class Exam extends Component {
                             <img src="/image/welcome.jpg" alt="welcome" className="img-hoc" />
                         </div>
                         <div className="col-8">
-                            <a>{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old" }</Badge>
+                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old" }</Badge>
                             <p>Exp: {exam.exp}  </p>
                             <p>Price: {exam.price}</p>
                             <p>Duration: {exam.duration}</p>
                         </div>
                         <div className="col-2 pr-4">
-                            <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Do</Link>
+                            <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Do <i className="fa fa-pencil"></i></Link>
                         </div>
                     </div>
                 </div>
