@@ -220,49 +220,57 @@ const routes = [
         path: '/quanly-cauhoi',
         exact: true,
         main: () => <ManagementQuestion />,
-        guard: true
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-naptien',
         exact: true,
         main: () => <ManagementPayment />,
-        guard: true
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-quiz',
         exact: true,
         main: () => <ManagementQuiz/>,
-        guard: true
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-exam',
         exact: true,
         main: () => <ManagementExam/>,
-        guard: true
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-taikhoan',
         exact: true,
         main: () => <ManagementAccount/>,
-        guard: true
+        guard: true,
+        role: []
     },
     {
         path: '/quanly-baiviet',
         exact: true,
         main: () => <ManagementPost />,
-        guard: true
+        guard: true,
+        role: []
     },
     {
         path: '/loi',
         exact: false,
         main: () => <NotFoundPage />,
-        guard: false
+        guard: false,
+        role: []
     },
     {
         path: '/access-denied',
         exact: true,
         main: (location) => <QuyenTruyCap location={location}/>,
-        guard: false
+        guard: false,
+        role: []
     },
 ];
 
