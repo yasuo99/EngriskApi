@@ -7,14 +7,17 @@ class ThongBaoClient extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notifications: []
+      notifications: [],
+      params: {
+        pageSize: 4
+      }
     }
     this.isComponentMounted = false;
   }
   async componentDidMount() {
     Moment.locale("en");
     this.isComponentMounted = true;
-    const result = await this.fetchNotifications();
+    const result = await this.fetchNotifications(this.state.params);
     if (this.isComponentMounted) {
       if (result) {
         this.setState({
@@ -23,9 +26,9 @@ class ThongBaoClient extends Component {
       }
     }
   }
-  fetchNotifications = async () => {
+  fetchNotifications = async (params) => {
     try {
-      const notifications = await notificationApi.getPublishing();
+      const notifications = await notificationApi.getPublishing(params);
       return notifications;
     } catch (error) {
       console.log(error);
@@ -34,7 +37,7 @@ class ThongBaoClient extends Component {
   render() {
     const { notifications } = this.state;
     const renderNotifications = this.state.notifications.map((notify) =>
-      <Link key={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url}>
+      <Link key={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url || "/"}>
         <div className="mr-3">
           <div className={"icon-circle" + " bg-" + notify.type}>
             <i className="fa fa-donate text-white" />

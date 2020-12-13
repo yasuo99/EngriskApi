@@ -3,10 +3,16 @@ import { useJwt } from 'react-jwt';
 import { useSelector } from 'react-redux'
 import { Redirect, Route } from 'react-router-dom';
 
-const GuardRoute = ({ path, exact, component, guard }) => {
+const GuardRoute = ({ path, exact, component, guard, roles }) => {
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const {decodedToken} = useJwt(localStorage.getItem('token'));
+    const account = JSON.parse(localStorage.getItem('account'));
     if (guard) {
+        if(account){
+            if(account.roles.includes('superadmin')){
+                console.log('ok');
+            }
+        }
         return isLoggedIn ? (
             <Route path={path} exact={exact} component={component} />
         ) : (<Redirect to={{pathname: "/access-denied", state:{url: window.location.pathname}}}></Redirect>)
