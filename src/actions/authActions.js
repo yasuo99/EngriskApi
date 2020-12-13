@@ -77,6 +77,11 @@ export const signUp = (user) => {
 
     }
 }
+export const logout = () => {
+    return dispatch => {
+        return dispatch({type: "SIGN_OUT"});
+    }
+}
 export const logOut = () => {
     return( {
         type: "SIGN_OUT"

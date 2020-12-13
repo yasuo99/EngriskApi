@@ -9,9 +9,9 @@ const notificationApi = {
         const url = `/notifications/${id}`;
         return axiosClient.get(url);
     },
-    getPublishing: () => {
+    getPublishing: (params) => {
         const url = `/notifications/publishing`;
-        return axiosClient.get(url);
+        return axiosClient.get(url,{params});
     },
     createNotification: (body) => {
         const url = `/notifications`;
