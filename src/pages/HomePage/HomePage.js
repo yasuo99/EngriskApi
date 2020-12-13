@@ -73,7 +73,6 @@ class HomePage extends PureComponent {
           <div className="col-8">
             <a href="#">Lesson 1: Welcome</a>
             <p>Greeting person</p>
-            <div>{ this.props.isLoggedIn ? "dm" : "dkm"}</div>
           </div>
           <div className="col-2 pr-4">
             <div className="progress">
