@@ -71,7 +71,7 @@ class HomePage extends PureComponent {
             <img src="/image/welcome.jpg" alt="welcome" className="img-hoc" />
           </div>
           <div className="col-8">
-            <a href="#">Lesson 1: Welcome</a>
+            <a href="#" className="link-title">{section.sectionName}</a>
             <p>Greeting person</p>
           </div>
           <div className="col-2 pr-4">
