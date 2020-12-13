@@ -13,6 +13,11 @@ const examApi = {
         const url = `/exams/${id}/do`;
         return axiosClient.get(url);
     },
+    getAnswer: (id) => {
+        const url = `/exams/${id}/answers`;
+        return axiosClient.get(url);
+    }
+    ,
     submitExam: (id, body) => {
         const url = `/exams/${id}/done`;
         return axiosClient.post(url,body);

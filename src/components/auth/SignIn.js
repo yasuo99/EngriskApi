@@ -59,9 +59,9 @@ class SignIn extends Component {
         autoComplete="off"
         onSubmit={this.handleSubmit}
       >
-        <div className="wrap-input100 validate-input mb-4"> <span className="label-input100">Email</span>
-          <input className="input100" name="loginMethod" placeholder="Nhập tên tài khoản"
-            type="email"
+        <div className="wrap-input100 validate-input mb-4"> <span className="label-input100">Tài khoản</span>
+          <input className="input100" name="loginMethod" placeholder="Nhập username hoặc email"
+            type="text"
             id="loginMethod"
             onChange={this.handleChange}
           ></input>
