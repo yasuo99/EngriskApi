@@ -1,0 +1,443 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url('https://fonts.googleapis.com/css?family=Arimo|Quicksand:400,700&display=swap');
+*{box-sizing: border-box}
+body {color: #123064;font-family: 'Quicksand', sans-serif;}
+h1, h2, h3, h4, h5, h6 {font-family: 'Quicksand', sans-serif; font-weight: 800; }
+p {font-family: 'Arimo', sans-serif; font-size: 14px; color: #777;}
+.text-primary{color: #77B748!important}
+/* .btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px} */
+/* .btn-primary{background-color: #77B748!important} */
+a.text-primary:hover{color: #48871B}
+/* .btn-primary:hover{background-color:#48871B!important}
+.btn-primary-border:hover{background-color:#48871B!important;color: #fff} */
+.btn-primary{color:#fff}
+.bg-primary{background-color: #77B748 !important}
+.text1{color: #273051}
+.text2{color: #4F4F4F}
+.text3{color: #828282}
+.img-100{width: 100%; height: 90%}
+.word-list{cursor: pointer;}
+.hidden {display: none;}
+#subMenu span{font-size: 16px;color: #fff;}
+#content-wrapper .nav-link:hover{background-color: #fff!important;}
+#wrapper{ background-size: cover;
+  height: 100vh;
+  background-attachment: fixed;}
+  #trangchu .link-title{color: black}
+  #trangchu{margin-top: 20px;width: 100%; position: relative;overflow: auto;}
+  #trangchu .progress-bar{
+    background-color: #77B748!important;
+  }
+  #trangchu a{color: #fff;}
+  #trangchu a:hover{color: #fff;text-decoration: none;}
+  #trangchu .card-hoc{background-color: #fff;width: 90%;height: 110px;border-radius: 10px;box-shadow: 5px 5px 5px #d0e2f7;}
+  #trangchu .card-hoc a{font-weight: bold;font-size: 18px;}
+  #trangchu .card-hoc .img-hoc{width: 60px;height: 60px;border-radius: 50%;position: relative; top: 50%;
+    transform: translateY(-50%);}
+  #trangchu .card-hoc .do-btn{position: relative; top: -50%; transform: translateY(50%);}
+  .giadauvang{border: 3px solid #ccc; border-radius: 10px;height: 450px}
+.gachchan{border-bottom:2px solid #ccc; margin-top: 30px}
+.img-xephang{padding-left:30%}
+.nd-xephang .nd{font-size:24px; text-align:center}
+
+.banbe{border: 3px solid #ccc; border-radius: 10px;height: 300px; margin-top: 40px;}
+.banbe .row{border-bottom:2px solid #ccc;margin:20px 0}
+.btn-banbe ,.btn1, .btn2, .btn3{
+        display: inline-block;
+        font-weight: 400;
+        color: #212529;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 10px;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.banbe .btn-banbe .btn1{width: 300px;border:2px solid #ccc;margin-bottom: 20px;}
+.banbe .btn-banbe .btn2{width: 145px;border:2px solid #ccc;margin-right: 10px;}
+.banbe .btn-banbe .btn3{width: 145px;border:2px solid #ccc;}
+
+footer .kechan{border-top: 3px solid #ccc;}
+footer a{color: #828282}
+footer a:hover{color: #77B748;text-decoration: none;}
+footer h6{font-size: 15px;}
+/* -----------------------------------THẢO LUẬN------------------------------- */
+/* --------------------------------------------------------------------------- */
+#thaoluan h2{font-weight: bold}
+#thaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 20px;font-weight: bold;}
+#thaoluan .img-thaoluan{width: 90px;width:90px;border-radius: 50%;}
+#thaoluan a{color:#495057; font-weight:bold}
+#thaoluan a:hover{text-decoration: none;color: #77B748;}
+#thaoluan .tab-content .row{border-bottom: 2px solid #ccc; margin-top: 10px;}
+#thaoluan .form-control{border-radius: 15px;font-size: 16px;height: 60px;}
+
+#thaoluan .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
+#thaoluan .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
+#thaoluan .nd-theodoi:hover{background-color: #ccc}
+/* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
+/* --------------------------------------------------------------------------- */
+#chitietthaoluan p{font-size: 16px;}
+#chitietthaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 20px;border-radius: 20px;font-weight: bold;color: #77B748;font-size: 20px;}
+#chitietthaoluan .kechan{border-bottom: 3px solid #ccc;}
+#chitietthaoluan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
+#chitietthaoluan .diendan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
+#chitietthaoluan .diendan i{font-size: 20px;font-weight: bold;}
+#chitietthaoluan .img-chitietthaoluan{border-radius: 50%}
+#chitietthaoluan .nd-img{padding: 0;}
+#chitietthaoluan .chude-binhluan .baocao{float:  right}
+#chitietthaoluan .chude-binhluan .baocao a{font-size: 20px; font-weight: bold; color: #828282}
+#chitietthaoluan .chude-binhluan .baocao a:hover{text-decoration: none;color: #77B748;}
+#chitietthaoluan textarea{border: 3px solid #ccc;font-size: 16px;padding: 10px;border-radius: 10px;outline: none;}
+#chitietthaoluan .binhluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 10px;font-weight: bold;color: #fff;font-size: 20px;}
+#chitietthaoluan .sub-sapxep .dropdown-item{width: 280px;padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
+#chitietthaoluan .sub-sapxep .dropdown-item:active{background-color: #77B748;color: #fff;}
+#chitietthaoluan .nav-item a{color: #828282;font-weight: bold;font-size: 20px}
+#chitietthaoluan li{list-style: none;}
+#chitietthaoluan .sapxep{padding-left: 150px;margin:0;}
+#chitietthaoluan .phanhoi-binhluan .baocao{margin-left:100px}
+#chitietthaoluan .phanhoi-binhluan a{font-size:20px;font-weight: bold;text-decoration: none;color: #828282;}
+#chitietthaoluan .phanhoi-binhluan a:hover{color: #77B748;}
+#chitietthaoluan .phanhoi-binhluan .kechan{border-bottom: 2px solid #ccc;margin:20px 0;}
+
+/* -----------------------------------CỬA HÀNG------------------------------- */
+/* -------------------------------------------------------------------------- */
+#cuahang .duolingoPlus{height: 250px;background-color: #1cb0f6;border-radius: 10px;}
+#cuahang .duolingo{float: left;width: 160px;padding: 20px 10px 10px 10px;color: #fff;}
+#cuahang .plus{width: 80px;background-color: #068CE1;color: #fff;text-align: center;border-radius: 5px; float: left;margin-top: 25px;}
+#cuahang .nd-duolingo{padding: 5px 10px;color: #fff;font-size: 16px;}
+#cuahang .btn{margin-left: 10px;color: #1cb0f6;font-weight: bold;border-radius: 10px;box-shadow: 3px 3px 3px #eee}
+#cuahang .kechan{border-top: 3px solid #ccc;margin: 30px 0;}
+#cuahang .tangsucmanh p{font-size: 16px;}
+#cuahang .tangsucmanh .btn{font-size: 18px;padding: 10px; border: 3px solid #ccc;color: red;font-weight: bold;border-radius: 15px;box-shadow: 3px 3px 3px #eee;}
+#cuahang .luyentap p{font-size: 16px;}
+#cuahang .luyentap .btn{font-size: 18px;padding: 10px; border: 3px solid #ccc;color: red;font-weight: bold;border-radius: 15px;box-shadow: 3px 3px 3px #eee;}
+#cuahang .lingot{font-size: 20px;}
+#cuahang .img-duolingo{float: right;margin-top: 100px;margin-right: 10px;}
+
+/* -----------------------------------TỪ ĐIỂN------------------------------- */
+/* -------------------------------------------------------------------------- */
+#tudien{margin-top: 200px; margin-bottom: 200px;}
+#tudien p{font-size: 20px;}
+
+form .inner-form {background: #fff;display: flex;width: 100%;align-items: center;box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);border-radius: 3px;}
+form .inner-form .input-field.first-wrap {width: 80px;margin-left: 10px;}
+form .inner-form .input-field {height: 80px;padding-top: 8px}
+form .inner-form .input-field input {height:100%;display: block;width: 460px;padding: 10px 32px;font-size: 20px;color: #555;margin-right: 20px;border: 0;outline: none;}
+form .inner-form .input-field.third-wrap .btn {padding:15px 12px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;}
+form ul .suggest{list-style-type: none;}
+/* -----------------------------------TỪ VỰNG------------------------------- */
+/* -------------------------------------------------------------------------- */
+#tuvung table{font-size: 16px;}
+#tuvung table a{color: #828282;}
+#tuvung table a:hover{text-decoration: none;}
+
+
+/* ------------------------------HỌC QUA HÌNH ẢNH--------------------------- */
+/* ------------------------------------------------------------------------- */
+#hoc-hinhanh .card-hoc{width: 200px;height: 250px;border: 2px solid #ccc;border-radius: 10px;}
+#hoc-hinhanh .card-hoc:active{background-color: #77B748;}
+#hoc-hinhanh .card-hoc .img-hoc{padding-left: 37px;padding-top: 40px;}
+#hoc-hinhanh .kechan{border-bottom: 2px solid #ccc; padding-bottom: 60px;}
+#hoc-hinhanh .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
+
+/* ---------------------------------HỌC 2------------------------------------ */
+/* -------------------------------------------------------------------------- */
+#hoc2 .dapan{border: 1px solid #ccc; width: 300px; height: 50px;margin-bottom: 20px;}
+#hoc2 .kechan{border-bottom: 2px solid #ccc; padding-bottom: 60px;}
+#hoc2 .dapan:active{background-color: #77B748;}
+#hoc2 .dapan:hover{background-color: #77B748;}
+#hoc2 .dapan p:active{color: #fff;}
+#hoc2 .dapan p:hover{color: #fff;}
+#hoc2 .dapan p{font-size: 16px;padding: 10px;}
+#hoc2 .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
+#hoc2 .active{background-color: #77B748;}
+#hoc2 .active p{color: #fff;}
+.thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 150px;border-radius: 20px;}
+.thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 150px;padding-top: 30px;border-radius: 20px;}
+.thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;}
+.thongbao-ketquasai p{font-size: 16px;color: #4f4f4f;}
+/* ---------------------------------Cài đặt---------------------------------- */
+/* -------------------------------------------------------------------------- */
+#caidat .btn{border: none;border-radius: 10px;font-size: 18px;font-weight: bold;padding: 10px;}
+#caidat form .nd{margin-left: 20px;margin-top: 50px;}
+#caidat span{font-size: 16px;font-weight: bold;}
+#caidat input{width: 460px;height: 50px;font-size: 16px;border-radius: 10px;border: 2px solid #ccc;outline: none;padding: 0 10px;}
+#caidat .caidat-taikhoan{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
+#caidat .caidat-taikhoan a{color: #828282; font-weight:bold;}
+#caidat .caidat-taikhoan a:hover{color: #4f4f4f;text-decoration: none;}
+.chucnang .bg-active{background-color: #ccc;}
+.chucnang .text-active{color: #4f4f4f!important}
+.chucnang .nd-chucnang{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;margin: 5px 20px;}
+.chucnang .nd-chucnang:hover{background-color: #ccc}
+#caidat .caidat-matkhau{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
+#caidat .caidat-matkhau a{color: #828282; font-weight:bold;}
+#caidat .caidat-matkhau a:hover{color: #4f4f4f;text-decoration: none;}
+
+
+/* -------------------------------Landing Page--------------------------------- */
+/* ---------------------------------------------------------------------------- */
+#duolingo{background:url(./../image/bg.jpg);background-size: cover;height: 100vh}
+#duolingo ul .ring-1 {position: absolute;top:90px;left:110px;width: 400px;height: 400px;border: 1px solid rgba(33, 150, 243, 0.5);border-radius: 50%;animation: rotate360 210s linear infinite}
+#duolingo ul.ring-2 {position: absolute;top:145px;left: 155px;width: 300px;height: 300px;border: 1px solid rgba(33, 150, 243, 0.5);border-radius: 50%; animation: rotate360 180s linear infinite;z-index: 1;}
+#duolingo ul.ring-3 {position: absolute;top:200px;left: 210px;width: 200px;height: 200px;border: 1px solid rgba(33, 150, 243, 0.5);border-radius: 50%;}
+#duolingo .orbit-center {position: relative;top: 230px;left: 220px;z-index: 5;font-size: 30px;width: 160px;height: 90px;text-align: center;border-radius: 50%;}
+#duolingo .orbit-icon1 {position: absolute;width: 100px;top: 10px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo .orbit-icon2 {position: absolute;width: 100px;top: 150px;left:-30px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo .orbit-icon3 {position: absolute;width: 120px;top: 300px;left:260px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo .orbit-icon4 {position: absolute;width: 100px;top: -10px;left:190px;height: 70px;border-radius: 50%;z-index: 99;}
+#duolingo li {list-style: none;}
+#duolingo .nd{top: 130px;right: 100px;}
+#duolingo .btn{box-shadow: 1px 3px 1px #007bff;outline: none;border: 0;width: 350px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
+
+#nd-duolingo .cachhoc p{font-size: 16px;}
+#nd-duolingo .kechan{border-bottom: 2px solid #ccc;}
+
+#footer-duolingo{background:url(./../image/bg.jpg);background-size: cover;height: 50vh}
+#footer-duolingo .btn{box-shadow: 1px 3px 1px #48871B;outline: none;border: 0;width: 200px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
+
+#conference-timeline {position: relative;width: 100%;margin: 0 auto; }
+#conference-timeline .timeline-start,#conference-timeline .timeline-end {display: table;font-size: 18px;font-weight: 900;text-transform: uppercase;background: #77B748;padding: 15px 23px;color: #fff;max-width: 15%;width: 100%;text-align: center;margin: 0 auto;}
+#conference-timeline .conference-center-line {position: absolute; width: 3px;height: 100%;top: 0;left: 50%;margin-left: -2px;background: #77B748;z-index: -1;}
+#conference-timeline .conference-timeline-content {padding-top: 67px;padding-bottom: 67px;}
+.timeline-article {width: 100%;height: 100%;position: relative;overflow: hidden;margin: 20px 0;}
+.timeline-article .content-left-container,
+.timeline-article .content-right-container {max-width: 44%;width: 100%;}
+.timeline-article .content-left,
+.timeline-article .content-right {position: relative;width: auto;border: 1px solid #77B748;background-color: #fff;box-shadow: 0 1px 3px rgba(0,0,0,.03);padding: 27px 25px;}
+.timeline-article p {margin: 0 0 0 60px;padding: 0; font-weight: 400;color: #242424;font-size: 14px;line-height: 24px;position: relative;}
+.timeline-article p span.article-number {position: absolute;font-weight: 300;font-size: 44px;top: 10px;left: -60px;color: #77B748;}
+.timeline-article .content-left-container {float: left;}
+.timeline-article .content-right-container {float: right;}
+.timeline-article .content-left:before,
+.timeline-article .content-right:before{position: absolute;top: 20px;font-size: 23px;font-family: "FontAwesome";color: #fff;}
+.timeline-article .meta-date {position: absolute;top: 0;left: 50%;width: 62px;height: 62px;margin-left: -31px;color: #fff;border-radius: 100%;background: #77B748;}
+
+      @media only screen and (max-width: 768px) {
+        #conference-timeline .timeline-start,
+        #conference-timeline .timeline-end {
+          margin: 0;
+        }
+        #conference-timeline .conference-center-line {
+          margin-left: 0;
+          left: 50px;
+        }
+        .timeline-article .meta-date {
+          margin-left: 0;
+          left: 20px;
+        }
+        .timeline-article .content-left-container,
+        .timeline-article .content-right-container {
+          max-width: 100%;
+          width: auto;
+          float: none;
+          margin-left: 110px;
+          min-height: 53px;
+        }
+        .timeline-article .content-left-container {
+          margin-bottom: 20px;
+        }
+        .timeline-article .content-left,
+        .timeline-article .content-right {
+          padding: 10px 25px;
+          min-height: 65px;
+        }
+      }
+      @media only screen and (max-width: 480px) {
+        .timeline-article p {
+          margin: 0;
+        }
+        .timeline-article p span.article-number {
+          display: none;
+        }
+        
+      }
+
+/* ---------------------Nạp tiền---------------------- */
+/* --------------------------------------------------- */
+#thanhtoan .col-8{display: inherit;}
+#thanhtoan input{height:100%;display: block;width: 300px;padding: 10px;font-size: 16px;color: #555;margin-right: 10px;outline: none;border: 2px solid #ccc; border-radius: 5px;}
+#thanhtoan input:focus{border: 2px solid #ccc!important;}
+#thanhtoan .btn{padding: 10px;outline: none!important;border: none;}
+#thanhtoan .dropdown-item{width: 190px;padding: 10px;}
+#thanhtoan .nd{height: 300px;border: 1px solid #77B748;}
+
+/* ---------------------------------FLASH CARD------------------------------ */
+/* ------------------------------------------------------------------------- */
+#flashcard .bg-flashcard{
+  background-image: linear-gradient(45deg, rgba(38, 79, 121, 0.7) 55%, rgba(30,66,88,0.7)), url("/image/banner.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 90vh;
+  /* view height */
+  background-attachment: fixed;
+}
+#flashcard .bg-flashcard{ height: 500px;position: relative}
+#flashcard .bg-flashcard .fa-caret-up{position: absolute;font-size: 80px;color: #fff;left: 47%;}
+#flashcard .bg-flashcard .fa-caret-down{position: absolute; top: 430px;font-size: 80px;color: #fff;left: 47%;}
+#flashcard .flip-container {perspective: 1000;float: left;cursor:pointer;position: absolute;top: 150px;left: 170px;}
+#flashcard .flippable {transition: 0.5s;transform-style: preserve-3d;position: relative;}
+#flashcard .flipme {transform: rotateY(180deg);}
+#flashcard .flip-container, .front, .back {width: 500px;height: 200px;text-align: center;font-size: 40px;border-radius: 5px;}
+      
+#flashcard .front, .back {backface-visibility: hidden;position: absolute;box-shadow: 8px 8px 8px rgba(5, 45, 70, 0.9)}
+      
+      
+#flashcard .front { z-index: 2;color: white;}
+#flashcard .front h2{margin-top: 40px;}
+#flashcard .front p{font-size: 16px;}
+#flashcard .back {transform: rotateY(180deg);background-color: #fff;}
+#flashcard .back p{font-size: 24px;margin-top: 80px;}
+      
+#flashcard .flashcard .front{background:#fff;}
+
+#flashcard ol{ height:500px;overflow-x:hidden; overflow-y:auto;background-color: #77B748;}
+#flashcard li{font-weight: bold;}
+#flashcard li:hover{background-color: #48871B}
+#flashcard a{text-decoration: none;font-size: 16px; padding-left: 20px;font-weight: bold;}
+#flashcard .img-100{width: 100%;}
+
+/* ---------------------------------Thêm bài viết----------------------------- */
+/* --------------------------------------------------------------------------- */
+#thembaiviet h2{font-weight: bold}
+#thembaiviet .btn{color:#77B748;outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px 0;border-radius: 10px;font-weight: bold;width: 80px;}
+#thembaiviet .btn:hover{background-color: #77B748;color: #fff;}
+#thembaiviet .form-baiviet .tieude{width: 100%;height: 80px;border: 2px solid#ccc;border-radius: 5px;margin-top: 20px;outline: none;}
+#thembaiviet .form-baiviet .noidung{width: 100%;height:300px;border: 2px solid#ccc;border-radius: 5px;margin-top: 20px;outline: none;}
+#thembaiviet .img-thaoluan{width: 90px;width:90px;border-radius: 50%;}
+#thembaiviet a{color:#495057; font-weight:bold}
+#thembaiviet a:hover{text-decoration: none;color: #77B748;}
+#thembaiviet .tab-content .row{border-bottom: 2px solid #ccc; margin-top: 10px;}
+#thembaiviet .form-control{border-radius: 15px;font-size: 16px;height: 60px;}
+
+#thembaiviet .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
+#thembaiviet .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
+#thembaiviet .nd-theodoi:hover{background-color: #ccc}
+#thembaiviet input:active{border: 2px solid #ccc!important;}
+/* -------------------------------KẾT QUẢ TÌM KIẾM--------------------------- */
+/* -------------------------------------------------------------------------- */
+#ketquatracuu{margin-top: 40px; margin-bottom: 40px;}
+#ketquatracuu form .inner-form {background: #fff;display: flex;width: 100%;align-items: center;box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);border-radius: 10px;}
+#ketquatracuu form .inner-form .input-field.first-wrap {width: 80px;margin-left: 10px;}
+#ketquatracuu form .inner-form .input-field {height: 80px;padding-top: 8px;margin-left: -15px;}
+#ketquatracuu form .inner-form .input-field input {height:100%;display: block;width: 650px;padding: 10px 32px;font-size: 20px;color: #555;margin-right: 20px;border: 0;outline: none;}
+#ketquatracuu form .inner-form .input-field.third-wrap .btn {padding: 15px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;left: 350px;margin-right: 10px;width: 150px;}
+#ketquatracuu .kechan{border-bottom: 2px solid #ccc;margin-bottom:30px;padding: 20px 0;}
+#ketquatracuu .gachchan{border-bottom: 2px solid #77B748;margin-bottom:30px;padding: 20px 0;border-bottom-style: dotted;width: 300px;}
+
+.dropdown-menu{
+  width: 200px;
+}
+/* .dropdown-menu .dropdown-item{
+  border-bottom: 1px solid #77B748 ;
+  border-style: dotted;
+  padding: 10px;
+}
+.dropdown-menu .dropdown-item:active{
+  background-color: #77B748;
+  color: #fff!important;
+} */
+
+/* -------------------------------KẾT QUẢ EXAM------------------------------- */
+/* -------------------------------------------------------------------------- */
+#ketquaexam .ketquacauhoi{
+  margin-bottom: 20px;
+}
+#ketquaexam .ketquacauhoi .cauhoi{
+  font-size: 18px;
+  color:#212529;
+  font-weight: 400;
+}
+#ketquaexam .ketquacauhoi .dapan li{
+  font-size: 16px;
+  color: #828282;
+  cursor: pointer;
+}
+#ketquaexam .ketquacauhoi .ketqua .btn{
+  border: 0px;
+  margin-bottom: 10px;
+}
+#ketquaexam .ketquacauhoi .ketqua p{
+  font-size: 16px!important;
+  border: none;
+}
+#ketquaexam .ketquacauhoi .dapan{
+  margin-top: 10px;
+  margin-left: 10px;
+  border-left: 3px solid #ccc;
+}
+/* -------------------------------QUYỀN TRUY CẬP----------------------------- */
+/* -------------------------------------------------------------------------- */
+#trangloitruycap{margin-top: 50px;margin-bottom: 100px;}
+
+/* -------------------------------MODAL-------------------------------------- */
+/* -------------------------------------------------------------------------- */
+.modal form{margin-left: 150px;}
+.modal .card-input{width: 760px;padding-left: 10px;}
+.modal .card-input select{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.modal .card-input input{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.modal .card-button{margin-left: 300px;margin-top: 30px;}
+.modal .card-button .btn{border: 0px;}
+.modal {
+  background: rgba(0, 0, 0, 0.6);
+}
+.modal-container {
+  position: absolute;
+  width: 60%;
+  background: #ffffff;
+  left: 25%;
+  top: 5%;
+  padding: 20px;
+  height: 580px;
+  overflow-x: hidden;
+}
+.modal .card-input input:focus{border: 2px solid #ccc!important;}
+.modal-tuvung{height: 300px;}
+/* -------------------------------QUẢN LÝ CÂU HỎI---------------------------
+/* -------------------------------------------------------------------------- */
+.dapAn{width: 200px;}
+.cautraA{width: 120px;}
+.cautraB{width: 120px;}
+.cautraC{width: 120px;}
+.cautraD{width: 120px;}
+/* -------------------------------QUẢN LÝ TÀI LIỆU---------------------------- */
+/* -------------------------------------------------------------------------- */
+.tieudeTL{width: 200px;}
+.fileTL{width: 250px;}
+/* -------------------------------QUẢN LÝ TỪ VỰNG---------------------------- */
+/* -------------------------------------------------------------------------- */
+.english{width: 120px;}
+.vietnam{width: 120px;}
+.loaitu{width: 120px;}
+.hinhanh{width: 200px;}
+/* ------------------------------QUẢN LÝ THÔNG BÁO--------------------------- */
+/* -------------------------------------------------------------------------- */
+.tieudeTB{width: 200px;}
+.ngayTB{width: 200px;}
+/* ------------------------------QUẢN LÝ NẠP TIỀN--------------------------- */
+/* -------------------------------------------------------------------------- */
+.taikhoan{width: 300px;}
+.thoigian{width: 200px;}
+.hinhthuc{width: 200px;}
+/* ---------------------------QUẢN LÝ QUIZ - EXAM---------------------------- */
+/* -------------------------------------------------------------------------- */
+.chucnang{width: 180px;}
+.nav-tabs .nav-item{cursor: pointer;}
+
+.form-group-account{
+  background: url(../image/banner.jpg);
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: cover;
+  height: 400px;
+  width: 100%;
+  padding-left: 230px;
+  padding-top: 30px; 
+  font-size: 18px;
+  font-weight: 400;
+  margin-top: 30px;
+}

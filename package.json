@@ -1,0 +1,66 @@
+{
+  "name": "tieuluan",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.11.0",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.5.0",
+    "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
+    "jquery": "^3.5.1",
+    "jwt-decode": "^3.1.2",
+    "moment": "^2.29.1",
+    "react": "^17.0.1",
+    "react-bootstrap": "^1.4.0",
+    "react-browser-router": "^2.1.2",
+    "react-ckeditor-component": "^1.1.0",
+    "react-countdown": "^2.3.1",
+    "react-dom": "^17.0.1",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.25",
+    "react-infinite-scroll-component": "^5.1.0",
+    "react-jwt": "^1.0.7",
+    "react-list": "^0.8.16",
+    "react-loader-spinner": "^3.1.14",
+    "react-modal": "^3.12.1",
+    "react-paypal-button-v2": "^2.6.2",
+    "react-player": "^2.7.0",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
+    "react-script-tag": "^1.1.2",
+    "react-scripts": "4.0.0",
+    "react-st-modal": "^1.1.3",
+    "react-time-ago": "^6.2.1",
+    "react-toastify": "^6.2.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
