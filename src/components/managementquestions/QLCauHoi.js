@@ -6,6 +6,12 @@ class QLCauHoi extends Component {
         super(props);
         this.state = {
             modal: false,
+            question: "",
+            a: "",
+            b: "",
+            c: "",
+            d: "",
+            answer: "",
             modalInputQuestion: "",
             modalInputA: "",
             modalInputB: "",
@@ -13,15 +19,10 @@ class QLCauHoi extends Component {
             modalInputD: "",
             modalInputAnswer: "",
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(e) {
-        var target = e.target;
-        var name = target.name;
-        var value = target.value;
         this.setState({
-            [name]: value
+            [e.target.id]: e.target.value,
         });
     }
 
