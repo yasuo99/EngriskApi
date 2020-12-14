@@ -7,6 +7,7 @@ import Footer from '../Footer/Footer';
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import axiosClient from '../../config/axiosClient';
 import groupApi from '../../api/groupApi';
+import { connect } from 'react-redux';
 
 class FlashCardPage extends Component {
     constructor(props) {
@@ -30,10 +31,14 @@ class FlashCardPage extends Component {
         });
         this.isComponentMounted = true;
         const result = await this.fetchWord();
-        const groups = await this.fetchGroups(1);
+        if (this.props.isLoggedIn) {
+            const groups = await this.fetchGroups(this.props.id);
+            this.setState({
+                groups: groups
+            })
+        }
         if (this.isComponentMounted) {
             this.setState({
-                groups: groups,
                 words: result,
                 currentWord: result[this.state.index],
                 loading: false
@@ -56,13 +61,22 @@ class FlashCardPage extends Component {
     fetchGroups = async (id) => {
         return groupApi.getGroupsOfAccount(id);
     }
-    selectGroup = (e) => {
+    selectGroup = async (e) => {
         console.log(e.target.id);
-        const currentGroup = this.state.groups[e.target.id - 1];
-        this.setState({
-            currentGroup: currentGroup,
-            words: currentGroup.words
-        });
+        if (e.target.id >= 1) {
+            const currentGroup = this.state.groups[e.target.id - 1];
+            this.setState({
+                currentGroup: currentGroup,
+                words: currentGroup.words
+            });
+        }
+        else {
+            const result = await this.fetchWord();
+            this.setState({
+                currentGroup: {},
+                words: result
+            })
+        }
         console.log(this.state);
     }
     selectWord = (e) => {
@@ -74,7 +88,6 @@ class FlashCardPage extends Component {
                 index: index,
                 currentWord: currentWord[0]
             });
-            console.log(this.state);
         }
     }
     previousWord = () => {
@@ -98,16 +111,17 @@ class FlashCardPage extends Component {
         }
     }
     render() {
-        const renderGroups = this.state.groups.map((group) =>
-            <Dropdown.Item onClick={(e) => this.selectGroup(e)} key={group.id} id={group.id}>{group.groupName}</Dropdown.Item>
-        );
+        let groups = [];
+        groups.push(<Dropdown.Item onClick={(e) => this.selectGroup(e)} key={0} id={0}>Tất cả từ vựng</Dropdown.Item>)
+        for (let i = 1; i <= this.state.groups.length; i++) {
+            groups.push(<Dropdown.Item onClick={(e) => this.selectGroup(e)} key={i} id={i}>{this.state.groups[i - 1] && this.state.groups[i - 1].groupName}</Dropdown.Item>)
+        }
         const listWord = this.state.words.map((word) =>
             <li key={word.id} id={word.id} className="text-center word-list" onClick={this.selectWord}>{word.eng}</li>
         );
         // const examples = this.state.currentWord.examples.map((example) =>
         //     <p key={example.id}>{example.eng}</p>
         // );
-        console.log(this.state.currentWord.examples);
         const { currentWord, index } = this.state;
         return (
             <div id="wrapper">
@@ -120,7 +134,7 @@ class FlashCardPage extends Component {
                                 <div className="row">
                                     <div className="col-3">
                                         <DropdownButton id="dropdown-basic-button" title={this.state.currentGroup.groupName || "Danh sách từ vựng"}>
-                                            {renderGroups}
+                                            {groups}
                                         </DropdownButton>
                                     </div>
 
@@ -128,7 +142,6 @@ class FlashCardPage extends Component {
                                 <div className="row mt-4">
                                     <div className="col-3 bg-xam">
                                         <ol type="1">
-                                            <li><input className="d-flex justify-content-center" /></li>
                                             {listWord}
                                         </ol>
                                     </div>
@@ -143,7 +156,7 @@ class FlashCardPage extends Component {
                                                 </div>
                                                 <div className="back">
                                                     <div className="row">
-                                                        <div className="col-8"><img src={currentWord.wordImg || "image/card.jpeg"} className="img-100 card-img-top img-fluid" /></div>
+                                                        <div className="col-8"><img src={currentWord.wordImg || "image/card.jpeg"} className="img-100 card-img-top" /></div>
                                                         <div className="col-4"> <p>{currentWord.vie}</p></div>
                                                     </div>
                                                 </div>
@@ -163,4 +176,11 @@ class FlashCardPage extends Component {
         )
     }
 }
-export default FlashCardPage;
+const mapStateToProps = (state) => {
+    const { id } = state.auth.account;
+    console.log(state);
+    return {
+        id: id
+    }
+}
+export default connect(mapStateToProps)(FlashCardPage);

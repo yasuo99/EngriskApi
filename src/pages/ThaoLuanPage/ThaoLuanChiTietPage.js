@@ -6,8 +6,29 @@ import PhanHoiPost from '../../components/thaoluan/PhanHoiPost';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
+import postApi from '../../api/postApi';
 
 class ThaoLuanChiTietPage extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            post:{}
+        }
+        this.isComponentMounted = false;
+    }
+    async componentDidMount() {
+        this.isComponentMounted = true;
+        const {match : {match : {params}}} = this.props;
+        const post = await this.fetchPostDetail(params.postId);
+        if(this.isComponentMounted){
+            this.setState({
+                post: post
+            });
+        }
+    }
+    fetchPostDetail = async (id) =>{
+        return await postApi.getDetail(id);
+    }
     render() {
         return (
             <div id="wrapper">
@@ -19,16 +40,14 @@ class ThaoLuanChiTietPage extends Component {
                     <div className="container pt-3">
                         <div className="row kechan">
                             <div className="col-6 diendan mt-5 mb-5">
-                                <a href="#">DIỄN ĐÀN</a> <i className="fa fa-angle-right" /> <a href="#">CHỦ ĐỀ DUOLINGO</a>
+                                <a href="#">DIỄN ĐÀN</a> <i className="fa fa-angle-right" /> <a href="#">Thảo luận</a>
                             </div>
-                            <div className="col-6 theodoi text-right mt-4"><button type="button" className="btn btn-light">THEO DÕI THẢO
-                      LUẬN</button></div>
                         </div>
                         <ContentPost></ContentPost>
                         <BinhLuanPost></BinhLuanPost>
                         <div className="row mt-5 kechan">
                             <div className="col-6">
-                                <h3>NHẬN XÉT</h3>
+                                <h3>BÌNH LUẬN</h3>
                             </div>
                             <div className="col-6 sapxep">
                                 <div className="navbar navbar-expand-lg navbar-light">
@@ -58,6 +77,9 @@ class ThaoLuanChiTietPage extends Component {
             
            </div>
         );
+    }
+    componentWillUnmount(){
+        this.isComponentMounted = false;
     }
 }
 export default ThaoLuanChiTietPage;

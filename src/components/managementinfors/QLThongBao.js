@@ -38,13 +38,10 @@ class QLThongBao extends Component {
       afterPaste(evt) {
         console.log("afterPaste event called with event info: ", evt);
       }
-      handleChange(e) {
-        var target = e.target;
-        var name = target.name;
-        var value = target.value;
+    handleChange(e) {
         this.setState({
-            [name]: value
-        });
+            [e.target.id]: e.target.value,
+          });
     }
 
     handleSubmit(e) {
@@ -69,7 +66,7 @@ class QLThongBao extends Component {
                 <td>02-02-2020</td>
                 <td>Bạn cần phải nổ lực hơn trong việc học tiếng anh</td>
                 <td>
-                    
+                    <a href="javascript:;" className="btn btn-success mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /></a>
                     <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
                     <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
                         <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>

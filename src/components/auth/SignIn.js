@@ -78,7 +78,7 @@ class SignIn extends Component {
         <div className="container-login100-form-btn mt-2">
           <button className="btn btn-primary"> Đăng Nhập </button>
         </div>
-        <a href="../index.html" className="mt-2">Về trang chủ</a>
+        <a href="/home" className="mt-2">Về trang chủ</a>
       </form>
     )
   }
