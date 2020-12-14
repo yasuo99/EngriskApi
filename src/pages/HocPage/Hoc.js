@@ -1,7 +1,6 @@
 import React, { PureComponent, Suspense, useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { getQuestion, submitQuestion } from '../../actions/questionActions';
-import { doQuiz } from '../../actions/quizActions';
 import Loader from 'react-loader-spinner';
 import { connect } from 'react-redux';
 import { ButtonToolbar, ProgressBar } from 'react-bootstrap';
@@ -10,14 +9,14 @@ import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import Countdown from 'react-countdown';
-
+import sectionApi from '../../api/sectionApi';
 
 class Hoc extends PureComponent {
     constructor(props) {
         super(props);
         this.isComponentMounted = false;
         this.state = {
-            quizId: 0,
+            sectionId: 0,
             question: {},
             questions: [],
             currentQuestion: {},
@@ -39,10 +38,19 @@ class Hoc extends PureComponent {
         window.addEventListener('beforeunload', this.handleUnload);
         console.log(this.props);
         const { match: { match: { params } } } = this.props;
+        const result = await this.fetchQuestions(params.sectionId);
+        console.log(result);
         this.isComponentMounted = true;
         try {
             if (this.isComponentMounted) {
-                this.fetchQuestions(params.quizId);
+                this.setState({
+                    sectionId: params.sectionId,
+                    questions: result.questions,
+                    currentQuestion: result.questions[this.state.index],
+                    id: this.state.index,
+                    quiz: result,
+                    loading: false
+                })
             }
         }
         catch (error) {
@@ -50,17 +58,9 @@ class Hoc extends PureComponent {
             this.setState({ loading: false });
         }
     }
-    fetchQuestions = async (quizId) => {
+    fetchQuestions = async (sectionId) => {
         try {
-            const quiz = await doQuiz(quizId);
-            this.setState({
-                quizId: quizId,
-                questions: quiz.questions,
-                currentQuestion: quiz.questions[this.state.index],
-                id: this.state.index,
-                quiz,
-                loading: false
-            })
+            return await sectionApi.doQuiz(sectionId);
         } catch (error) {
             console.log(error);
         }
@@ -88,8 +88,7 @@ class Hoc extends PureComponent {
             return ""
         }
     }
-    submitAnswer = async (e) => {
-        e.preventDefault();
+    submitAnswer = async () => {
         const answer = {
             id: this.state.currentQuestion.id,
             answer: this.state.answer,
@@ -122,12 +121,13 @@ class Hoc extends PureComponent {
                 this.setState({
                     done: true
                 })
+                this.submitQuiz();
             }
         }
         console.log(this.state);
     }
-    submitQuiz = async (e) => {
-
+    submitQuiz = async () => {
+        sectionApi.doneQuiz(this.state.sectionId, this.state.quiz.id, this.props.isLoggedIn);
     }
     reachEnd = () => {
         if (this.state.index < this.state.questions.length) {
@@ -166,8 +166,16 @@ class Hoc extends PureComponent {
             console.log(this.state);
         }
     }
+    listeningCountdown = () => {
+        var countdown = setInterval(() => {
+            this.submitAnswer();
+            this.skipQuestion();
+            clearInterval(countdown);
+        }, 5000)
+
+    }
     render() {
-        const { quizId, currentQuestion, loading, rightAnswer, checked, quiz, index, done, isRight } = this.state;
+        const { sectionId, currentQuestion, loading, rightAnswer, checked, quiz, index, done, isRight } = this.state;
         if (loading) {
             return (
                 <div id="wrapper">
@@ -208,7 +216,6 @@ class Hoc extends PureComponent {
                                         <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
                                     </div>
                                     <div className="row kechan mt-5 kechan">
-                                        <div className="col-3">Thời gian còn lại: <Countdown date={Date.now() + quiz.durationTime*60*1000} onComplete={() => console.log('dkm')} /></div>
                                         <div className="col-8 offset-2">
                                             {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
                                                 <p className="mb-5">Có nghĩa là?</p></div>
@@ -216,7 +223,7 @@ class Hoc extends PureComponent {
                                             {currentQuestion.isListeningQuestion === true &&
                                                 <div className="row">
                                                     <b>Chọn đáp án đúng</b>
-                                                    <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
+                                                    <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" onEnded={this.listeningCountdown} />
                                                 </div>}
                                             <div className="row mt-2">
                                                 <div className="col-6">
@@ -244,14 +251,14 @@ class Hoc extends PureComponent {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className={isRight == true?"row mt-3 thongbao-ketqua":"row mt-3"}>
+                                    <div className={isRight == true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
                                         <div className="col-3">
                                             {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
                                         </div>
                                         <div className="col-6"></div>
                                         <div className="col-3 text-right">
                                             {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
-                                            {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (quizId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
+                                            {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
                                             {done && <Link className="btn btn-primary" to="/">Kết thúc</Link>}
                                         </div>
                                     </div>
@@ -281,7 +288,8 @@ class Hoc extends PureComponent {
 const mapStateToProps = (state) => {
     const { auth } = state;
     return {
-        account: auth.account
+        account: auth.account,
+        isLoggedIn: auth.isLoggedIn
     }
 }
 const mapDispatchToProps = (dispatch) => {

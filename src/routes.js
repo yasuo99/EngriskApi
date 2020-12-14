@@ -64,9 +64,9 @@ const routes = [
         roles: []
     },
     {
-        path: '/thao-luan-chi-tiet',
+        path: '/thao-luan-chi-tiet/:postId',
         exact: true,
-        main: () => <ThaoLuanChiTietPage />,
+        main: (match) => <ThaoLuanChiTietPage match={match}/>,
         guard: false,
         roles: []
     },
@@ -155,7 +155,7 @@ const routes = [
         roles: []
     },
     {
-        path: '/baihoc/:quizId',
+        path: '/sections/:sectionId/do',
         exact: true,
         main: (match) => <Hoc match={match}/>,
         guard: false,
@@ -272,6 +272,9 @@ const routes = [
         guard: false,
         roles: []
     },
+    {
+        main: () => <NotFoundPage/>
+    }
 ];
 
 export default routes;
