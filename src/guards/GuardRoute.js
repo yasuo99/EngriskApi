@@ -1,11 +1,10 @@
 import React from 'react'
 import { useJwt } from 'react-jwt';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route } from 'react-router-dom';
 
 const GuardRoute = ({ path, exact, component, guard, roles }) => {
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-    const {decodedToken} = useJwt(localStorage.getItem('token'));
     const account = JSON.parse(localStorage.getItem('account'));
     if (guard) {
         if(account){

@@ -12,27 +12,21 @@ class KetQuaExam extends Component {
         super(props);
         this.isComponentMounted = false;
         this.state = {
-            result: { questions: [] }
+            result: { answer: {questions: []} }
         }
     }
     componentDidMount = async () => {
         this.isComponentMounted = true;
         const { match: { match: { params } } } = this.props;
-        console.log(params);
-        var result = await this.fetchExamAnswer(params.examId);
-        console.log(result);
         if (this.isComponentMounted) {
             this.setState({
-                result: result
+                result: this.props.result
             })
         }
     }
-    fetchExamAnswer = async (id) => {
-        return await examApi.getAnswer(id);
-    }
     render() {
-        const { questions } = this.state.result;
-        const renderQuestions = this.state.result.questions.map((question) =>
+        console.log(this.state.result.questions);
+        const renderQuestions = this.state.result.answer.questions.map((question) =>
             <div key={question.id} className="ketquacauhoi">
                 <div className="cauhoi">
                     {question.isListeningQuestion && <ReactPlayer url={question.content} controls width="500px" height="30px" />}
@@ -40,10 +34,10 @@ class KetQuaExam extends Component {
                 </div>
                 <div className="dapan">
                     <ol type="A" className="ml-4">
-                        <li className={question.a ? "" : "hidden"}>{question.a}</li>
-                        <li className={question.b ? "" : "hidden"}>{question.b}</li>
-                        <li className={question.c ? "" : "hidden"}>{question.c}</li>
-                        <li className={question.d ? "" : "hidden"}>{question.d}</li>
+                        <li className={question.a ? (question.a === question.answer ? "text-success" : (question.a === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.a}</li>
+                        <li className={question.b ? (question.b === question.answer ? "text-success" : (question.b === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.b}</li>
+                        <li className={question.c ? (question.c === question.answer ? "text-success" : (question.c === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.c}</li>
+                        <li className={question.d ? (question.d === question.answer ? "text-success" : (question.d === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.d}</li>
                     </ol>
                 </div>
                 <div className="ketqua">
@@ -72,13 +66,13 @@ class KetQuaExam extends Component {
                                     </div>
 
                                 </div>
-                                <div>Bài thi: {this.state.result.title}</div>
-                                <div>Kinh nghiệm: {this.state.result.expGain}</div>
-                                <div>Thời gian làm bài: {this.state.result.duration} phút</div>
+                                <div>Bài thi: {this.state.result.answer.title}</div>
+                                <div>Kinh nghiệm: {this.state.result.answer.expGain}</div>
+                                <div>Thời gian làm bài: {this.state.result.answer.duration} phút</div>
                                 <div>Điểm: {this.props.result.score} (listening: {this.props.result.listening} câu, reading: {this.props.result.reading} câu)</div>
                                 <hr />
                                 {renderQuestions}
-
+                                <Link className="btn btn-secondary" to="/exam">Trở lại</Link>
                             </div>
                         </main>
                         <Footer></Footer>

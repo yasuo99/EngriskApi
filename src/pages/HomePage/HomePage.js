@@ -21,10 +21,11 @@ class HomePage extends PureComponent {
     };
     this.isComponentMounted = false;
   }
-  async componentDidMount (){
+  async componentDidMount() {
     this.isComponentMounted = true;
-    const result = await this.fetchSections(this.state.params,this.props.isLoggedIn);
-    if(result.length < 4){
+    const result = await this.fetchSections(this.state.params, this.props.isLoggedIn);
+    console.log(result);
+    if (result.length < 4) {
       this.setState({
         hasMore: false
       })
@@ -43,13 +44,14 @@ class HomePage extends PureComponent {
     this.setState({
       params: { ...this.state.params, currentPage: this.state.params.currentPage + 1 }
     })
-    var result = await sectionApi.getAll(this.state.params,this.props.isLoggedIn).catch((error) => {
+    var result = await sectionApi.getAll(this.state.params, this.props.isLoggedIn).catch((error) => {
       console.log(error);
       this.setState({
         hasMore: false
       });
       return;
     });
+    console.log(result);
     if (result.length === 0) {
       this.setState({
         hasMore: false
@@ -67,18 +69,22 @@ class HomePage extends PureComponent {
     const renderSections = this.state.sections.map((section) =>
       <div key={section.id} className="card-hoc pt-2 mb-3">
         <div className="row">
-          <div className="col-2 text-center">
-            <img src="/image/welcome.jpg" alt="welcome" className="img-hoc" />
+          <div className="col-2 text-center img-section">
+            <img src={section.photoUrl || "/image/welcome.jpg"} alt="welcome" className="img-hoc" />
           </div>
           <div className="col-8">
             <a href="#" className="link-title">{section.sectionName}</a>
-            <p>Greeting person</p>
+            <p>{section.description}</p>
+            <p>test</p>
           </div>
           <div className="col-2 pr-4">
-            <div className="progress">
-              <div className="progress-bar progress-bar-success" style={{ width: (section.dpa / section.totalQuizzes) * 100 }}>
+            {/* <div className="progress">
+              <div className="progress-bar progress-bar-success" style={{ width: (section.dpa / (section.totalQuizzes === 0 ? 1 : section.totalQuizzes)) * 100 }}>
                 <span className="text-light pl-2">100%</span>
               </div>
+            </div> */}
+            <div>
+              <Link className="btn btn-primary do-btn" to={`/sections/${section.id}/do`}>Do <i className="fa fa-pencil"></i></Link>
             </div>
           </div>
         </div>
@@ -97,10 +103,13 @@ class HomePage extends PureComponent {
                   <div id="trangchu" className="col-10 offset-1">
                     <InfiniteScroll
                       dataLength={this.state.sections.length}
-                      next={this.fetchMoreSection}
+                      next={this.fetchMoreSections}
                       hasMore={this.state.hasMore}
                       loader={<h4>Loading...</h4>}
                       scrollableTarget="content-wrapper"
+                      endMessage={
+                        <p>Hết rồi</p>
+                      }
                     >{renderSections}
                     </InfiniteScroll>
                   </div>

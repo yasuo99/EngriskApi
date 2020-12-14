@@ -13,12 +13,9 @@ class QLQuiz extends Component {
         };
     }
     handleChange(e) {
-        var target = e.target;
-        var name = target.name;
-        var value = target.value;
         this.setState({
-            [name]: value
-        });
+            [e.target.id]: e.target.value,
+          });
     }
 
     handleSubmit(e) {

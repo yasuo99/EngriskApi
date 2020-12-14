@@ -1,7 +1,19 @@
 import React, { Component } from 'react'
 
 class DangTheoDoi extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            posts: this.props.posts !== undefined ? this.props.posts : []
+        }
+    }
     render() {
+        const renderPosts = this.state.posts.map((post) =>
+            <div key={post.id} className="nd-theodoi mt-2">
+                <img src="/image/united-states.png" className="pr-3" />
+                <a href="#">{post.title}</a>
+            </div>
+        );
         return (
             <div className="theodoi mt-4">
                 <div className="row pt-3">
@@ -10,18 +22,7 @@ class DangTheoDoi extends Component {
                     </div>
                     <div className="col-4 pt-2"><a href="#">SỬA ĐỔI</a></div>
                 </div>
-                <div className="nd-theodoi mt-2">
-                    <img src="/image/united-states.png" className="pr-3" />
-                    <a href="#">Duolingo</a>
-                </div>
-                <div className="nd-theodoi mt-2">
-                    <img src="/image/united-states.png" className="pr-3" />
-                    <a href="#">Duolingo</a>
-                </div>
-                <div className="nd-theodoi mt-2">
-                    <img src="/image/united-states.png" className="pr-3" />
-                    <a href="#">Duolingo</a>
-                </div>
+                {renderPosts}
             </div>
 
         )
