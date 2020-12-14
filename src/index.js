@@ -10,7 +10,9 @@ import thunk from 'redux-thunk';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 const store = createStore(
-  rootReducer
+  rootReducer,
+  compose(applyMiddleware(thunk),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 )
 TimeAgo.addDefaultLocale(en)
 ReactDOM.render(
