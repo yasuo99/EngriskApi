@@ -11,6 +11,7 @@ import Footer from '../Footer/Footer';
 import { doExam, doneExam } from '../../actions/examActions';
 import Countdown from 'react-countdown';
 import { Fragment } from 'react';
+import ModalInfor from "../../components/modal/ModalInfor";
 class ExamPage extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +33,8 @@ class ExamPage extends Component {
             submitted: false, //Kết quả trả về cho câu hỏi
             done: false, //Câu hỏi cuối
             empty: false,
-            start: Date.now()
+            start: Date.now(),
+            modal: false,
         }
         this.handleUnload = this.handleUnload.bind(this);
     }
@@ -318,6 +320,14 @@ class ExamPage extends Component {
             clearInterval(timeout);
         }, 3000);
     }
+    modalOpen() {
+        this.setState({ modal: true });
+    }
+    modalClose() {
+        this.setState({
+            modal: false
+        });
+    }
     render() {
         let active = this.state.index + 1;
         let items = [];
@@ -374,7 +384,9 @@ class ExamPage extends Component {
                                             <Pagination size="lg">{items}</Pagination>
                                         </div>
                                         <div className="row kechan mt-5">
-                                            <div className="col-3">Time left: <Countdown date={this.state.start + exam.duration * 60 * 1000} onComplete={this.submitExam} /></div>
+                                            <div className="col-4">Time left: <Countdown date={this.state.start + exam.duration * 60 * 1000} onComplete={this.submitExam} /></div>
+                                            <div className="col-4"></div>
+                                            <div className="col-4 "><button href="javascript:;" className="btn btn-primary" onClick={e => this.modalOpen(e)}>Hướng dẫn</button> </div>
                                             <div className="col-8 offset-2">
                                                 Câu {index + 1}
                                                 {currentQuestion.isListeningQuestion === false && currentQuestion.isFillOutQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
@@ -427,7 +439,12 @@ class ExamPage extends Component {
                                         </div>
                                     </div>
                                 </main>
-
+                                <ModalInfor show={this.state.modal} handleClose={e => this.modalClose(e)}>
+                                    <h3 className="title"> <img src="/image/chat.png"></img> Hướng dẫn làm bài</h3>
+                                    <p className="content">
+                                        Đối với mỗi câu hỏi, bạn sẽ thấy một hình ảnh và bạn sẽ nghe thấy bốn câu lệnh ngắn. Các tuyên bố sẽ chỉ được nói một lần. Chúng sẽ không được in trong sách kiểm tra của bạn vì vậy bạn phải lắng nghe cẩn thận để hiểu những gì người nói nói. Khi bạn nghe thấy bốn câu nói, hãy nhìn vào hình và chọn câu mô tả đúng nhất những gì bạn thấy trong hình. Chọn câu trả lời đúng nhất A, B, C hoặc D
+                                    </p>
+                                </ModalInfor>
                                 <Footer></Footer>
                             </div>
                         </div>

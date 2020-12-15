@@ -33,6 +33,8 @@ import ManagementPayment from './pages/Admin/ManagementPayment';
 import ManagementQuiz from './pages/Admin/ManagementQuiz';
 import ManagementExam from './pages/Admin/ManagementExam';
 import ManagementAccount from './pages/Admin/ManagementAccount';
+import HistroriesExam from './pages/HistoryPage/HistroriesExam';
+import HistoriesTopup from './pages/HistoryPage/HistoriesTopup';
 
 const routes = [
     {
@@ -127,6 +129,13 @@ const routes = [
         roles: []
     },
     {
+        path: '/lichsu-naptien',
+        exact: true,
+        main: () => <HistoriesTopup />,
+        guard: false,
+        roles: []
+    },
+    {
         path: '/ketqua-exam/:examId',
         exact: true,
         main: (match) => <KetQuaExam match={match} />,
@@ -160,14 +169,22 @@ const routes = [
         main: (match) => <Hoc match={match}/>,
         guard: false,
         roles: []
-    },{
+    },
+    {
         path: '/exam',
         exact: true,
         main: () => <Exam/>,
         guard: false,
         roles: []
-    }
-    ,{
+    },
+    {
+        path: '/lichsu-exam',
+        exact: true,
+        main: () => <HistroriesExam/>,
+        guard: false,
+        roles: []
+    },
+    {
         path: '/exam/:examId',
         exact: true,
         main: (match) => <ExamPage match={match}/>,

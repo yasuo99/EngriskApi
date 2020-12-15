@@ -17,7 +17,13 @@ class PhanHoiPost extends Component {
                     <p className="mt-3">{comment.comment}</p>
                 </div>
                 <div className="baocao">
-                    <a href="#" className="mr-3">TRẢ LỜI</a>
+                    {/* <a href="#" className="mr-3">TRẢ LỜI
+                    <p className="collapse" id="ketqua">Sau tính từ sở hữu YOUR ta cần một danh từ, nên ta chọn ngay D.</p>
+                    </a> */}
+                    <a data-toggle="collapse" data-target="#demo" className="mr-3">Collapsible</a>
+                    <div id="demo" class="collapse">
+                        <input type="text" ></input>
+                    </div>
                     <a href="#" className="mr-3">BÁO CÁO</a>
                 </div>
             </div>
