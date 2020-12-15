@@ -8,24 +8,32 @@ import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import postApi from '../../api/postApi';
 import Paypal from '../../components/paypal/Paypal';
+import { connect } from 'react-redux';
 class ThaoLuanPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             allPosts: [],
             newPosts: [],
-            highRatePosts: []
+            highRatePosts: [],
+            followingPosts: []
         };
         this.isComponentMounted = false;
     }
     componentDidMount = async () => {
         this.isComponentMounted = true;
-        var posts =  await this.fetchAllPosts();
+        var posts = await this.fetchAllPosts();
         var newPosts = await this.fetchNewPosts();
         if (this.isComponentMounted) {
+            if (this.props.isLoggedIn) {
+                var followingPosts = await this.fetchFollowingPosts();
+                this.setState({
+                    followingPosts: followingPosts
+                });
+            }
             this.setState({
                 allPosts: posts,
-                newPosts: newPosts
+                newPosts: newPosts,
             });
         }
     }
@@ -34,7 +42,7 @@ class ThaoLuanPage extends Component {
     }
     fetchNewPosts = async () => {
         return await postApi.getNewPost();
-        
+
     }
     fetchRatingPosts = async () => {
         var highRatePosts = await postApi.getHighRate();
@@ -43,7 +51,9 @@ class ThaoLuanPage extends Component {
         })
     }
     fetchFollowingPosts = async () => {
-
+        var token = localStorage.getItem('token');
+        var followingPosts = await postApi.getFollowing(this.props.id, token);
+        return followingPosts;
     }
     componentWillUnmount() {
         this.isComponentMounted = false;
@@ -70,7 +80,7 @@ class ThaoLuanPage extends Component {
                                                 <h3>Diễn Đàn Ngôn Ngữ</h3>
                                             </div>
                                             <div className="col-4 text-right">
-                                                <h3 className="btn btn-primary"><Link to="/thao-luan/them-bai-viet">ĐĂNG BÀI MỚI</Link></h3>
+                                                <Link className="btn btn-primary" to="/thao-luan/them-bai-viet">ĐĂNG BÀI MỚI</Link>
                                             </div>
                                         </div>
                                         <ul className="nav nav-tabs">
@@ -93,7 +103,7 @@ class ThaoLuanPage extends Component {
                                     </div>
                                     <div className="col-4 mt-5">
                                         <input className="form-control" type="text" placeholder="Tìm kiếm" aria-label="Search" />
-                                        <DangTheoDoi></DangTheoDoi>
+                                        <DangTheoDoi posts={this.state.followingPosts}></DangTheoDoi>
                                     </div>
                                 </div>
                             </div>
@@ -107,8 +117,15 @@ class ThaoLuanPage extends Component {
         );
 
     }
-
 }
-export default ThaoLuanPage;
+const mapStateToProps = (state) => {
+    const { id } = state.auth.account;
+    const { isLoggedIn } = state.auth;
+    return {
+        id: id,
+        isLoggedIn: isLoggedIn
+    }
+}
+export default connect(mapStateToProps)(ThaoLuanPage);
 
 

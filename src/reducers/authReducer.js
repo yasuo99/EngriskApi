@@ -24,8 +24,8 @@ const initialState = () => {
   return {
     ...initialState,
     isLoggedIn: localStorage.getItem('account') ? true: false,
-    account: localStorage.getItem('account'),
-    token: localStorage.getItem('token')
+    account:  localStorage.getItem('account') === null ? {} : JSON.parse(localStorage.getItem('account')),
+    token: localStorage.getItem('token') === null ? "" : localStorage.getItem('token')
   }
 }
 const authReducer = (state = initialState(), action) => {
@@ -71,6 +71,16 @@ const authReducer = (state = initialState(), action) => {
       localStorage.removeItem('account');
       localStorage.removeItem('token');
       toast("Đăng xuất thành công");
+      return ({
+        ...state,
+        isLoggedIn: false,
+        account: {},
+        token: ''
+      });
+    }
+    case "TOKEN_EXPIRED": {
+      localStorage.removeItem('account');
+      localStorage.removeItem('token');
       return ({
         ...state,
         isLoggedIn: false,

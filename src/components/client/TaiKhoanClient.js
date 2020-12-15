@@ -11,7 +11,7 @@ const TaiKhoanClient = ({ status,account}) => {
             <li className="nav-item dropdown no-arrow">
                 <Link className="nav-link dropdown-toggle" to="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span className="mr-2 d-none d-lg-inline text-gray-600 small">{account.username}</span>
-                    <img className="img-profile rounded-circle" src={account.photoUrl} />
+                    <img className="img-profile rounded-circle" src={account.photoUrl !== null ? account.photoUrl : "/image/default-user-image.png"} />
                 </Link>
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <Link className="dropdown-item" to="#">Hồ sơ của bạn</Link>
@@ -30,8 +30,8 @@ const TaiKhoanClient = ({ status,account}) => {
               <img className="img-profile rounded-circle" src="/image/default-user-image.png" />
             </Link>
             <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-              <Link className="dropdown-item" to="/signin">Đăng nhập</Link>
-              <Link className="dropdown-item" to="/signup">Đăng ký</Link>
+              <Link className="dropdown-item" to={{pathname: "/signin", state:{url: window.location.pathname}}}>Đăng nhập</Link>
+              <Link className="dropdown-item" to={{pathname: "/signup", state:{url: window.location.pathname}}}>Đăng ký</Link>
             </div>
           </li>    )
     }

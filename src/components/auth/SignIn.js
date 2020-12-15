@@ -42,19 +42,6 @@ class SignIn extends Component {
     this.props.signIn(this.state);
   };
   render() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
-      if(Array.isArray(decodedToken.role)){
-        if(decodedToken.role.includes("superadmin") || decodedToken.role.includes("manager"))
-        {
-          return <Redirect to="/admin"/>
-        }
-      }
-      console.log(decodedToken);
-    }
-    if (this.props.isLoggedIn) return <Redirect to="/home" />
     return (
       <form className="login100-form validate-form"
         autoComplete="off"
@@ -78,7 +65,7 @@ class SignIn extends Component {
         <div className="container-login100-form-btn mt-2">
           <button className="btn btn-primary"> Đăng Nhập </button>
         </div>
-        <a href="../index.html" className="mt-2">Về trang chủ</a>
+        <a href="/home" className="mt-2">Về trang chủ</a>
       </form>
     )
   }

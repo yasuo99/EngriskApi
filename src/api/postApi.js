@@ -13,16 +13,16 @@ const postApi = {
         const url = "/posts/rating";
         return axiosClient.get(url);
     },
-    getFollowing: (token) => {
-        const url = "/posts/following";
+    getFollowing: (id,token) => {
+        const url = `/accounts/${id}/posts-following`;
         return axiosClient.get(url, {headers: {'Authorization': `Bearer ${token}`}});
     },
     getDetail: (id) => {
         const url = `/posts/${id}`;
         return axiosClient.get(url);
     },
-    createPost: (id,body) => {
-        const url = `/posts/${id}`;
+    createPost: (body) => {
+        const url = `/posts`;
         return axiosClient.post(url,body);
     },
     updatePost: (id,body) => {
@@ -38,8 +38,12 @@ const postApi = {
         return axiosClient.put(url);
     },
     commentToPost: (id, body) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
         const url = `/posts/${id}/comments`;
-        return axiosClient.post(url,body);
+        return axiosClient.post(url,body, {headers: headers});
     },
     ratingPost: (id) => {
 
