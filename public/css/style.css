@@ -82,16 +82,19 @@ footer h6{font-size: 15px;}
 /* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
 /* --------------------------------------------------------------------------- */
 #chitietthaoluan p{font-size: 16px;}
-#chitietthaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 20px;border-radius: 20px;font-weight: bold;color: #77B748;font-size: 20px;}
+/* #chitietthaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 20px;border-radius: 20px;font-weight: bold;color: #77B748;font-size: 20px;} */
 #chitietthaoluan .kechan{border-bottom: 3px solid #ccc;}
-#chitietthaoluan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
+#chitietthaoluan .modal .btn{padding: 8px;}
+/* #chitietthaoluan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;} */
 #chitietthaoluan .diendan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
 #chitietthaoluan .diendan i{font-size: 20px;font-weight: bold;}
-#chitietthaoluan .img-chitietthaoluan{border-radius: 50%}
+#chitietthaoluan .img-chitietthaoluan{border-radius: 50%;width: 70px;}
 #chitietthaoluan .nd-img{padding: 0;}
 #chitietthaoluan .chude-binhluan .baocao{float:  right}
-#chitietthaoluan .chude-binhluan .baocao a{font-size: 20px; font-weight: bold; color: #828282}
+#chitietthaoluan .chude-binhluan .baocao .rate .checked{margin-right: 4px;color: red;}
+#chitietthaoluan .chude-binhluan .baocao a{font-size: 20px; font-weight: bold; color: #828282; cursor: pointer;}
 #chitietthaoluan .chude-binhluan .baocao a:hover{text-decoration: none;color: #77B748;}
+#chitietthaoluan .chude-binhluan .chucnang .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px 15px;border-radius: 10px;font-weight: bold;color: #fff;font-size: 20px; margin-top: 20px;}
 #chitietthaoluan textarea{border: 3px solid #ccc;font-size: 16px;padding: 10px;border-radius: 10px;outline: none;}
 #chitietthaoluan .binhluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 10px;font-weight: bold;color: #fff;font-size: 20px;}
 #chitietthaoluan .sub-sapxep .dropdown-item{padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
@@ -100,7 +103,8 @@ footer h6{font-size: 15px;}
 #chitietthaoluan li{list-style: none;}
 #chitietthaoluan .sapxep{padding-left: 150px;margin:0;}
 #chitietthaoluan .phanhoi-binhluan .baocao{margin-left:100px}
-#chitietthaoluan .phanhoi-binhluan a{font-size:20px;font-weight: bold;text-decoration: none;color: #828282;}
+#chitietthaoluan .phanhoi-binhluan .reply-binhluan{ margin-top: 30px;}
+#chitietthaoluan .phanhoi-binhluan a{font-size:20px;font-weight: bold;text-decoration: none;color: #828282;cursor: pointer;}
 #chitietthaoluan .phanhoi-binhluan a:hover{color: #77B748;}
 #chitietthaoluan .phanhoi-binhluan .kechan{border-bottom: 2px solid #ccc;margin:20px 0;}
 

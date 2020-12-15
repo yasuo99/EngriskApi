@@ -6,25 +6,30 @@ class QLTuVung extends Component {
         super(props);
         this.state = {
             modal: false,
-            english: "", 
-            vietnam: "",
-            exeng: "",
-            exvn: "",
             modalInputEnglish: "",
-            modalInputVietNam:"",
-            modalInputExEng:"",
-            modalInputExVN:"",
+            modalInputVietNam: "",
+            modalInputLoaiTu: "",
+            modalInputHinhAnh: null
         };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
+    onFileChange = event => { 
+        this.setState({ modalInputHinhAnh: event.target.files[0] }); 
+       
+      }; 
     handleChange(e) {
+        var target = e.target;
+        var name = target.name;
+        var value = target.value;
         this.setState({
-            [e.target.id]: e.target.value,
-          });
+            [name]: value
+        });
     }
 
     handleSubmit(e) {
-        this.setState({ 
-            english: this.state.modalInputEnglish, 
+        this.setState({
+            english: this.state.modalInputEnglish,
             vietnam: this.state.modalInputVietNam,
             exeng: this.state.modalInputExEng,
             exvn: this.state.modalInputExVN,
@@ -39,9 +44,7 @@ class QLTuVung extends Component {
     modalClose() {
         this.setState({
             modalInputEnglish: "",
-            modalInputVietNam:"",
-            modalInputExEng:"",
-            modalInputExVN:"",
+            modalInputVietNam: "",
             modal: false
         });
     }
@@ -55,7 +58,6 @@ class QLTuVung extends Component {
                 <td><img src="../image/fish.png"></img></td>
                 
                 <td>
-                    <a href="javascript:;" className="btn btn-success mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /></a>
                     <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
                     <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
                     <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>

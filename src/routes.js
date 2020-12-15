@@ -26,7 +26,6 @@ import Exam from './pages/Exam/Exam';
 import KetQuaExam from './pages/HocPage/KetQuaExam';
 import QuyenTruyCap from './pages/NotFoundPage/QuyenTruyCap';
 import ManagementInfor from './pages/Admin/ManagementInfor';
-import ManagementPost from './pages/Admin/ManagementPost';
 import ManagementDoc from './pages/Admin/ManagementDoc';
 import ManagementQuestion from './pages/Admin/ManagementQuestion';
 import ManagementPayment from './pages/Admin/ManagementPayment';
@@ -35,6 +34,7 @@ import ManagementExam from './pages/Admin/ManagementExam';
 import ManagementAccount from './pages/Admin/ManagementAccount';
 import HistroriesExam from './pages/HistoryPage/HistroriesExam';
 import HistoriesTopup from './pages/HistoryPage/HistoriesTopup';
+import QuenMatKhau from './pages/CaiDatPage/QuenMatKhau';
 
 const routes = [
     {
@@ -164,6 +164,13 @@ const routes = [
         roles: []
     },
     {
+        path: '/quenmatkhau',
+        exact: true,
+        main: () => <QuenMatKhau />,
+        guard: true,
+        roles: []
+    },
+    {
         path: '/sections/:sectionId/do',
         exact: true,
         main: (match) => <Hoc match={match}/>,
@@ -267,13 +274,6 @@ const routes = [
         main: () => <ManagementAccount/>,
         guard: true,
         roles: ["superadmin"]
-    },
-    {
-        path: '/quanly-baiviet',
-        exact: true,
-        main: () => <ManagementPost />,
-        guard: true,
-        roles: ["superadmin","manager"]
     },
     {
         path: '/loi',

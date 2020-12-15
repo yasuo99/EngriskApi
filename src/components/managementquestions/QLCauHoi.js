@@ -6,12 +6,6 @@ class QLCauHoi extends Component {
         super(props);
         this.state = {
             modal: false,
-            question: "",
-            a: "",
-            b: "",
-            c: "",
-            d: "",
-            answer: "",
             modalInputQuestion: "",
             modalInputA: "",
             modalInputB: "",
@@ -19,10 +13,15 @@ class QLCauHoi extends Component {
             modalInputD: "",
             modalInputAnswer: "",
         };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     handleChange(e) {
+        var target = e.target;
+        var name = target.name;
+        var value = target.value;
         this.setState({
-            [e.target.id]: e.target.value,
+            [name]: value
         });
     }
 
@@ -69,8 +68,7 @@ class QLCauHoi extends Component {
                 </td>
                 <td>Sau tính từ sở hữu YOUR ta cần một danh từ, nên ta chọn ngay D</td>
                 <td>
-                    <a href="javascript:;" className="btn btn-success mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /></a>
-                    <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
+                  <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
                     <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
                     <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
                         <h2 className="text-center text-primary">Thêm câu hỏi</h2>
