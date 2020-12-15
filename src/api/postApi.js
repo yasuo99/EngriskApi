@@ -38,8 +38,12 @@ const postApi = {
         return axiosClient.put(url);
     },
     commentToPost: (id, body) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
         const url = `/posts/${id}/comments`;
-        return axiosClient.post(url,body);
+        return axiosClient.post(url,body, {headers: headers});
     },
     ratingPost: (id) => {
 

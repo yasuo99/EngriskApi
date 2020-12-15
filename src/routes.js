@@ -184,7 +184,7 @@ const routes = [
     {
         path: '/signup',
         exact: true,
-        main: () => <SignUpPage />,
+        main: (location) => <SignUpPage location={location}/>,
         guard: false,
         roles: []
     },

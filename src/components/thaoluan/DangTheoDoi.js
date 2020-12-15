@@ -8,7 +8,7 @@ class DangTheoDoi extends Component {
         }
     }
     render() {
-        const renderPosts = this.state.posts.map((post) =>
+        const renderPosts = this.props.posts.map((post) =>
             <div key={post.id} className="nd-theodoi mt-2">
                 <img src="/image/united-states.png" className="pr-3" />
                 <a href="#">{post.title}</a>

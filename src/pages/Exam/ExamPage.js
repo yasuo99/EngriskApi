@@ -27,6 +27,7 @@ class ExamPage extends Component {
             loading: true, //Màn hình chờ load
             selected: null, //Đáp án lựa chọn
             answer: '', //Lưu đáp án để submit
+            listened: false,
             checked: false, //Câu hỏi đã được submit để kiểm tra
             submitted: false, //Kết quả trả về cho câu hỏi
             done: false, //Câu hỏi cuối
@@ -67,7 +68,9 @@ class ExamPage extends Component {
                         id: question.id,
                         answer: '',
                         selected: '',
-                        flag: false
+                        flag: false,
+                        isListeningQuestion: question.isListeningQuestion,
+                        listened: false
                     };
                     answers.push(currentAnswer);
                 });
@@ -103,6 +106,9 @@ class ExamPage extends Component {
                 flag: false
             }
             let found = this.state.answers.filter(el => el.id === currentAnswer.id);
+            if (found[0].isListeningQuestion) {
+                found[0].listened = true;
+            }
             found[0].selected = position;
             found[0].answer = e.target.innerHTML;
             console.log(this.state.answers);
@@ -192,6 +198,16 @@ class ExamPage extends Component {
             let stateCurrentQuestion = this.state.questions[tempIndex];
             let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
             if (currentAnswer.length > 0) {
+                if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
+                    this.setState({
+                        listened: true
+                    })
+                }
+                else {
+                    this.setState({
+                        listened: false
+                    })
+                }
                 this.setState({
                     selected: currentAnswer[0].selected,
                     checked: true
@@ -222,6 +238,16 @@ class ExamPage extends Component {
             let stateCurrentQuestion = this.state.questions[tempIndex];
             let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
             if (currentAnswer.length > 0) {
+                if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
+                    this.setState({
+                        listened: true
+                    })
+                }
+                else {
+                    this.setState({
+                        listened: false
+                    })
+                }
                 this.setState({
                     selected: currentAnswer[0].selected,
                     checked: true
@@ -239,6 +265,16 @@ class ExamPage extends Component {
         let stateCurrentQuestion = this.state.questions[index - 1];
         let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
         if (currentAnswer.length > 0) {
+            if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
+                this.setState({
+                    listened: true
+                })
+            }
+            else {
+                this.setState({
+                    listened: false
+                })
+            }
             this.setState({
                 selected: currentAnswer[0].selected,
                 checked: true
@@ -263,6 +299,24 @@ class ExamPage extends Component {
         }
         this.setState({});
         console.log(this.state.answers);
+    }
+    skipQuestion = () => {
+        let tempIndex = this.state.index + 1;
+        if (tempIndex < this.state.questions.length) {
+            this.setState({
+                index: tempIndex,
+                currentQuestion: this.state.questions[tempIndex],
+                answer: '',
+                checked: false
+            });
+        }
+    }
+    listenningTimeout = () => {
+        var timeout = setInterval(() => {
+            this.skipQuestion();
+            this.removeSelected();
+            clearInterval(timeout);
+        }, 3000);
     }
     render() {
         let active = this.state.index + 1;
@@ -308,7 +362,7 @@ class ExamPage extends Component {
         else {
             return (
                 <Fragment>
-                    <Prompt when={ !submitted} message="Bạn chưa nộp bài, có chắn chắn rời ?"></Prompt>
+                    <Prompt when={!submitted} message="Bạn chưa nộp bài, có chắn chắn rời ?"></Prompt>
                     <div id="wrapper">
                         <SubMenuClient></SubMenuClient>
                         <div id="content-wrapper" className="d-flex flex-column">
@@ -326,11 +380,12 @@ class ExamPage extends Component {
                                                 {currentQuestion.isListeningQuestion === false && currentQuestion.isFillOutQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
                                                     <p className="mb-5">Có nghĩa là?</p></div>
                                                     <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
-                                                {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false &&
+                                                {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened == false &&
                                                     <div className="row">
                                                         <b>Chọn đáp án đúng</b>
-                                                        <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
+                                                        <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
                                                     </div>}
+                                                {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
                                                 {currentQuestion.isFillOutQuestion === true && <p>{currentQuestion.content}</p>}
                                                 <div className="row mt-2">
                                                     <div className="col-6">
