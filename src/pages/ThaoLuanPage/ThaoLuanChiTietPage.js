@@ -14,9 +14,12 @@ class ThaoLuanChiTietPage extends Component {
         super(props);
         this.state = {
             post: { comments: [] },
-            comment: ""
+            comment: "",
+            filter: ""
         }
         this.isComponentMounted = false;
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.cancel = this.cancel.bind(this);
     }
     async componentDidMount() {
         this.isComponentMounted = true;
@@ -29,8 +32,8 @@ class ThaoLuanChiTietPage extends Component {
             });
         }
     }
-    fetchPostDetail = async (id) => {
-        return await postApi.getDetail(id);
+    fetchPostDetail = async (id,params) => {
+        return await postApi.getDetail(id,params);
     }
     handleChange = event => {
         this.setState({
@@ -42,7 +45,40 @@ class ThaoLuanChiTietPage extends Component {
         let comment = {
             comment: this.state.comment
         }
+        let parameters = {
+            orderBy: this.state.filter
+        }
         let result = (await postApi.commentToPost(this.state.post.id, comment)).status;
+        if (result === 200) {
+            const { match: { match: { params } } } = this.props;
+            const post = await this.fetchPostDetail(params.postId, parameters);
+            if (this.isComponentMounted) {
+                this.setState({
+                    post: post,
+                    comment: ""
+                });
+            }
+        }
+    }
+    cancel() {
+        this.setState({
+            comment: ""
+        });
+    }
+    async filter(event){
+        this.setState({
+            filer: event.target.id
+        })
+        let parameters = {
+            orderBy: event.target.id
+        }
+        const { match: { match: { params } } } = this.props;
+        const post = await this.fetchPostDetail(params.postId, parameters);
+        if (this.isComponentMounted) {
+            this.setState({
+                post: post
+            });
+        }
     }
     render() {
         return (
@@ -63,11 +99,9 @@ class ThaoLuanChiTietPage extends Component {
                                     <div className="row mt-5">
                                         <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.account.photoUrl || "/image/default-user-image.png"} /></div>
                                         <div className="col-md-11">
-                                            <form onSubmit={this.handleSubmit}>
-                                                <textarea rows={4} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={this.handleChange} />
-                                                <button type="submit" className="btn btn-primary mr-3 mt-2">ĐĂNG</button>
-                                                <button type="button" className="btn btn-primary mt-2">HỦY</button>
-                                            </form>
+                                            <textarea rows={4} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={this.handleChange} />
+                                            <button type="button" className="btn btn-primary mr-3 mt-2" onClick={this.handleSubmit}>ĐĂNG</button>
+                                            <button type="button" className="btn btn-primary mt-2" onClick={this.cancel}>HỦY</button>
                                         </div>
                                     </div>
                                 </div>}
@@ -82,8 +116,7 @@ class ThaoLuanChiTietPage extends Component {
                                                 <div className="collapse navbar-collapse" id="menu-sapxep">
                                                     <ul>
                                                         <li className="nav-item dropdown"> <a className="nav-link " href="#" data-toggle="dropdown">SẮP XẾP THEO<i className="fa fa-chevron-down" /></a>
-                                                            <div className="dropdown-menu sub-sapxep"> <a className="dropdown-item" href="#">Top bài
-                                  đăng</a> <a className="dropdown-item" href="#">Mới nhất</a> <a className="dropdown-item" href="#">Cũ nhất</a></div>
+                                                            <div className="dropdown-menu sub-sapxep"> <a className="dropdown-item" href="#" id="like" onClick={(e) => this.filter(e)}>Top like</a> <a className="dropdown-item" href="#" id="newest" onClick={(e) => this.filter(e)}>Mới nhất</a> <a className="dropdown-item" id="oldest" href="#" onClick={(e) => this.filter(e)}>Cũ nhất</a></div>
                                                         </li>
                                                     </ul>
                                                 </div>

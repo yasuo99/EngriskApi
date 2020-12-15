@@ -17,13 +17,17 @@ const postApi = {
         const url = `/accounts/${id}/posts-following`;
         return axiosClient.get(url, {headers: {'Authorization': `Bearer ${token}`}});
     },
-    getDetail: (id) => {
+    getDetail: (id, params) => {
         const url = `/posts/${id}`;
-        return axiosClient.get(url);
+        return axiosClient.get(url,{params});
     },
     createPost: (body) => {
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
         const url = `/posts`;
-        return axiosClient.post(url,body);
+        return axiosClient.post(url,body,{headers});
     },
     updatePost: (id,body) => {
         const url = `/posts/${id}`;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactTimeAgo from 'react-time-ago/commonjs/ReactTimeAgo';
 
 class PhanHoiPost extends Component {
     constructor(props) {
