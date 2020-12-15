@@ -166,6 +166,14 @@ class Hoc extends PureComponent {
             console.log(this.state);
         }
     }
+    listeningCountdown = () => {
+        var countdown = setInterval(() => {
+            this.submitAnswer();
+            this.skipQuestion();
+            clearInterval(countdown);
+        }, 5000)
+
+    }
     render() {
         const { sectionId, currentQuestion, loading, rightAnswer, checked, quiz, index, done, isRight } = this.state;
         if (loading) {
@@ -215,7 +223,7 @@ class Hoc extends PureComponent {
                                             {currentQuestion.isListeningQuestion === true &&
                                                 <div className="row">
                                                     <b>Chọn đáp án đúng</b>
-                                                    <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
+                                                    <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" onEnded={this.listeningCountdown} />
                                                 </div>}
                                             <div className="row mt-2">
                                                 <div className="col-6">

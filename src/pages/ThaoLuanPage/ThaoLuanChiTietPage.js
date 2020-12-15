@@ -83,6 +83,7 @@ class ThaoLuanChiTietPage extends Component {
                                                     <ul>
                                                         <li className="nav-item dropdown"> <a className="nav-link " href="#" data-toggle="dropdown">SẮP XẾP THEO<i className="fa fa-chevron-down" /></a>
                                                             <div className="dropdown-menu sub-sapxep"> <a className="dropdown-item" href="#">Top bài
+
                                   đăng</a> <a className="dropdown-item" href="#">Mới nhất</a> <a className="dropdown-item" href="#">Cũ nhất</a></div>
                                                         </li>
                                                     </ul>
