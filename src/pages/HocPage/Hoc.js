@@ -10,6 +10,8 @@ import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import Countdown from 'react-countdown';
 import sectionApi from '../../api/sectionApi';
+import ModalQuiz from "../../components/modal/ModalQuiz";
+import { appendScript } from '../../config/appendScript'
 import { Fragment } from 'react';
 
 class Hoc extends PureComponent {
@@ -31,7 +33,8 @@ class Hoc extends PureComponent {
             checked: false,
             result: false,
             done: false,
-            isRight: false
+            isRight: false,
+            modal: false,
         }
         this.handleUnload = this.handleUnload.bind(this);
     }
@@ -58,6 +61,7 @@ class Hoc extends PureComponent {
             console.log(error);
             this.setState({ loading: false });
         }
+        appendScript("https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js");
     }
     fetchQuestions = async (sectionId) => {
         try {
@@ -167,6 +171,14 @@ class Hoc extends PureComponent {
             console.log(this.state);
         }
     }
+    modalOpen() {
+        this.setState({ modal: true });
+    }
+    modalClose() {
+        this.setState({
+            modal: false
+        });
+    }
     render() {
         const { sectionId, currentQuestion, loading, rightAnswer, checked, quiz, index, done, isRight } = this.state;
         if (loading) {
@@ -246,22 +258,32 @@ class Hoc extends PureComponent {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
-                                            <div className="col-3">
-                                                {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
-                                            </div>
-                                            <div className="col-6"></div>
-                                            <div className="col-3 text-right">
-                                                {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
-                                                {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
-                                                {done && <Link className="btn btn-primary" to="/">Kết thúc</Link>}
-                                            </div>
+                                    </div>
+                                    <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
+                                        <div className="col-3">
+                                            {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
+                                        </div>
+                                        <div className="col-6"></div>
+                                        <div className="col-3 text-right">
+                                            {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
+                                            {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
+                                            {done && <Link className="btn btn-primary" onClick={e => this.modalOpen(e)}>Kết thúc</Link>}
                                         </div>
                                     </div>
-                                </main>
-
-                                <Footer></Footer>
-                            </div>
+                                </div>
+                            </main>
+                            <ModalQuiz show={this.state.modal} handleClose={e => this.modalClose(e)}>
+                                <div>
+                                    <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_REOnx3.json" background="transparent" speed="1" hover loop autoplay>
+                                    </lottie-player>
+                                </div>
+                                <h3 className="title"> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã hoàn thành bài quiz</h3>
+                                <p className="content">
+                                    Thời gian hoàn thành của bạn là: 60 phút
+                                </p>
+                                <strong>Bạn cần duy trì luyện tập để nâng cao trình độ của mình</strong>
+                            </ModalQuiz>
+                            <Footer></Footer>
                         </div>
 
                     </div>

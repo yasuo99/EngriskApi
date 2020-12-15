@@ -82,42 +82,31 @@ footer h6{font-size: 15px;}
 /* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
 /* --------------------------------------------------------------------------- */
 #chitietthaoluan p{font-size: 16px;}
-#chitietthaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 20px;border-radius: 20px;font-weight: bold;color: #77B748;font-size: 20px;}
+/* #chitietthaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 20px;border-radius: 20px;font-weight: bold;color: #77B748;font-size: 20px;} */
 #chitietthaoluan .kechan{border-bottom: 3px solid #ccc;}
-#chitietthaoluan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
+#chitietthaoluan .modal .btn{padding: 8px;}
+/* #chitietthaoluan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;} */
 #chitietthaoluan .diendan a{font-size: 20px;font-weight: bold;text-decoration: none;color: #77B748;}
 #chitietthaoluan .diendan i{font-size: 20px;font-weight: bold;}
-#chitietthaoluan .img-chitietthaoluan{border-radius: 50%}
+#chitietthaoluan .img-chitietthaoluan{border-radius: 50%;width: 70px;}
 #chitietthaoluan .nd-img{padding: 0;}
 #chitietthaoluan .chude-binhluan .baocao{float:  right}
-#chitietthaoluan .chude-binhluan .baocao a{font-size: 20px; font-weight: bold; color: #828282}
+#chitietthaoluan .chude-binhluan .baocao .rate .checked{margin-right: 4px;color: red;}
+#chitietthaoluan .chude-binhluan .baocao a{font-size: 20px; font-weight: bold; color: #828282; cursor: pointer;}
 #chitietthaoluan .chude-binhluan .baocao a:hover{text-decoration: none;color: #77B748;}
+#chitietthaoluan .chude-binhluan .chucnang .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px 15px;border-radius: 10px;font-weight: bold;color: #fff;font-size: 20px; margin-top: 20px;}
 #chitietthaoluan textarea{border: 3px solid #ccc;font-size: 16px;padding: 10px;border-radius: 10px;outline: none;}
 #chitietthaoluan .binhluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 10px;font-weight: bold;color: #fff;font-size: 20px;}
-#chitietthaoluan .sub-sapxep .dropdown-item{width: 280px;padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
+#chitietthaoluan .sub-sapxep .dropdown-item{padding: 10px;border-bottom: 2px dotted #ccc;font-weight: bold}
 #chitietthaoluan .sub-sapxep .dropdown-item:active{background-color: #77B748;color: #fff;}
 #chitietthaoluan .nav-item a{color: #828282;font-weight: bold;font-size: 20px}
 #chitietthaoluan li{list-style: none;}
 #chitietthaoluan .sapxep{padding-left: 150px;margin:0;}
 #chitietthaoluan .phanhoi-binhluan .baocao{margin-left:100px}
-#chitietthaoluan .phanhoi-binhluan a{font-size:20px;font-weight: bold;text-decoration: none;color: #828282;}
+#chitietthaoluan .phanhoi-binhluan .reply-binhluan{ margin-top: 30px;}
+#chitietthaoluan .phanhoi-binhluan a{font-size:20px;font-weight: bold;text-decoration: none;color: #828282;cursor: pointer;}
 #chitietthaoluan .phanhoi-binhluan a:hover{color: #77B748;}
 #chitietthaoluan .phanhoi-binhluan .kechan{border-bottom: 2px solid #ccc;margin:20px 0;}
-
-/* -----------------------------------CỬA HÀNG------------------------------- */
-/* -------------------------------------------------------------------------- */
-#cuahang .duolingoPlus{height: 250px;background-color: #1cb0f6;border-radius: 10px;}
-#cuahang .duolingo{float: left;width: 160px;padding: 20px 10px 10px 10px;color: #fff;}
-#cuahang .plus{width: 80px;background-color: #068CE1;color: #fff;text-align: center;border-radius: 5px; float: left;margin-top: 25px;}
-#cuahang .nd-duolingo{padding: 5px 10px;color: #fff;font-size: 16px;}
-#cuahang .btn{margin-left: 10px;color: #1cb0f6;font-weight: bold;border-radius: 10px;box-shadow: 3px 3px 3px #eee}
-#cuahang .kechan{border-top: 3px solid #ccc;margin: 30px 0;}
-#cuahang .tangsucmanh p{font-size: 16px;}
-#cuahang .tangsucmanh .btn{font-size: 18px;padding: 10px; border: 3px solid #ccc;color: red;font-weight: bold;border-radius: 15px;box-shadow: 3px 3px 3px #eee;}
-#cuahang .luyentap p{font-size: 16px;}
-#cuahang .luyentap .btn{font-size: 18px;padding: 10px; border: 3px solid #ccc;color: red;font-weight: bold;border-radius: 15px;box-shadow: 3px 3px 3px #eee;}
-#cuahang .lingot{font-size: 20px;}
-#cuahang .img-duolingo{float: right;margin-top: 100px;margin-right: 10px;}
 
 /* -----------------------------------TỪ ĐIỂN------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -397,6 +386,27 @@ form ul .suggest{list-style-type: none;}
 }
 .modal .card-input input:focus{border: 2px solid #ccc!important;}
 .modal-tuvung{height: 300px;}
+.modalInfor{height: 280px;border-radius: 10px;margin-top: 100px;
+  background-image: linear-gradient(45deg, rgba(71, 132, 194, 0.8) 55%, rgba(103, 182, 231, 0.8));
+  background-position: center;
+} 
+.modalInfor .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff;}
+.modalInfor .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
+
+.modalQuiz {height: 280px;
+  position: relative;
+  border-radius: 10px;
+  background-image: linear-gradient(45deg, rgba(248, 170, 134, 0.8) 55%, rgba(250, 195, 75, 0.8));
+  background-position: center;
+  overflow: hidden;
+  margin-top: 100px;
+}
+.modalQuiz lottie-player{position: absolute;
+  width: 90%;
+}
+.modalQuiz .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff; text-align: center;margin-top: 20px;}
+.modalQuiz .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
+
 /* -------------------------------QUẢN LÝ CÂU HỎI---------------------------
 /* -------------------------------------------------------------------------- */
 .dapAn{width: 200px;}
@@ -441,3 +451,10 @@ form ul .suggest{list-style-type: none;}
   font-weight: 400;
   margin-top: 30px;
 }
+/* ---------------------------LICH SỬ EXAM - TOPUP---------------------------- */
+/* -------------------------------------------------------------------------- */
+#lichsuexam{margin-top: 30px;}
+#lichsuexam .table{border: 1px solid #ccc;box-shadow: 3px 3px 3px #ccc;border-top-left-radius: 20px;margin-top: 20px;}
+#lichsuexam .table th{background-color: #068CE1;color: #fff;}
+#lichsutopup .table{border: 1px solid #ccc;box-shadow: 3px 3px 3px #ccc;border-top-left-radius: 20px;}
+#lichsutopup .table th{background-color: #068CE1;color: #fff;}
