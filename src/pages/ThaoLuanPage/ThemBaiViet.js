@@ -36,7 +36,7 @@ class ThemBaiViet extends Component {
         }
         console.log(post);
         var result = await postApi.createPost(post);
-        if (result.status === 200) {
+        if (result.status === 201) {
             this.setState({
                 content: "",
                 title: ""
