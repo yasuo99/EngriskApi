@@ -11,7 +11,6 @@ const HeaderClient = () => {
   const account = useSelector(state => state.auth.account)
   const token = localStorage.getItem('token');
   const { isExpired } = useJwt(token);
-  console.log(isExpired);
   useEffect(() => {
     if (!isLoggedIn) {
       localStorage.removeItem('account');

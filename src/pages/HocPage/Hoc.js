@@ -1,5 +1,5 @@
 import React, { PureComponent, Suspense, useState, useEffect } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Prompt, Redirect } from 'react-router-dom';
 import { getQuestion, submitQuestion } from '../../actions/questionActions';
 import Loader from 'react-loader-spinner';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import Countdown from 'react-countdown';
 import sectionApi from '../../api/sectionApi';
+import { Fragment } from 'react';
 
 class Hoc extends PureComponent {
     constructor(props) {
@@ -197,71 +198,74 @@ class Hoc extends PureComponent {
         }
         else {
             return (
-                <div id="wrapper">
-                    <SubMenuClient></SubMenuClient>
-                    <div id="content-wrapper" className="d-flex flex-column">
-                        <div id="content">
-                            <HeaderClient></HeaderClient>
-                            <main id="hoc2">
-                                <div className="container">
-                                    <div className="mt-4">
-                                        <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
-                                    </div>
-                                    <div className="row kechan mt-5 kechan">
-                                        <div className="col-8 offset-2">
-                                            {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
-                                                <p className="mb-5">Có nghĩa là?</p></div>
-                                                <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
-                                            {currentQuestion.isListeningQuestion === true &&
+                <Fragment>
+                    <Prompt when={!done} message="Bạn chưa hoàn thành quiz, bạn muốn rời khỏi ?"></Prompt>
+                    <div id="wrapper">
+                        <SubMenuClient></SubMenuClient>
+                        <div id="content-wrapper" className="d-flex flex-column">
+                            <div id="content">
+                                <HeaderClient></HeaderClient>
+                                <main id="hoc2">
+                                    <div className="container">
+                                        <div className="mt-4">
+                                            <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
+                                        </div>
+                                        <div className="row kechan mt-5 kechan">
+                                            <div className="col-8 offset-2">
+                                                {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
+                                                    <p className="mb-5">Có nghĩa là?</p></div>
+                                                    <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
+                                                {currentQuestion.isListeningQuestion === true &&
+                                                    <div className="row">
+                                                        <b>Chọn đáp án đúng</b>
+                                                        <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
+                                                    </div>}
+                                                <div className="row mt-2">
+                                                    <div className="col-6">
+                                                        <div className={currentQuestion.a ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
+                                                            <p>{currentQuestion.a}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-6">
+                                                        <div className={currentQuestion.b ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
+                                                            <p>{currentQuestion.b}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div className="row">
-                                                    <b>Chọn đáp án đúng</b>
-                                                    <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
-                                                </div>}
-                                            <div className="row mt-2">
-                                                <div className="col-6">
-                                                    <div className={currentQuestion.a ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
-                                                        <p>{currentQuestion.a}</p>
+                                                    <div className="col-6">
+                                                        <div className={currentQuestion.c ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
+                                                            <p>{currentQuestion.c}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-6">
-                                                    <div className={currentQuestion.b ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
-                                                        <p>{currentQuestion.b}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-6">
-                                                    <div className={currentQuestion.c ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
-                                                        <p>{currentQuestion.c}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="col-6">
-                                                    <div className={currentQuestion.d ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
-                                                        <p>{currentQuestion.d}</p>
+                                                    <div className="col-6">
+                                                        <div className={currentQuestion.d ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
+                                                            <p>{currentQuestion.d}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
-                                        <div className="col-3">
-                                            {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
+                                        <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
+                                            <div className="col-3">
+                                                {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
+                                            </div>
+                                            <div className="col-6"></div>
+                                            <div className="col-3 text-right">
+                                                {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
+                                                {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
+                                                {done && <Link className="btn btn-primary" to="/">Kết thúc</Link>}
+                                            </div>
                                         </div>
-                                        <div className="col-6"></div>
-                                        <div className="col-3 text-right">
-                                            {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
-                                            {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
-                                            {done && <Link className="btn btn-primary" to="/">Kết thúc</Link>}
-                                        </div>
                                     </div>
-                                </div>
-                            </main>
+                                </main>
 
-                            <Footer></Footer>
+                                <Footer></Footer>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
+                    </div>
+                </Fragment>
             )
         }
 
