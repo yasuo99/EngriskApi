@@ -1,11 +1,26 @@
 import React, { Component } from "react"
 import FormMatKhau from "../../components/caidat/FormMatKhau";
+import FormTaiKhoan from "../../components/caidat/FormTaiKhoan";
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
-
-class CaiDatMatKhau extends Component {
+import { Link } from "react-router-dom";
+class CaiDatChung extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isActive: false,
+      check: false,
+    };
+  }
+  onClickTaiKhoan() {
+    this.setState({ check: false });
+  }
+  onClickMatKhau() {
+    this.setState({ check: true });
+  }
   render() {
+    var { isActive,check } = this.state;
     return (
       <div id="wrapper">
         <SubMenuClient></SubMenuClient>
@@ -15,26 +30,25 @@ class CaiDatMatKhau extends Component {
             <main id="caidat">
               <div className="container">
                 <div className="row">
-                  <FormMatKhau></FormMatKhau>
+            
+                  {check=== true ? <FormMatKhau /> : <FormTaiKhoan />}
+                  
                   <div className="col-4 mt-5">
                     <div className="caidat-matkhau">
                       <div className="ml-3 mt-3">
                         <img src="image/user (1).png" className="float-left mr-2" />
                         <h3 className="mt-2 text-primary">Thanh Lập</h3>
-                        <a href="hoso.html">XEM HỒ SƠ CỦA BẠN</a>
+                        <Link to="/hoso">XEM HỒ SƠ CỦA BẠN</Link>
                       </div>
                       <div className="chucnang">
-                        <div className="nd-chucnang mt-2 ">
-                          <a href="caidattaikhoan.html">Tài khoản</a>
+                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"}>
+                          <Link to="#" onClick={e => this.onClickTaiKhoan(e)}>Tài khoản</Link>
                         </div>
-                        <div className="nd-chucnang mt-2">
-                          <a href="#">Hồ sơ</a>
+                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"}  >
+                          <Link to="#" onClick={e => this.onClickMatKhau(e)}>Mật khẩu</Link>
                         </div>
-                        <div className="nd-chucnang mt-2 bg-active">
-                          <a href="#" className="text-active">Mật khẩu</a>
-                        </div>
-                        <div className="nd-chucnang mt-2">
-                          <a href="#">Thông báo</a>
+                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"}>
+                          <Link to="/thongbao">Thông báo</Link>
                         </div>
                       </div>
                     </div>
@@ -50,4 +64,4 @@ class CaiDatMatKhau extends Component {
     )
   }
 }
-export default CaiDatMatKhau;
+export default CaiDatChung;

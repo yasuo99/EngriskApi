@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-browser-router"
 import Modal from "../modal/Modal";
+import ModalDelete from "../modal/ModalDelete";
 import ListCauHoi from "./ListCauHoi";
 import ModalListCauHoiDoc from "../modalcauhoi/ModalListCauHoiDoc";
 import ModalListCauHoiHinhAnh from "../modalcauhoi/ModalListCauHoiHinhAnh";
@@ -10,6 +11,7 @@ class QLQuiz extends Component {
         super(props);
         this.state = {
             modal: false,
+            modalDelete:false,
         };
     }
     handleChange(e) {
@@ -34,8 +36,18 @@ class QLQuiz extends Component {
 
     modalClose() {
         this.setState({
-            modal: false
+            modal: false,
+            modalDelete:false,
         });
+    }
+    modalOpenDelete() {
+        this.setState({ modalDelete: true });
+    }
+    handleSubmitDelete(e) {
+        this.setState({
+
+        });
+        this.modalClose();
     }
     render() {
         return (
@@ -47,34 +59,42 @@ class QLQuiz extends Component {
 
                 <td>
                     <a href="javascript:;" className="btn btn-success mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /></a>
-                    <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
-                    <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
+                    <a href="#" className="btn btn-danger" onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash" /></a>
                     <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
                         <h2 className="text-center text-primary">Thêm câu hỏi vào bài quiz</h2>
                         <hr className="sidebar-divider my-2" />
                         <ul className="nav nav-tabs">
-                            <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#tabone"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
-                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwo"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
-                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthree"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
+                            <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#taboneQuestion"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
+                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwoQuestion"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
+                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthreeQuestion"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
                         </ul>
                         <div className="tab-content mt-3">
-                            <div className="tab-pane fade show active" id="tabone" role="tabpanel">
+                            <div className="tab-pane fade show active" id="taboneQuestion" role="tabpanel">
                                 <ModalListCauHoiDoc></ModalListCauHoiDoc>
                             </div>
 
-                            <div className="tab-pane fade" id="tabtwo" role="tabpanel">
+                            <div className="tab-pane fade" id="tabtwoQuestion" role="tabpanel">
                                 <ModalListCauHoiNghe></ModalListCauHoiNghe>
                             </div>
-                            <div className="tab-pane fade" id="tabthree" role="tabpanel">
+                            <div className="tab-pane fade" id="tabthreeQuestion" role="tabpanel">
                                 <ModalListCauHoiHinhAnh></ModalListCauHoiHinhAnh>
                             </div>
                         </div>
                         <div className="card-button">
                             <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
                                 Lưu lại
-                                </button>
+                            </button>
                         </div>
                     </Modal>
+                    <ModalDelete show={this.state.modalDelete} handleClose={e => this.modalClose(e)}>
+                    <h3 className="title"> <img src="/image/trash.png"></img> Xác nhận xóa bài quiz</h3>
+                        <p className="content">
+                            Bạn có chắc chắn muốn xóa quiz này ra khỏi hệ thống không?
+                        </p>
+                        <button onClick={e => this.handleSubmitDelete(e)} type="button" className="btn btn-info float-right">
+                                Xác nhận
+                        </button>
+                    </ModalDelete>
                 </td>
             </tr>
         );

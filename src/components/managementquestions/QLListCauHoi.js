@@ -6,12 +6,24 @@ class QLListCauHoi extends Component {
         super(props);
         this.state = {
             modal: false,
-            modalInputQuestion: "",
-            modalInputA: "",
-            modalInputB: "",
-            modalInputC: "",
-            modalInputD: "",
-            modalInputAnswer: "",
+            modalInputQuestionDoc: "",
+            modalInputADoc: "",
+            modalInputBDoc: "",
+            modalInputCDoc: "",
+            modalInputDDoc: "",
+            modalInputAnswerDoc: "",
+            modalInputQuestionNghe: "",
+            modalInputANghe: "",
+            modalInputBNghe: "",
+            modalInputCNghe: "",
+            modalInputDNghe: "",
+            modalInputAnswerNghe: "",
+            modalInputQuestionHinh: "",
+            modalInputAHinh: "",
+            modalInputBHinh: "",
+            modalInputCHinh: "",
+            modalInputAnswerHinh: "",
+            
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,12 +39,7 @@ class QLListCauHoi extends Component {
 
     handleSubmit(e) {
         this.setState({
-            question: this.state.modalInputQuestion,
-            a: this.state.modalInputA,
-            b: this.state.modalInputB,
-            c: this.state.modalInputC,
-            d: this.state.modalInputD,
-            answer: this.state.modalInputAnswer,
+
         });
         this.modalClose();
     }
@@ -43,20 +50,30 @@ class QLListCauHoi extends Component {
 
     modalClose() {
         this.setState({
-            modalInputQuestion: "",
-            modalInputA: "",
-            modalInputB: "",
-            modalInputC: "",
-            modalInputD: "",
-            modalInputAnswer: "",
-            modal: false
+            modal: false,
+            modalInputQuestionDoc: "",
+            modalInputADoc: "",
+            modalInputBDoc: "",
+            modalInputCDoc: "",
+            modalInputDDoc: "",
+            modalInputAnswerDoc: "",
+            modalInputQuestionNghe: "",
+            modalInputANghe: "",
+            modalInputBNghe: "",
+            modalInputCNghe: "",
+            modalInputDNghe: "",
+            modalInputAnswerNghe: "",
+            modalInputQuestionHinh: "",
+            modalInputAHinh: "",
+            modalInputBHinh: "",
+            modalInputCHinh: "",
+            modalInputAnswerHinh: "",
         });
     }
     render() {
         return (
             <div>
                 <a href="javascript:;" className="btn btn-success mr-2 mb-3" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /> Thêm câu hỏi</a>
-
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
@@ -87,9 +104,9 @@ class QLListCauHoi extends Component {
                                 <div className="card-input mt-4">
                                     <span>Câu hỏi</span>
                                     <input
-                                        type="file"
-                                        value={this.state.modalInputQuestion}
-                                        name="modalInputQuestion"
+                                        type="text"
+                                        value={this.state.modalInputQuestionDoc}
+                                        name="modalInputQuestionDoc"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -97,8 +114,8 @@ class QLListCauHoi extends Component {
                                     <span>A</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputA}
-                                        name="modalInputA"
+                                        value={this.state.modalInputADoc}
+                                        name="modalInputADoc"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -106,8 +123,8 @@ class QLListCauHoi extends Component {
                                     <span>B</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputB}
-                                        name="modalInputB"
+                                        value={this.state.modalInputBDoc}
+                                        name="modalInputBDoc"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -115,8 +132,8 @@ class QLListCauHoi extends Component {
                                     <span>C</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputC}
-                                        name="modalInputC"
+                                        value={this.state.modalInputCDoc}
+                                        name="modalInputCDoc"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -124,8 +141,8 @@ class QLListCauHoi extends Component {
                                     <span>D</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputD}
-                                        name="modalInputD"
+                                        value={this.state.modalInputDDoc}
+                                        name="modalInputDDoc"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -133,8 +150,8 @@ class QLListCauHoi extends Component {
                                     <span>Đáp án câu hỏi</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputAnswer}
-                                        name="modalInputAnswer"
+                                        value={this.state.modalInputAnswerDoc}
+                                        name="modalInputAnswerDoc"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -148,8 +165,8 @@ class QLListCauHoi extends Component {
                                     <span>Câu hỏi</span>
                                     <input
                                         type="file"
-                                        value={this.state.modalInputQuestion}
-                                        name="modalInputQuestion"
+                                        value={this.state.modalInputQuestionNghe}
+                                        name="modalInputQuestionNghe"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -157,8 +174,8 @@ class QLListCauHoi extends Component {
                                     <span>A</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputA}
-                                        name="modalInputA"
+                                        value={this.state.modalInputANghe}
+                                        name="modalInputANghe"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -166,8 +183,8 @@ class QLListCauHoi extends Component {
                                     <span>B</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputB}
-                                        name="modalInputB"
+                                        value={this.state.modalInputBNghe}
+                                        name="modalInputBNghe"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -175,8 +192,8 @@ class QLListCauHoi extends Component {
                                     <span>C</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputC}
-                                        name="modalInputC"
+                                        value={this.state.modalInputCNghe}
+                                        name="modalInputCNghe"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -184,8 +201,8 @@ class QLListCauHoi extends Component {
                                     <span>D</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputD}
-                                        name="modalInputD"
+                                        value={this.state.modalInputDNghe}
+                                        name="modalInputDNghe"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -193,8 +210,8 @@ class QLListCauHoi extends Component {
                                     <span>Đáp án câu hỏi</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputAnswer}
-                                        name="modalInputAnswer"
+                                        value={this.state.modalInputAnswerNghe}
+                                        name="modalInputAnswerNghe"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -207,8 +224,8 @@ class QLListCauHoi extends Component {
                                     <span>Câu hỏi</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputQuestion}
-                                        name="modalInputQuestion"
+                                        value={this.state.modalInputQuestionHinh}
+                                        name="modalInputQuestionHinh"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -216,8 +233,8 @@ class QLListCauHoi extends Component {
                                     <span>A</span>
                                     <input
                                         type="file"
-                                        value={this.state.modalInputA}
-                                        name="modalInputA"
+                                        value={this.state.modalInputAHinh}
+                                        name="modalInputAHinh"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -225,8 +242,8 @@ class QLListCauHoi extends Component {
                                     <span>B</span>
                                     <input
                                         type="file"
-                                        value={this.state.modalInputB}
-                                        name="modalInputB"
+                                        value={this.state.modalInputBHinh}
+                                        name="modalInputBHinh"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -234,8 +251,8 @@ class QLListCauHoi extends Component {
                                     <span>C</span>
                                     <input
                                         type="file"
-                                        value={this.state.modalInputC}
-                                        name="modalInputC"
+                                        value={this.state.modalInputCHinh}
+                                        name="modalInputCHinh"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>
@@ -243,8 +260,8 @@ class QLListCauHoi extends Component {
                                     <span>Đáp án câu hỏi</span>
                                     <input
                                         type="text"
-                                        value={this.state.modalInputAnswer}
-                                        name="modalInputAnswer"
+                                        value={this.state.modalInputAnswerHinh}
+                                        name="modalInputAnswerHinh"
                                         onChange={e => this.handleChange(e)}
                                     />
                                 </div>

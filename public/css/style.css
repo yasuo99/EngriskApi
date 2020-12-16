@@ -156,14 +156,14 @@ form ul .suggest{list-style-type: none;}
 #caidat form .nd{margin-left: 20px;margin-top: 50px;}
 #caidat span{font-size: 16px;font-weight: bold;}
 #caidat input{width: 460px;height: 50px;font-size: 16px;border-radius: 10px;border: 2px solid #ccc;outline: none;padding: 0 10px;}
-#caidat .caidat-taikhoan{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
+#caidat .caidat-taikhoan{height: 320px;border: 2px solid #ccc;border-radius: 20px;}
 #caidat .caidat-taikhoan a{color: #828282; font-weight:bold;}
 #caidat .caidat-taikhoan a:hover{color: #4f4f4f;text-decoration: none;}
 .chucnang .bg-active{background-color: #ccc;}
 .chucnang .text-active{color: #4f4f4f!important}
-.chucnang .nd-chucnang{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;margin: 5px 20px;}
-.chucnang .nd-chucnang:hover{background-color: #ccc}
-#caidat .caidat-matkhau{height: 400px;border: 2px solid #ccc;border-radius: 10px;}
+.chucnang .nd-chucnang{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;margin: 5px 20px;width: 300px;}
+.chucnang .nd-chucnang:hover{background-color: #ccc;width: 300px;}
+#caidat .caidat-matkhau{height: 320px;border: 2px solid #ccc;border-radius: 20px;}
 #caidat .caidat-matkhau a{color: #828282; font-weight:bold;}
 #caidat .caidat-matkhau a:hover{color: #4f4f4f;text-decoration: none;}
 
@@ -407,6 +407,21 @@ form ul .suggest{list-style-type: none;}
 .modalQuiz .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff; text-align: center;margin-top: 20px;}
 .modalQuiz .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
 
+.modalDelete{height: 220px;border-radius: 10px;margin-top: 100px;
+  background-image: linear-gradient(45deg, rgba(71, 132, 194, 0.8) 55%, rgba(103, 182, 231, 0.8));
+  background-position: center;
+} 
+.modalDelete .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff;}
+.modalDelete .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
+.modalDelete button{color: #fff;margin-left: 5px;padding: 5px;}
+
+.modalLock{height: 220px;border-radius: 10px;margin-top: 100px;
+  background-image: linear-gradient(45deg, rgba(71, 132, 194, 0.8) 55%, rgba(103, 182, 231, 0.8));
+  background-position: center;
+} 
+.modalLock .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff;}
+.modalLock .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
+.modalLock button{color: #fff;margin-left: 5px;padding: 5px;}
 /* -------------------------------QUẢN LÝ CÂU HỎI---------------------------
 /* -------------------------------------------------------------------------- */
 .dapAn{width: 200px;}
@@ -426,8 +441,9 @@ form ul .suggest{list-style-type: none;}
 .hinhanh{width: 200px;}
 /* ------------------------------QUẢN LÝ THÔNG BÁO--------------------------- */
 /* -------------------------------------------------------------------------- */
-.tieudeTB{width: 200px;}
-.ngayTB{width: 200px;}
+.tieudeTB{width: 180px;}
+.ngayTB{width: 180px;}
+.lock{width: 70px;}
 /* ------------------------------QUẢN LÝ NẠP TIỀN--------------------------- */
 /* -------------------------------------------------------------------------- */
 .taikhoan{width: 300px;}
@@ -435,7 +451,7 @@ form ul .suggest{list-style-type: none;}
 .hinhthuc{width: 200px;}
 /* ---------------------------QUẢN LÝ QUIZ - EXAM---------------------------- */
 /* -------------------------------------------------------------------------- */
-.chucnang{width: 180px;}
+.chucnang{width: 160px;}
 .nav-tabs .nav-item{cursor: pointer;}
 
 .form-group-account{
@@ -458,3 +474,9 @@ form ul .suggest{list-style-type: none;}
 #lichsuexam .table th{background-color: #068CE1;color: #fff;}
 #lichsutopup .table{border: 1px solid #ccc;box-shadow: 3px 3px 3px #ccc;border-top-left-radius: 20px;}
 #lichsutopup .table th{background-color: #068CE1;color: #fff;}
+
+#danhsachthongbao .boxInfor{padding: 10px;box-shadow: 3px 3px 3px #a9cef5;border-radius: 10px;}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem; }
+.toggle.ios .toggle-handle { border-radius: 20rem; }
+#listquiz .boxInfor{padding: 10px;box-shadow: 3px 3px 3px #a9cef5;border-radius: 10px;border: 1px solid #ccc;}

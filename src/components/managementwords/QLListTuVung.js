@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import QLTuVung from "./QLTuVung"
 import Modal from "../modal/Modal";
+import { createWord} from '../../actions/wordActions';
 class QLListTuVung extends Component {
     constructor(props) {
         super(props);
@@ -14,10 +15,11 @@ class QLListTuVung extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    onFileChange = event => { 
-        this.setState({ modalInputHinhAnh: event.target.files[0] }); 
-       
-      }; 
+
+    onFileChange = event => {
+        this.setState({ modalInputHinhAnh: event.target.files[0] });
+
+    };
     handleChange(e) {
         var target = e.target;
         var name = target.name;
@@ -27,13 +29,16 @@ class QLListTuVung extends Component {
         });
     }
 
-    handleSubmit(e) {
-        this.setState({
-            english: this.state.modalInputEnglish,
-            vietnam: this.state.modalInputVietNam,
-            exeng: this.state.modalInputExEng,
-            exvn: this.state.modalInputExVN,
-        });
+    handleSubmit = (e) => {
+        e.preventDefault();
+        var { modalInputEnglish, modalInputVietNam, modalInputLoaiTu, modalInputHinhAnh } = this.state;
+        var formData = new FormData();
+        formData.append("eng", modalInputEnglish);
+        formData.append("vie", modalInputVietNam);
+        formData.append("wordCategory", modalInputLoaiTu);
+        formData.append("file", modalInputHinhAnh);
+        createWord(formData)
+        console.log(formData);
         this.modalClose();
     }
 
@@ -45,6 +50,8 @@ class QLListTuVung extends Component {
         this.setState({
             modalInputEnglish: "",
             modalInputVietNam: "",
+            modalInputLoaiTu: "",
+            modalInputHinhAnh: null,
             modal: false
         });
     }

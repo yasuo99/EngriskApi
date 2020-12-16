@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-browser-router"
 import Modal from "../modal/Modal";
+import ModalDelete from "../modal/ModalDelete";
 import CKEditor from "react-ckeditor-component";
 class QLTaiLieu extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class QLTaiLieu extends Component {
             content: '',
             modal: false,
             name: "",
+            modalDelete: false,
             modalInputName: "",
         };
     }
@@ -56,9 +58,17 @@ class QLTaiLieu extends Component {
 
     modalClose() {
         this.setState({
-            modalInputName: "",
-            modal: false
+            modal: false,
+            modalDelete: false,
         });
+    }
+    modalOpenDelete() {
+        this.setState({ modalDelete: true });
+    }
+    handleSubmitDelete(e) {
+        this.setState({
+        });
+        this.modalClose();
     }
     render() {
         return (
@@ -66,12 +76,11 @@ class QLTaiLieu extends Component {
                 <td>Ngữ pháp</td>
                 <td>Một số cấu trúc ngữ pháp cơ bản và mẹo để giải các dạng bài tập một cách dễ dàng</td>
                 <td>nguphap.pdf</td>
-                <td>
-                   
-                    <a href="#" className="btn btn-primary mr-2" ><i className="fa fa-edit" /></a>
-                    <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
+                <td>             
+                    <a href="#" className="btn btn-primary mr-2" onClick={e => this.modalOpen(e)}><i className="fa fa-edit" /></a>
+                    <a href="#" className="btn btn-danger"onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash" /></a>
                         <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                            <h2 className="text-center text-primary">Thêm tài liệu</h2>
+                            <h2 className="text-center text-primary">Cập nhật tài liệu</h2>
                             <hr className="sidebar-divider my-0" />
                             <div className="form-group">
                                 <div className="card-input mt-4">
@@ -105,6 +114,15 @@ class QLTaiLieu extends Component {
                                 </button>
                             </div>
                         </Modal>
+                        <ModalDelete show={this.state.modalDelete} handleClose={e => this.modalClose(e)}>
+                        <h3 className="title"> <img src="/image/trash.png"></img> Xác nhận xóa tài liệu</h3>
+                        <p className="content">
+                            Bạn có chắc chắn muốn xóa tài liệu này ra khỏi hệ thống không?
+                        </p>
+                        <button onClick={e => this.handleSubmitDelete(e)} type="button" className="btn btn-info float-right">
+                            Xác nhận
+                        </button>
+                    </ModalDelete>
                 </td>
             </tr>
         );

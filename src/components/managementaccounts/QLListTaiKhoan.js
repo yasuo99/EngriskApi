@@ -12,6 +12,7 @@ class QLListTaiKhoan extends Component {
                         <th className="hoten">Họ và tên</th>
                         <th className="sdt">Số điện thoại</th>
                         <th className="chucnang"/>
+                        <th className="lock"></th>
                     </tr>
                 </thead>
                 <tbody>
