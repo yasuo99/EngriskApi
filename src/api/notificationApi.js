@@ -13,6 +13,11 @@ const notificationApi = {
         const url = `/notifications/client/publishing`;
         return axiosClient.get(url,{params});
     },
+    getAdminNotification: (params) => {
+        const url = `/notifications/admin/publishing`;
+        return axiosClient.get(url,{params});
+    }
+    ,
     createNotification: (body) => {
         const url = `/notifications`;
         return axiosClient.post(url,body);

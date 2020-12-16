@@ -16,6 +16,7 @@ const initState = {
     levelName: '',
     exp: '',
     point: '',
+    learned: []
   },
   token: '',
   refreshToken: ''
@@ -24,7 +25,7 @@ const initialState = () => {
   return {
     ...initialState,
     isLoggedIn: localStorage.getItem('account') ? true: false,
-    account:  localStorage.getItem('account') === null ? {} : JSON.parse(localStorage.getItem('account')),
+    account:  localStorage.getItem('account') === null ? initState.account : JSON.parse(localStorage.getItem('account')),
     token: localStorage.getItem('token') === null ? "" : localStorage.getItem('token')
   }
 }
@@ -84,18 +85,17 @@ const authReducer = (state = initialState(), action) => {
       return ({
         ...state,
         isLoggedIn: false,
-        account: {},
+        account: initState.account,
         token: ''
       });
     }
     case "TIME_OUT":{
       localStorage.removeItem('account');
       localStorage.removeItem('token');
-      toast("Đăng nhập để tiếp tục");
       return ({
         ...state,
         isLoggedIn: false,
-        account: {},
+        account: initState.account,
         token: ''
       });
     }

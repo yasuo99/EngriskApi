@@ -13,12 +13,21 @@ const quizApi = {
         return axiosClient.post(url, body)
     },
     doQuiz: (id) => {
-        const url = `sections/1/quizzes/${id}/do`;
-        return axiosClient.get(url);
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer "+ token
+        }
+        console.log(headers);
+        const url = `sections/${id}/do`;
+        return axiosClient.get(url,{headers: headers});
     },
     doneQuiz: (id, body) => {
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer "+token
+        }
         const url = `/quizzes/${id}/done`;
-        return axiosClient.post(url);
+        return axiosClient.post(url,{headers});
     }
     ,
     update: (id, body) => {

@@ -10,8 +10,12 @@ const examApi = {
         return axiosClient.get(url);
     },
     doExam: (id) =>  {
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token 
+        }
         const url = `/exams/${id}/do`;
-        return axiosClient.get(url);
+        return axiosClient.get(url,{headers});
     },
     getAnswer: (id) => {
         const url = `/exams/${id}/answers`;
@@ -19,8 +23,12 @@ const examApi = {
     }
     ,
     submitExam: (id, body) => {
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token 
+        }
         const url = `/exams/${id}/done`;
-        return axiosClient.post(url,body);
+        return axiosClient.post(url,body, {headers});
     },
     deleteExam: (id) => {
         const url = `/exams/${id}`;

@@ -4,7 +4,6 @@ import ReactTimeAgo from 'react-time-ago'
 class Post extends Component {
     constructor(props){
         super(props);
-        console.log(this.props);
     }
     render() {
         return (

@@ -35,7 +35,10 @@ class Hoc extends PureComponent {
             done: false,
             isRight: false,
             modal: false,
+            authResult: {},
+            totalTime: 0
         }
+
         this.handleUnload = this.handleUnload.bind(this);
     }
     async componentDidMount() {
@@ -47,14 +50,27 @@ class Hoc extends PureComponent {
         this.isComponentMounted = true;
         try {
             if (this.isComponentMounted) {
-                this.setState({
-                    sectionId: params.sectionId,
-                    questions: result.questions,
-                    currentQuestion: result.questions[this.state.index],
-                    id: this.state.index,
-                    quiz: result,
-                    loading: false
-                })
+                if (result) {
+                    this.setState({
+                        sectionId: params.sectionId,
+                        questions: result.questions,
+                        currentQuestion: result.questions[this.state.index],
+                        id: this.state.index,
+                        quiz: result,
+                        loading: false
+                    })
+                    this.calculateSpent = setInterval(() => {
+                        this.setState({
+                            totalTime: this.state.totalTime + 1
+                        })
+                    }, 1000)
+                }
+                else {
+                    this.setState({
+                        loading: true
+                    })
+                }
+
             }
         }
         catch (error) {
@@ -123,16 +139,19 @@ class Hoc extends PureComponent {
                 });
             }
             else {
+                const result = this.submitQuiz();
+                clearInterval(this.calculateSpent);
                 this.setState({
-                    done: true
+                    done: true,
+                    authResult: result
                 })
-                this.submitQuiz();
+
             }
         }
         console.log(this.state);
     }
     submitQuiz = async () => {
-        sectionApi.doneQuiz(this.state.sectionId, this.state.quiz.id, this.props.isLoggedIn);
+        return await sectionApi.doneQuiz(this.state.sectionId, this.state.quiz.id);
     }
     reachEnd = () => {
         if (this.state.index < this.state.questions.length) {
@@ -258,36 +277,35 @@ class Hoc extends PureComponent {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
-                                        <div className="col-3">
-                                            {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
+                                        <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
+                                            <div className="col-3">
+                                                {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
+                                            </div>
+                                            <div className="col-6"></div>
+                                            <div className="col-3 text-right">
+                                                {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
+                                                {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
+                                                {done && <button className="btn btn-primary" onClick={e => this.modalOpen(e)}>Kết thúc</button>}
+                                            </div>
                                         </div>
-                                        <div className="col-6"></div>
-                                        <div className="col-3 text-right">
-                                            {checked === false && <button className="btn btn-primary" onClick={this.submitAnswer}>Kiểm tra</button>}
-                                            {checked && done === false && <Link className="btn btn-primary" to={"/baihoc/" + (sectionId)} onClick={this.nextQuestion}>Tiếp theo</Link>}
-                                            {done && <Link className="btn btn-primary" onClick={e => this.modalOpen(e)}>Kết thúc</Link>}
-                                        </div>
                                     </div>
-                                </div>
-                            </main>
-                            <ModalQuiz show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                                <div>
-                                    <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_REOnx3.json" background="transparent" speed="1" hover loop autoplay>
-                                    </lottie-player>
-                                </div>
-                                <h3 className="title"> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã hoàn thành bài quiz</h3>
-                                <p className="content">
-                                    Thời gian hoàn thành của bạn là: 60 phút
+                                </main>
+                                <ModalQuiz show={this.state.modal} handleClose={e => this.modalClose(e)}>
+                                    <div>
+                                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_REOnx3.json" background="transparent" speed="1" hover loop autoplay>
+                                        </lottie-player>
+                                    </div>
+                                    <h3 className="title"> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã hoàn thành bài quiz</h3>
+                                    <p className="content">
+                                        Thời gian hoàn thành của bạn là: {this.props.isLoggedIn ? this.state.authResult.timeSpent : this.state.totalTime} giây
                                 </p>
-                                <strong>Bạn cần duy trì luyện tập để nâng cao trình độ của mình</strong>
-                            </ModalQuiz>
-                            <Footer></Footer>
+                                    <strong>Bạn cần duy trì luyện tập để nâng cao trình độ của mình</strong>
+                                </ModalQuiz>
+                                <Footer></Footer>
+                            </div>
                         </div>
-
-                    </div>
-                </Fragment>
+                    </div >
+                </Fragment >
             )
         }
 

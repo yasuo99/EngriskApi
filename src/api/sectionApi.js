@@ -13,19 +13,22 @@ const sectionApi = {
         return axiosClient.get(url, { params, headers: header });
     },
     doQuiz: (id, params) => {
-        const url = `/sections/${id}/do`;
-        return axiosClient.get(url,{params});
-    },
-    doneQuiz: (sectionId, quizId, auth) => {
-        const url = `/sections/${sectionId}/quizzes/${quizId}/done`;
-        let header = ''
-        if (auth) {
-            const token = localStorage.getItem('token');
-            header = {
-                "Authorization": "Bearer " + token
-            }
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
         }
-        return axiosClient.post(url,{headers: header});
+        const url = `/sections/${id}/do`;
+        return axiosClient.get(url, { params, headers });
+    },
+    doneQuiz: (sectionId, quizId) => {
+        const url = `/sections/${sectionId}/quizzes/${quizId}/done`;
+        const token = localStorage.getItem('token');
+        const start = localStorage.getItem('start');
+        const headers = {
+            "Authorization": "Bearer " + token
+        }
+        console.log(headers);
+        return axiosClient.post(url,start,{headers});
     },
     getDetail: (id) => {
         const url = `/sections/${id}`;

@@ -82,13 +82,15 @@ class FlashCardPage extends Component {
     selectWord = (e) => {
         e.preventDefault();
         const index = parseInt(e.target.id);
-        const currentWord = this.state.words.filter(el => el.id === index);
+        const currentWord = this.state.words[index];
         if (currentWord) {
             this.setState({
                 index: index,
-                currentWord: currentWord[0]
+                currentWord: currentWord
             });
         }
+        console.log(index);
+        console.log(currentWord);
     }
     previousWord = () => {
         const index = this.state.index - 1;
@@ -112,13 +114,14 @@ class FlashCardPage extends Component {
     }
     render() {
         let groups = [];
+        let words = [];
         groups.push(<Dropdown.Item onClick={(e) => this.selectGroup(e)} key={0} id={0}>Tất cả từ vựng</Dropdown.Item>)
         for (let i = 1; i <= this.state.groups.length; i++) {
             groups.push(<Dropdown.Item onClick={(e) => this.selectGroup(e)} key={i} id={i}>{this.state.groups[i - 1] && this.state.groups[i - 1].groupName}</Dropdown.Item>)
         }
-        const listWord = this.state.words.map((word) =>
-            <li key={word.id} id={word.id} className="text-center word-list" onClick={this.selectWord}>{word.eng}</li>
-        );
+        for(let i = 0; i < this.state.words.length; i ++){
+            words.push(<li key={i} id={i} className="text-center word-list" onClick={this.selectWord}>{this.state.words[i].eng}</li>)
+        }
         // const examples = this.state.currentWord.examples.map((example) =>
         //     <p key={example.id}>{example.eng}</p>
         // );
@@ -142,7 +145,7 @@ class FlashCardPage extends Component {
                                 <div className="row mt-4">
                                     <div className="col-3 bg-xam">
                                         <ol type="1">
-                                            {listWord}
+                                            {words}
                                         </ol>
                                     </div>
                                     <div className="col-9 bg-flashcard">

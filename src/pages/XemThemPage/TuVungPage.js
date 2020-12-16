@@ -3,9 +3,21 @@ import { Link } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
+import { connect } from 'react-redux';
+import ReactTimeAgo from 'react-time-ago/commonjs/ReactTimeAgo';
 
 class TuVungPage extends Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
+        const renderWordLearnts = this.props.account.learned.map((word) =>
+            <tr key={word.wordId}>
+                <td><a href="#">{word.eng}</a></td>
+                <td>{word.wordCategory}</td>
+                <td><ReactTimeAgo date={word.lastPractice}></ReactTimeAgo></td>
+            </tr>
+        );
         return (
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
@@ -24,111 +36,7 @@ class TuVungPage extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">Places</a></td>
-                                            <td>Noun</td>
-                                            <td>3 ngày trước</td>
-                                        </tr>
+                                        {renderWordLearnts}
                                     </tbody>
                                 </table>
                             </div>
@@ -143,4 +51,11 @@ class TuVungPage extends Component {
         );
     }
 }
-export default TuVungPage;
+const mapStateToProps = (state) => {
+    const { account } = state.auth;
+    console.log(account);
+    return {
+        account: account
+    }
+}
+export default connect(mapStateToProps)(TuVungPage);

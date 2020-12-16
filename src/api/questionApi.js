@@ -13,8 +13,12 @@ const questionApi = {
         return axiosClient.post(url,body);
     },
     submitQuestion: (id,body) => {
+        let token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        };
         const url = `/questions/${id}/check`;
-        return axiosClient.post(url,body);
+        return axiosClient.post(url,body, {headers});
     }
     ,
     updateQuestion: (id, body) => {
