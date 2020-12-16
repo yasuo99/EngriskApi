@@ -1,6 +1,26 @@
 import React, { Component } from "react";
-
+import ModalDelete from "../modal/ModalDelete";
 class CauHoi extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalDelete: false,
+        };
+    }
+    modalClose() {
+        this.setState({
+            modalDelete: false,
+        });
+    }
+    modalOpenDelete() {
+        this.setState({ modalDelete: true });
+    }
+    handleSubmitDelete(e) {
+        this.setState({
+
+        });
+        this.modalClose();
+    }
     render() {
         return (
             <tr>
@@ -17,8 +37,17 @@ class CauHoi extends Component {
                 </td>
                 <td>Sau tính từ sở hữu YOUR ta cần một danh từ, nên ta chọn ngay D</td>
                 <td>
-                    <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
-                    </td>
+                    <a href="#" className="btn btn-danger" onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash"  /></a>
+                </td>
+                <ModalDelete show={this.state.modalDelete} handleClose={e => this.modalClose(e)}>
+                    <h3 className="title"> <img src="/image/trash.png"></img> Xác nhận xóa câu hỏi trong bài exam</h3>
+                    <p className="content">
+                        Bạn có chắc chắn muốn xóa câu hỏi này ra khỏi bài exam không?
+                        </p>
+                    <button onClick={e => this.handleSubmitDelete(e)} type="button" className="btn btn-info float-right">
+                        Xác nhận
+                        </button>
+                </ModalDelete>
             </tr>
         );
     }

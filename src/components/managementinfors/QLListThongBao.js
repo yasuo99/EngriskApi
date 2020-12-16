@@ -73,6 +73,7 @@ class QLListThongBao extends Component {
                             <th className="ngayTB">Ngày thông báo</th>
                             <th >Nội dung thông báo</th>
                             <th className="chucnang" />
+                            <th className="lock"></th>
                         </tr>
                     </thead>
                     <tbody>

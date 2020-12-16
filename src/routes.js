@@ -11,8 +11,8 @@ import Admin from './pages/Admin/Admin';
 import ManagementWord from './pages/Admin/ManagementWord';
 import HocHinhAnh from './pages/HocPage/HocHinhAnh';
 import Hoc from './pages/HocPage/Hoc';
-import CaiDatMatKhau from './pages/CaiDatPage/CaiDatMatKhau';
-import CaiDatTaiKhoan from './pages/CaiDatPage/CaiDatTaiKhoan';
+// import CaiDatMatKhau from './pages/CaiDatPage/CaiDatMatKhau';
+// import CaiDatTaiKhoan from './pages/CaiDatPage/CaiDatTaiKhoan';
 import LandingPage from './pages/LandingPage/LandingPage';
 import NapTienPage from './pages/NapTienPage/NapTienPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
@@ -35,12 +35,22 @@ import ManagementAccount from './pages/Admin/ManagementAccount';
 import HistroriesExam from './pages/HistoryPage/HistroriesExam';
 import HistoriesTopup from './pages/HistoryPage/HistoriesTopup';
 import QuenMatKhau from './pages/CaiDatPage/QuenMatKhau';
-
+import CaiDatChung from './pages/CaiDatPage/CaiDatChung';
+import DanhSachThongBao from './pages/ThongBao/DanhSachThongBao';
+import ListQuiz from './pages/HocPage/ListQuiz';
+import DatLaiMatKhau from './pages/CaiDatPage/DatLaiMatKhau';
 const routes = [
     {
         path: '/home',
         exact: true,
         main: () => <HomePage />,
+        guard: false,
+        roles: []
+    },
+    {
+        path: '/list-quiz',
+        exact: true,
+        main: () => <ListQuiz />,
         guard: false,
         roles: []
     },
@@ -149,17 +159,38 @@ const routes = [
         guard: false,
         roles: []
     },
+    // {
+    //     path: '/caidatmatkhau',
+    //     exact: true,
+    //     main: () => <CaiDatMatKhau />,
+    //     guard: true,
+    //     roles: []
+    // },
+    // {
+    //     path: '/caidattaikhoan',
+    //     exact: true,
+    //     main: () => <CaiDatTaiKhoan />,
+    //     guard: true,
+    //     roles: []
+    // },
     {
-        path: '/caidatmatkhau',
+        path: '/caidatchung',
         exact: true,
-        main: () => <CaiDatMatKhau />,
+        main: () => <CaiDatChung />,
         guard: true,
         roles: []
     },
     {
-        path: '/caidattaikhoan',
+        path: '/datlai-matkhau',
         exact: true,
-        main: () => <CaiDatTaiKhoan />,
+        main: () => <DatLaiMatKhau />,
+        guard: true,
+        roles: []
+    },
+    {
+        path: '/thongbao',
+        exact: true,
+        main: () => <DanhSachThongBao />,
         guard: true,
         roles: []
     },

@@ -14,3 +14,4 @@ export const updateWord = (id, body) => {
 }
 export const deleteWord = (id) =>  wordApi.delete(id);
 
+export const createWord = (body) =>  wordApi.create(body);
