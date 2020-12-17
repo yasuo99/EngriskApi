@@ -4,12 +4,27 @@ import Modal from "../modal/Modal";
 import ModalListCauHoiDoc from "../modalcauhoi/ModalListCauHoiDoc";
 import ModalListCauHoiHinhAnh from "../modalcauhoi/ModalListCauHoiHinhAnh";
 import ModalListCauHoiNghe from "../modalcauhoi/ModalListCauHoiNghe";
+import "datatables.net-dt/js/dataTables.dataTables.js"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery'
+import sectionApi from "../../api/sectionApi";
 class QLListQuiz extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modal: false,
+            quizzes: []
         };
+        this.isComponentMounted = false;
+    }
+    componentDidMount(){
+        $(function(){
+            $("#dataTableQuiz").DataTable();
+        })
+        this.isComponentMounted = true;
+    }
+    fetchQuizzes = async () => {
+        return sectionApi
     }
     handleChange(e) {
         var target = e.target;
@@ -67,7 +82,7 @@ class QLListQuiz extends Component {
                     </div>
                 </Modal>
 
-                <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
+                <table className="table table-bordered" id="dataTableQuiz" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
                             <th>Quiz</th>
@@ -82,6 +97,9 @@ class QLListQuiz extends Component {
                 
             </div>
         )
+    }
+    componentWillUnmount(){
+        this.isComponentMounted = false;
     }
 }
 export default QLListQuiz;

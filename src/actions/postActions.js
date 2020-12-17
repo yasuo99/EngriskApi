@@ -1,28 +1,29 @@
+import { toast } from "react-toastify";
 import postApi from "../api/postApi"
 
-export const CreatePost = async (body) => {
+export const CreatePost = (body) => {
     return dispatch => {
-        await postApi.createPost(body).then((response) => {
+        postApi.createPost(body).then((response) => {
             console.log(response);
-            return dispatch({type: "CREATED_POST"});
+            return dispatch({ type: "CREATED_POST" });
+        }).catch((error) => {
+            toast(error.response.data.error);
+        });
+    }
+}
+export const DeletePost = (id) => {
+    return dispatch => {
+        postApi.deletePost(id).then((response) => {
+            return dispatch({ type: "DELETED_POST" });
         }).catch((error) => {
             console.log(error);
         });
     }
 }
-export const DeletePost = async (id) => {
+export const UpdatePost = (id, body) => {
     return dispatch => {
-        await postApi.deletePost(id).then((response) => {
-            return dispatch({type: "DELETED_POST"});
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-}
-export const UpdatePost = async (id, body) => {
-    return dispatch => {
-        await postApi.updatePost(id,body).then((response) => {
-            return dispatch({type: "UPDATED_POST"});
+        postApi.updatePost(id, body).then((response) => {
+            return dispatch({ type: "UPDATED_POST" });
         }).catch((error) => console.log(error));
     }
 }

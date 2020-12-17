@@ -84,7 +84,7 @@ export default class Exam extends Component {
                             <img src="/image/welcome.jpg" alt="welcome" className="img-hoc" />
                         </div>
                         <div className="col-8">
-                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old" }</Badge>
+                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge>
                             <p>Exp: {exam.exp}  </p>
                             <p>Price: {exam.price}</p>
                             <p>Duration: {exam.duration}</p>
@@ -106,7 +106,7 @@ export default class Exam extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div id="trangchu" className="col-10 offset-1">
-                                        <InfiniteScroll
+                                        {this.isComponentMounted && <InfiniteScroll
                                             dataLength={this.state.exams.length}
                                             next={this.fetchMoreExam}
                                             hasMore={this.state.hasMore}
@@ -118,7 +118,7 @@ export default class Exam extends Component {
                                             }
                                             scrollableTarget="content-wrapper"
                                         >{renderExam}
-                                        </InfiniteScroll>
+                                        </InfiniteScroll>}
                                     </div>
                                 </div>
                             </div>

@@ -2,10 +2,14 @@ import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import { appendScript } from '../../config/appendScript'
 class DashBoard extends Component {
+    constructor(props) {
+        super(props);
+        appendScript("/js/Chart.min.js");
+        
+    }
     componentDidMount() {
-        appendScript("./js/Chart.min.js");
-        appendScript("./js/chart-area-demo.js");
-        appendScript("./js/chart-pie-demo.js");
+        appendScript("/js/chart-area-demo.js");
+        appendScript("/js/chart-pie-demo.js");
     };
     render() {
         return (

@@ -16,7 +16,8 @@ const initState = {
     levelName: '',
     exp: '',
     point: '',
-    learned: []
+    learned: [],
+    roles: []
   },
   token: '',
   refreshToken: ''

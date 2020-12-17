@@ -1,13 +1,14 @@
-import React, { Component } from "react"
-import QLExam from "./QLExam"
-import Modal from "../modal/Modal";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ModalListCauHoiDoc from "../modalcauhoi/ModalListCauHoiDoc";
 import ModalListCauHoiHinhAnh from "../modalcauhoi/ModalListCauHoiHinhAnh";
 import ModalListCauHoiNghe from "../modalcauhoi/ModalListCauHoiNghe";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery'
-class QLListExam extends Component {
+import Modal from "../modal/Modal";
+import QLSection from './QLSection';
+export class QLListSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -81,7 +82,7 @@ class QLListExam extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <QLExam></QLExam>
+                        <QLSection></QLSection>
                     </tbody>
                 </table>
 
@@ -90,4 +91,17 @@ class QLListExam extends Component {
         )
     }
 }
-export default QLListExam;
+
+const mapStateToProps = (state) => {
+    return({
+
+    })
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(QLListSection)

@@ -1,8 +1,22 @@
 import React, { Component } from "react"
+import { appendScript } from "../../config/appendScript";
 import QLRole from "./QLRole";
-
+import "datatables.net-dt/js/dataTables.dataTables.js"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery'
 
 class QLListRole extends Component {
+    constructor(props) {
+        super(props);
+    }
+    componentDidMount() {
+        $(function(){
+            $("#dataTable").DataTable();
+        })
+    }
+    fetchAccounts = async () => {
+
+    }
     render() {
         return (
             <div>

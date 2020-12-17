@@ -10,6 +10,7 @@ class QLTuVung extends Component {
             modal: false,
             modalInputEnglish: "",
             modalInputVietNam:"",
+            modalInputSpelling: "",
             modalInputLoaiTu:"",
             modalInputHinhAnh: null
         };
@@ -18,8 +19,9 @@ class QLTuVung extends Component {
     }
     
     onFileChange = event => { 
+        console.log(event);
         this.setState({ modalInputHinhAnh: event.target.files[0] }); 
-       
+       console.log(this.state);
       }; 
     handleChange(e) {
         var target = e.target;
@@ -38,7 +40,8 @@ class QLTuVung extends Component {
         formData.append("vie",modalInputVietNam);
         formData.append("wordCategory",modalInputLoaiTu);
         formData.append("file",modalInputHinhAnh);
-        createWord(formData)
+        // createWord(formData)
+        console.log('dkm');
         console.log(formData);
         this.modalClose();
     }
@@ -99,6 +102,15 @@ class QLTuVung extends Component {
                                 />
                             </div>
                             <div className="card-input mt-4">
+                                <span>Phát âm</span>
+                                <input
+                                    type="text"
+                                    value={modalInputSpelling}
+                                    name="modalInputSpelling"
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
                                 <span>Loại từ</span>
                                 <select 
                                 value={modalInputLoaiTu} 
@@ -136,7 +148,7 @@ class QLTuVung extends Component {
                                     accept="image/png, image/jpeg" 
                                     name="modalInputHinhAnh"
                                     onChange={this.onFileChange}
-                                
+                            
                                 />
                             </div>
                         </div>

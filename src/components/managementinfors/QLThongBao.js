@@ -75,9 +75,9 @@ class QLThongBao extends Component {
     render() {
         return (
             <tr>
-                <td>Học tập</td>
-                <td>02-02-2020</td>
-                <td>Bạn cần phải nổ lực hơn trong việc học tiếng anh</td>
+                <td>{this.props.notification.id}</td>
+                <td>{this.props.notification.publishedDate}</td>
+                <td>{this.props.notification.content}</td>
                 <td>
                     <a href="#" className="btn btn-primary mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-edit" /></a>
                     <a href="#" className="btn btn-danger" onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash" /></a>
@@ -133,12 +133,6 @@ class QLThongBao extends Component {
                     </ModalDelete>
                 </td>
                 <td>
-                    <input 
-                        type="checkbox" data-toggle="toggle" data-size="sm" data-style="ios"
-                        name="toggleSwitch"
-                        id="toggleSwitch"
-                        onChange={e => this.handleChange(e)}
-                    />
                 </td>
             </tr>
         );

@@ -7,19 +7,19 @@ const postApi = {
     },
     getNewPost: (params) => {
         const url = "/posts/new";
-        return axiosClient.get(url,{params});
+        return axiosClient.get(url, { params });
     },
     getHighRate: (params) => {
         const url = "/posts/rating";
         return axiosClient.get(url);
     },
-    getFollowing: (id,token) => {
+    getFollowing: (id, token) => {
         const url = `/accounts/${id}/posts-following`;
-        return axiosClient.get(url, {headers: {'Authorization': `Bearer ${token}`}});
+        return axiosClient.get(url, { headers: { 'Authorization': `Bearer ${token}` } });
     },
     getDetail: (id, params) => {
         const url = `/posts/${id}`;
-        return axiosClient.get(url,{params});
+        return axiosClient.get(url, { params });
     },
     createPost: (body) => {
         let token = localStorage.getItem('token');
@@ -27,11 +27,11 @@ const postApi = {
             authorization: "Bearer " + token
         }
         const url = `/posts`;
-        return axiosClient.post(url,body,{headers});
+        return axiosClient.post(url, body, { headers });
     },
-    updatePost: (id,body) => {
+    updatePost: (id, body) => {
         const url = `/posts/${id}`;
-        return axiosClient.put(url,body);
+        return axiosClient.put(url, body);
     },
     deletePost: (id) => {
         const url = `/posts/${id}`;
@@ -47,8 +47,28 @@ const postApi = {
             authorization: "Bearer " + token
         }
         const url = `/posts/${id}/comments`;
-        return axiosClient.post(url,body, {headers: headers});
+        return axiosClient.post(url, body, { headers: headers });
     },
+    replyComment: (postId, commentId, body) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
+        const url = `/posts/${postId}/comments/${commentId}`;
+        return axiosClient.post(url, body, { headers });
+    },
+    likeComment: (postId, commentId) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
+        const url = `/posts/${postId}/comments/${commentId}/like`;
+        return axiosClient.put(url,null, {headers});
+    },
+    dislikeComment: (commentId) => {
+
+    }
+    ,
     ratingPost: (id) => {
 
     }

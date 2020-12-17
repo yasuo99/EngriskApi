@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import Modal from "../modal/Modal";
 import CKEditor from "react-ckeditor-component";
+import { connect } from "react-redux";
 class ContentPost extends Component {
     constructor(props) {
         super(props);
@@ -10,7 +11,6 @@ class ContentPost extends Component {
             id: "",
             modal: false,
         };
-
     }
     handleSubmit(e) {
         this.setState({
@@ -24,7 +24,7 @@ class ContentPost extends Component {
 
     modalClose() {
         this.setState({
-            modal:false,
+            modal: false,
         });
     }
     updateContent() {
@@ -61,10 +61,10 @@ class ContentPost extends Component {
                         <hr />
                         <p className="mt-3 mb-3">{this.props.post.content}</p>
                     </div>
-                    <div className="col-2 chucnang">
+                    {(this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("admin") || this.props.account.roles.includes("manager") || this.props.post.accountUsername === this.props.account.username) && <div className="col-2 chucnang">
                         <a href="javascript:;" className="btn btn-primary mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-edit" /></a>
                         <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
-                    </div>
+                    </div>}
                     <div className="baocao">
                         <a href="#" className="mr-3">Báo cáo <i className="fa fa-flag"></i></a>
                         <div className="rate">
@@ -91,18 +91,7 @@ class ContentPost extends Component {
                         </div>
                         <div className="card-input mt-4">
                             <span>Nội dung bài viết</span>
-                            <CKEditor
-                                activeClass="p10"
-                                content={this.state.content}
-                                events={{
-                                    "blur": this.onBlur,
-                                    "afterPaste": this.afterPaste,
-                                    "change": this.onChange
-                                }}
-                            />
-                        </div>
-                        <div className="card-input mt-4">
-                            <span>Hình ảnh bài viết</span><input type="file" accept="image/png, image/jpeg" />
+                            <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude" />
                         </div>
                     </div>
                     <div className="card-button mt-5">
@@ -116,4 +105,10 @@ class ContentPost extends Component {
         )
     }
 }
-export default ContentPost;
+const mapStateToProps = (state) => {
+    const { account } = state.auth
+    return {
+        account: account
+    }
+}
+export default connect(mapStateToProps)(ContentPost);

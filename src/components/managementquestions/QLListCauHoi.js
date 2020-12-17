@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import QLCauHoi from "./QLCauHoi";
 import Modal from "../modal/Modal";
+import "datatables.net-dt/js/dataTables.dataTables.js"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery'
 class QLListCauHoi extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +30,11 @@ class QLListCauHoi extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    componentDidMount() {
+        $(function () {
+            $("#dataTable").DataTable();
+        })
     }
     handleChange(e) {
         var target = e.target;

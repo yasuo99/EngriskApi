@@ -1,8 +1,19 @@
 import React, { Component } from "react"
+import { appendScript } from "../../config/appendScript";
 import QLScore from "./QLScore";
-
+import "datatables.net-dt/js/dataTables.dataTables.js"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery'
 
 class QLListScore extends Component {
+    constructor(props){
+        super(props);
+    }
+    componentDidMount(){
+        $(function () {
+            $("#dataTable").DataTable();
+        })
+    }
     render() {
         return (
             <div>

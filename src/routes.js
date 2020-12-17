@@ -39,6 +39,7 @@ import CaiDatChung from './pages/CaiDatPage/CaiDatChung';
 import DanhSachThongBao from './pages/ThongBao/DanhSachThongBao';
 import ListQuiz from './pages/HocPage/ListQuiz';
 import DatLaiMatKhau from './pages/CaiDatPage/DatLaiMatKhau';
+import ManagementSection from './pages/Admin/ManagementSection';
 const routes = [
     {
         path: '/home',
@@ -296,6 +297,13 @@ const routes = [
         path: '/quanly-exam',
         exact: true,
         main: () => <ManagementExam/>,
+        guard: true,
+        roles: ["superadmin","manager"]
+    },
+    {
+        path: '/quanly-section',
+        exact: true,
+        main: () => <ManagementSection/>,
         guard: true,
         roles: ["superadmin","manager"]
     },

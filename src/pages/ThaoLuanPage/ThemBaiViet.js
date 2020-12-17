@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import CKEditor from "react-ckeditor-component";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { CreatePost } from "../../actions/postActions";
 import postApi from "../../api/postApi";
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
@@ -35,13 +36,11 @@ class ThemBaiViet extends Component {
             content: this.state.content
         }
         console.log(post);
-        var result = await postApi.createPost(post);
-        if (result.status === 201) {
-            this.setState({
-                content: "",
-                title: ""
-            })
-        }
+        this.props.CreatePost(post);
+        this.setState({
+            content: "",
+            title: ""
+        })
     }
     async fetchFollowingPosts() {
         let token = localStorage.getItem('token');
@@ -101,4 +100,9 @@ const mapStateToProps = (state) => {
         isLoggedIn: isLoggedIn
     }
 }
-export default connect(mapStateToProps)(ThemBaiViet);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        CreatePost: (body) => dispatch(CreatePost(body))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ThemBaiViet);

@@ -8,6 +8,7 @@ import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import postApi from '../../api/postApi';
 import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
 
 class ThaoLuanChiTietPage extends Component {
     constructor(props) {
@@ -32,8 +33,8 @@ class ThaoLuanChiTietPage extends Component {
             });
         }
     }
-    fetchPostDetail = async (id,params) => {
-        return await postApi.getDetail(id,params);
+    fetchPostDetail = async (id, params) => {
+        return await postApi.getDetail(id, params);
     }
     handleChange = event => {
         this.setState({
@@ -45,19 +46,12 @@ class ThaoLuanChiTietPage extends Component {
         let comment = {
             comment: this.state.comment
         }
-        let parameters = {
-            orderBy: this.state.filter
-        }
         let result = (await postApi.commentToPost(this.state.post.id, comment)).status;
         if (result === 200) {
-            const { match: { match: { params } } } = this.props;
-            const post = await this.fetchPostDetail(params.postId, parameters);
-            if (this.isComponentMounted) {
-                this.setState({
-                    post: post,
-                    comment: ""
-                });
-            }
+            this.refreshPost();
+            this.setState({
+                comment: ""
+            })
         }
     }
     cancel() {
@@ -65,7 +59,39 @@ class ThaoLuanChiTietPage extends Component {
             comment: ""
         });
     }
-    async filter(event){
+    replyComment = async (comment, commentId) => {
+        const { match: { match: { params } } } = this.props;
+        const body = {
+            content: comment
+        }
+        let result = await (await postApi.replyComment(params.postId, commentId, body)).status;
+        if (result === 200) {
+            await this.refreshPost();
+        }
+    }
+    refreshPost = async () => {
+        const { match: { match: { params } } } = this.props;
+        let parameters = {
+            orderBy: "newest"
+        }
+        const post = await this.fetchPostDetail(params.postId, parameters);
+        if (this.isComponentMounted) {
+            this.setState({
+                post: post,
+            });
+        }
+    }
+    likeComment = async (commentId) => {
+        const { match: { match: { params } } } = this.props;
+        var result = await postApi.likeComment(params.postId, commentId);
+        if(result.status === 200){
+            await this.refreshPost();
+        }
+        else{
+            toast(result.error)
+        }
+    }
+    async filter(event) {
         this.setState({
             filer: event.target.id
         })
@@ -125,7 +151,7 @@ class ThaoLuanChiTietPage extends Component {
                                     </div>
                                 </div>
                                 <div className="phanhoi-binhluan">
-                                    <PhanHoiPost comments={this.state.post.comments}></PhanHoiPost>
+                                    <PhanHoiPost comments={this.state.post.comments} replyComment={this.replyComment} likeComment={this.likeComment}></PhanHoiPost>
                                 </div>
                             </div>
                         </section>

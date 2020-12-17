@@ -101,7 +101,7 @@ class HomePage extends PureComponent {
               <div className="container">
                 <div className="row">
                   <div id="trangchu" className="col-10 offset-1">
-                    <InfiniteScroll
+                    {this.isComponentMounted && <InfiniteScroll
                       dataLength={this.state.sections.length}
                       next={this.fetchMoreSections}
                       hasMore={this.state.hasMore}
@@ -111,7 +111,8 @@ class HomePage extends PureComponent {
                         <p>Hết rồi</p>
                       }
                     >{renderSections}
-                    </InfiniteScroll>
+                    </InfiniteScroll>}
+
                   </div>
                 </div>
               </div>

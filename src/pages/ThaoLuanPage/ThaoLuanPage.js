@@ -90,11 +90,11 @@ class ThaoLuanPage extends Component {
                                         </ul>
                                         <div className="tab-content mt-3">
                                             <div className="tab-pane fade show active" id="tabone" role="tabpanel">
-                                                {renderHighRatePost}
+                                                {this.isComponentMounted && renderHighRatePost}
                                             </div>
 
                                             <div className="tab-pane fade" id="tabtwo" role="tabpanel">
-                                                {renderNewPost}
+                                                {this.isComponentMounted && renderNewPost}
                                             </div>
                                             <div className="tab-pane fade" id="tabthree" role="tabpanel">
 
