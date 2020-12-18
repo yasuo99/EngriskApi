@@ -1,18 +1,15 @@
 import React, { Component } from "react"
-import QLTuVung from "./QLTuVung"
 import { createWord } from '../../actions/wordActions';
-import ModalEdit from "../modal/ModalEdit";
-import ModalDelete from "../modal/ModalDelete";
+import wordApi from "../../api/wordApi";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
-import $ from 'jquery'
-import wordApi from "../../api/wordApi";
+import $ from 'jquery';
 import { Button, Modal } from 'react-bootstrap'
+
 class QLListTuVung extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: [],
             modalCreate: false,
             modalDelete: false,
             modalEdit: false,
@@ -28,31 +25,32 @@ class QLListTuVung extends Component {
             spellingEdit: "",
             categoryEdit: "",
             imageEdit: null,
+
+            words: [],
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmit = this.submitCreate.bind(this);
         this.handleSubmit = this.submitEdit.bind(this);
         this.handleSubmit = this.submitDelete.bind(this);
-        this.isComponentMounted = false;
     }
     async componentDidMount() {
         this.isComponentMounted = true;
-        var result = await this.fetchWords();
-        console.log(result);
+        var result = await this.fetchWord();
         if (this.isComponentMounted) {
             this.setState({
                 words: result
-            })
+            });
             $(function () {
                 $("#dataTable").DataTable();
-            })
+            });
         }
     }
-    fetchWords = async () => {
+    fetchWord = async () => {
         return await wordApi.getAll();
     }
+
     onFileChange = event => {
-        this.setState({ imageCreate: event.target.files[0] });
+        this.setState({ modalInputHinhAnh: event.target.files[0] });
         console.log(this.state);
     };
     handleChange(e) {
@@ -63,8 +61,8 @@ class QLListTuVung extends Component {
             [name]: value
         });
     }
-
-    handleSubmit = (e) => {
+    // Xử lý modal create
+    submitCreate = (e) => {
         e.preventDefault();
         var { englishCreate, vietNamCreate, spellingCreate, categoryCreate, imageCreate } = this.state;
         var formData = new FormData();
@@ -89,7 +87,8 @@ class QLListTuVung extends Component {
             imageCreate: null,
             modalCreate: false
         });
-    } // Xử lý modal edit
+    }
+    // Xử lý modal edit
     openEdit() {
         this.setState({ modalEdit: true });
     }
@@ -123,15 +122,14 @@ class QLListTuVung extends Component {
         });
         this.closeDelete();
     }
-
     render() {
         var { englishCreate, vietNamCreate, spellingCreate, categoryCreate } = this.state;
         var { englishEdit, vietNamEdit, spellingEdit, categoryEdit } = this.state;
         const renderWords = this.state.words.map((word) =>
             <tr key={word.id}>
                 <td>{word.eng}</td>
-                <td>{word.wordCategory}</td>
                 <td>{word.vie}</td>
+                <td>{word.wordCategory}</td>
                 <td>{word.examples.map((example) =>
                     <p key={example.id}>{example.eng} / {example.vie}</p>
                 )}</td>
@@ -140,83 +138,6 @@ class QLListTuVung extends Component {
                 <td>
                     <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
                     <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
-                    {/* Modal phần xóa */}
-                    <Modal show={this.state.modalDelete}>
-                        <Modal.Header closeButton onClick={() => this.closeDelete()}>
-                            <Modal.Title>Xác nhận xóa từ vựng</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>Bạn có chắc chắn muốn xóa từ vựng này ra khỏi hệ thống không?</Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
-                            <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
-                        </Modal.Footer>
-                    </Modal>
-                    {/* Modal phần sửa */}
-                    <Modal show={this.state.modalEdit}>
-                        <Modal.Header closeButton onClick={() => this.closeEdit()}>
-                            <Modal.Title>Cập nhật từ vựng</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="form-group">
-                                <div className="card-input">
-                                    <span>English</span>
-                                    <input
-                                        type="text"
-                                        value={englishEdit}
-                                        name="englishEdit"
-                                        onChange={e => this.handleChange(e)}
-                                        required
-                                    />
-                                </div>
-                                <div className="card-input">
-                                    <span>Việt Nam</span>
-                                    <input
-                                        type="text"
-                                        value={vietNamEdit}
-                                        name="vietNamEdit"
-                                        onChange={e => this.handleChange(e)}
-                                        required
-                                    />
-                                </div>
-                                <div className="card-input">
-                                    <span>Phát âm</span>
-                                    <input
-                                        type="text"
-                                        value={spellingEdit}
-                                        name="spellingEdit"
-                                        onChange={e => this.handleChange(e)}
-                                        required
-                                    />
-                                </div>
-                                <div className="card-input">
-                                    <span>Loại từ</span>
-                                    <select
-                                        value={categoryEdit}
-                                        onChange={e => this.handleChange(e)}
-                                        name="categoryEdit" required>
-                                        <option value="">- Chọn loại từ -</option>
-                                        <option value="Danh từ">Danh từ</option>
-                                        <option value="Tính từ">Tính từ</option>
-                                        <option value="Động từ">Động từ</option>
-                                        <option value="Trạng từ">Trạng từ</option>
-                                    </select>
-                                </div>
-                                <div className="card-input">
-                                    <span>Hình ảnh minh họa</span>
-                                    <input
-                                        type="file"
-                                        accept="image/png, image/jpeg"
-                                        name="imageEdit"
-                                        onChange={this.onFileChange}
-                                    />
-                                </div>
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
-                            <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
-                        </Modal.Footer>
-                    </Modal>
                 </td>
             </tr>
         );
@@ -236,9 +157,10 @@ class QLListTuVung extends Component {
                     </thead>
                     {renderWords}
                 </table>
+                {/* Modal create */}
                 <Modal show={this.state.modalCreate}>
                     <Modal.Header closeButton onClick={() => this.closeCreate()}>
-                        <Modal.Title>Cập nhật từ vựng</Modal.Title>
+                        <Modal.Title>Thêm từ vựng</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="form-group">
@@ -301,13 +223,89 @@ class QLListTuVung extends Component {
                         <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
                     </Modal.Footer>
                 </Modal>
+                {/* Modal phần xóa */}
+                <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa từ vựng</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa từ vựng này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                {/* Modal phần sửa */}
+                <Modal show={this.state.modalEdit}>
+                    <Modal.Header closeButton onClick={() => this.closeEdit()}>
+                        <Modal.Title>Cập nhật từ vựng</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
+                            <div className="card-input">
+                                <span>English</span>
+                                <input
+                                    type="text"
+                                    value={englishEdit}
+                                    name="englishEdit"
+                                    onChange={e => this.handleChange(e)}
+                                    required
+                                />
+                            </div>
+                            <div className="card-input">
+                                <span>Việt Nam</span>
+                                <input
+                                    type="text"
+                                    value={vietNamEdit}
+                                    name="vietNamEdit"
+                                    onChange={e => this.handleChange(e)}
+                                    required
+                                />
+                            </div>
+                            <div className="card-input">
+                                <span>Phát âm</span>
+                                <input
+                                    type="text"
+                                    value={spellingEdit}
+                                    name="spellingEdit"
+                                    onChange={e => this.handleChange(e)}
+                                    required
+                                />
+                            </div>
+                            <div className="card-input">
+                                <span>Loại từ</span>
+                                <select
+                                    value={categoryEdit}
+                                    onChange={e => this.handleChange(e)}
+                                    name="categoryEdit" required>
+                                    <option value="">- Chọn loại từ -</option>
+                                    <option value="Danh từ">Danh từ</option>
+                                    <option value="Tính từ">Tính từ</option>
+                                    <option value="Động từ">Động từ</option>
+                                    <option value="Trạng từ">Trạng từ</option>
+                                </select>
+                            </div>
+                            <div className="card-input">
+                                <span>Hình ảnh minh họa</span>
+                                <input
+                                    type="file"
+                                    accept="image/png, image/jpeg"
+                                    name="imageEdit"
+                                    onChange={this.onFileChange}
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+
             </div>
         )
     }
-
     componentWillUnmount() {
         this.isComponentMounted = false;
-
     }
 }
 export default QLListTuVung;
