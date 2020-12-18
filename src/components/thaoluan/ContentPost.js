@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import Modal from "../modal/Modal";
+import { Button, Modal } from 'react-bootstrap'
 import CKEditor from "react-ckeditor-component";
 import { connect } from "react-redux";
 class ContentPost extends Component {
@@ -9,22 +9,22 @@ class ContentPost extends Component {
         this.state = {
             content: '',
             id: "",
-            modal: false,
+            modalEdit: false,
         };
     }
-    handleSubmit(e) {
+    submitEdit(e) {
         this.setState({
         });
-        this.modalClose();
+        this.closeEdit();
     }
 
-    modalOpen() {
-        this.setState({ modal: true });
+    openEdit() {
+        this.setState({ modalEdit: true });
     }
 
-    modalClose() {
+    closeEdit() {
         this.setState({
-            modal: false,
+            modalEdit: false,
         });
     }
     updateContent() {
@@ -62,7 +62,7 @@ class ContentPost extends Component {
                         <p className="mt-3 mb-3">{this.props.post.content}</p>
                     </div>
                     {(this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("admin") || this.props.account.roles.includes("manager") || this.props.post.accountUsername === this.props.account.username) && <div className="col-2 chucnang">
-                        <a href="javascript:;" className="btn btn-primary mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-edit" /></a>
+                    <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
                         <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
                     </div>}
                     <div className="baocao">
@@ -76,29 +76,32 @@ class ContentPost extends Component {
                         </div>
                     </div>
                 </div>
-                <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                    <h2 className="text-center text-primary">Chỉnh sửa bài viết</h2>
-                    <hr className="sidebar-divider my-0" />
-                    <div className="form-group pt-3">
-                        <div className="card-input mt-4">
-                            <span>Tiêu đề</span>
-                            <input
-                                type="text"
-                                value={this.state.modalInputTitle}
-                                name="modalInputTitle"
-                                onChange={e => this.handleChange(e)}
-                            />
+                {/* Modal phần sửa */}
+                <Modal show={this.state.modalEdit}>
+                    <Modal.Header closeButton onClick={() => this.closeEdit()}>
+                        <Modal.Title>Cập nhật từ vựng</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group pt-3">
+                            <div className="card-input mt-4">
+                                <span>Tiêu đề</span>
+                                <input
+                                    type="text"
+                                    value={this.state.modalInputTitle}
+                                    name="modalInputTitle"
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Nội dung bài viết</span>
+                                <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude" />
+                            </div>
                         </div>
-                        <div className="card-input mt-4">
-                            <span>Nội dung bài viết</span>
-                            <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude" />
-                        </div>
-                    </div>
-                    <div className="card-button mt-5">
-                        <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
-                            Lưu lại
-                        </button>
-                    </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
+                    </Modal.Footer>
                 </Modal>
             </div>
 

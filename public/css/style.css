@@ -365,6 +365,24 @@ form ul .suggest{list-style-type: none;}
 
 /* -------------------------------MODAL-------------------------------------- */
 /* -------------------------------------------------------------------------- */
+
+.modal-content {width: 700px!important;margin-left: -50px;}
+.modal .card-input input{width: 100%;padding: 5px 10px;border: 2px solid #ccc;border-radius: 5px;}
+.modal .card-input input:focus{border: 2px solid #ccc!important}
+.modal .card-input select{width: 100%;padding: 5px 10px;border: 2px solid #ccc;border-radius: 5px;}
+.modal .card-input select:focus{border: 2px solid #ccc!important}
+.modal {
+  background-color: transparent;
+} 
+/* .modal .card-input{width: 760px;padding-left: 10px;}
+.modal .card-input select{width: 250px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.modal .card-input input{width: 250px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
+.modal .card-button{margin-left: 300px;margin-top: 30px;}
+.modal .card-button .btn{border: 0px;}
+.modal {
+  background: rgba(0, 0, 0, 0.6);
+} */
+
 /* .modal form{margin-left: 150px;}
 .modal .card-input{width: 760px;padding-left: 10px;}
 .modal .card-input select{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
@@ -422,31 +440,24 @@ form ul .suggest{list-style-type: none;}
 .modalLock .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff;}
 .modalLock .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
 .modalLock button{color: #fff;margin-left: 5px;padding: 5px;} */
-.modal-content {width: 600px!important;margin-left: -50px;}
-.modal .card-input input{width: 100%;padding: 5px 10px;border: 2px solid #ccc;border-radius: 5px;}
-.modal .card-input input:focus{border: 2px solid #ccc!important}
-.modal .card-input select{width: 100%;padding: 5px 10px;border: 2px solid #ccc;border-radius: 5px;}
-.modal .card-input select:focus{border: 2px solid #ccc!important}
-.modal {
-  background-color: transparent;
-}
 /* -------------------------------QUẢN LÝ CÂU HỎI---------------------------
 /* -------------------------------------------------------------------------- */
-.dapAn{width: 200px;}
+/* .dapAn{width: 200px;}
 .cautraA{width: 120px;}
 .cautraB{width: 120px;}
 .cautraC{width: 120px;}
 .cautraD{width: 120px;}
+.odd .sorting_1{width: 200px!important;} */
 /* -------------------------------QUẢN LÝ TÀI LIỆU---------------------------- */
 /* -------------------------------------------------------------------------- */
 .tieudeTL{width: 200px;}
 .fileTL{width: 250px;}
 /* -------------------------------QUẢN LÝ TỪ VỰNG---------------------------- */
 /* -------------------------------------------------------------------------- */
-.english{width: 120px;}
-.vietnam{width: 120px;}
-.loaitu{width: 120px;}
-.hinhanh{width: 200px;}
+.english{width: 80px;}
+.vietnam{width: 80px;}
+.loaitu{width: 60px;}
+.hinhanh{width: 150px;}
 /* ------------------------------QUẢN LÝ THÔNG BÁO--------------------------- */
 /* -------------------------------------------------------------------------- */
 .tieudeTB{width: 180px;}
@@ -459,7 +470,7 @@ form ul .suggest{list-style-type: none;}
 .hinhthuc{width: 200px;}
 /* ---------------------------QUẢN LÝ QUIZ - EXAM---------------------------- */
 /* -------------------------------------------------------------------------- */
-.chucnang{width: 160px;}
+.chucnang{width: 100px;}
 .nav-tabs .nav-item{cursor: pointer;}
 
 .form-group-account{

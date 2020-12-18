@@ -10,7 +10,7 @@ import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import Countdown from 'react-countdown';
 import sectionApi from '../../api/sectionApi';
-import ModalQuiz from "../../components/modal/ModalQuiz";
+import { Button, Modal } from 'react-bootstrap'
 import { appendScript } from '../../config/appendScript'
 import { Fragment } from 'react';
 
@@ -290,17 +290,16 @@ class Hoc extends PureComponent {
                                         </div>
                                     </div>
                                 </main>
-                                <ModalQuiz show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                                    <div>
-                                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_REOnx3.json" background="transparent" speed="1" hover loop autoplay>
-                                        </lottie-player>
-                                    </div>
-                                    <h3 className="title"> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã hoàn thành bài quiz</h3>
-                                    <p className="content">
-                                        Thời gian hoàn thành của bạn là: {this.props.isLoggedIn ? this.state.authResult.timeSpent : this.state.totalTime} giây
-                                </p>
-                                    <strong>Bạn cần duy trì luyện tập để nâng cao trình độ của mình</strong>
-                                </ModalQuiz>
+                                <Modal show={this.state.modal}>
+                                    <Modal.Header closeButton onClick={() => this.modalClose()}>
+                                        <Modal.Title><img src="/image/check-mark.png"></img> Chúc mừng bạn đã hoàn thành bài quiz</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body> Thời gian hoàn thành của bạn là: {this.props.isLoggedIn ? this.state.authResult.timeSpent : this.state.totalTime} giây
+                                   </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={() => this.modalClose()}>Trở lại</Button>
+                                    </Modal.Footer>
+                                </Modal>
                                 <Footer></Footer>
                             </div>
                         </div>

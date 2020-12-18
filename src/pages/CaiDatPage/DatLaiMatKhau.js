@@ -3,12 +3,14 @@ import { Link } from "react-browser-router";
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
+import { Button, Modal } from 'react-bootstrap'
 import accountApi from '../../api/accountApi';
 import { toast } from 'react-toastify';
 class DatLaiMatKhau extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            modalInfor: false,
             modal: false,
             email: '',
             otp: 0,
@@ -43,11 +45,11 @@ class DatLaiMatKhau extends Component {
         })
     }
     modalOpen() {
-        this.setState({ modal: true });
+        this.setState({ modalInfor: true });
     }
     modalClose() {
         this.setState({
-            modal: false
+            modalInfor: false
         });
     }
     render() {
@@ -85,7 +87,16 @@ class DatLaiMatKhau extends Component {
                                                                 </div>
                                                                 <button className="btn btn-primary btn-user btn-block" type="submit">
                                                                     Lưu lại
-                                                                </button>                            
+                                                                </button>
+                                                                <Modal show={this.state.modalInfor}>
+                                                                    <Modal.Header closeButton onClick={() => this.modalClose()}>
+                                                                        <Modal.Title> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã thay đổi mật khẩu thành công</Modal.Title>
+                                                                    </Modal.Header>
+
+                                                                    <Modal.Footer>
+                                                                        <Button variant="secondary" onClick={() => this.modalClose()}>Trở lại</Button>
+                                                                    </Modal.Footer>
+                                                                </Modal>                         
                                                             </form>
                                                             <hr />
                                                             <div className="text-center">

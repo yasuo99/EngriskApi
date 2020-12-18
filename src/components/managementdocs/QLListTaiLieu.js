@@ -1,19 +1,20 @@
 import React, { Component } from "react"
-import QLTaiLieu from "./QLTaiLieu"
-import Modal from "../modal/Modal";
 import CKEditor from "react-ckeditor-component";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
-import $ from 'jquery'
+import $ from 'jquery';
+import { Button, Modal } from 'react-bootstrap'
 class QLListTaiLieu extends Component {
     constructor(props) {
         super(props);
         this.updateContent = this.updateContent.bind(this);
         this.state = {
             content: '',
-            modal: false,
-            name: "",
-            modalInputName: "",
+            modalCreate: false,
+            modalEdit: false,
+            modalDelete: false,
+            nameCreate: "",
+            nameEdit:"",
         };
     }
     componentDidMount(){
@@ -52,26 +53,67 @@ class QLListTaiLieu extends Component {
             [name]: value
         });
     }
-
-    handleSubmit(e) {
-        this.setState({ name: this.state.modalInputName });
-        this.modalClose();
+    //  Xử lý modal create
+    submitCreate(e) {
+        this.setState({ name: this.state.nameCreate });
+        this.closeCreate();
     }
 
-    modalOpen() {
-        this.setState({ modal: true });
+    openCreate() {
+        this.setState({ modalCreate: true });
     }
 
-    modalClose() {
+    closeCreate() {
         this.setState({
-            modalInputName: "",
-            modal: false
+            nameCreate: "",
+            modalCreate: false
+        });
+    }
+     //  Xử lý modal edit
+     submitEdit(e) {
+        this.setState({ name: this.state.nameEdit });
+        this.closeEdit();
+    }
+
+    openEdit() {
+        this.setState({ modalEdit: true });
+    }
+
+    closeEdit() {
+        this.setState({
+            nameEdit: "",
+            modalEdit: false
+        });
+    }
+     //  Xử lý modal edit
+     submitDelete(e) {
+        this.setState();
+        this.closeEdit();
+    }
+
+    openDelete() {
+        this.setState({ modalDelete: true });
+    }
+
+    closeDelete() {
+        this.setState({
+            nameDelete: "",
+            modalDelete: false
         });
     }
     render() {
+        const renderDocs = ((word) =>
+        <tr>
+             {/* XỬ LÝ DATA */}
+            <td>
+                <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
+                <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+            </td>
+        </tr>
+    );
         return (
             <div>
-                <a href="javascript:;" className="btn btn-success mr-2 mb-3" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /> Thêm tài liệu</a>
+                <Button variant="primary" className="btn btn-success mr-2 mb-3" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /> Thêm tài liệu</Button>
 
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                     <thead>
@@ -83,45 +125,95 @@ class QLListTaiLieu extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <QLTaiLieu></QLTaiLieu>
-                        <QLTaiLieu></QLTaiLieu>
-                        <QLTaiLieu></QLTaiLieu>
+                        {renderDocs}
                     </tbody>
                 </table>
-                <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                    <h2 className="text-center text-primary">Thêm tài liệu</h2>
-                    <hr className="sidebar-divider my-0" />
-                    <div className="form-group">
-                        <div className="card-input mt-4">
-                            <span>Tiêu đề</span>
-                            <input
-                                type="text"
-                                value={this.state.modalInputName}
-                                name="modalInputName"
-                                onChange={e => this.handleChange(e)}
-                            />
+                 {/* Modal create */}
+                  <Modal show={this.state.modalCreate}>
+                    <Modal.Header closeButton onClick={() => this.closeCreate()}>
+                        <Modal.Title>Thêm tài liệu</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
+                            <div className="card-input mt-4">
+                                <span>Tiêu đề</span>
+                                <input
+                                    type="text"
+                                    value={this.state.nameCreate}
+                                    name="nameCreate"
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Nội dung tài liệu</span>
+                                <CKEditor
+                                    activeClass="p10"
+                                    content={this.state.content}
+                                    events={{
+                                        "blur": this.onBlur,
+                                        "afterPaste": this.afterPaste,
+                                        "change": this.onChange
+                                    }}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>File đính kèm</span><input type="file" accept=".doc,.docx,.pdf" />
+                            </div>
                         </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeCreate()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                {/* Modal phần xóa */}
+                <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa tài liệu</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa tài liệu này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                {/* Modal phần sửa */}
+                <Modal show={this.state.modalEdit}>
+                    <Modal.Header closeButton onClick={() => this.closeEdit()}>
+                        <Modal.Title>Cập nhật tài liệu</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
                         <div className="card-input mt-4">
-                            <span>Nội dung tài liệu</span>
-                            <CKEditor
-                                activeClass="p10"
-                                content={this.state.content}
-                                events={{
-                                    "blur": this.onBlur,
-                                    "afterPaste": this.afterPaste,
-                                    "change": this.onChange
-                                }}
-                            />
+                                <span>Tiêu đề</span>
+                                <input
+                                    type="text"
+                                    value={this.state.nameCreate}
+                                    name="nameCreate"
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Nội dung tài liệu</span>
+                                <CKEditor
+                                    activeClass="p10"
+                                    content={this.state.content}
+                                    events={{
+                                        "blur": this.onBlur,
+                                        "afterPaste": this.afterPaste,
+                                        "change": this.onChange
+                                    }}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>File đính kèm</span><input type="file" accept=".doc,.docx,.pdf" />
+                            </div>
                         </div>
-                        <div className="card-input mt-4">
-                            <span>File đính kèm</span><input type="file" accept=".doc,.docx,.pdf" />
-                        </div>
-                    </div>
-                    <div className="card-button">
-                        <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
-                            Lưu lại
-                                </button>
-                    </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
+                    </Modal.Footer>
                 </Modal>
 
             </div>

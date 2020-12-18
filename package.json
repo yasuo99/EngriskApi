@@ -17,6 +17,7 @@
     "moment": "^2.29.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
+    "react-bootstrap4-modal": "^1.7.5",
     "react-browser-router": "^2.1.2",
     "react-ckeditor-component": "^1.1.0",
     "react-countdown": "^2.3.1",
