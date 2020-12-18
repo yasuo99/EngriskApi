@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ModalDelete from "../modal/ModalDelete";
+import { Button, Modal } from 'react-bootstrap'
 class CauHoi extends Component {
     constructor(props) {
         super(props);
@@ -7,19 +7,19 @@ class CauHoi extends Component {
             modalDelete: false,
         };
     }
-    modalClose() {
+    closeDelete() {
         this.setState({
             modalDelete: false,
         });
     }
-    modalOpenDelete() {
+    openDelete() {
         this.setState({ modalDelete: true });
     }
-    handleSubmitDelete(e) {
+    submitDelete(e) {
         this.setState({
 
         });
-        this.modalClose();
+        this.closeDelete();
     }
     render() {
         return (
@@ -37,17 +37,20 @@ class CauHoi extends Component {
                 </td>
                 <td>Sau tính từ sở hữu YOUR ta cần một danh từ, nên ta chọn ngay D</td>
                 <td>
-                    <a href="#" className="btn btn-danger" onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash"  /></a>
+                <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
                 </td>
-                <ModalDelete show={this.state.modalDelete} handleClose={e => this.modalClose(e)}>
-                    <h3 className="title"> <img src="/image/trash.png"></img> Xác nhận xóa câu hỏi trong bài exam</h3>
-                    <p className="content">
-                        Bạn có chắc chắn muốn xóa câu hỏi này ra khỏi bài exam không?
-                        </p>
-                    <button onClick={e => this.handleSubmitDelete(e)} type="button" className="btn btn-info float-right">
-                        Xác nhận
-                        </button>
-                </ModalDelete>
+                 {/* Modal phần xóa */}
+                 <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa câu hỏi</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa câu hỏi này ra khỏi bài exam không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                
             </tr>
         );
     }

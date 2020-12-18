@@ -1,25 +1,29 @@
 import React, { Component } from "react"
-import QLThongBao from "./QLThongBao"
-import Modal from "../modal/Modal";
 import Switch from "react-switch";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery'
 import notificationApi from "../../api/notificationApi";
-import ModalDelete from "../modal/ModalDelete";
-import ModalEdit from "../modal/ModalEdit";
+import { Button, Modal } from 'react-bootstrap';
+import CKEditor from "react-ckeditor-component";
 class QLListThongBao extends Component {
     constructor(props) {
         super(props);
         this.updateContent = this.updateContent.bind(this);
         this.state = {
-            content: '',
-            modal: false,
-            name: "",
-            date: "",
-            modalInputName: "",
-            modalInputDate: "",
-            modalInputContent: "",
+            modalCreate: false,
+            modalDelete: false,
+            modalEdit: false,
+            content:"",
+            // Phần create
+            nameCreate: "",
+            dateCreate: "",
+            contentCreate: "",
+            // Phần edit
+            nameEdit: "",
+            dateEdit: "",
+            contentEdit: "",
+
             notifications: []
         };
         this.isComponentMounted = false;
@@ -80,24 +84,54 @@ class QLListThongBao extends Component {
             [name]: value
         });
     }
-
-    handleSubmit(e) {
+    // Xử lý modal create
+    submitCreate(e) {
         const notify = {
-            content: this.state.modalInputContent,
-            url: this.state.modalInputName
+            content: this.state.contentCreate,
+            url: this.state.nameCreate
         }
-        this.modalClose();
+        this.closeCreate();
     }
 
-    modalOpen() {
-        this.setState({ modal: true });
+    openCreate() {
+        this.setState({ modalCreate: true });
     }
 
-    modalClose() {
+    closeCreate() {
         this.setState({
-            modalInputName: "",
-            modal: false
+            nameCreate: "",
+            modalCreate: false
         });
+    }
+    // Xử lý modal edit
+    openEdit() {
+        this.setState({ modalEdit: true });
+    }
+    closeEdit() {
+        this.setState({
+            nameCreate: "",
+            modalEdit: false,
+        });
+    }
+    submitEdit(e) {
+        this.setState({
+        });
+        this.closeEdit();
+    }
+    // Xử lý modal delete
+    openDelete() {
+        this.setState({ modalDelete: true });
+    }
+    closeDelete() {
+        this.setState({
+            modalDelete: false,
+        });
+    }
+    submitDelete(e) {
+        this.setState({
+
+        });
+        this.closeDelete();
     }
     render() {
         const renderNotification = this.state.notifications.map((notification) =>
@@ -106,46 +140,9 @@ class QLListThongBao extends Component {
                 <td>{notification.publishedDate}</td>
                 <td>{notification.content}</td>
                 <td>
-                    <a href="#" className="btn btn-primary mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-edit" /></a>
-                    <a href="#" className="btn btn-danger" onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash" /></a>
-                    <ModalEdit show={this.state.modalEdit} handleClose={e => this.modalClose(e)}>
-                        <h2 className="text-center text-primary">Cập nhật thông báo</h2>
-                        <hr className="sidebar-divider my-0" />
-                        <div className="form-group">
-                            <div className="card-input mt-4">
-                                <span>Đường dẫn</span>
-                                <input
-                                    type="text"
-                                    value={this.state.modalInputName}
-                                    name="modalInputName"
-                                    onChange={e => this.handleChange(e)}
-                                />
-                            </div>
-                            <div className="card-input mt-4">
-                                <span>Nội dung</span>
-                                <input
-                                    type="datetime-local"
-                                    value={this.state.modalInputContent}
-                                    name="modalInputContent"
-                                    onChange={e => this.handleChange(e)}
-                                />
-                            </div>
-                        </div>
-                        <div className="card-button">
-                            <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
-                                Lưu lại
-                        </button>
-                        </div>
-                    </ModalEdit>
-                    <ModalDelete show={this.state.modalDelete} handleClose={e => this.modalClose(e)}>
-                        <h3 className="title"> <img src="/image/trash.png"></img> Xác nhận xóa thông báo</h3>
-                        <p className="content">
-                            Bạn có chắc chắn muốn xóa thông báo này ra khỏi hệ thống không?
-                </p>
-                        <button onClick={e => this.handleSubmitDelete(e)} type="button" className="btn btn-info float-right">
-                            Xác nhận
-                </button>
-                    </ModalDelete>
+                    <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
+                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+
                 </td>
                 <td>
                     <Switch id={notification.id} onChange={(props, event, id) => this.publishNotification(id)} checked={notification.isPublish} />
@@ -154,7 +151,7 @@ class QLListThongBao extends Component {
         );
         return (
             <div>
-                <a href="javascript:;" className="btn btn-success mr-2 mb-3" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /> Thêm thông báo</a>
+                <Button variant="primary" className="btn btn-success mr-2 mb-3" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /> Thêm thông báo</Button>
                 {this.isComponentMounted && <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
@@ -169,35 +166,88 @@ class QLListThongBao extends Component {
                         {renderNotification}
                     </tbody>
                 </table>}
-                <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                    <h2 className="text-center text-primary">Thêm thông báo</h2>
-                    <hr className="sidebar-divider my-0" />
-                    <div className="form-group">
-                        <div className="card-input mt-4">
-                            <span>Đường dẫn</span>
-                            <input
-                                type="text"
-                                value={this.state.modalInputName}
-                                name="modalInputName"
-                                onChange={e => this.handleChange(e)}
-                            />
+                {/* Modal thêm */}
+                <Modal show={this.state.modalCreate}>
+                    <Modal.Header closeButton onClick={() => this.closeCreate()}>
+                        <Modal.Title>Thêm thông báo</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
+                            <div className="card-input mt-4">
+                                <span>Đường dẫn</span>
+                                <input
+                                    type="text"
+                                    value={this.state.nameCreate}
+                                    name="nameCreate"
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Nội dung</span>
+                                <CKEditor
+                                    activeClass="p10"
+                                    content={this.state.content}
+                                    events={{
+                                        "blur": this.onBlur,
+                                        "afterPaste": this.afterPaste,
+                                        "change": this.onChange
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <div className="card-input mt-4">
-                            <span>Nội dung thông báo</span>
-                            <input
-                                type="text"
-                                value={this.state.modalInputContent}
-                                name="modalInputContent"
-                                onChange={e => this.handleChange(e)}
-                            />
-                        </div>
-                    </div>
-                    <div className="card-button">
-                        <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
-                            Lưu lại
-                                </button>
-                    </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeCreate()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
+                    </Modal.Footer>
                 </Modal>
+                {/* Modal phần xóa */}
+                <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa thông báo</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa thông báo này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                {/* Modal phần sửa */}
+                <Modal show={this.state.modalEdit}>
+                    <Modal.Header closeButton onClick={() => this.closeEdit()}>
+                        <Modal.Title>Cập nhật thông báo</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group">
+                            <div className="card-input mt-4">
+                                <span>Đường dẫn</span>
+                                <input
+                                    type="text"
+                                    value={this.state.nameEdit}
+                                    name="nameEdit"
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Nội dung</span>
+                                <CKEditor
+                                    activeClass="p10"
+                                    content={this.state.content}
+                                    events={{
+                                        "blur": this.onBlur,
+                                        "afterPaste": this.afterPaste,
+                                        "change": this.onChange
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+
             </div>
         )
 

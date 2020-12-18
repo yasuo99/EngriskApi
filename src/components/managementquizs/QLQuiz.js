@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-browser-router"
-import Modal from "../modal/Modal";
-import ModalDelete from "../modal/ModalDelete";
 import ListCauHoi from "./ListCauHoi";
 import ModalListCauHoiDoc from "../modalcauhoi/ModalListCauHoiDoc";
 import ModalListCauHoiHinhAnh from "../modalcauhoi/ModalListCauHoiHinhAnh";
 import ModalListCauHoiNghe from "../modalcauhoi/ModalListCauHoiNghe";
+import { Button, Modal } from 'react-bootstrap'
 class QLQuiz extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
+            modalCreate: false,
             modalDelete:false,
         };
     }
@@ -22,28 +21,33 @@ class QLQuiz extends Component {
             [name]: value
         });
     }
-
-    handleSubmit(e) {
+    // Phần xử lý modal Create
+    submitCreate(e) {
         this.setState({
 
         });
         this.modalClose();
     }
 
-    modalOpen() {
-        this.setState({ modal: true });
+    openCreate() {
+        this.setState({ modalCreate: true, });
     }
 
-    modalClose() {
+    closeCreate() {
         this.setState({
-            modal: false,
+            modalCreate: false,
+        });
+    }
+    // Phần xử lý moda Delete
+    closeDelete() {
+        this.setState({
             modalDelete:false,
         });
     }
-    modalOpenDelete() {
+    openDelete() {
         this.setState({ modalDelete: true });
     }
-    handleSubmitDelete(e) {
+    submitDelete(e) {
         this.setState({
 
         });
@@ -58,12 +62,15 @@ class QLQuiz extends Component {
                 </td>
 
                 <td>
-                    <a href="javascript:;" className="btn btn-success mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /></a>
-                    <a href="#" className="btn btn-danger" onClick={e => this.modalOpenDelete(e)}><i className="fa fa-trash" /></a>
-                    <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                        <h2 className="text-center text-primary">Thêm câu hỏi vào bài quiz</h2>
-                        <hr className="sidebar-divider my-2" />
-                        <ul className="nav nav-tabs">
+                <Button variant="primary" className="btn btn-success mr-2" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /></Button>
+                <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                 {/* Modal create */}
+                <Modal show={this.state.modalCreate}>
+                    <Modal.Header closeButton onClick={() => this.closeCreate()}>
+                        <Modal.Title>Thêm câu hỏi</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <ul className="nav nav-tabs">
                             <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#taboneQuestion"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
                             <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwoQuestion"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
                             <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthreeQuestion"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
@@ -80,21 +87,24 @@ class QLQuiz extends Component {
                                 <ModalListCauHoiHinhAnh></ModalListCauHoiHinhAnh>
                             </div>
                         </div>
-                        <div className="card-button">
-                            <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
-                                Lưu lại
-                            </button>
-                        </div>
-                    </Modal>
-                    <ModalDelete show={this.state.modalDelete} handleClose={e => this.modalClose(e)}>
-                    <h3 className="title"> <img src="/image/trash.png"></img> Xác nhận xóa bài quiz</h3>
-                        <p className="content">
-                            Bạn có chắc chắn muốn xóa quiz này ra khỏi hệ thống không?
-                        </p>
-                        <button onClick={e => this.handleSubmitDelete(e)} type="button" className="btn btn-info float-right">
-                                Xác nhận
-                        </button>
-                    </ModalDelete>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeCreate()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                
+                {/* Modal phần xóa */}
+                <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa quiz</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa quiz này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
                 </td>
             </tr>
         );

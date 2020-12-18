@@ -1,41 +1,78 @@
 import React, { Component } from "react"
-import QLCauHoi from "./QLCauHoi";
-import Modal from "../modal/Modal";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery'
+import questionApi from "../../api/questionApi";
+import { Button, Modal } from 'react-bootstrap'
+
 class QLListCauHoi extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
-            modalInputQuestionDoc: "",
-            modalInputADoc: "",
-            modalInputBDoc: "",
-            modalInputCDoc: "",
-            modalInputDDoc: "",
-            modalInputAnswerDoc: "",
-            modalInputQuestionNghe: "",
-            modalInputANghe: "",
-            modalInputBNghe: "",
-            modalInputCNghe: "",
-            modalInputDNghe: "",
-            modalInputAnswerNghe: "",
-            modalInputQuestionHinh: "",
-            modalInputAHinh: "",
-            modalInputBHinh: "",
-            modalInputCHinh: "",
-            modalInputAnswerHinh: "",
-            
+            modalCreate: false,
+            modalEdit: false,
+            modalDelete: false,
+            // Phần create
+            questionDocCreate: "",
+            ADocCreate: "",
+            BDocCreate: "",
+            CDocCreate: "",
+            DDocCreate: "",
+            AnswerDocCreate: "",
+            QuestionNgheCreate: "",
+            ANgheCreate: "",
+            BNgheCreate: "",
+            CNgheCreate: "",
+            DNgheCreate: "",
+            AnswerNgheCreate: "",
+            QuestionHinhCreate: "",
+            AHinhCreate: "",
+            BHinhCreate: "",
+            CHinhCreate: "",
+            AnswerHinhCreate: "",
+            // Phần edit
+            questionDocEdit: "",
+            ADocEdit: "",
+            BDocEdit: "",
+            CDocEdit: "",
+            DDocEdit: "",
+            AnswerDocEdit: "",
+            QuestionNgheEdit: "",
+            ANgheEdit: "",
+            BNgheEdit: "",
+            CNgheEdit: "",
+            DNgheEdit: "",
+            AnswerNgheEdit: "",
+            QuestionHinhEdit: "",
+            AHinhEdit: "",
+            BHinhEdit: "",
+            CHinhEdit: "",
+            AnswerHinhEdit: "",
+
+            questions: [],
+
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleChange = this.handleChange.bind(this);
+        // this.handleSubmit = this.submitCreate.bind(this);
+        // this.handleSubmit = this.submitEdit.bind(this);
+        // this.handleSubmit = this.submitDelete.bind(this);
     }
-    componentDidMount() {
-        $(function () {
-            $("#dataTable").DataTable();
-        })
+    async componentDidMount() {
+        this.isComponentMounted = true;
+        var result = await this.fetchQuestion();
+        if (this.isComponentMounted) {
+            this.setState({
+                questions: result
+            });
+            $(function () {
+                $("#dataTable").DataTable();
+            });
+        }
     }
+    fetchQuestion = async () => {
+        return await questionApi.getAll();
+    }
+
     handleChange(e) {
         var target = e.target;
         var name = target.name;
@@ -44,44 +81,104 @@ class QLListCauHoi extends Component {
             [name]: value
         });
     }
-
-    handleSubmit(e) {
+    // Xử lý modal create
+    submitCreate(e) {
         this.setState({
 
         });
-        this.modalClose();
+        this.closeCreate();
     }
 
-    modalOpen() {
-        this.setState({ modal: true });
+    openCreate() {
+        this.setState({ modalCreate: true });
     }
 
-    modalClose() {
+    closeCreate() {
         this.setState({
-            modal: false,
-            modalInputQuestionDoc: "",
-            modalInputADoc: "",
-            modalInputBDoc: "",
-            modalInputCDoc: "",
-            modalInputDDoc: "",
-            modalInputAnswerDoc: "",
-            modalInputQuestionNghe: "",
-            modalInputANghe: "",
-            modalInputBNghe: "",
-            modalInputCNghe: "",
-            modalInputDNghe: "",
-            modalInputAnswerNghe: "",
-            modalInputQuestionHinh: "",
-            modalInputAHinh: "",
-            modalInputBHinh: "",
-            modalInputCHinh: "",
-            modalInputAnswerHinh: "",
+            modalCreate: false,
+            questionDocCreate: "",
+            ADocCreate: "",
+            BDocCreate: "",
+            CDocCreate: "",
+            DDocCreate: "",
+            AnswerDocCreate: "",
+            QuestionNgheCreate: "",
+            ANgheCreate: "",
+            BNgheCreate: "",
+            CNgheCreate: "",
+            DNgheCreate: "",
+            AnswerNgheCreate: "",
+            QuestionHinhCreate: "",
+            AHinhCreate: "",
+            BHinhCreate: "",
+            CHinhCreate: "",
+            AnswerHinhCreate: "",
         });
+    }
+    // Xử lý modal edit
+    openEdit() {
+        this.setState({ modalEdit: true });
+    }
+    closeEdit() {
+        this.setState({
+            modalEdit: false,
+            questionDocEdit: "",
+            ADocEdit: "",
+            BDocEdit: "",
+            CDocEdit: "",
+            DDocEdit: "",
+            AnswerDocEdit: "",
+            QuestionNgheEdit: "",
+            ANgheEdit: "",
+            BNgheEdit: "",
+            CNgheEdit: "",
+            DNgheEdit: "",
+            AnswerNgheEdit: "",
+            QuestionHinhEdit: "",
+            AHinhEdit: "",
+            BHinhEdit: "",
+            CHinhEdit: "",
+            AnswerHinhEdit: "",
+        });
+    }
+    submitEdit(e) {
+        this.setState({
+        });
+        this.closeEdit();
+    }
+    // Xử lý modal delete
+    openDelete() {
+        this.setState({ modalDelete: true });
+    }
+    closeDelete() {
+        this.setState({
+            modalDelete: false,
+        });
+    }
+    submitDelete(e) {
+        this.setState({
+
+        });
+        this.closeDelete();
     }
     render() {
+        const renderQuestions = this.state.questions.map((question) =>
+            <tr key={question.id}>
+                <td>{question.content}</td>
+                <td>{question.a}</td>
+                <td>{question.b}</td>
+                <td>{question.c}</td>
+                <td>{question.d}</td>
+                <td>{question.answer}</td>
+                <td>
+                    <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
+                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                </td>
+            </tr>
+        );
         return (
             <div>
-                <a href="javascript:;" className="btn btn-success mr-2 mb-3" onClick={e => this.modalOpen(e)} ><i className="fa fa-plus" /> Thêm câu hỏi</a>
+                <Button variant="primary" className="btn btn-success mr-2 mb-3" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /> Thêm câu hỏi</Button>
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
@@ -95,197 +192,402 @@ class QLListCauHoi extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <QLCauHoi></QLCauHoi>
+                        {renderQuestions}
                     </tbody>
                 </table>
-                <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                    <h2 className="text-center text-primary">Thêm câu hỏi</h2>
-                    <hr className="sidebar-divider my-0" />
-                    <ul className="nav nav-tabs mt-5">
-                        <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#tabone"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
-                        <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwo"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
-                        <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthree"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
-                    </ul>
-                    <div className="tab-content mt-3">
-                        <div className="tab-pane fade show active" id="tabone" role="tabpanel">
-                        <div className="form-group">
-                                <div className="card-input mt-4">
-                                    <span>Câu hỏi</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputQuestionDoc}
-                                        name="modalInputQuestionDoc"
-                                        onChange={e => this.handleChange(e)}
-                                    />
+                {/* Modal create */}
+                <Modal show={this.state.modalCreate}>
+                    <Modal.Header closeButton onClick={() => this.closeCreate()}>
+                        <Modal.Title>Thêm câu hỏi</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ul className="nav nav-tabs mt-5">
+                            <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#taboneCreate"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
+                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwoCreate"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
+                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthreeCreate"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
+                        </ul>
+                        <div className="tab-content mt-3">
+                            <div className="tab-pane fade show active" id="taboneCreate" role="tabpanel">
+                                <div className="form-group">
+                                    <div className="card-input mt-4">
+                                        <span>Câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.QuestionDocCreate}
+                                            name="QuestionDocCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>A</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.ADocCreate}
+                                            name="ADocCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>B</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.BDocCreate}
+                                            name="BDocCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>C</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.CDocCreate}
+                                            name="CDocCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>D</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.DDocCreate}
+                                            name="DDocCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>Đáp án câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.AnswerDocCreate}
+                                            name="AnswerDocCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="card-input mt-4">
-                                    <span>A</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputADoc}
-                                        name="modalInputADoc"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>B</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputBDoc}
-                                        name="modalInputBDoc"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>C</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputCDoc}
-                                        name="modalInputCDoc"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>D</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputDDoc}
-                                        name="modalInputDDoc"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>Đáp án câu hỏi</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputAnswerDoc}
-                                        name="modalInputAnswerDoc"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
+
                             </div>
 
-                        </div>
+                            <div className="tab-pane fade" id="tabtwoCreate" role="tabpanel">
+                                <div className="form-group">
+                                    <div className="card-input mt-4">
+                                        <span>Câu hỏi</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.QuestionNgheCreate}
+                                            name="QuestionNgheCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>A</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.ANgheCreate}
+                                            name="ANgheCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>B</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.BNgheCreate}
+                                            name="BNgheCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>C</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.CNgheCreate}
+                                            name="CNgheCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>D</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.DNgheCreate}
+                                            name="DNgheCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>Đáp án câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.AnswerNgheCreate}
+                                            name="AnswerNgheCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                </div>
 
-                        <div className="tab-pane fade" id="tabtwo" role="tabpanel">
-                            <div className="form-group">
-                                <div className="card-input mt-4">
-                                    <span>Câu hỏi</span>
-                                    <input
-                                        type="file"
-                                        value={this.state.modalInputQuestionNghe}
-                                        name="modalInputQuestionNghe"
-                                        onChange={e => this.handleChange(e)}
-                                    />
+                            </div>
+                            <div className="tab-pane fade" id="tabthreeCreate" role="tabpanel">
+                                <div className="form-group">
+                                    <div className="card-input mt-4">
+                                        <span>Câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.QuestionHinhCreate}
+                                            name="QuestionHinhCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>A</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.AHinhCreate}
+                                            name="AHinhCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>B</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.BHinhCreate}
+                                            name="BHinhCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>C</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.CHinhCreate}
+                                            name="CHinhCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>Đáp án câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.AnswerHinhCreate}
+                                            name="AnswerHinhCreate"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="card-input mt-4">
-                                    <span>A</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputANghe}
-                                        name="modalInputANghe"
-                                        onChange={e => this.handleChange(e)}
-                                    />
+
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeCreate()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                {/* Modal Edit */}
+                <Modal show={this.state.modalEdit}>
+                    <Modal.Header closeButton onClick={() => this.closeEdit()}>
+                        <Modal.Title>Cập nhật câu hỏi</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ul className="nav nav-tabs mt-5">
+                            <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#taboneEdit"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
+                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwoEdit"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
+                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthreeEdit"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
+                        </ul>
+                        <div className="tab-content mt-3">
+                            <div className="tab-pane fade show active" id="taboneEdit" role="tabpanel">
+                                <div className="form-group">
+                                    <div className="card-input mt-4">
+                                        <span>Câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.QuestionDocEdit}
+                                            name="QuestionDocEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>A</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.ADocEdit}
+                                            name="ADocEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>B</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.BDocEdit}
+                                            name="BDocEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>C</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.CDocEdit}
+                                            name="CDocEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>D</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.DDocEdit}
+                                            name="DDocEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>Đáp án câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.AnswerDocEdit}
+                                            name="AnswerDocEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="card-input mt-4">
-                                    <span>B</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputBNghe}
-                                        name="modalInputBNghe"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>C</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputCNghe}
-                                        name="modalInputCNghe"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>D</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputDNghe}
-                                        name="modalInputDNghe"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>Đáp án câu hỏi</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputAnswerNghe}
-                                        name="modalInputAnswerNghe"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
+
                             </div>
 
-                        </div>
-                        <div className="tab-pane fade" id="tabthree" role="tabpanel">
-                            <div className="form-group">
-                                <div className="card-input mt-4">
-                                    <span>Câu hỏi</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputQuestionHinh}
-                                        name="modalInputQuestionHinh"
-                                        onChange={e => this.handleChange(e)}
-                                    />
+                            <div className="tab-pane fade" id="tabtwoEdit" role="tabpanel">
+                                <div className="form-group">
+                                    <div className="card-input mt-4">
+                                        <span>Câu hỏi</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.QuestionNgheEdit}
+                                            name="QuestionNgheEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>A</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.ANgheEdit}
+                                            name="ANgheEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>B</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.BNgheEdit}
+                                            name="BNgheEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>C</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.CNgheEdit}
+                                            name="CNgheEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>D</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.DNgheEdit}
+                                            name="DNgheEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>Đáp án câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.AnswerNgheEdit}
+                                            name="AnswerNgheEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="card-input mt-4">
-                                    <span>A</span>
-                                    <input
-                                        type="file"
-                                        value={this.state.modalInputAHinh}
-                                        name="modalInputAHinh"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>B</span>
-                                    <input
-                                        type="file"
-                                        value={this.state.modalInputBHinh}
-                                        name="modalInputBHinh"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>C</span>
-                                    <input
-                                        type="file"
-                                        value={this.state.modalInputCHinh}
-                                        name="modalInputCHinh"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                                <div className="card-input mt-4">
-                                    <span>Đáp án câu hỏi</span>
-                                    <input
-                                        type="text"
-                                        value={this.state.modalInputAnswerHinh}
-                                        name="modalInputAnswerHinh"
-                                        onChange={e => this.handleChange(e)}
-                                    />
-                                </div>
-                            </div>
 
+                            </div>
+                            <div className="tab-pane fade" id="tabthreeEdit" role="tabpanel">
+                                <div className="form-group">
+                                    <div className="card-input mt-4">
+                                        <span>Câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.QuestionHinhEdit}
+                                            name="QuestionHinhEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>A</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.AHinhEdit}
+                                            name="AHinhEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>B</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.BHinhEdit}
+                                            name="BHinhEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>C</span>
+                                        <input
+                                            type="file"
+                                            value={this.state.CHinhEdit}
+                                            name="CHinhEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="card-input mt-4">
+                                        <span>Đáp án câu hỏi</span>
+                                        <input
+                                            type="text"
+                                            value={this.state.AnswerHinhEdit}
+                                            name="AnswerHinhEdit"
+                                            onChange={e => this.handleChange(e)}
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
-                    <div className="card-button">
-                        <button onClick={e => this.handleSubmit(e)} type="button" className="btn btn-primary float-left">
-                            Lưu lại
-                                </button>
-                    </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+                {/* Modal Delete */}
+                <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa câu hỏi</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa câu hỏi này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
                 </Modal>
 
             </div>
         )
+    }
+    componentWillUnmount() {
+        this.isComponentMounted = false;
     }
 }
 export default QLListCauHoi;

@@ -3,20 +3,20 @@ import { Link } from "react-browser-router";
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
-import ModalInfor from "../../components/modal/ModalInfor";
+import { Button, Modal } from 'react-bootstrap'
 class DatLaiMatKhau extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
+            modalInfor: false,
         };
     }
     modalOpen() {
-        this.setState({ modal: true });
+        this.setState({ modalInfor: true });
     }
     modalClose() {
         this.setState({
-            modal: false
+            modalInfor: false
         });
     }
     render() {
@@ -49,9 +49,16 @@ class DatLaiMatKhau extends Component {
                                                                 <button className="btn btn-primary btn-user btn-block" onClick={e => this.modalOpen(e)}>
                                                                     Lưu lại
                                                                 </button>
-                                                                <ModalInfor show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                                                                    <h3 className="title"> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã thay đổi mật khẩu thành công</h3>
-                                                                </ModalInfor>
+                                                                <Modal show={this.state.modalInfor}>
+                                                                    <Modal.Header closeButton onClick={() => this.modalClose()}>
+                                                                        <Modal.Title> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã thay đổi mật khẩu thành công</Modal.Title>
+                                                                    </Modal.Header>
+
+                                                                    <Modal.Footer>
+                                                                        <Button variant="secondary" onClick={() => this.modalClose()}>Trở lại</Button>
+                                                                    </Modal.Footer>
+                                                                </Modal>
+
                                                             </form>
                                                             <hr />
                                                             <div className="text-center">
