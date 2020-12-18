@@ -76,7 +76,7 @@ const authReducer = (state = initialState(), action) => {
       return ({
         ...state,
         isLoggedIn: false,
-        account: initialState.account,
+        account: initState.account,
         token: ''
       });
     }

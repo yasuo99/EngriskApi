@@ -20,6 +20,10 @@ const examApi = {
     getAnswer: (id) => {
         const url = `/exams/${id}/answers`;
         return axiosClient.get(url);
+    },
+    getHistories: (id) => {
+        const url = `/exams/histories/${id}`;
+        return axiosClient.get(url);
     }
     ,
     submitExam: (id, body) => {

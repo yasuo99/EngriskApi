@@ -38,9 +38,10 @@ class TaiKhoanAdmin extends Component {
   }
 }
 const mapStateToProps = (state) =>{
-  const {isLoggedIn} = state.auth;
+  const {isLoggedIn, account} = state.auth;
   return{
-    isLoggedIn: isLoggedIn
+    isLoggedIn: isLoggedIn,
+    account: account
   }
 }
 const mapDispatchToProps = (dispatch) => {

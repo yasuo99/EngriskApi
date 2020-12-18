@@ -5,11 +5,13 @@ import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery';
 import { Button, Modal } from 'react-bootstrap'
+import { toast } from "react-toastify";
 
 class QLListTuVung extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentWord: {},
             modalCreate: false,
             modalDelete: false,
             modalEdit: false,
@@ -25,7 +27,7 @@ class QLListTuVung extends Component {
             spellingEdit: "",
             categoryEdit: "",
             imageEdit: null,
-
+            selectedWord: 0,
             words: [],
         };
         this.handleChange = this.handleChange.bind(this);
@@ -41,7 +43,7 @@ class QLListTuVung extends Component {
                 words: result
             });
             $(function () {
-                $("#dataTable").DataTable();
+                $("#dataTable1").DataTable();
             });
         }
     }
@@ -50,7 +52,7 @@ class QLListTuVung extends Component {
     }
 
     onFileChange = event => {
-        this.setState({ modalInputHinhAnh: event.target.files[0] });
+        this.setState({ imageCreate: event.target.files[0] });
         console.log(this.state);
     };
     handleChange(e) {
@@ -62,7 +64,7 @@ class QLListTuVung extends Component {
         });
     }
     // Xử lý modal create
-    submitCreate = (e) => {
+    submitCreate = async (e) => {
         e.preventDefault();
         var { englishCreate, vietNamCreate, spellingCreate, categoryCreate, imageCreate } = this.state;
         var formData = new FormData();
@@ -71,7 +73,13 @@ class QLListTuVung extends Component {
         formData.append("wordCategory", categoryCreate);
         formData.append('spelling', spellingCreate)
         formData.append("file", imageCreate);
-        createWord(formData)
+        await createWord(formData)
+        var result = await this.fetchWord();
+        if (this.isComponentMounted) {
+            this.setState({
+                words: result
+            })
+        }
         this.closeCreate();
     }
     openCreate() {
@@ -89,8 +97,22 @@ class QLListTuVung extends Component {
         });
     }
     // Xử lý modal edit
-    openEdit() {
-        this.setState({ modalEdit: true });
+    selectWord = (e) => {
+        this.setState({
+            selectedWord: Number.parseInt(e.target.dataset.id)
+        });
+    }
+    async openEdit(e) {
+        var word = await wordApi.getDetail(e.target.dataset.id);
+        console.log(word);
+        this.setState({
+            modalEdit: true,
+            currentWord: word,
+            englishEdit: word.eng === null ? "" : word.eng,
+            vietNamEdit: word.vie === null ? "" : word.vie,
+            spellingEdit: word.spelling === null ? "" : word.spelling,
+            categoryEdit: word.wordCategory === null ? "" : word.wordCategory,
+        });
     }
     closeEdit() {
         this.setState({
@@ -102,24 +124,62 @@ class QLListTuVung extends Component {
             modalEdit: false,
         });
     }
-    submitEdit(e) {
+    async submitEdit(e) {
+        console.log(this.state);
+        const formData = new FormData();
+        formData.append("eng", this.state.englishEdit);
+        formData.append("vie", this.state.vietNamEdit);
+        formData.append("wordCategory", this.state.categoryEdit);
+        formData.append('spelling', this.state.spellingEdit);
+        formData.append("file", this.state.imageCreate);
+        try {
+            const result = await wordApi.update(this.state.currentWord.id, formData);
+            console.log(result);
+            if (result.status === 200) {
+                toast("Cập nhật từ vựng thành công");
+                var words = await this.fetchWord();
+                if (this.isComponentMounted) {
+                    this.setState({
+                        words: words
+                    })
+                }
+            }
+        } catch (error) {
+            if (error.response.data.error) {
+                toast(error.response.data.error);
+            }
+        }
         this.setState({
         });
         this.closeEdit();
     }
     // Xử lý modal delete
-    openDelete() {
-        this.setState({ modalDelete: true });
+    openDelete(e) {
+        this.setState({ modalDelete: true, selectedWord: e.target.dataset.id });
     }
     closeDelete() {
         this.setState({
             modalDelete: false,
         });
     }
-    submitDelete(e) {
-        this.setState({
+    async submitDelete(e) {
+        try {
+            const deleteResult = await wordApi.delete(this.state.selectedWord);
+            if (deleteResult.status === 204) {
+                toast("Xóa thành công");
+                var words = await this.fetchWord();
+                if (this.isComponentMounted) {
+                    this.setState({
+                        words: words
+                    })
+                }
+            }
+        } catch (error) {
+            if (error.response.data.error) {
+                toast(error.response.data.error);
+            }
+        }
 
-        });
         this.closeDelete();
     }
     render() {
@@ -136,15 +196,15 @@ class QLListTuVung extends Component {
                 <td><img width="50px" height="50px" src={word.wordImg}></img></td>
 
                 <td>
-                    <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
-                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                    <Button data-id={word.id} variant="primary" className="btn btn-primary mr-2" onClick={e => { this.openEdit(e); this.selectWord(e) }}><i data-id={word.id} className="fa fa-edit" /></Button>
+                    <Button data-id={word.id} variant="primary" className="btn btn-danger" onClick={e => { this.openDelete(e); this.selectWord(e) }}><i data-id={word.id} className="fa fa-trash" /></Button>
                 </td>
             </tr>
         );
         return (
             <div>
                 <Button variant="primary" className="btn btn-success mr-2 mb-3" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /> Thêm từ vựng</Button>
-                <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
+                {this.isComponentMounted && <table className="table table-bordered" id="dataTable1" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
                             <th className="english">English</th>
@@ -155,8 +215,11 @@ class QLListTuVung extends Component {
                             <th className="chucnang" />
                         </tr>
                     </thead>
-                    {renderWords}
-                </table>
+                    <tbody>
+                        {renderWords}
+                    </tbody>
+
+                </table>}
                 {/* Modal create */}
                 <Modal show={this.state.modalCreate}>
                     <Modal.Header closeButton onClick={() => this.closeCreate()}>
@@ -285,7 +348,7 @@ class QLListTuVung extends Component {
                                 </select>
                             </div>
                             <div className="card-input">
-                                <span>Hình ảnh minh họa</span>
+                                <span>Hình ảnh minh họa </span>
                                 <input
                                     type="file"
                                     accept="image/png, image/jpeg"

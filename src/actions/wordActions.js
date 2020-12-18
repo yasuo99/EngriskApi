@@ -15,8 +15,8 @@ export const updateWord = (id, body) => {
 }
 export const deleteWord = (id) =>  wordApi.delete(id);
 
-export const createWord = (body) =>  {
-    return wordApi.create(body).then(response => {
+export const createWord = async (body) =>  {
+    return await wordApi.create(body).then(response => {
         toast('Thêm từ vựng thành công');
         return response
     }).catch((error) => {

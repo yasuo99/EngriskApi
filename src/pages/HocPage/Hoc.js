@@ -139,7 +139,7 @@ class Hoc extends PureComponent {
                 });
             }
             else {
-                const result = this.submitQuiz();
+                const result = await this.submitQuiz();
                 clearInterval(this.calculateSpent);
                 this.setState({
                     done: true,
