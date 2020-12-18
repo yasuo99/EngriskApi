@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class ModalCauHoiDoc extends Component {
     state = {
-        check: "false",
+        // check: "false",
       };
       handleChange = (event) => {
         this.setState({
@@ -25,7 +25,7 @@ class ModalCauHoiDoc extends Component {
                 </td>
                 <td>Sau tính từ sở hữu YOUR ta cần một danh từ, nên ta chọn ngay D</td>
                 <td>
-                    <input type="radio" name="check" value="true" onChange={this.handleChange} id="check"></input>
+                    <input type="checkbox" name="check" value="true" onChange={this.handleChange} id="check"></input>
                 </td>
             </tr>
         );

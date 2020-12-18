@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class ModalCauHoiNghe extends Component {
     state = {
-        check: "false",
+        // check: "false",
       };
       handleChange = (event) => {
         this.setState({
@@ -12,24 +12,29 @@ class ModalCauHoiNghe extends Component {
     render() {
         return (
             <tr>
-                <td className="cauhoi-quiz">Đâu là "cà phê"?</td>
+                <td className="cauhoi-quiz"><img src="image/rice.png" className="img-hoc" /></td>
                 <td>
-                    <div className="card-hoc"><img src="image/rice.png" className="img-hoc" />
+                    <div className="card-hoc">
                           <h5 className="text-center mt-2">rice</h5>
                     </div>
                 </td>
                 <td>
-                <div className="card-hoc"><img src="image/rice.png" className="img-hoc" />
+                <div className="card-hoc">
                           <h5 className="text-center mt-2">rice</h5>
                         </div> 
                         </td>
                 <td>
-                <div className="card-hoc"><img src="image/rice.png" className="img-hoc" />
+                <div className="card-hoc">
+                          <h5 className="text-center mt-2">rice</h5>
+                        </div> 
+                        </td>
+                <td>
+                <div className="card-hoc">
                           <h5 className="text-center mt-2">rice</h5>
                         </div></td>
                 <td>A</td>
                 <td>
-                    <input type="radio" name="check" value="true" onChange={this.handleChange} id="check"></input>
+                    <input type="checkbox" name="check" value="true" onChange={this.handleChange} id="check"></input>
                 </td>
             </tr>
         );

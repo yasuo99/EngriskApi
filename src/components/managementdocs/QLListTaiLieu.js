@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import CKEditor from "react-ckeditor-component";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery';
@@ -7,43 +6,20 @@ import { Button, Modal } from 'react-bootstrap'
 class QLListTaiLieu extends Component {
     constructor(props) {
         super(props);
-        this.updateContent = this.updateContent.bind(this);
         this.state = {
-            content: '',
             modalCreate: false,
             modalEdit: false,
             modalDelete: false,
             nameCreate: "",
             nameEdit:"",
+            contentCreate:"",
+            contentEdit:"",
         };
     }
     componentDidMount(){
         $(function(){
             $("#dataTable").DataTable();
         })
-    }
-    updateContent() {
-        var content = localStorage.getItem('content');
-        this.setState({
-            content: content
-        })
-        console.log(this.state.content);
-        localStorage.removeItem('content');
-    }
-
-    onChange(evt) {
-        console.log("onChange fired with event info: ", evt);
-        var newContent = evt.editor.getData();
-        console.log(newContent);
-        localStorage.setItem('content', newContent);
-    }
-
-    onBlur(evt) {
-        console.log("onBlur event called with event info: ", evt);
-    }
-
-    afterPaste(evt) {
-        console.log("afterPaste event called with event info: ", evt);
     }
     handleChange(e) {
         var target = e.target;
@@ -102,7 +78,7 @@ class QLListTaiLieu extends Component {
         });
     }
     render() {
-        const renderDocs = ((word) =>
+        const renderDocs = (() =>
         <tr>
              {/* XỬ LÝ DATA */}
             <td>
@@ -146,14 +122,10 @@ class QLListTaiLieu extends Component {
                             </div>
                             <div className="card-input mt-4">
                                 <span>Nội dung tài liệu</span>
-                                <CKEditor
-                                    activeClass="p10"
-                                    content={this.state.content}
-                                    events={{
-                                        "blur": this.onBlur,
-                                        "afterPaste": this.afterPaste,
-                                        "change": this.onChange
-                                    }}
+                                <textarea placeholder="Nhập nội dung tài liệu" 
+                                    onChange={e => this.handleChange(e)}
+                                    value={this.state.contentCreate}
+                                    name="contentCreate"
                                 />
                             </div>
                             <div className="card-input mt-4">
@@ -195,14 +167,10 @@ class QLListTaiLieu extends Component {
                             </div>
                             <div className="card-input mt-4">
                                 <span>Nội dung tài liệu</span>
-                                <CKEditor
-                                    activeClass="p10"
-                                    content={this.state.content}
-                                    events={{
-                                        "blur": this.onBlur,
-                                        "afterPaste": this.afterPaste,
-                                        "change": this.onChange
-                                    }}
+                                <textarea placeholder="Nhập nội dung tài liệu" 
+                                    onChange={e => this.handleChange(e)}
+                                    value={this.state.contentEdit}
+                                    name="contentEdit"
                                 />
                             </div>
                             <div className="card-input mt-4">

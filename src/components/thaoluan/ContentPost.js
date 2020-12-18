@@ -1,15 +1,15 @@
 import React, { Component } from "react"
 import { Button, Modal } from 'react-bootstrap'
-import CKEditor from "react-ckeditor-component";
 import { connect } from "react-redux";
 class ContentPost extends Component {
     constructor(props) {
         super(props);
-        this.updateContent = this.updateContent.bind(this);
         this.state = {
             content: '',
             id: "",
+            titleEdit:"",
             modalEdit: false,
+            modalDelete: false,
         };
     }
     submitEdit(e) {
@@ -24,31 +24,32 @@ class ContentPost extends Component {
 
     closeEdit() {
         this.setState({
+            titleEdit:"",
             modalEdit: false,
         });
     }
-    updateContent() {
-        var content = localStorage.getItem('content');
+     // Xử lý modal delete
+    openDelete() {
+        this.setState({ modalDelete: true });
+    }
+    closeDelete() {
         this.setState({
-            content: content
-        })
-        console.log(this.state.content);
-        localStorage.removeItem('content');
+            modalDelete: false,
+        });
     }
+    submitDelete(e) {
+        this.setState({
 
-    onChange(evt) {
-        console.log("onChange fired with event info: ", evt);
-        var newContent = evt.editor.getData();
-        console.log(newContent);
-        localStorage.setItem('content', newContent);
+        });
+        this.closeDelete();
     }
-
-    onBlur(evt) {
-        console.log("onBlur event called with event info: ", evt);
-    }
-
-    afterPaste(evt) {
-        console.log("afterPaste event called with event info: ", evt);
+    handleChange(e) {
+        var target = e.target;
+        var name = target.name;
+        var value = target.value;
+        this.setState({
+            [name]: value
+        });
     }
     render() {
         return (
@@ -63,7 +64,7 @@ class ContentPost extends Component {
                     </div>
                     {(this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("admin") || this.props.account.roles.includes("manager") || this.props.post.accountUsername === this.props.account.username) && <div className="col-2 chucnang">
                     <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
-                        <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
+                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
                     </div>}
                     <div className="baocao">
                         <a href="#" className="mr-3">Báo cáo <i className="fa fa-flag"></i></a>
@@ -79,7 +80,7 @@ class ContentPost extends Component {
                 {/* Modal phần sửa */}
                 <Modal show={this.state.modalEdit}>
                     <Modal.Header closeButton onClick={() => this.closeEdit()}>
-                        <Modal.Title>Cập nhật từ vựng</Modal.Title>
+                        <Modal.Title>Cập nhật bài viết</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="form-group pt-3">
@@ -87,14 +88,14 @@ class ContentPost extends Component {
                                 <span>Tiêu đề</span>
                                 <input
                                     type="text"
-                                    value={this.state.modalInputTitle}
-                                    name="modalInputTitle"
+                                    value={this.state.titleEdit}
+                                    name="titleEdit"
                                     onChange={e => this.handleChange(e)}
                                 />
                             </div>
                             <div className="card-input mt-4">
                                 <span>Nội dung bài viết</span>
-                                <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude" />
+                                <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude"/>
                             </div>
                         </div>
                     </Modal.Body>
@@ -103,6 +104,18 @@ class ContentPost extends Component {
                         <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
                     </Modal.Footer>
                 </Modal>
+                  {/* Modal phần xóa */}
+                  <Modal show={this.state.modalDelete}>
+                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
+                        <Modal.Title>Xác nhận xóa bài viết</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa bài viết này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
+
             </div>
 
         )
