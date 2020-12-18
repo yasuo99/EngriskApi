@@ -3,6 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import sectionApi from '../../api/sectionApi';
+import HeaderAdmin from '../../components/admin/HeaderAdmin';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
@@ -96,7 +97,8 @@ class HomePage extends PureComponent {
         <SubMenuClient></SubMenuClient>
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
-            <HeaderClient></HeaderClient>
+            {(this.props.account.roles.includes("superadmin") || this.props.account.roles.includes("manager")) && <HeaderAdmin></HeaderAdmin>}
+            {(this.props.account.roles.includes("learner") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("forumadmin") || this.props.isLoggedIn === false) &&<HeaderClient></HeaderClient>}
             <main>
               <div className="container">
                 <div className="row">
@@ -126,9 +128,10 @@ class HomePage extends PureComponent {
   }
 }
 const mapStateToProps = (state) => {
-  const { isLoggedIn } = state.auth;
+  const { isLoggedIn, account } = state.auth;
   return {
-    isLoggedIn: isLoggedIn
+    isLoggedIn: isLoggedIn,
+    account: account
   };
 }
 export default connect(mapStateToProps)(HomePage);
