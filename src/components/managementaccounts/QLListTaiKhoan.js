@@ -8,7 +8,6 @@ class QLListTaiKhoan extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalDelete: false,
             modalDetail: false,
 
             accounts: [],
@@ -37,28 +36,14 @@ class QLListTaiKhoan extends Component {
         });
         this.closeDetail();
     }
-    // Xử lý modal delete
-    openDelete() {
-        this.setState({ modalDelete: true });
-    }
-    closeDelete() {
-        this.setState({
-            modalDelete: false,
-        });
-    }
-    submitDelete(e) {
-        this.setState({
 
-        });
-        this.closeDelete();
-    }
     render() {
         const renderAccounts = (() =>
             <tr>
                 {/* XỬ LÝ DATA */}
                 <td>
                     <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openDetail(e)}><i className="fa fa-info" /></Button>
-                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                
                 </td>
             </tr>
         );
@@ -79,17 +64,7 @@ class QLListTaiKhoan extends Component {
                         {renderAccounts}
                     </tbody>
                 </table>
-                {/* Modal phần xóa */}
-                <Modal show={this.state.modalDelete}>
-                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
-                        <Modal.Title>Xác nhận xóa tài khoản</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Bạn có chắc chắn muốn xóa tài khoản này ra khỏi hệ thống không?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
-                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
-                    </Modal.Footer>
-                </Modal>
+             
                 {/* Modal phần xem chi tiết */}
                 <Modal show={this.state.modalDetail}>
                     <Modal.Header closeButton onClick={() => this.closeDetail()}>

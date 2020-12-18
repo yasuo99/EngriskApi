@@ -29,7 +29,8 @@ class QLListCauHoi extends Component {
             AHinhCreate: "",
             BHinhCreate: "",
             CHinhCreate: "",
-            AnswerHinhCreate: "",
+            DHinhCreate: "",
+            AnswerHinhCreate:"",
             // Phần edit
             questionDocEdit: "",
             ADocEdit: "",
@@ -47,8 +48,8 @@ class QLListCauHoi extends Component {
             AHinhEdit: "",
             BHinhEdit: "",
             CHinhEdit: "",
-            AnswerHinhEdit: "",
-
+            DHinhEdit: "",
+            AnswerHinhEdit:"",
             questions: [],
 
         };
@@ -72,7 +73,6 @@ class QLListCauHoi extends Component {
     fetchQuestion = async () => {
         return await questionApi.getAll();
     }
-
     handleChange(e) {
         var target = e.target;
         var name = target.name;
@@ -112,7 +112,8 @@ class QLListCauHoi extends Component {
             AHinhCreate: "",
             BHinhCreate: "",
             CHinhCreate: "",
-            AnswerHinhCreate: "",
+            DHinhCreate: "",
+            AnswerHinhCreate:"",
         });
     }
     // Xử lý modal edit
@@ -138,7 +139,8 @@ class QLListCauHoi extends Component {
             AHinhEdit: "",
             BHinhEdit: "",
             CHinhEdit: "",
-            AnswerHinhEdit: "",
+            DHinhEdit: "",
+            AnswerHinhEdit:"",
         });
     }
     submitEdit(e) {
@@ -220,48 +222,88 @@ class QLListCauHoi extends Component {
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>A</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.ADocCreate}
-                                            name="ADocCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.ADocCreate}
+                                                name="ADocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocCreate}
+                                                name="AnswerDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>B</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.BDocCreate}
-                                            name="BDocCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.BDocCreate}
+                                                name="BDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocCreate}
+                                                name="AnswerDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>C</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.CDocCreate}
-                                            name="CDocCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.CDocCreate}
+                                                name="CDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocCreate}
+                                                name="AnswerDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>D</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.DDocCreate}
-                                            name="DDocCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
-                                    </div>
-                                    <div className="card-input mt-4">
-                                        <span>Đáp án câu hỏi</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.AnswerDocCreate}
-                                            name="AnswerDocCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.DDocCreate}
+                                                name="DDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocCreate}
+                                                name="AnswerDocCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                 </div>
 
@@ -276,52 +318,93 @@ class QLListCauHoi extends Component {
                                             value={this.state.QuestionNgheCreate}
                                             name="QuestionNgheCreate"
                                             onChange={e => this.handleChange(e)}
+                                            accept="audio/*"
                                         />
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>A</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.ANgheCreate}
-                                            name="ANgheCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.ANgheCreate}
+                                                name="ANgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
+                                       
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>B</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.BNgheCreate}
-                                            name="BNgheCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.BNgheCreate}
+                                                name="BNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>C</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.CNgheCreate}
-                                            name="CNgheCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.CNgheCreate}
+                                                name="CNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>D</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.DNgheCreate}
-                                            name="DNgheCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
-                                    </div>
-                                    <div className="card-input mt-4">
-                                        <span>Đáp án câu hỏi</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.AnswerNgheCreate}
-                                            name="AnswerNgheCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.DNgheCreate}
+                                                name="DNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerNgheCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -331,47 +414,99 @@ class QLListCauHoi extends Component {
                                     <div className="card-input mt-4">
                                         <span>Câu hỏi</span>
                                         <input
-                                            type="text"
+                                            type="file"
                                             value={this.state.QuestionHinhCreate}
                                             name="QuestionHinhCreate"
                                             onChange={e => this.handleChange(e)}
+                                            aaccept="image/png, image/jpeg"
                                         />
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>A</span>
-                                        <input
-                                            type="file"
-                                            value={this.state.AHinhCreate}
-                                            name="AHinhCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.AHinhCreate}
+                                                name="AHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>B</span>
-                                        <input
-                                            type="file"
-                                            value={this.state.BHinhCreate}
-                                            name="BHinhCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.BHinhCreate}
+                                                name="BHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>C</span>
-                                        <input
-                                            type="file"
-                                            value={this.state.CHinhCreate}
-                                            name="CHinhCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.CHinhCreate}
+                                                name="CHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
-                                        <span>Đáp án câu hỏi</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.AnswerHinhCreate}
-                                            name="AnswerHinhCreate"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <span> 
+                                             D
+                                        </span>
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.DHinhCreate}
+                                                name="DHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheCreate}
+                                                name="AnswerHinhCreate"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
+                                       
                                     </div>
                                 </div>
 
@@ -395,7 +530,7 @@ class QLListCauHoi extends Component {
                             <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthreeEdit"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
                         </ul>
                         <div className="tab-content mt-3">
-                            <div className="tab-pane fade show active" id="taboneEdit" role="tabpanel">
+                            <div className="tab-pane fade show active" id="taboneCreate" role="tabpanel">
                                 <div className="form-group">
                                     <div className="card-input mt-4">
                                         <span>Câu hỏi</span>
@@ -408,48 +543,88 @@ class QLListCauHoi extends Component {
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>A</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.ADocEdit}
-                                            name="ADocEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.ADocEdit}
+                                                name="ADocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocEdit}
+                                                name="AnswerDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>B</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.BDocEdit}
-                                            name="BDocEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.BDocEdit}
+                                                name="BDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocEdit}
+                                                name="AnswerDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>C</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.CDocEdit}
-                                            name="CDocEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.CDocEdit}
+                                                name="CDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocEdit}
+                                                name="AnswerDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>D</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.DDocEdit}
-                                            name="DDocEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
-                                    </div>
-                                    <div className="card-input mt-4">
-                                        <span>Đáp án câu hỏi</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.AnswerDocEdit}
-                                            name="AnswerDocEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.DDocEdit}
+                                                name="DDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerDocEdit}
+                                                name="AnswerDocEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>  
+                                        </div>
                                     </div>
                                 </div>
 
@@ -464,52 +639,93 @@ class QLListCauHoi extends Component {
                                             value={this.state.QuestionNgheEdit}
                                             name="QuestionNgheEdit"
                                             onChange={e => this.handleChange(e)}
+                                            accept="audio/*"
                                         />
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>A</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.ANgheEdit}
-                                            name="ANgheEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.ANgheEdit}
+                                                name="ANgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
+                                       
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>B</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.BNgheEdit}
-                                            name="BNgheEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.BNgheEdit}
+                                                name="BNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>C</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.CNgheEdit}
-                                            name="CNgheEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.CNgheEdit}
+                                                name="CNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>D</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.DNgheEdit}
-                                            name="DNgheEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
-                                    </div>
-                                    <div className="card-input mt-4">
-                                        <span>Đáp án câu hỏi</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.AnswerNgheEdit}
-                                            name="AnswerNgheEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.DNgheEdit}
+                                                name="DNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerNgheEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -519,53 +735,105 @@ class QLListCauHoi extends Component {
                                     <div className="card-input mt-4">
                                         <span>Câu hỏi</span>
                                         <input
-                                            type="text"
+                                            type="file"
                                             value={this.state.QuestionHinhEdit}
                                             name="QuestionHinhEdit"
                                             onChange={e => this.handleChange(e)}
+                                            aaccept="image/png, image/jpeg"
                                         />
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>A</span>
-                                        <input
-                                            type="file"
-                                            value={this.state.AHinhEdit}
-                                            name="AHinhEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.AHinhEdit}
+                                                name="AHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>B</span>
-                                        <input
-                                            type="file"
-                                            value={this.state.BHinhEdit}
-                                            name="BHinhEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.BHinhEdit}
+                                                name="BHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
                                         <span>C</span>
-                                        <input
-                                            type="file"
-                                            value={this.state.CHinhEdit}
-                                            name="CHinhEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.CHinhEdit}
+                                                name="CHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="card-input mt-4">
-                                        <span>Đáp án câu hỏi</span>
-                                        <input
-                                            type="text"
-                                            value={this.state.AnswerHinhEdit}
-                                            name="AnswerHinhEdit"
-                                            onChange={e => this.handleChange(e)}
-                                        />
+                                        <span> 
+                                             D
+                                        </span>
+                                        <div className="row">
+                                            <div className="col-11">
+                                            <input
+                                                type="text"
+                                                value={this.state.DHinhEdit}
+                                                name="DHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                            <div className="col-1">
+                                            <input
+                                                type="radio"
+                                                value={this.state.AnswerNgheEdit}
+                                                name="AnswerHinhEdit"
+                                                onChange={e => this.handleChange(e)}
+                                            />
+                                            </div>
+                                        </div>
+                                       
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-                    </Modal.Body>
+                   </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => this.closeEdit()}>Trở lại</Button>
                         <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>

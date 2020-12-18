@@ -40,11 +40,19 @@ import DanhSachThongBao from './pages/ThongBao/DanhSachThongBao';
 import ListQuiz from './pages/HocPage/ListQuiz';
 import DatLaiMatKhau from './pages/CaiDatPage/DatLaiMatKhau';
 import ManagementSection from './pages/Admin/ManagementSection';
+import Blog from './pages/CaiDatPage/Blog';
 const routes = [
     {
         path: '/home',
         exact: true,
         main: () => <HomePage />,
+        guard: false,
+        roles: []
+    },
+    {
+        path: '/blog',
+        exact: true,
+        main: () => <Blog />,
         guard: false,
         roles: []
     },

@@ -11,6 +11,7 @@ class ModalListCauHoiHinhAnh extends Component {
                         <th className="cautraA">A</th>
                         <th className="cautraB">B</th>
                         <th className="cautraC">C</th>
+                        <th className="cautraD">D</th>
                         <th className="dapAn">Đáp án câu hỏi</th>
                         <th />
                     </tr>
