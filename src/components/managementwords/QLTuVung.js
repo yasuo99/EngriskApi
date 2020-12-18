@@ -77,7 +77,7 @@ class QLTuVung extends Component {
     }
     render() {
         var { modalInputEnglish, modalInputVietNam, modalInputLoaiTu, modalInputSpelling, modalInputHinhAnh } = this.state;
-        const renderWords = this.state.words.map((word) =>
+        const renderWords = this.props.words.map((word) =>
             <tr key={word.id}>
                 <td>{word.eng}</td>
                 <td>{word.wordCategory}</td>

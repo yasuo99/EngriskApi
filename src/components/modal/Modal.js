@@ -13,5 +13,5 @@ const Modal = ({ handleClose, show, children }) => {
         </div>
       </div>
     );
-  };
+};
   export default Modal;

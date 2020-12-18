@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-browser-router"
+import Moment from 'moment';
 class ThongBao extends Component {
+    constructor(props){
+        super(props);
+    }
     render() {
         return (
             <div className="boxInfor">
                 <img src="/image/banner1.jpg" className="img-100 img-fluid img-infor" />
-                <p className="dateInfor">02/02/2018</p>
+                <p className="dateInfor">{Moment(this.props.notify.publishedDate).format("MMMM Do YYYY")}</p>
                 <div className="content">
-                    <p>Hôm này website đã cập nhật một số bài quiz mới với chủ đề rất hay và thực tế. Cùng nhau học nào!!! </p>
-                    <a href="#" className="btn btn-primary mt-2">Xem ngay</a>
+                    <p>{this.props.notify.content}</p>
+                    {this.props.notify.url && <a href={this.props.notify.url} className="btn btn-primary mt-2">Xem ngay</a>}
                 </div>
             </div>
         );

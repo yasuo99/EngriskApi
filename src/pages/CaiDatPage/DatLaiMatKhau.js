@@ -3,13 +3,44 @@ import { Link } from "react-browser-router";
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
-import ModalInfor from "../../components/modal/ModalInfor";
+import accountApi from '../../api/accountApi';
+import { toast } from 'react-toastify';
 class DatLaiMatKhau extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modal: false,
+            email: '',
+            otp: 0,
+            newPassword: '',
+            confirmPassword: ''
         };
+        this.handleChange = this.handleChange.bind(this);
+    }
+    resetPassword = async (e) => {
+        e.preventDefault();
+        try {
+            const result = await accountApi.resetPassword(Number.parseInt(this.state.otp), this.state.email, this.state.newPassword, this.state.confirmPassword);
+            if (result.status === 200) {
+                toast("Reset mật khẩu thành công");
+            }
+        } catch (error) {
+            console.log(error.response);
+            if(error.response.data.error){
+                toast(error.response.data.error)
+            }
+            else{
+                toast("OTP đã sử dụng");
+            }
+        }
+
+    }
+    handleChange = (e) => {
+        e.preventDefault();
+        console.log(e.target.value);
+        this.setState({
+            [e.target.id]: e.target.value
+        })
     }
     modalOpen() {
         this.setState({ modal: true });
@@ -39,19 +70,22 @@ class DatLaiMatKhau extends Component {
                                                             <div className="text-center">
                                                                 <h1 className="h4 text-gray-900 mb-2">Đặt lại mật khẩu</h1>
                                                             </div>
-                                                            <form className="user">
+                                                            <form className="user" onSubmit={this.resetPassword}>
                                                                 <div className="form-group">
-                                                                    <input type="password" className="form-control form-control-user" id="InputPassword" placeholder="Nhập mật khẩu..." />
+                                                                    <input type="email" className="form-control form-control-user" id="email" placeholder="Nhập email..." onChange={this.handleChange} required/>
                                                                 </div>
                                                                 <div className="form-group">
-                                                                    <input type="password" className="form-control form-control-user" id="InputConfirmPassword" placeholder="Xác nhận lại mật khẩu..." />
+                                                                    <input type="number" className="form-control form-control-user" id="otp" placeholder="Nhập mã OTP..." onChange={this.handleChange} required/>
                                                                 </div>
-                                                                <button className="btn btn-primary btn-user btn-block" onClick={e => this.modalOpen(e)}>
+                                                                <div className="form-group">
+                                                                    <input type="password" className="form-control form-control-user" id="newPassword" placeholder="Nhập mật khẩu..." onChange={this.handleChange} required/>
+                                                                </div>
+                                                                <div className="form-group">
+                                                                    <input type="password" className="form-control form-control-user" id="confirmPassword" placeholder="Xác nhận lại mật khẩu..." onChange={this.handleChange} required/>
+                                                                </div>
+                                                                <button className="btn btn-primary btn-user btn-block" type="submit">
                                                                     Lưu lại
-                                                                </button>
-                                                                <ModalInfor show={this.state.modal} handleClose={e => this.modalClose(e)}>
-                                                                    <h3 className="title"> <img src="/image/check-mark.png"></img> Chúc mừng bạn đã thay đổi mật khẩu thành công</h3>
-                                                                </ModalInfor>
+                                                                </button>                            
                                                             </form>
                                                             <hr />
                                                             <div className="text-center">

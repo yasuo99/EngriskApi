@@ -162,7 +162,7 @@ form ul .suggest{list-style-type: none;}
 .chucnang .bg-active{background-color: #ccc;}
 .chucnang .text-active{color: #4f4f4f!important}
 .chucnang .nd-chucnang{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;margin: 5px 20px;width: 300px;}
-.chucnang .nd-chucnang:hover{background-color: #ccc;width: 300px;}
+.chucnang .nd-chucnang:hover{background-color: #ccc;width: 300px; cursor: pointer;}
 #caidat .caidat-matkhau{height: 320px;border: 2px solid #ccc;border-radius: 20px;}
 #caidat .caidat-matkhau a{color: #828282; font-weight:bold;}
 #caidat .caidat-matkhau a:hover{color: #4f4f4f;text-decoration: none;}
@@ -365,7 +365,7 @@ form ul .suggest{list-style-type: none;}
 
 /* -------------------------------MODAL-------------------------------------- */
 /* -------------------------------------------------------------------------- */
-.modal form{margin-left: 150px;}
+/* .modal form{margin-left: 150px;}
 .modal .card-input{width: 760px;padding-left: 10px;}
 .modal .card-input select{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
 .modal .card-input input{float: right;width: 550px;padding: 5px 10px;border: 2px solid #ccc;outline: none;border-radius: 5px;}
@@ -421,7 +421,15 @@ form ul .suggest{list-style-type: none;}
 } 
 .modalLock .title{border-bottom: 1px solid #ccc;margin-bottom: 20px;padding-bottom: 10px;color: #fff;}
 .modalLock .content{border-bottom: 1px solid #ccc; padding-bottom:10px; margin-bottom: 20px;color: #fff;}
-.modalLock button{color: #fff;margin-left: 5px;padding: 5px;}
+.modalLock button{color: #fff;margin-left: 5px;padding: 5px;} */
+.modal-content {width: 600px!important;margin-left: -50px;}
+.modal .card-input input{width: 100%;padding: 5px 10px;border: 2px solid #ccc;border-radius: 5px;}
+.modal .card-input input:focus{border: 2px solid #ccc!important}
+.modal .card-input select{width: 100%;padding: 5px 10px;border: 2px solid #ccc;border-radius: 5px;}
+.modal .card-input select:focus{border: 2px solid #ccc!important}
+.modal {
+  background-color: transparent;
+}
 /* -------------------------------QUẢN LÝ CÂU HỎI---------------------------
 /* -------------------------------------------------------------------------- */
 .dapAn{width: 200px;}

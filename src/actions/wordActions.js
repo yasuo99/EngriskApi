@@ -3,7 +3,6 @@ import wordApi from '../api/wordApi';
 
 export const getAllWord = (params) => {
     return  wordApi.getAll(params).then(response => {
-        toast('Thêm từ vựng thành công')
         return response;
     }).catch(error => {
         toast(error.response.data.error)
@@ -17,7 +16,10 @@ export const updateWord = (id, body) => {
 export const deleteWord = (id) =>  wordApi.delete(id);
 
 export const createWord = (body) =>  {
-    return wordApi.create(body).catch((error) => {
+    return wordApi.create(body).then(response => {
+        toast('Thêm từ vựng thành công');
+        return response
+    }).catch((error) => {
         toast(error.response.data.error)
     })
 };

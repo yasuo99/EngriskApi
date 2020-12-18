@@ -5,6 +5,9 @@ import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import accountApi from "../../api/accountApi";
+import { toast } from "react-toastify";
 class CaiDatChung extends Component {
   constructor(props) {
     super(props);
@@ -19,8 +22,21 @@ class CaiDatChung extends Component {
   onClickMatKhau() {
     this.setState({ check: true });
   }
+  changePassword = async (accountId,currentPassword, newPassword) => {
+    try {
+      const result = await accountApi.changePassword(accountId,currentPassword, newPassword);
+      if (result.status === 200) {
+        toast("Đổi mật khẩu thành công");
+      }
+    } catch (error) {
+      if(error.response.data.error){
+        toast(error.response.data.error);
+      }
+    }
+
+  }
   render() {
-    var { isActive,check } = this.state;
+    var { isActive, check } = this.state;
     return (
       <div id="wrapper">
         <SubMenuClient></SubMenuClient>
@@ -30,25 +46,22 @@ class CaiDatChung extends Component {
             <main id="caidat">
               <div className="container">
                 <div className="row">
-            
-                  {check=== true ? <FormMatKhau /> : <FormTaiKhoan />}
-                  
+
+                  {check === true ? <FormMatKhau changePassword={this.changePassword}/> : <FormTaiKhoan />}
+
                   <div className="col-4 mt-5">
                     <div className="caidat-matkhau">
                       <div className="ml-3 mt-3">
-                        <img src="image/user (1).png" className="float-left mr-2" />
-                        <h3 className="mt-2 text-primary">Thanh Lập</h3>
+                        <img width="64px" src={this.props.account.photoUrl || " image/user (1).png"} className="float-left mr-2" />
+                        <h3 className="mt-2 text-primary">{this.props.account.username}</h3>
                         <Link to="/hoso">XEM HỒ SƠ CỦA BẠN</Link>
                       </div>
                       <div className="chucnang">
-                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"}>
-                          <Link to="#" onClick={e => this.onClickTaiKhoan(e)}>Tài khoản</Link>
+                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"} onClick={e => this.onClickTaiKhoan(e)}>
+                          Tài khoản
                         </div>
-                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"}  >
-                          <Link to="#" onClick={e => this.onClickMatKhau(e)}>Mật khẩu</Link>
-                        </div>
-                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"}>
-                          <Link to="/thongbao">Thông báo</Link>
+                        <div className={isActive === true ? "nd-chucnang mt-2 bg-active" : "nd-chucnang mt-2"} onClick={e => this.onClickMatKhau(e)} >
+                          Mật khẩu
                         </div>
                       </div>
                     </div>
@@ -64,4 +77,10 @@ class CaiDatChung extends Component {
     )
   }
 }
-export default CaiDatChung;
+const mapStateToProps = (state) => {
+  const { account } = state.auth;
+  return {
+    account: account
+  }
+}
+export default connect(mapStateToProps)(CaiDatChung);

@@ -1,10 +1,33 @@
 import React, { Component } from 'react';
 import { Link } from "react-browser-router";
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import accountApi from '../../api/accountApi';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 class QuenMatKhau extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: ''
+        }
+    }
+    sendResetPassword = async () => {
+        const result = await accountApi.forgetPassword(this.state.email);
+        if(result.status === 200){
+            toast("Yêu cầu reset mật khẩu đã được gửi !");
+            toast("Vui lòng kiểm tra hộp thư email");
+        }
+        else{
+            toast(result.data.error);
+        }
+    }
     render() {
+        if (this.props.isLoggedIn) {
+            return <Redirect to="/home" />
+        }
         return (
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
@@ -28,9 +51,9 @@ class QuenMatKhau extends Component {
                                                             </div>
                                                             <form className="user">
                                                                 <div className="form-group">
-                                                                    <input type="email" className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Nhập email..." />
+                                                                    <input type="email" value={this.state.email} onChange={(e) => this.setState({email: e.target.value})} className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Nhập email..." />
                                                                 </div>
-                                                                <Link to="/datlai-matkhau" className="btn btn-primary btn-user btn-block">
+                                                                <Link to="/reset-password" onClick={this.sendResetPassword} className="btn btn-primary btn-user btn-block">
                                                                     Đặt lại mật khẩu
                           </Link>
                                                             </form>
@@ -59,5 +82,11 @@ class QuenMatKhau extends Component {
         );
     }
 }
-
-export default QuenMatKhau;
+const mapStateToProps = (state) => {
+    const { isLoggedIn } = state.auth;
+    console.log(isLoggedIn);
+    return {
+        isLoggedIn: isLoggedIn
+    }
+}
+export default connect(mapStateToProps)(QuenMatKhau);
