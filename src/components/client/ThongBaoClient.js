@@ -60,7 +60,7 @@ class ThongBaoClient extends Component {
             Alerts Center
           </h6>
           {renderNotifications}
-          <Link className="dropdown-item text-center small text-gray-500" to="#">Show All Alerts</Link>
+          <Link className="dropdown-item text-center small text-gray-500" to="/thongbao">Show All Alerts</Link>
         </div>
       </li>
     )

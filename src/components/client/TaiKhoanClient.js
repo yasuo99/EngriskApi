@@ -14,8 +14,7 @@ const TaiKhoanClient = ({ status,account}) => {
                     <img className="img-profile rounded-circle" src={account.photoUrl !== null ? account.photoUrl : "/image/default-user-image.png"} />
                 </Link>
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <Link className="dropdown-item" to="#">Hồ sơ của bạn</Link>
-                    <Link className="dropdown-item" to="#">Cài đặt</Link>
+                    <Link className="dropdown-item" to="/caidatchung">Hồ sơ của bạn</Link>
                     <Link className="dropdown-item" to="#">Hỗ trợ</Link>
                     <div className="dropdown-divider" />
                     <Link className="dropdown-item" to="#" onClick={dispatchLogout}>Đăng xuất</Link>

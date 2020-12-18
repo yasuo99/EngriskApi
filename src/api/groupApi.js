@@ -17,6 +17,15 @@ const groupApi = {
         const url = `/groups`;
         return axiosClient.post(url,body);
     },
+    addWordToGroup: (groupId,wordId) => {
+        const url = `/groups/${groupId}/words/${wordId}`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer "+token
+        }
+        return axiosClient.put(url,null,{headers})
+    }
+    ,
     updateGroup: (id, body) => {
         const url = `/groups/${id}`;
         return axiosClient.put(url,body);

@@ -182,10 +182,10 @@ const routes = [
         roles: []
     },
     {
-        path: '/datlai-matkhau',
+        path: '/reset-password',
         exact: true,
         main: () => <DatLaiMatKhau />,
-        guard: true,
+        guard: false,
         roles: []
     },
     {
@@ -199,7 +199,7 @@ const routes = [
         path: '/quenmatkhau',
         exact: true,
         main: () => <QuenMatKhau />,
-        guard: true,
+        guard: false,
         roles: []
     },
     {

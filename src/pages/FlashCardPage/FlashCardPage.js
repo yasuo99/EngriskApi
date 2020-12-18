@@ -31,13 +31,16 @@ class FlashCardPage extends Component {
         });
         this.isComponentMounted = true;
         const result = await this.fetchWord();
-        if (this.props.isLoggedIn) {
-            const groups = await this.fetchGroups(this.props.id);
-            this.setState({
-                groups: groups
-            })
-        }
         if (this.isComponentMounted) {
+            if (this.props.isLoggedIn) {
+                const groups = await this.fetchGroups(this.props.id);
+                console.log(groups);
+                this.setState({
+                    groups: groups
+                })
+            }else{
+                console.log('clgv');
+            }
             this.setState({
                 words: result,
                 currentWord: result[this.state.index],
@@ -180,10 +183,12 @@ class FlashCardPage extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const { id } = state.auth.account;
+    const { id} = state.auth.account;
+    const {isLoggedIn} = state.auth;
     console.log(state);
     return {
-        id: id
+        id: id,
+        isLoggedIn: isLoggedIn
     }
 }
 export default connect(mapStateToProps)(FlashCardPage);
