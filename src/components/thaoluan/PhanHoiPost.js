@@ -96,8 +96,8 @@ class PhanHoiPost extends Component {
                         <a href="#" className="mr-3">BÁO CÁO</a>
                         <a data-toggle="collapse" data-target={`#demo${comment.id}`} id={comment.id} onClick={(e) => this.setState({ selectedCommentId: e.target.id })} className="mr-3">BÌNH LUẬN</a>
                         <div id={`demo${comment.id}`} className="collapse binhluan">
-                            <form>
-                                <textarea rows={3} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={(e) => this.setState({ comment: e.target.value })} />
+                            <form className="mb-2">
+                                <textarea rows={2} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={(e) => this.setState({ comment: e.target.value })} />
                                 <button type="button" className="btn btn-primary mr-3 mt-2" onClick={this.replyComment}>ĐĂNG</button>
                                 <button type="button" className="btn btn-primary mt-2">HỦY</button>
                             </form>

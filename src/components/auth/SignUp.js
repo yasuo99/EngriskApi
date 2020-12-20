@@ -11,7 +11,12 @@ class SignUp extends Component {
     dateOfBirth: "",
     address: "",
     mobilePhone: "",
+    file: null,
   };
+  onFileChange = event => {
+    this.setState({ file: event.target.files[0] });
+
+};
   handleChange = (event) => {
     this.setState({
       [event.target.id]: event.target.value,
@@ -29,7 +34,7 @@ class SignUp extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    var { id, email, password, passwordConfirm, username, dateOfBirth, address, mobilePhone } = this.state;
+    var { id, email, password, passwordConfirm, username, dateOfBirth, address, mobilePhone, file } = this.state;
     var user = {
       id: id,
       email: email,
@@ -39,6 +44,7 @@ class SignUp extends Component {
       address: address,
       phone: mobilePhone,
       passwordConfirm: passwordConfirm,
+      file: file,
       roles: ["learner"]
     };
     this.props.signUp(user);
@@ -50,6 +56,7 @@ class SignUp extends Component {
       dateOfBirth: "",
       address: "",
       mobilePhone: "",
+      file:null,
     })
   };
   render() {
@@ -116,6 +123,14 @@ class SignUp extends Component {
             type="text"
             id="mobilePhone"
             onChange={this.handleChange}
+          ></input>
+        </div>
+        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">File hình ảnh</span>
+          <input className="input100" name="mobilePhone" placeholder="Nhập số điện thoại"
+            required
+            type="file"
+            id="file"
+            onChange={this.onFileChange}
           ></input>
         </div>
         <div className="container-login100-form-btn">

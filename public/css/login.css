@@ -285,7 +285,7 @@ iframe {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 43px 88px 93px 190px;
+  padding: 43px 88px 20px 190px;
 }
 
 
@@ -356,6 +356,7 @@ iframe {
 /*---------------------------------------------*/
 input.input100 {
   height: 45px;
+  padding-top: 10px;
 }
 
 
@@ -553,3 +554,10 @@ input.input100 {
 }
 
 
+.kep-login-facebook{
+  margin-bottom: 40px;
+  margin-left: 120px;
+  height: 48px;
+  border-radius: 10px;
+  padding: 0px 10px!important;
+}

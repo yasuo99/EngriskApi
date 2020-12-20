@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-browser-router"
-import Modal from "../modal/Modal";
+// import Modal from "../modal/Modal";
 class QLScore extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +41,7 @@ class QLScore extends Component {
                 <td>
                     <a href="#" className="btn btn-primary mr-2" onClick={e => this.modalOpen(e)} ><i className="fa fa-edit" /></a>
                     <a href="#" className="btn btn-danger"><i className="fa fa-trash" /></a>
-                    <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
+                    {/* <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
                         <h2 className="text-center text-primary">Điểm quy đổi</h2>
                         <hr className="sidebar-divider my-0" />
                         <div className="form-group form-group-account">
@@ -65,7 +65,7 @@ class QLScore extends Component {
                                 Lưu lại
                                 </button>
                         </div>
-                    </Modal>
+                    </Modal> */}
                 </td>
             </tr>
         );

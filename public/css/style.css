@@ -71,13 +71,12 @@ footer h6{font-size: 15px;}
 #thaoluan h2{font-weight: bold}
 #thaoluan .btn{outline: none;box-shadow: 3px 3px 3px #77B748;border: none;padding: 10px;border-radius: 20px;font-weight: bold;}
 #thaoluan .img-thaoluan{width: 90px;width:90px;border-radius: 50%;}
-#thaoluan a{color:#495057; font-weight:bold}
 #thaoluan a:hover{text-decoration: none;color: #77B748;}
 #thaoluan .tab-content .row{border-bottom: 2px solid #ccc; margin-top: 10px;}
 #thaoluan .form-control{border-radius: 15px;font-size: 16px;height: 60px;}
 
-#thaoluan .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
-#thaoluan .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
+#thaoluan .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;overflow-y: scroll;overflow-x: hidden;}
+#thaoluan .nd-theodoi{border-radius: 10px;;font-size: 20px;padding: 15px;}
 #thaoluan .nd-theodoi:hover{background-color: #ccc}
 /* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
 /* --------------------------------------------------------------------------- */
@@ -137,15 +136,16 @@ form ul .suggest{list-style-type: none;}
 /* ---------------------------------HỌC 2------------------------------------ */
 /* -------------------------------------------------------------------------- */
 #hoc2 .dapan{border: 1px solid #ccc; width: 300px; height: 50px;margin-bottom: 20px;}
-#hoc2 .kechan{border-bottom: 2px solid #ccc; padding-bottom: 60px;}
+#hoc2 .khungKq{height: 120px;border-top: 2px solid #ccc;border-bottom: 2px solid #ccc;}
 #hoc2 .dapan:active{background-color: #77B748;}
 #hoc2 .dapan:hover{background-color: #77B748;}
 #hoc2 .dapan p:active{color: #fff;}
 #hoc2 .dapan p:hover{color: #fff;}
 #hoc2 .dapan p{font-size: 16px;padding: 10px;}
-#hoc2 .btn{border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
+#hoc2 .btn{margin-top: 30px;border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
 #hoc2 .active{background-color: #77B748;}
 #hoc2 .active p{color: #fff;}
+#hoc2 img{width: 150px;height: 150px;}
 .thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 150px;border-radius: 20px;}
 .thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 150px;padding-top: 30px;border-radius: 20px;}
 .thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;}
@@ -155,7 +155,7 @@ form ul .suggest{list-style-type: none;}
 #caidat .btn{border: none;border-radius: 10px;font-size: 18px;font-weight: bold;padding: 10px;}
 #caidat form .nd{margin-left: 20px;margin-top: 50px;}
 #caidat span{font-size: 16px;font-weight: bold;}
-#caidat input{width: 460px;height: 50px;font-size: 16px;border-radius: 10px;border: 2px solid #ccc;outline: none;padding: 0 10px;}
+#caidat input{width: 460px;height: 50px;font-size: 16px;border-radius: 10px;border: 2px solid #ccc;outline: none;padding: 0 8px;}
 #caidat .caidat-taikhoan{height: 320px;border: 2px solid #ccc;border-radius: 20px;}
 #caidat .caidat-taikhoan a{color: #828282; font-weight:bold;}
 #caidat .caidat-taikhoan a:hover{color: #4f4f4f;text-decoration: none;}
@@ -163,11 +163,11 @@ form ul .suggest{list-style-type: none;}
 .chucnang .text-active{color: #4f4f4f!important}
 .chucnang .nd-chucnang{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;margin: 5px 20px;width: 300px;}
 .chucnang .nd-chucnang:hover{background-color: #ccc;width: 300px; cursor: pointer;}
-#caidat .caidat-matkhau{height: 320px;border: 2px solid #ccc;border-radius: 20px;}
+#caidat .caidat-matkhau{height: 250px;border: 2px solid #ccc;border-radius: 20px;}
 #caidat .caidat-matkhau a{color: #828282; font-weight:bold;}
 #caidat .caidat-matkhau a:hover{color: #4f4f4f;text-decoration: none;}
-
-
+#caidat .caidat-matkhau .img-info{width: 30px;height: 30px;border-radius: 50%;margin-top: 40px;margin-left: -30px;border: 0px;overflow: hidden;background-color: #ccc;}
+#caidat .caidat-matkhau .fa-camera::before{padding-right: 10px;}
 /* -------------------------------Landing Page--------------------------------- */
 /* ---------------------------------------------------------------------------- */
 #duolingo{background:url(./../image/bg.jpg);background-size: cover;height: 100vh}
@@ -181,7 +181,7 @@ form ul .suggest{list-style-type: none;}
 #duolingo .orbit-icon4 {position: absolute;width: 100px;top: -10px;left:190px;height: 70px;border-radius: 50%;z-index: 99;}
 #duolingo li {list-style: none;}
 #duolingo .nd{top: 130px;right: 100px;}
-#duolingo .btn{box-shadow: 1px 3px 1px #007bff;outline: none;border: 0;width: 350px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
+#duolingo .btn{box-shadow: 1px 3px 1px #007bff;outline: none;border: 0;width: 370px;height: 50px;font-size: 24px;font-weight: bold;border-radius: 30px;}
 
 #nd-duolingo .cachhoc p{font-size: 16px;}
 #nd-duolingo .kechan{border-bottom: 2px solid #ccc;}
@@ -280,7 +280,7 @@ form ul .suggest{list-style-type: none;}
 #flashcard .front h2{margin-top: 40px;}
 #flashcard .front p{font-size: 16px;}
 #flashcard .back {transform: rotateY(180deg);background-color: #fff;}
-#flashcard .back p{font-size: 24px;margin-top: 80px;}
+#flashcard .back p{font-size: 20px;margin-top: 80px;}
       
 #flashcard .flashcard .front{background:#fff;}
 
@@ -288,7 +288,7 @@ form ul .suggest{list-style-type: none;}
 #flashcard li{font-weight: bold;}
 #flashcard li:hover{background-color: #48871B}
 #flashcard a{text-decoration: none;font-size: 16px; padding-left: 20px;font-weight: bold;}
-#flashcard .img-100{width: 100%;}
+#flashcard .img-flashcard{width: 100%;height: 200px;}
 
 /* ---------------------------------Thêm bài viết----------------------------- */
 /* --------------------------------------------------------------------------- */
@@ -303,8 +303,8 @@ form ul .suggest{list-style-type: none;}
 #thembaiviet .tab-content .row{border-bottom: 2px solid #ccc; margin-top: 10px;}
 #thembaiviet .form-control{border-radius: 15px;font-size: 16px;height: 60px;}
 
-#thembaiviet .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;}
-#thembaiviet .nd-theodoi{height: 60px;border-radius: 10px;;font-size: 20px;padding: 15px;}
+#thembaiviet .theodoi{border:1px solid #ccc;height: 300px;padding: 10px;border-radius: 10px;overflow-y: scroll;overflow-x: hidden;}
+#thembaiviet .nd-theodoi{border-radius: 10px;;font-size: 20px;padding: 15px;}
 #thembaiviet .nd-theodoi:hover{background-color: #ccc}
 #thembaiviet input:active{border: 2px solid #ccc!important;}
 /* -------------------------------KẾT QUẢ TÌM KIẾM--------------------------- */
@@ -513,8 +513,162 @@ form ul .suggest{list-style-type: none;}
 .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem; }
 .toggle.ios .toggle-handle { border-radius: 20rem; }
 #listquiz .boxInfor{padding: 10px;box-shadow: 3px 3px 3px #a9cef5;border-radius: 10px;border: 1px solid #ccc;}
+/* ---------------------------RANKING EXAM---------------------------------- */
+/* -------------------------------------------------------------------------- */
+.panel .panel-heading{
+  background: #00324a;
+  padding: 20px 40px;
+  border-radius: 0;
+  margin: 0 0;
+}
+.panel .panel-heading .title{
+  color: #fff;
+  font-size: 28px;
+  font-weight: 400;
+  text-transform: capitalize;
+  margin: 0;
+}
+#rankingExam .panel{box-shadow: 3px 2px 2px 1px #ccc;margin-top: 50px;;}
+#rankingExam{border-radius: 10px;}
+#rankingExam table span img{width: 40px;height: 40px;margin-right: 20px;}
 
+/* ---------------------------RANKING WORD---------------------------------- */
+/* -------------------------------------------------------------------------- */
+#rankingWord .card.user-card {
+  border-top: none;
+  box-shadow: 0 0 1px 2px rgba(0,0,0,0.05), 0 -2px 1px -2px rgba(0,0,0,0.04), 0 0 0 -1px rgba(0,0,0,0.05);
+  transition: all 150ms linear;
+}
 
+#rankingWord .card {
+  border-radius: 5px;
+  box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+  border: none;
+  margin-bottom: 30px;
+  transition: all 0.3s ease-in-out;
+}
+
+#rankingWord .card .card-header {
+  background-color: transparent;
+  border-bottom: none;
+  padding: 25px;
+}
+
+#rankingWord .card .card-header h5 {
+  margin-bottom: 0;
+  color: #222;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  margin-right: 10px;
+  line-height: 1.4;
+}
+
+#rankingWord .user-card .card-block {
+  text-align: center;
+}
+
+#rankingWord .card .card-block {
+  padding: 25px;
+}
+
+#rankingWord .user-card .card-block .user-image {
+  position: relative;
+  margin: 0 auto;
+  display: inline-block;
+  padding: 5px;
+  width: 110px;
+  height: 110px;
+}
+
+#rankingWord .user-card .card-block .user-image img {
+  z-index: 20;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 100px;
+  height: 100px;
+}
+
+#rankingWord .img-radius {
+  border-radius: 50%;
+}
+#rankingWord .title{font-weight: 600;margin-bottom: 10px;margin-top: 25px}
+#rankingWord .card .card-block p {
+  line-height: 1.4;
+}
+
+#rankingWord .text-muted {
+  color: #919aa3!important;
+}
+
+#rankingWord .user-card .card-block .activity-leval li.active {
+  background-color: #2ed8b6;
+}
+
+#rankingWord .user-card .card-block .activity-leval li {
+  display: inline-block;
+  width: 15%;
+  height: 4px;
+  margin: 0 3px;
+  background-color: #ccc;
+}
+
+#rankingWord .user-card .card-block .counter-block {
+  color: #fff;
+}
+
+#rankingWord .bg-blue {
+  background: linear-gradient(45deg,#4099ff,#73b4ff);
+}
+
+#rankingWord .bg-green {
+  background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+}
+
+#rankingWord .bg-yellow {
+  background: linear-gradient(45deg,#FFB64D,#ffcb80);
+}
+#rankingWord .user-card .card-block .user-social-link i {
+  font-size: 30px;
+}
+
+#rankingWord .text-facebook {
+  color: #3B5997;
+}
+
+#rankingWord .text-twitter {
+  color: #42C0FB;
+}
+
+#rankingWord .text-dribbble {
+  color: #EC4A89;
+}
+
+#rankingWord .user-card .card-block .user-image:before {
+  bottom: 0;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+#rankingWord .user-card .card-block .user-image:after, .user-card .card-block .user-image:before {
+  content: "";
+  width: 100%;
+  height: 48%;
+  border: 2px solid #4099ff;
+  position: absolute;
+  left: 0;
+  z-index: 10;
+}
+
+#rankingWord .user-card .card-block .user-image:after {
+  top: 0;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+}
+
+/* ---------------------------BLOG------------------------------------------ */
+/* -------------------------------------------------------------------------- */
 /* 1. Background Image */
 .started-bg {
   height: 300px;
@@ -610,3 +764,71 @@ form ul .suggest{list-style-type: none;}
   color: #333;
 }
 #about .btn-primary{padding: 10px 20px;border: 0px;border-radius: 20px;margin-left: 350px;}
+.pagination-lg .page-item:first-child .page-link{
+  border-bottom-left-radius: 30px!important ;
+  border-top-left-radius: 30px!important  ;
+}
+.pagination-lg .page-item:last-child .page-link{
+  border-bottom-right-radius: 30px!important ;
+  border-top-right-radius: 30px!important  ;
+}
+.rate-area {
+  float:left;
+  border-style: none;
+}
+
+.rate-area:not(:checked) > input {
+  position:absolute;
+  top:-9999px;
+  clip:rect(0,0,0,0);
+}
+
+.rate-area:not(:checked) > label {
+  float: right;
+  width: .80em;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 36px;
+  line-height: 32px;
+  color: lightgrey;
+  margin-bottom: 10px !important;
+}
+
+.rate-area:not(:checked) > label:before {
+  content: '★';
+}
+
+.rate-area > input:checked ~ label {
+  color: #e8262d;
+  text-shadow: none;
+}
+
+.rate-area:not(:checked) > label:hover,
+.rate-area:not(:checked) > label:hover ~ label {
+  color: #e8262d;
+  
+}
+
+.rate-area > input:checked + label:hover,
+.rate-area > input:checked + label:hover ~ label,
+.rate-area > input:checked ~ label:hover,
+.rate-area > input:checked ~ label:hover ~ label,
+.rate-area > label:hover ~ input:checked ~ label {
+  color: #e8262d;
+  text-shadow: none;
+  
+}
+
+.rate-area > label:active {
+  position:relative;
+  top:0px;
+  left:0px; 
+}
+
+.dropdown-exam{margin-left: 165px;color: #fff;margin-top: 30px;}
+.dropdown-exam .dropdown-item:active{background-color: #007bff}
+.dropdown-exam .dropdown-menu:active{color: #fff}
+.dropdown-quiz {margin-left: 100px;color: #fff;margin-top: 30px;}
+.dropdown-quiz  .dropdown-item:active{background-color: #007bff}
+.dropdown-quiz  .dropdown-menu:active{color: #fff}

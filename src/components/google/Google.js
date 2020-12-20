@@ -31,11 +31,11 @@ class Google extends Component {
     render() {
         return (<GoogleLogin
             clientId="704575261938-i3iiefjaminroc2114rbd02qpjbcgho9.apps.googleusercontent.com"
-            buttonText="Login With Google"
+            buttonText="LOGIN WITH GOOGLE"
             onSuccess={this.responseGoogle}
             onFailure={this.failureGoogle}
-            cookiePolicy={'single_host_origin'}
-        />)
+            cookiePolicy={'single_host_origin'}   
+            />)
     }
 
 

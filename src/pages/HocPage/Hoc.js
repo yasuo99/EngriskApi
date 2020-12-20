@@ -207,6 +207,7 @@ class Hoc extends PureComponent {
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
                             <HeaderClient></HeaderClient>
+                            
                             <main id="hoc2">
                                 <div className="container">
                                     <div className="row kechan mt-5 kechan d-flex">
@@ -241,7 +242,7 @@ class Hoc extends PureComponent {
                                         <div className="mt-4">
                                             <ProgressBar animated now={rightAnswer} max={quiz.questions.length} variant="success" />
                                         </div>
-                                        <div className="row kechan mt-5 kechan">
+                                        <div className="row kechan mt-5">
                                             <div className="col-8 offset-2">
                                                 {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
                                                     <p className="mb-5">Có nghĩa là?</p></div>
@@ -277,7 +278,7 @@ class Hoc extends PureComponent {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={isRight === true ? "row mt-3 thongbao-ketqua" : "row mt-3"}>
+                                        <div className={isRight === true ? "row mt-3 thongbao-ketqua khungKq" : "row mt-3 khungKq"}>
                                             <div className="col-3">
                                                 {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
                                             </div>

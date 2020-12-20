@@ -11,7 +11,7 @@ import Footer from '../Footer/Footer';
 import { doExam, doneExam } from '../../actions/examActions';
 import Countdown from 'react-countdown';
 import { Fragment } from 'react';
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap';
 class ExamPage extends Component {
     constructor(props) {
         super(props);
@@ -367,7 +367,7 @@ class ExamPage extends Component {
                                     </div>
                                 </div>
                             </main>
-
+                           
                             <Footer></Footer>
                         </div>
                     </div>
@@ -387,7 +387,8 @@ class ExamPage extends Component {
                                 <main id="hoc2">
                                     <div className="container">
                                         <div className="mt-4">
-                                            <Pagination size="lg">{items}</Pagination>
+                                            <Pagination size="lg" className="justify-content-center"
+                                            >{items}</Pagination>
                                         </div>
                                         <div className="row kechan mt-5">
                                             <div className="col-4">Time left: <Countdown date={this.state.start + exam.duration * 60 * 1000} onComplete={this.submitExam} /></div>

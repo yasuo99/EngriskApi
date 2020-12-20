@@ -85,6 +85,7 @@ class HomePage extends PureComponent {
               </div>
             </div> */}
             <div>
+
               <Link className="btn btn-primary do-btn" to={`/sections/${section.id}/do`}>Do <i className="fa fa-pencil"></i></Link>
             </div>
           </div>
@@ -98,9 +99,18 @@ class HomePage extends PureComponent {
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
             {(this.props.account.roles.includes("superadmin") || this.props.account.roles.includes("manager")) && <HeaderAdmin></HeaderAdmin>}
-            {(this.props.account.roles.includes("learner") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("forumadmin") || this.props.isLoggedIn === false) &&<HeaderClient></HeaderClient>}
+            {(this.props.account.roles.includes("learner") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("forumadmin") || this.props.isLoggedIn === false) && <HeaderClient></HeaderClient>}
             <main>
               <div className="container">
+                <div className="dropdown dropdown-quiz">
+                  <a className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Lọc danh sách quiz
+                                            </a>
+                  <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a className="dropdown-item"  >Học Tập</a>
+                    <a className="dropdown-item" >Gia Đình</a>
+                  </div>
+                </div>
                 <div className="row">
                   <div id="trangchu" className="col-10 offset-1">
                     {this.isComponentMounted && <InfiniteScroll

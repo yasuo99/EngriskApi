@@ -20,7 +20,7 @@ class DangTheoDoi extends Component {
                     <div className="col-8">
                         <h4>Đang Theo Dõi:</h4>
                     </div>
-                    <div className="col-4 pt-2"><a href="#">SỬA ĐỔI</a></div>
+                    <div className="col-4"><a href="#">SỬA ĐỔI</a></div>
                 </div>
                 {renderPosts}
             </div>
