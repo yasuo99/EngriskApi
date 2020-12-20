@@ -28,6 +28,7 @@ class QLListTuVung extends Component {
             categoryEdit: "",
             imageEdit: null,
             selectedWord: 0,
+            oldImage: null,
             words: [],
         };
         this.handleChange = this.handleChange.bind(this);
@@ -112,6 +113,7 @@ class QLListTuVung extends Component {
             vietNamEdit: word.vie === null ? "" : word.vie,
             spellingEdit: word.spelling === null ? "" : word.spelling,
             categoryEdit: word.wordCategory === null ? "" : word.wordCategory,
+            oldImage: word.wordImg
         });
     }
     closeEdit() {
@@ -346,6 +348,9 @@ class QLListTuVung extends Component {
                                     <option value="Động từ">Động từ</option>
                                     <option value="Trạng từ">Trạng từ</option>
                                 </select>
+                            </div>
+                            <div className="card-input mt-2">
+                                <img src={this.state.oldImage} alt="" width="100px" height="100px"/>
                             </div>
                             <div className="card-input">
                                 <span>Hình ảnh minh họa </span>

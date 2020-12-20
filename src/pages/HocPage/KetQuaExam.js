@@ -29,8 +29,8 @@ class KetQuaExam extends Component {
         const renderQuestions = this.state.result.answer.questions.map((question) =>
             <div key={question.id} className="ketquacauhoi">
                 <div className="cauhoi">
-                    {question.isListeningQuestion && <ReactPlayer url={question.content} controls width="500px" height="30px" />}
-                    {question.isListeningQuestion == false && question.content}
+                    {question.isListeningQuestion && <ReactPlayer url={question.audio} controls width="500px" height="30px" />}
+                    {question.content}
                 </div>
                 <div className="dapan">
                     <ol type="A" className="ml-4">

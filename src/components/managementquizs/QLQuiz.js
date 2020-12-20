@@ -56,55 +56,16 @@ class QLQuiz extends Component {
     render() {
         return (
             <tr>
-                <td>1</td>
+                <td style={{width: "300px"}}>{this.props.quiz.quizName}</td>
+                <td style={{width: "300px"}}>{this.props.quiz.sectionName}</td>
+                <td style={{width: "100px"}}>{this.props.quiz.difficultLevel}</td>
+                <td style={{width: "100px"}}>{this.props.quiz.totalQuestion}</td>
                 <td>
-                    <ListCauHoi></ListCauHoi>
-                </td>
-
-                <td>
-                <Button variant="primary" className="btn btn-success mr-2" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /></Button>
-                <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                <Button data-id={this.props.quiz.id} variant="primary" className="btn btn-success mr-2" onClick={e => this.props.modalQuestionCreate(e)} ><i data-id={this.props.quiz.id} className="fa fa-plus" /></Button>
+                <Button data-id={this.props.quiz.id} variant="primary" className="btn btn-primary mr-2" onClick={e => { this.props.modalEdit(e)}}><i data-id={this.props.quiz.id} className="fa fa-edit" /></Button>
+                <Button data-id={this.props.quiz.id} variant="primary" className="btn btn-danger" onClick={e => this.props.modalDelete(e)}><i data-id={this.props.quiz.id} className="fa fa-trash" /></Button>
                  {/* Modal create */}
-                <Modal show={this.state.modalCreate}>
-                    <Modal.Header closeButton onClick={() => this.closeCreate()}>
-                        <Modal.Title>Thêm câu hỏi</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                    <ul className="nav nav-tabs">
-                            <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#taboneQuestion"><i className="fa fa-book" /> Câu hỏi đọc</a> </li>
-                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwoQuestion"><i className="fa fa-star" /> Câu hỏi nghe </a> </li>
-                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthreeQuestion"><i className="fa fa-bolt" /> Câu hỏi hình ảnh</a> </li>
-                        </ul>
-                        <div className="tab-content mt-3">
-                            <div className="tab-pane fade show active" id="taboneQuestion" role="tabpanel">
-                                <ModalListCauHoiDoc></ModalListCauHoiDoc>
-                            </div>
-
-                            <div className="tab-pane fade" id="tabtwoQuestion" role="tabpanel">
-                                <ModalListCauHoiNghe></ModalListCauHoiNghe>
-                            </div>
-                            <div className="tab-pane fade" id="tabthreeQuestion" role="tabpanel">
-                                <ModalListCauHoiHinhAnh></ModalListCauHoiHinhAnh>
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.closeCreate()}>Trở lại</Button>
-                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
-                    </Modal.Footer>
-                </Modal>
-                
-                {/* Modal phần xóa */}
-                <Modal show={this.state.modalDelete}>
-                    <Modal.Header closeButton onClick={() => this.closeDelete()}>
-                        <Modal.Title>Xác nhận xóa quiz</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Bạn có chắc chắn muốn xóa quiz này ra khỏi hệ thống không?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.closeDelete()}>Trở lại</Button>
-                        <Button variant="primary" onClick={(e) => this.submitDelete(e)}>Lưu lại</Button>
-                    </Modal.Footer>
-                </Modal>
+               
                 </td>
             </tr>
         );

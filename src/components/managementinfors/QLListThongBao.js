@@ -5,6 +5,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery'
 import notificationApi from "../../api/notificationApi";
 import { Button, Modal } from 'react-bootstrap';
+import { toast } from "react-toastify";
 class QLListThongBao extends Component {
     constructor(props) {
         super(props);
@@ -12,17 +13,12 @@ class QLListThongBao extends Component {
             modalCreate: false,
             modalDelete: false,
             modalEdit: false,
-            content:"",
-            // Phần create
-            nameCreate: "",
-            dateCreate: "",
-            contentCreate: "",
-            // Phần edit
-            nameEdit: "",
-            dateEdit: "",
-            contentEdit: "",
-
-            notifications: []
+            url: null,
+            content: null,
+            type: null,
+            side: null,
+            notifications: [],
+            selectNotify: 0
         };
         this.isComponentMounted = false;
         this.handleChange = this.handleChange.bind(this);
@@ -61,12 +57,33 @@ class QLListThongBao extends Component {
         });
     }
     // Xử lý modal create
-    submitCreate(e) {
+    submitCreate = async (e) => {
         const notify = {
-            content: this.state.contentCreate,
-            url: this.state.nameCreate
+            content: this.state.content,
+            url: this.state.url,
+            type: this.state.type,
+            isClientNotify: this.state.side === "client" ? true : false
         }
-        this.closeCreate();
+        try {
+            const result = await notificationApi.createNotification(notify);
+            if (result.status === 200) {
+                toast("Thêm thành công");
+                var notifications = await this.fetchNotification();
+                if (this.isComponentMounted) {
+                    this.setState({
+                        notifications: notifications
+                    });
+                }
+                this.closeCreate();
+            }
+            else {
+                toast("Thêm thất bại");
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
     openCreate() {
@@ -77,27 +94,69 @@ class QLListThongBao extends Component {
         this.setState({
             nameCreate: "",
             modalCreate: false,
-            contentCreate:""
+            contentCreate: ""
         });
     }
     // Xử lý modal edit
-    openEdit() {
+    openEdit = async (e) => {
+        if (e) {
+            if (e.target.dataset.id) {
+                const notify = await notificationApi.getDetail(e.target.dataset.id);
+                this.setState({
+                    selectNotify: e.target.dataset.id,
+                    url: notify.url,
+                    content: notify.content,
+                    type: notify.type,
+                    side: notify.isClientNotify ? "client" : "admin"
+                });
+            }
+        }
         this.setState({ modalEdit: true });
     }
     closeEdit() {
         this.setState({
             nameCreate: "",
-            contentEdit:"",
+            contentEdit: "",
             modalEdit: false,
         });
     }
-    submitEdit(e) {
-        this.setState({
-        });
-        this.closeEdit();
+    submitEdit = async (e) => {
+        const notify = {
+            content: this.state.content,
+            url: this.state.url,
+            type: this.state.type,
+            isClientNotify: this.state.side === "client" ? true : false
+        }
+        try {
+            const result = await notificationApi.updateNotify(this.state.selectNotify, notify);
+            if (result.status === 200) {
+                toast("Cập nhật thành công");
+                var notifications = await this.fetchNotification();
+                if (this.isComponentMounted) {
+                    this.setState({
+                        notifications: notifications
+                    });
+                }
+                this.closeEdit();
+            }
+            else {
+                toast("Cập nhật thất bại");
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     // Xử lý modal delete
-    openDelete() {
+    openDelete(e) {
+        if (e) {
+            if (e.target.dataset.id) {
+                this.setState({
+                    selectNotify: e.target.dataset.id
+                })
+            }
+        }
         this.setState({ modalDelete: true });
     }
     closeDelete() {
@@ -105,21 +164,37 @@ class QLListThongBao extends Component {
             modalDelete: false,
         });
     }
-    submitDelete(e) {
-        this.setState({
-
-        });
-        this.closeDelete();
+    submitDelete = async (e) => {
+        try {
+            const result = await notificationApi.deleteNotify(this.state.selectNotify);
+            if (result.status === 200) {
+                toast("Xóa thành công");
+                var notifications = await this.fetchNotification();
+                if (this.isComponentMounted) {
+                    this.setState({
+                        notifications: notifications
+                    });
+                }
+                this.closeDelete();
+            }
+            else {
+                toast("Xóa thất bại")
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
     render() {
         const renderNotification = this.state.notifications.map((notification) =>
             <tr key={notification.id}>
-                <td>{notification.id}</td>
+                <td>{notification.url}</td>
                 <td>{notification.publishedDate}</td>
                 <td>{notification.content}</td>
+                <td>{notification.type}</td>
+                <td>{notification.isClientNotify ? "Client" : "Admin"}</td>
                 <td>
-                    <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
-                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                    <Button data-id={notification.id} variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i data-id={notification.id} className="fa fa-edit" /></Button>
+                    <Button data-id={notification.id} variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i data-id={notification.id} className="fa fa-trash" /></Button>
 
                 </td>
                 <td>
@@ -133,9 +208,11 @@ class QLListThongBao extends Component {
                 {this.isComponentMounted && <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
-                            <th className="tieudeTB">Tiêu đề</th>
+                            <th className="tieudeTB">Đường dẫn</th>
                             <th className="ngayTB">Ngày thông báo</th>
                             <th >Nội dung thông báo</th>
+                            <th>Loại thông báo</th>
+                            <th>Client/ admin</th>
                             <th className="chucnang" />
                             <th className="lock"></th>
                         </tr>
@@ -155,18 +232,35 @@ class QLListThongBao extends Component {
                                 <span>Đường dẫn</span>
                                 <input
                                     type="text"
-                                    value={this.state.nameCreate}
-                                    name="nameCreate"
+                                    value={this.state.url}
+                                    name="url"
                                     onChange={e => this.handleChange(e)}
                                 />
                             </div>
                             <div className="card-input mt-4">
                                 <span>Nội dung</span>
-                                <textarea placeholder="Nhập nội dung thông báo" 
+                                <textarea placeholder="Nhập nội dung thông báo"
                                     onChange={e => this.handleChange(e)}
-                                    value={this.state.contentCreate}
-                                    name="contentCreate"
+                                    value={this.state.content}
+                                    name="content"
                                 />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Loại thông báo</span>
+                                <select name="type" id="" onChange={e => this.handleChange(e)}>
+                                    <option value="">Chọn loại thông báo</option>
+                                    <option value="info">Gợi ý</option>
+                                    <option value="success">Thông báo</option>
+                                    <option value="danger">Cảnh báo</option>
+                                </select>
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Phía</span>
+                                <select name="side" id="">
+                                    <option value="">Chọn phía nhận thông báo</option>
+                                    <option value="client">Client</option>
+                                    <option value="admin">Admin</option>
+                                </select>
                             </div>
                         </div>
                     </Modal.Body>
@@ -197,18 +291,27 @@ class QLListThongBao extends Component {
                                 <span>Đường dẫn</span>
                                 <input
                                     type="text"
-                                    value={this.state.nameEdit}
-                                    name="nameEdit"
+                                    value={this.state.url}
+                                    name="url"
                                     onChange={e => this.handleChange(e)}
                                 />
                             </div>
                             <div className="card-input mt-4">
                                 <span>Nội dung</span>
-                                <textarea placeholder="Nhập nội dung thông báo" 
+                                <textarea placeholder="Nhập nội dung thông báo"
                                     onChange={e => this.handleChange(e)}
-                                    value={this.state.contentEdit}
-                                    name="contentEdit"
+                                    value={this.state.content}
+                                    name="content"
                                 />
+                            </div>
+                            <div className="card-input mt-4">
+                                <span>Loại thông báo</span>
+                                <select name="type" id="" onChange={e => this.handleChange(e)}>
+                                    <option value="">Chọn loại thông báo</option>
+                                    <option value="info">Gợi ý</option>
+                                    <option value="success">Thông báo</option>
+                                    <option value="danger">Cảnh báo</option>
+                                </select>
                             </div>
                         </div>
                     </Modal.Body>

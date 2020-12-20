@@ -36,16 +36,13 @@ const accountApi = {
         }
         return axiosClient.put(url, null, { params, headers });
     },
-    disableAccount: (id, body) => {
-        const url = `/accounts/${id}/ban`;
+    disableAccount: (id) => {
+        const url = `/accounts/${id}/disable`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: "Bearer " + token
         }
-        const params = {
-            hour: body
-        }
-        return axiosClient.put(url, null, { params, headers });
+        return axiosClient.put(url, null, {headers });
     },
     forgetPassword: (email) => {
         const url =`/accounts/forget-pw?email=${email}`;
@@ -72,6 +69,17 @@ const accountApi = {
             newPassword: newPassword
         };
         return axiosClient.put(url, body,{headers});
+    },
+    addAccountToRole: (accountId, roleName) => {
+        const url = `/accounts/${accountId}/roles`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        };
+        const body = {
+            roleName: roleName
+        }
+        return axiosClient.put(url,body, {headers});
     }
 }
 export default accountApi;

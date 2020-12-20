@@ -1,5 +1,6 @@
 // import * as Types from '../constants/ActionTypes';
 import { useJwt } from 'react-jwt';
+import { toast } from 'react-toastify';
 import axiosClient from '../config/axiosClient';
 
 export const googleSignIn = (token) => {
@@ -27,6 +28,7 @@ export const facebookSignIn = (token) => {
             }
             return (
                 dispatch({ type: "SIGN_IN", account: response.account, token: response.token }))
+        }).catch(error => {
         });
     }
 }
@@ -55,9 +57,9 @@ export const signIn = (user) => {
                 // console.log("a");
                 // return(dispatch({ type: "SIGN_IN_ERR_EMAIL" }))
             }, error => {
-                return (dispatch({ type: "SIGN_IN_ERR" }));
+                toast(error.response.data.error)
             }).catch((error) => {
-                console.log(error);
+                console.log(error.response.data.error);
             });
     };
 }
@@ -79,16 +81,16 @@ export const signUp = (user) => {
 }
 export const logout = () => {
     return dispatch => {
-        return dispatch({type: "SIGN_OUT"});
+        return dispatch({ type: "SIGN_OUT" });
     }
 }
 export const logOut = () => {
-    return( {
+    return ({
         type: "SIGN_OUT"
     })
 }
 export const timeOut = () => {
-    return({
+    return ({
         type: "TIME_OUT"
     })
 }

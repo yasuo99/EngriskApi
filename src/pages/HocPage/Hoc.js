@@ -249,8 +249,8 @@ class Hoc extends PureComponent {
                                                     <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
                                                 {currentQuestion.isListeningQuestion === true &&
                                                     <div className="row">
-                                                        <b>Chọn đáp án đúng</b>
-                                                        <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" />
+                                                        <b>{currentQuestion.content}</b>
+                                                        <ReactPlayer url={currentQuestion.audio} controls width="500px" height="30px" />
                                                     </div>}
                                                 <div className="row mt-2">
                                                     <div className="col-6">

@@ -1,8 +1,8 @@
 import axiosClient from '../config/axiosClient';
 const questionApi = {
-    getAll: () => {
+    getAll: (params) => {
         const url = "/questions/";
-        return axiosClient.get(url);
+        return axiosClient.get(url, {params});
     },
     getDetail: (id) => {
         const url = `/questions/${id}`;

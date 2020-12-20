@@ -45,6 +45,9 @@ import Blog from './pages/CaiDatPage/Blog';
 import RankingExam from './pages/RankingPage/RankingExam'
 import RankingWord from './pages/RankingPage/RankingWord'
 import XacNhanEmail from './pages/CaiDatPage/XacNhanEmail';
+
+import ManagementRole from './pages/Admin/ManagementRole';
+
 const routes = [
     {
         path: '/home',
@@ -354,6 +357,13 @@ const routes = [
         guard: true,
         roles: ["superadmin"]
     },
+        path: '/quanly-phanquyen',
+        exact: true,
+        main: () => <ManagementRole/>,
+        guard: true,
+        roles: ["superadmin"]
+    }
+    ,
     {
         path: '/loi',
         exact: false,

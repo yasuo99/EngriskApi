@@ -110,9 +110,9 @@ class PhanHoiPost extends Component {
                         <div className="col-md-1"></div>
                         <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-2 img-chitietthaoluan" src={reply.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                         <div className="col-md-10">
-                        <a href="#">{comment.accountUsername}</a>
+                        <a href="#">{reply.accountUsername}</a>
                         <span className="more">
-                            <p className="mt-3">{comment.comment}
+                            <p className="mt-3">{reply.comment}
                             <span className="dropdown">
                                 <a className="ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img src="/image/morel.png"></img>
