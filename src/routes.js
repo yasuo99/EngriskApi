@@ -32,6 +32,7 @@ import ManagementPayment from './pages/Admin/ManagementPayment';
 import ManagementQuiz from './pages/Admin/ManagementQuiz';
 import ManagementExam from './pages/Admin/ManagementExam';
 import ManagementAccount from './pages/Admin/ManagementAccount';
+import ManagementScore from './pages/Admin/ManagementScore';
 import HistroriesExam from './pages/HistoryPage/HistroriesExam';
 import HistoriesTopup from './pages/HistoryPage/HistoriesTopup';
 import QuenMatKhau from './pages/CaiDatPage/QuenMatKhau';
@@ -41,6 +42,9 @@ import ListQuiz from './pages/HocPage/ListQuiz';
 import DatLaiMatKhau from './pages/CaiDatPage/DatLaiMatKhau';
 import ManagementSection from './pages/Admin/ManagementSection';
 import Blog from './pages/CaiDatPage/Blog';
+import RankingExam from './pages/RankingPage/RankingExam'
+import RankingWord from './pages/RankingPage/RankingWord'
+import XacNhanEmail from './pages/CaiDatPage/XacNhanEmail';
 const routes = [
     {
         path: '/home',
@@ -57,9 +61,30 @@ const routes = [
         roles: []
     },
     {
+        path: '/rankingexam',
+        exact: true,
+        main: () => <RankingExam />,
+        guard: false,
+        roles: []
+    },
+    {
+        path: '/rankingword',
+        exact: true,
+        main: () => <RankingWord />,
+        guard: false,
+        roles: []
+    },
+    {
         path: '/list-quiz',
         exact: true,
         main: () => <ListQuiz />,
+        guard: false,
+        roles: []
+    },
+    {
+        path: '/xacnhan-email',
+        exact: true,
+        main: () => <XacNhanEmail />,
         guard: false,
         roles: []
     },
@@ -319,6 +344,13 @@ const routes = [
         path: '/quanly-taikhoan',
         exact: true,
         main: () => <ManagementAccount/>,
+        guard: true,
+        roles: ["superadmin"]
+    },
+    {
+        path: '/quanly-bangdiem',
+        exact: true,
+        main: () => <ManagementScore/>,
         guard: true,
         roles: ["superadmin"]
     },

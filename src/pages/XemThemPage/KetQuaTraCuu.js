@@ -103,7 +103,7 @@ class KetQuaTraCuu extends Component {
                                 <div className="row">
                                     <div className="col-10 offset-1 mt-4">
                                         <div className="row">
-                                            <div className="col-8"><h1 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h1></div>
+                                            <div className="col-8"><h2 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h2></div>
                                             {this.props.isLoggedIn && <div className="col-4 mt-4 text-right">
                                                 <div className="dropdown">
                                                     <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -115,7 +115,7 @@ class KetQuaTraCuu extends Component {
                                             </div>}
                                         </div>
                                         <h5 className="text2 mt-2">BẢN DỊCH</h5>
-                                        <h2 className="mt-3"><img src={result.direction === 'en' ? "/image/vietnamxl.png" : "/image/english-language.png"} />{result.direction === 'en' ? result.word.vie : result.word.eng}</h2>
+                                        <h3 className="mt-3"><img src={result.direction === 'en' ? "/image/vietnamxl.png" : "/image/english-language.png"} className="mr-2"/>{result.direction === 'en' ? result.word.vie : result.word.eng}</h3>
                                         <h5 className="text2 mt-4">VÍ DỤ</h5>
                                         {renderExamples}
                                     </div>

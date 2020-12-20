@@ -125,7 +125,7 @@ class ThaoLuanChiTietPage extends Component {
                                     <div className="row mt-5">
                                         <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.account.photoUrl || "/image/default-user-image.png"} /></div>
                                         <div className="col-md-11">
-                                            <textarea rows={4} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={this.handleChange} />
+                                            <textarea rows={2} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={this.handleChange} />
                                             <button type="button" className="btn btn-primary mr-3 mt-2" onClick={this.handleSubmit}>ĐĂNG</button>
                                             <button type="button" className="btn btn-primary mt-2" onClick={this.cancel}>HỦY</button>
                                         </div>

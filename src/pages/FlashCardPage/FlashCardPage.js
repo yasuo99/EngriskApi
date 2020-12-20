@@ -162,7 +162,7 @@ class FlashCardPage extends Component {
                                                 </div>
                                                 <div className="back">
                                                     <div className="row">
-                                                        <div className="col-8"><img src={currentWord.wordImg || "image/card.jpeg"} className="img-100 card-img-top" /></div>
+                                                        <div className="col-8"><img src={currentWord.wordImg || "image/card.jpeg"} className="img-flashcard card-img-top" /></div>
                                                         <div className="col-4"> <p>{currentWord.vie}</p></div>
                                                     </div>
                                                 </div>

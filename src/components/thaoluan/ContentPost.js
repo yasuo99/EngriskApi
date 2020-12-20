@@ -7,7 +7,7 @@ class ContentPost extends Component {
         this.state = {
             content: '',
             id: "",
-            titleEdit:"",
+            titleEdit: "",
             modalEdit: false,
             modalDelete: false,
         };
@@ -24,11 +24,11 @@ class ContentPost extends Component {
 
     closeEdit() {
         this.setState({
-            titleEdit:"",
+            titleEdit: "",
             modalEdit: false,
         });
     }
-     // Xử lý modal delete
+    // Xử lý modal delete
     openDelete() {
         this.setState({ modalDelete: true });
     }
@@ -63,17 +63,24 @@ class ContentPost extends Component {
                         <p className="mt-3 mb-3">{this.props.post.content}</p>
                     </div>
                     {(this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("admin") || this.props.account.roles.includes("manager") || this.props.post.accountUsername === this.props.account.username) && <div className="col-2 chucnang">
-                    <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
-                    <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
+                        <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
+                        <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
                     </div>}
                     <div className="baocao">
                         <a href="#" className="mr-3">Báo cáo <i className="fa fa-flag"></i></a>
                         <div className="rate">
-                            <i className="fa fa-star checked"></i>
-                            <i className="fa fa-star checked"></i>
-                            <i className="fa fa-star checked"></i>
-                            <i className="fa fa-star"></i>
-                            <i className="fa fa-star"></i>
+                            <ul className="rate-area">
+                                <input type="radio" id="5-star" name="crating" defaultValue={5} />
+                                <label htmlFor="5-star" title="Amazing">5 stars</label>
+                                <input type="radio" id="4-star" name="crating" defaultValue={4} />
+                                <label htmlFor="4-star" title="Good">4 stars</label>
+                                <input type="radio" id="3-star" name="crating" defaultValue={3} />
+                                <label htmlFor="3-star" title="Average">3 stars</label>
+                                <input type="radio" id="2-star" name="crating" defaultValue={2} />
+                                <label htmlFor="2-star" title="Not Good">2 stars</label>
+                                <input type="radio" id="1-star" required name="crating" defaultValue={1} aria-required="true" />
+                                <label htmlFor="1-star" title="Bad">1 star</label>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -95,7 +102,7 @@ class ContentPost extends Component {
                             </div>
                             <div className="card-input mt-4">
                                 <span>Nội dung bài viết</span>
-                                <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude"/>
+                                <textarea placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude" />
                             </div>
                         </div>
                     </Modal.Body>
@@ -104,8 +111,8 @@ class ContentPost extends Component {
                         <Button variant="primary" onClick={(e) => this.submitEdit(e)}>Lưu lại</Button>
                     </Modal.Footer>
                 </Modal>
-                  {/* Modal phần xóa */}
-                  <Modal show={this.state.modalDelete}>
+                {/* Modal phần xóa */}
+                <Modal show={this.state.modalDelete}>
                     <Modal.Header closeButton onClick={() => this.closeDelete()}>
                         <Modal.Title>Xác nhận xóa bài viết</Modal.Title>
                     </Modal.Header>

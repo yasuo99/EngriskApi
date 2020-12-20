@@ -102,6 +102,15 @@ export default class Exam extends Component {
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
                         <HeaderClient></HeaderClient>
+                        <div className="dropdown dropdown-exam">
+                            <a className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Lọc danh sách exam
+                                            </a>
+                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a className="dropdown-item"  >Học Tập</a>
+                                <a className="dropdown-item" >Gia Đình</a>
+                            </div>
+                        </div>
                         <main id="scroll">
                             <div className="container">
                                 <div className="row">

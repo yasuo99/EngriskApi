@@ -4767,7 +4767,7 @@ input[type="button"].btn-block {
 .page-link:focus {
   z-index: 3;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+  /* box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25); */
 }
 
 .page-item:first-child .page-link {
@@ -10820,7 +10820,12 @@ a:focus {
   background-size: cover;
   width: 20%;
 }
-
+.bg-email-image {
+  background: url("../image/message.png");
+  background-position: center;
+  background-size: cover;
+  width: 20%;
+}
 form.user .custom-checkbox.small label {
   line-height: 1.5rem;
 }
