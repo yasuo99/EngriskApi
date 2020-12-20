@@ -48,7 +48,6 @@ class SubMenu extends Component {
             <div className="bg-white py-2 collapse-inner rounded">
               <h6 className="collapse-header">Quản lý nội dung:</h6>
               <Link className="collapse-item" to="/quanly-thongbao">Thông báo</Link>
-              <Link className="collapse-item" to="/quanly-naptien">Lịch sử nạp</Link>
               <Link className="collapse-item" to="/quanly-taikhoan">Tài khoản</Link>
               <Link className="collapse-item" to="/quanly-phanquyen">Phân quyền</Link>
               <Link className="collapse-item" to="/quanly-bangdiem">Quy đổi điểm</Link>

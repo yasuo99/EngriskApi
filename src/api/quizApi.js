@@ -37,6 +37,10 @@ const quizApi = {
     delete: (id, body) => {
         const url = `/quizzes/${id}`;
         return axiosClient.delete(url, body);
+    },
+    addQuestionToquiz: (quizId, questionId) => {
+        const url = `/quizzes/${quizId}/questions/${questionId}`;
+        return axiosClient.put(url);
     }
 }
 export default quizApi;

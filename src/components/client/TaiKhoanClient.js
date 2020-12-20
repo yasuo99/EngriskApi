@@ -15,6 +15,7 @@ const TaiKhoanClient = ({ status,account}) => {
                 </Link>
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                     <Link className="dropdown-item" to="/caidatchung">Hồ sơ của bạn</Link>
+                    <Link className="dropdown-item" to="/lichsu-exam">Lịch sử exam</Link>
                     <Link className="dropdown-item" to="#">Hỗ trợ</Link>
                     <div className="dropdown-divider" />
                     <Link className="dropdown-item" to="#" onClick={dispatchLogout}>Đăng xuất</Link>

@@ -34,13 +34,21 @@ const sectionApi = {
         const url = `/sections/${id}`;
         return axiosClient.get(url);
     },
+    getAllQuizzes: (id) => {
+        const url = `/sections/${id}/quizzes`;
+        return axiosClient.get(url);
+    },
     create: (body) => {
         const url = `/sections`;
-        return axiosClient.post(body);
+        return axiosClient.post(url,body);
     },
     update: (id, body) => {
         const url = `/sections/${id}`;
         return axiosClient.put(url, body);
+    },
+    setRequireLogin: (id) => {
+        const url = `/sections/${id}/require-login`;
+        return axiosClient.put(url);
     },
     delete: (id) => {
         const url = `/sections/${id}`;

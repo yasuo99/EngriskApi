@@ -41,6 +41,7 @@ import ListQuiz from './pages/HocPage/ListQuiz';
 import DatLaiMatKhau from './pages/CaiDatPage/DatLaiMatKhau';
 import ManagementSection from './pages/Admin/ManagementSection';
 import Blog from './pages/CaiDatPage/Blog';
+import ManagementRole from './pages/Admin/ManagementRole';
 const routes = [
     {
         path: '/home',
@@ -322,6 +323,14 @@ const routes = [
         guard: true,
         roles: ["superadmin"]
     },
+    {
+        path: '/quanly-phanquyen',
+        exact: true,
+        main: () => <ManagementRole/>,
+        guard: true,
+        roles: ["superadmin"]
+    }
+    ,
     {
         path: '/loi',
         exact: false,

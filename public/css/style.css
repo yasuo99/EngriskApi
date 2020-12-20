@@ -36,7 +36,7 @@ a.text-primary:hover{color: #48871B}
   #trangchu .card-hoc a{font-weight: bold;font-size: 18px;}
   #trangchu .card-hoc .img-hoc{width: 60px;height: 60px;border-radius: 50%;position: relative; top: 50%;
     transform: translateY(-50%);}
-  #trangchu .card-hoc .do-btn{position: relative; top: -50%; transform: translateY(50%);}
+  #trangchu .card-hoc .do-btn{position: relative; transform: translateY(50%);}
   .giadauvang{border: 3px solid #ccc; border-radius: 10px;height: 450px}
 .gachchan{border-bottom:2px solid #ccc; margin-top: 30px}
 .img-xephang{padding-left:30%}
@@ -317,6 +317,18 @@ form ul .suggest{list-style-type: none;}
 #ketquatracuu form .inner-form .input-field.third-wrap .btn {padding: 15px;font-size: 20px;font-weight: bold; border-radius: 10px;box-shadow: 3px 3px 3px #77B748;left: 350px;margin-right: 10px;width: 150px;}
 #ketquatracuu .kechan{border-bottom: 2px solid #ccc;margin-bottom:30px;padding: 20px 0;}
 #ketquatracuu .gachchan{border-bottom: 2px solid #77B748;margin-bottom:30px;padding: 20px 0;border-bottom-style: dotted;width: 300px;}
+  
+.question-table{
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+}
+.question-table td {
+  padding: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100px;
+}
 
 .dropdown-menu{
   width: 200px;

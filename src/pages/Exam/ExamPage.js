@@ -311,6 +311,12 @@ class ExamPage extends Component {
                 answer: '',
                 checked: false
             });
+            const currentQuestion = this.state.questions[this.state.index - 1];
+            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            console.log(found);
+            if (found[0].isListeningQuestion) {
+                found[0].listened = true;
+            }
         }
     }
     listenningTimeout = () => {
@@ -397,10 +403,10 @@ class ExamPage extends Component {
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened == false &&
                                                     <div className="row">
                                                         <b>Chọn đáp án đúng</b>
-                                                        <ReactPlayer url={currentQuestion.content} controls width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
+                                                        <ReactPlayer url={currentQuestion.audio} controls playing={!this.state.listened} width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
                                                     </div>}
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
-                                                {currentQuestion.isFillOutQuestion === true && <p>{currentQuestion.content}</p>}
+                                                <p>{currentQuestion.content}</p>
                                                 <div className="row mt-2">
                                                     <div className="col-6">
                                                         <button className={currentQuestion.a ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
