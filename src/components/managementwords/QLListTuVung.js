@@ -6,6 +6,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery';
 import { Button, Modal } from 'react-bootstrap'
 import { toast } from "react-toastify";
+import {Link} from "react-browser-router"
 
 class QLListTuVung extends Component {
     constructor(props) {
@@ -205,7 +206,9 @@ class QLListTuVung extends Component {
         );
         return (
             <div>
+                
                 <Button variant="primary" className="btn btn-success mr-2 mb-3" onClick={e => this.openCreate(e)} ><i className="fa fa-plus" /> Thêm từ vựng</Button>
+                <Link to="/quanly-tuvung/quanly-vidu" className="btn btn-primary float-right">Thêm ví dụ</Link>
                 {this.isComponentMounted && <table className="table table-bordered" id="dataTable1" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
