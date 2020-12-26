@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Engrisk.Data;
 using Engrisk.Helper;
+using Engrisk.Hubs;
 using Engrisk.Models;
 using Engrisk.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,10 +55,11 @@ namespace Engrisk
                 opts.Password.RequireUppercase = false;
             });
             identityBuider = new IdentityBuilder(identityBuider.UserType, typeof(Role), identityBuider.Services);
-            identityBuider.AddEntityFrameworkStores<ApplicationDbContext>();
+            identityBuider.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             identityBuider.AddRoleValidator<RoleValidator<Role>>();
             identityBuider.AddRoleManager<RoleManager<Role>>();
             identityBuider.AddSignInManager<SignInManager<Account>>();
+            // services.AddIdentity<Account,Role>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
@@ -77,13 +79,15 @@ namespace Engrisk
             //     opts.AddPolicy("RequireManagerRole", policy => policy.RequireRole("MANAGER"));
             //     opts.AddPolicy("RequireForumRole", policy => policy.RequireRole("forumadmin","forummod"));
             // });
-            services.AddDbContextPool<ApplicationDbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers(opts =>
             {
                 // var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 // opts.Filters.Add(new AuthorizeFilter(policy));
             })
-            .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            .AddNewtonsoftJson(options => {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             services.AddScoped<IAuthRepo, AuthRepo>();
             services.AddScoped<ICRUDRepo, CRUDRepo>();
             services.AddScoped<IAuthService, GoogleAuthService>();

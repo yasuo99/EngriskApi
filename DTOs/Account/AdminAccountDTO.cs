@@ -16,7 +16,7 @@ namespace Engrisk.DTOs
         public string PhotoUrl { get; set; }
         public string PublicId { get; set; }
         public virtual IEnumerable<AccountRole> Roles { get; set; }
-        public virtual IEnumerable<Comment> Comments { get; set; }
+        public virtual IEnumerable<Models.Comment> Comments { get; set; }
         public virtual IEnumerable<PostRating> PostRatings { get; set; }
 
 

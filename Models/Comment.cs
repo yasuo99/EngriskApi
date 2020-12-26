@@ -17,6 +17,7 @@ namespace Engrisk.Models
         public DateTime Date { get; set; }
         public int Like { get; set; }
         public int Dislike { get; set; }
+        public bool IsReplyComment { get; set; }
         public virtual IEnumerable<CommentReply> Replies { get; set; }
         public virtual IEnumerable<CommentReply> Comments { get; set; }
         public virtual IEnumerable<LikedComment> LikedComments { get; set; }

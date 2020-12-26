@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Engrisk.Migrations
 {
-    public partial class Migrations2020123 : Migration
+    public partial class CreateModels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,8 +87,10 @@ namespace Engrisk.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
+                    Detail = table.Column<string>(nullable: true),
                     Create_At = table.Column<DateTime>(nullable: false),
                     Price = table.Column<int>(nullable: false),
+                    Exp = table.Column<int>(nullable: false),
                     Duration = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -164,6 +166,20 @@ namespace Engrisk.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ListeningToeicRedeems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NumOfSentences = table.Column<int>(nullable: false),
+                    Score = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ListeningToeicRedeems", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
                 {
@@ -172,7 +188,9 @@ namespace Engrisk.Migrations
                     Content = table.Column<string>(nullable: true),
                     Url = table.Column<string>(nullable: true),
                     PublishedDate = table.Column<DateTime>(nullable: false),
-                    IsPublish = table.Column<bool>(nullable: false)
+                    IsPublish = table.Column<bool>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
+                    IsClientNotify = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,14 +206,19 @@ namespace Engrisk.Migrations
                     PhotoUrl = table.Column<string>(nullable: true),
                     PublicId = table.Column<string>(nullable: true),
                     Filename = table.Column<string>(nullable: true),
+                    Audio = table.Column<string>(nullable: true),
+                    ToeicPart = table.Column<int>(nullable: false),
                     Content = table.Column<string>(nullable: true),
                     A = table.Column<string>(nullable: true),
                     B = table.Column<string>(nullable: true),
                     C = table.Column<string>(nullable: true),
                     D = table.Column<string>(nullable: true),
                     Answer = table.Column<string>(nullable: true),
+                    Explaination = table.Column<string>(nullable: true),
                     IsListeningQuestion = table.Column<bool>(nullable: false),
                     IsFillOutQuestion = table.Column<bool>(nullable: false),
+                    IsConcatQuestion = table.Column<bool>(nullable: false),
+                    IsQuizQuestion = table.Column<bool>(nullable: false),
                     Inserted = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -204,27 +227,34 @@ namespace Engrisk.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Quiz",
+                name: "ReadingToeicRedeems",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NumOfSentences = table.Column<int>(nullable: false),
+                    Score = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReadingToeicRedeems", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhotoUrl = table.Column<string>(nullable: true),
                     PublicId = table.Column<string>(nullable: true),
-                    QuizPhoto = table.Column<string>(nullable: true),
-                    QuizName = table.Column<string>(nullable: true),
-                    DifficultLevel = table.Column<int>(nullable: false),
-                    ExpGain = table.Column<int>(nullable: false),
-                    Enrolled = table.Column<int>(nullable: false),
-                    Liked = table.Column<int>(nullable: false),
-                    Dislike = table.Column<int>(nullable: false),
-                    TotalScore = table.Column<int>(nullable: false),
-                    PassScore = table.Column<int>(nullable: false),
-                    DurationTime = table.Column<int>(nullable: false),
+                    SectionName = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     RequireLogin = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Quiz", x => x.Id);
+                    table.PrimaryKey("PK_Sections", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -252,6 +282,7 @@ namespace Engrisk.Migrations
                     PublicId = table.Column<string>(nullable: true),
                     Eng = table.Column<string>(nullable: true),
                     Spelling = table.Column<string>(nullable: true),
+                    WordVoice = table.Column<string>(nullable: true),
                     Vie = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -345,31 +376,34 @@ namespace Engrisk.Migrations
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuizQuestions",
+                name: "Quiz",
                 columns: table => new
                 {
-                    QuizId = table.Column<int>(nullable: false),
-                    QuestionId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SectionId = table.Column<int>(nullable: true),
+                    PublicId = table.Column<string>(nullable: true),
+                    QuizPhoto = table.Column<string>(nullable: true),
+                    QuizName = table.Column<string>(nullable: true),
+                    DifficultLevel = table.Column<int>(nullable: false),
+                    ExpGain = table.Column<int>(nullable: false),
+                    Enrolled = table.Column<int>(nullable: false),
+                    DurationTime = table.Column<int>(nullable: false),
+                    RequireLogin = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuizQuestions", x => new { x.QuizId, x.QuestionId });
+                    table.PrimaryKey("PK_Quiz", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_QuizQuestions_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
+                        name: "FK_Quiz_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuizQuestions_Quiz_QuizId",
-                        column: x => x.QuizId,
-                        principalTable: "Quiz",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -387,13 +421,13 @@ namespace Engrisk.Migrations
                         column: x => x.ExampleId,
                         principalTable: "Examples",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WordExamples_Word_WordId",
                         column: x => x.WordId,
                         principalTable: "Word",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -470,6 +504,55 @@ namespace Engrisk.Migrations
                         name: "FK_AccountMissions_DailyMissions_DailyMissionId",
                         column: x => x.DailyMissionId,
                         principalTable: "DailyMissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountOTP",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<int>(nullable: false),
+                    OTP = table.Column<int>(nullable: false),
+                    Token = table.Column<string>(nullable: true),
+                    ValidUntil = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountOTP", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccountOTP_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountSections",
+                columns: table => new
+                {
+                    AccountId = table.Column<int>(nullable: false),
+                    SectionId = table.Column<int>(nullable: false),
+                    QuizDoneCount = table.Column<int>(nullable: false),
+                    Start_At = table.Column<DateTime>(nullable: false),
+                    Done_At = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountSections", x => new { x.AccountId, x.SectionId });
+                    table.ForeignKey(
+                        name: "FK_AccountSections_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AccountSections_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -599,7 +682,6 @@ namespace Engrisk.Migrations
                     End_At = table.Column<DateTime>(nullable: false),
                     IsDoing = table.Column<bool>(nullable: false),
                     TotalTime = table.Column<int>(nullable: false),
-                    Exp = table.Column<int>(nullable: false),
                     Score = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -641,46 +723,14 @@ namespace Engrisk.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Histories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<int>(nullable: false),
-                    QuizId = table.Column<int>(nullable: false),
-                    QuizzId = table.Column<int>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    DoneDate = table.Column<DateTime>(nullable: false),
-                    IsDone = table.Column<bool>(nullable: false),
-                    TimeSpent = table.Column<int>(nullable: false),
-                    Score = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Histories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Histories_AspNetUsers_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Histories_Quiz_QuizzId",
-                        column: x => x.QuizzId,
-                        principalTable: "Quiz",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
                     Rating = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     IsLocked = table.Column<bool>(nullable: false)
@@ -776,6 +826,85 @@ namespace Engrisk.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WordLearnts",
+                columns: table => new
+                {
+                    WordId = table.Column<int>(nullable: false),
+                    AccountId = table.Column<int>(nullable: false),
+                    LastPractice = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WordLearnts", x => new { x.AccountId, x.WordId });
+                    table.ForeignKey(
+                        name: "FK_WordLearnts_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WordLearnts_Word_WordId",
+                        column: x => x.WordId,
+                        principalTable: "Word",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Histories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<int>(nullable: false),
+                    QuizId = table.Column<int>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    DoneDate = table.Column<DateTime>(nullable: false),
+                    IsDone = table.Column<bool>(nullable: false),
+                    TimeSpent = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Histories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Histories_AspNetUsers_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Histories_Quiz_QuizId",
+                        column: x => x.QuizId,
+                        principalTable: "Quiz",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuizQuestions",
+                columns: table => new
+                {
+                    QuizId = table.Column<int>(nullable: false),
+                    QuestionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuizQuestions", x => new { x.QuizId, x.QuestionId });
+                    table.ForeignKey(
+                        name: "FK_QuizQuestions_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuizQuestions_Quiz_QuizId",
+                        column: x => x.QuizId,
+                        principalTable: "Quiz",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WordGroups",
                 columns: table => new
                 {
@@ -790,13 +919,13 @@ namespace Engrisk.Migrations
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WordGroups_Word_WordId",
                         column: x => x.WordId,
                         principalTable: "Word",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -810,7 +939,8 @@ namespace Engrisk.Migrations
                     Content = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     Like = table.Column<int>(nullable: false),
-                    Dislike = table.Column<int>(nullable: false)
+                    Dislike = table.Column<int>(nullable: false),
+                    IsReplyComment = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -954,6 +1084,16 @@ namespace Engrisk.Migrations
                 column: "DailyMissionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountOTP_AccountId",
+                table: "AccountOTP",
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountSections_SectionId",
+                table: "AccountSections",
+                column: "SectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountStorage_ItemId",
                 table: "AccountStorage",
                 column: "ItemId");
@@ -1069,9 +1209,9 @@ namespace Engrisk.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Histories_QuizzId",
+                name: "IX_Histories_QuizId",
                 table: "Histories",
-                column: "QuizzId");
+                column: "QuizId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LikedComment_CommentId",
@@ -1092,6 +1232,18 @@ namespace Engrisk.Migrations
                 name: "IX_Posts_AccountId",
                 table: "Posts",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Quiz_QuizName",
+                table: "Quiz",
+                column: "QuizName",
+                unique: true,
+                filter: "[QuizName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Quiz_SectionId",
+                table: "Quiz",
+                column: "SectionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuizQuestions_QuestionId",
@@ -1127,6 +1279,11 @@ namespace Engrisk.Migrations
                 name: "IX_WordGroups_WordId",
                 table: "WordGroups",
                 column: "WordId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WordLearnts_WordId",
+                table: "WordLearnts",
+                column: "WordId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1139,6 +1296,12 @@ namespace Engrisk.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccountMissions");
+
+            migrationBuilder.DropTable(
+                name: "AccountOTP");
+
+            migrationBuilder.DropTable(
+                name: "AccountSections");
 
             migrationBuilder.DropTable(
                 name: "AccountStorage");
@@ -1183,6 +1346,9 @@ namespace Engrisk.Migrations
                 name: "LikedPost");
 
             migrationBuilder.DropTable(
+                name: "ListeningToeicRedeems");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -1190,6 +1356,9 @@ namespace Engrisk.Migrations
 
             migrationBuilder.DropTable(
                 name: "QuizQuestions");
+
+            migrationBuilder.DropTable(
+                name: "ReadingToeicRedeems");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
@@ -1208,6 +1377,9 @@ namespace Engrisk.Migrations
 
             migrationBuilder.DropTable(
                 name: "WordGroups");
+
+            migrationBuilder.DropTable(
+                name: "WordLearnts");
 
             migrationBuilder.DropTable(
                 name: "Attendances");
@@ -1247,6 +1419,9 @@ namespace Engrisk.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Sections");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

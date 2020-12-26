@@ -14,8 +14,10 @@ namespace Engrisk.Models
         public string PublicId { get; set; }
         public string Eng  { get; set; }
         public string Spelling { get; set; }
+        public string WordVoice { get; set; }
         public string Vie { get; set; }
         public virtual IEnumerable<WordExample> Examples{get;set;}
         public virtual IEnumerable<WordGroup> Groups { get; set; }
+        public virtual IEnumerable<WordLearnt> Learned { get; set; }
     }
 }

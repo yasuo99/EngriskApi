@@ -44,6 +44,7 @@ namespace Engrisk.Services
                     Email = email,
                     PhotoUrl = picture,
                     Fullname = fullname,
+                    EmailConfirmed = true
                 };
                 await _userManager.CreateAsync(userFromEmail, _config.GetSection("Defaults:Account:Password").Value);
             }

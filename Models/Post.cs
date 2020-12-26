@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Engrisk.Models
@@ -11,7 +12,9 @@ namespace Engrisk.Models
         public int AccountId { get; set; }
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Content { get; set; }
         public int Rating { get; set; }
         public DateTime Date { get; set; }

@@ -44,13 +44,14 @@ namespace Engrisk.Data
             try
             {
                 var dbSet = _db.Set<T>();
-                foreach(var item in dbSet.ToList()){
+                foreach (var item in dbSet.ToList())
+                {
                     dbSet.Remove(item);
                 }
             }
             catch (System.Exception e)
             {
-                
+
                 throw e;
             }
         }
@@ -60,13 +61,16 @@ namespace Engrisk.Data
             var _dbSet = _db.Set<T>();
             if (_dbSet.Count() == 0)
             {
-                return true;
+                return false;
             }
             foreach (var item in _dbSet.AsNoTracking().ToList())
             {
-                if (item.CompareProperties(properties))
+                if (item != null)
                 {
-                    return true;
+                    if (item.CompareProperties(properties))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -89,6 +93,12 @@ namespace Engrisk.Data
 
                 throw e;
             }
+        }
+
+        public async Task<bool> Exists<T>(Expression<Func<T, bool>> expression = null) where T : class
+        {
+            var _dbSet = _db.Set<T>();
+            return await _dbSet.AnyAsync(expression);
         }
 
         // public async Task<PagingList<T>> GetAll<T>(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, SubjectParams subjectParams = null, string includeProperties = "") where T : class
@@ -114,42 +124,46 @@ namespace Engrisk.Data
         //     return await PagingList<T>.OnCreateAsync(queryableDbSet, subjectParams.CurrentPage, subjectParams.PageSize);
         // }
 
-        public async Task<PagingList<T>> GetAll<T>(SubjectParams subjectParams = null, Expression<Func<T, bool>> expression = null, string includeProperties = "",Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null) where T : class
+        public async Task<PagingList<T>> GetAll<T>(SubjectParams subjectParams = null, Expression<Func<T, bool>> expression = null, string includeProperties = "", Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null) where T : class
         {
             var dbSet = _db.Set<T>();
             var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
-            if(expression != null){
+            if (expression != null)
+            {
                 queryableDbSet = queryableDbSet.Where(expression);
             }
             if (includeProperties != null)
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    queryableDbSet = queryableDbSet.Include(property);
+                    queryableDbSet = queryableDbSet.Include(property.Trim());
                 }
             }
-            if(orderBy != null){
-               queryableDbSet = orderBy(queryableDbSet);
+            if (orderBy != null)
+            {
+                queryableDbSet = orderBy(queryableDbSet);
             }
             return await PagingList<T>.OnCreateAsync(queryableDbSet, subjectParams.CurrentPage, subjectParams.PageSize);
         }
-        public async Task<IEnumerable<T>> GetAll<T>(Expression<Func<T, bool>> expression, string includeProperties = "",Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null) where T : class
+        public async Task<IEnumerable<T>> GetAll<T>(Expression<Func<T, bool>> expression = null, string includeProperties = "", Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null) where T : class
         {
             var dbSet = _db.Set<T>();
             var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
+            if (expression != null)
+            {
+                queryableDbSet = queryableDbSet.Where(expression);
+            }
             if (includeProperties != null)
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    queryableDbSet.Include(property);
+                    queryableDbSet = queryableDbSet.Include(property.Trim());
                 }
             }
-            if (expression != null)
+
+            if (orderBy != null)
             {
-                queryableDbSet.Where(expression);
-            }
-            if(orderBy != null){
-               queryableDbSet = orderBy(queryableDbSet);
+                queryableDbSet = orderBy(queryableDbSet);
             }
             return await queryableDbSet.ToListAsync();
         }
@@ -165,7 +179,7 @@ namespace Engrisk.Data
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    queryableDbSet = queryableDbSet.Include(property);
+                    queryableDbSet = queryableDbSet.Include(property.Trim());
                 }
             }
             return await queryableDbSet.AsNoTracking().FirstOrDefaultAsync();
@@ -183,25 +197,27 @@ namespace Engrisk.Data
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    queryableDbSet = queryableDbSet.Include(property);
+                    queryableDbSet = queryableDbSet.Include(property.Trim());
                 }
             }
             return await queryableDbSet.FirstOrDefaultAsync();
         }
 
-        public async Task<T> GetOneWithManyToMany<T>(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IQueryable<T>> eagerLoad = null) where T : class
+        public async Task<T> GetOneWithKey<T>(dynamic key) where T : class
+        {
+            var _dbSet = _db.Set<T>();
+            return await _dbSet.FindAsync(key);
+        }
+
+        public async Task<IQueryable<T>> GetOneWithManyToMany<T>(Expression<Func<T, bool>> expression = null) where T : class
         {
             var dbSet = _db.Set<T>();
-            var queryableDbSet = dbSet.Take(dbSet.Count());
+            var queryableDbSet = dbSet.Take(await dbSet.CountAsync());
             if (expression != null)
             {
                 queryableDbSet = queryableDbSet.Where(expression);
             }
-            if (eagerLoad != null)
-            {
-                return await eagerLoad(queryableDbSet).FirstOrDefaultAsync();
-            }
-            return await queryableDbSet.FirstOrDefaultAsync();
+            return queryableDbSet;
         }
 
         public IEnumerable<T> GetWithProperties<T>(Dictionary<dynamic, dynamic> properties, Expression<Func<T, bool>> expression, string includeProperties = "") where T : class
@@ -216,7 +232,7 @@ namespace Engrisk.Data
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    queryableDbSet = queryableDbSet.Include(property);
+                    queryableDbSet = queryableDbSet.Include(property.Trim());
                 }
             }
             foreach (var subject in queryableDbSet)

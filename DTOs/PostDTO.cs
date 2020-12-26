@@ -10,6 +10,7 @@ namespace Engrisk.DTOs
     {
         public int Id { get; set; }
         public int AccountId { get; set; }
+        public string AccountPhotoUrl { get; set; }
         public string AccountUserName { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

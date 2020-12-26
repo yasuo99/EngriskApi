@@ -8,10 +8,16 @@ namespace Engrisk.Data
 {
     public interface IAuthRepo
     {
-        Task<PagingList<Account>> GetAll(SubjectParams subjectParams);
+        Task<IEnumerable<Account>> GetAll();
         Task<Account> GetAccountDetail(string identify);
         Task<Account> GetAccountDetail(int id);
+        Task<Account> GetAccount(string identity);
         Task<Account> CreateAccount(Account account);
+        Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountForUpdateDTO);
+        Task<bool> ChangePassword(int id,string currentPass,string newPassword);
+        Task<bool> ForgetPassword(string email);
+        Task<bool> ResetPassword(Account account,string token, string newPassword);
+        Task<bool> VerifyEmail(string email);
         Task DeleteAccount(int id);
         Task DeleteAccount(string username);
         Task<bool> SaveAll();

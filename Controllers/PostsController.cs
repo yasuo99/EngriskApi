@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Engrisk.Data;
 using Engrisk.DTOs;
+using Engrisk.DTOs.Comment;
+using Engrisk.DTOs.Post;
 using Engrisk.Helper;
 using Engrisk.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Engrisk.Controllers
 {
@@ -28,7 +31,7 @@ namespace Engrisk.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPosts([FromQuery] SubjectParams subjectParams)
         {
-            var posts = await _repo.GetAll<Post>(subjectParams, null, "Account");
+            var posts = await _repo.GetAll<Post>(subjectParams, null, "Account, Comments, PostRatings");
             var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
             return Ok(returnPosts);
         }
@@ -48,42 +51,65 @@ namespace Engrisk.Controllers
         }
         [Authorize]
         [HttpGet("following")]
-        public async Task<IActionResult> GetFollowingPosts([FromQuery] SubjectParams subjectParams){
+        public async Task<IActionResult> GetFollowingPosts([FromQuery] SubjectParams subjectParams)
+        {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var posts = await _repo.GetAll<Post>(subjectParams, post => post.PostRatings.Any(account => account.AccountId == userId), "Account");
             var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
             return Ok(returnPosts);
         }
         [HttpGet("search")]
-        public async Task<IActionResult> SearchPosts([FromQuery] SubjectParams subjectParams, [FromBody] SearchDTO searchDTO){
-            var postsFromDb = await _repo.GetAll<Post>(subjectParams, post => post.Title.ToLower().Contains(searchDTO.Search.ToLower().Trim()) || post.Content.ToLower().Contains(searchDTO.Search.ToLower().Trim()),"Account");
+        public async Task<IActionResult> SearchPosts([FromQuery] SubjectParams subjectParams, [FromBody] SearchDTO searchDTO)
+        {
+            var postsFromDb = await _repo.GetAll<Post>(subjectParams, post => post.Title.ToLower().Contains(searchDTO.Search.ToLower().Trim()) || post.Content.ToLower().Contains(searchDTO.Search.ToLower().Trim()), "Account");
             var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(postsFromDb);
             return Ok(returnPosts);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPost(int id)
+        public async Task<IActionResult> GetPost(int id, [FromQuery] SubjectParams subjectParams, [FromQuery] string orderBy = "newest")
         {
-            var post = await _repo.GetOneWithConditionTracking<Post>(pos => pos.Id == id, "Account,PostRatings");
+            var postQuery = await _repo.GetOneWithManyToMany<Post>(pos => pos.Id == id);
+            var post = await postQuery.Include(p => p.Account).Include(p => p.Comments).ThenInclude(c => c.Account).FirstOrDefaultAsync();
             if (post == null)
             {
                 return NotFound();
             }
-            var returnPost = _mapper.Map<PostDTO>(post);
+            post.Comments = post.Comments.Where(c => c.IsReplyComment == false);
+            foreach (var comment in post.Comments)
+            {
+                var temp = await _repo.GetOneWithManyToMany<CommentReply>(r => r.CommentId == comment.Id);
+                comment.Replies = await temp.Include(r => r.Reply).ThenInclude(a => a.Account).ToListAsync();
+            }
+            var returnPost = _mapper.Map<PostDetailDTO>(post);
+            switch (orderBy)
+            {
+                case "like":
+                    returnPost.Comments = returnPost.Comments.Where(c => c.IsReplyComment == false).OrderByDescending(c => c.Like).ToList();
+                    break;
+                case "newest":
+                    returnPost.Comments = returnPost.Comments.Where(c => c.IsReplyComment == false).OrderByDescending(c => c.Date).ToList();
+                    break;
+                case "oldest":
+                    returnPost.Comments = returnPost.Comments.Where(c => c.IsReplyComment == false).OrderBy(c => c.Date).ToList();
+                    break;
+                default: break;
+            }
             return Ok(returnPost);
         }
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreatePost(Post post)
+        public async Task<IActionResult> CreatePost([FromBody] Post post)
         {
-            if (ModelState.IsValid)
+            var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var accountFromDb = await _repo.GetOneWithCondition<Account>(acc => acc.Id == accountId);
+            if (accountFromDb.Locked > DateTime.Now)
             {
-                return StatusCode(400, new
+                return BadRequest(new
                 {
-                    errors = ModelState.Select(error => error.Value.Errors).Where(error => error.Count > 0).ToList()
+                    Error = "Tài khoản của bạn đang bị khóa chức năng thảo luận"
                 });
             }
-            var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             post.AccountId = accountId;
             var properties = new Dictionary<dynamic, dynamic>();
             properties.Add("Content", post.Content);
@@ -91,12 +117,26 @@ namespace Engrisk.Controllers
             properties.Add("AccountId", accountId);
             if (_repo.Exists<Post>(properties))
             {
-                return Conflict();
+                return Conflict(new
+                {
+                    Error = "Bài viết bị trùng"
+                });
+            }
+            post.Date = DateTime.Now;
+            post.Title = await CensoredString(post.Title);
+            post.Content = await CensoredString(post.Content);
+            var lastCreatedPost = await _repo.GetOneWithCondition<Post>(p => p.AccountId == accountId && p.Date.AddMinutes(15) > DateTime.Now);
+            if (lastCreatedPost != null)
+            {
+                return BadRequest(new
+                {
+                    Error = "Không được phép đăng liên tiếp bài viết"
+                });
             }
             _repo.Create(post);
             if (await _repo.SaveAll())
             {
-                return CreatedAtAction("GetPost", new { id = post.Id }, post);
+                return Ok();
             }
             else
             {
@@ -117,9 +157,10 @@ namespace Engrisk.Controllers
             comment.Comment = await CensoredString(comment.Comment);
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var accountFromDb = await _repo.GetOneWithCondition<Account>(acc => acc.Id == userId);
-            if(DateTime.Compare(accountFromDb.Locked,DateTime.Now) > 0)
+            if (DateTime.Compare(accountFromDb.Locked, DateTime.Now) > 0)
             {
-                return BadRequest(new {
+                return BadRequest(new
+                {
                     error = "Tài khoản tạm thời bị khóa bình luận"
                 });
             }
@@ -144,17 +185,192 @@ namespace Engrisk.Controllers
             }
             return StatusCode(500);
         }
-        [HttpPut("{postId}/comments/{commentsId}/like")]
-        public async Task<IActionResult> LikeComment(int postId, int commentId){
+        [Authorize]
+        [HttpPost("{postId}/comments/{commentId}")]
+        public async Task<IActionResult> ReplyComment(int postId, int commentId, [FromBody] CommentReplyDTO commentReplyDTO)
+        {
+            try
+            {
+                var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == postId, "Comments");
+                if (postFromDb == null)
+                {
+                    return NotFound(new
+                    {
+                        Error = "Không tìm thấy bài viết"
+                    });
+                }
+                if (!postFromDb.Comments.Any(c => c.Id == commentId))
+                {
+                    return NotFound(new
+                    {
+                        Error = "Không tìm thấy bình luận"
+                    });
+                }
+                if (await ValidateString(commentReplyDTO.Content))
+                {
+                    return BadRequest(new
+                    {
+                        validate = "Comment có chứa quá nhiều kí tự nhạy cảm"
+                    });
+                }
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var accountFromDb = await _repo.GetOneWithCondition<Account>(acc => acc.Id == userId);
+                if (accountFromDb.Locked > DateTime.Now)
+                {
+                    return BadRequest(new
+                    {
+                        Error = "Tài khoản của bạn đang bị khóa chức năng thảo luận"
+                    });
+                }
+                var comment = new Comment()
+                {
+                    PostId = postId,
+                    AccountId = userId,
+                    Content = commentReplyDTO.Content,
+                    Date = DateTime.Now,
+                    Like = 0,
+                    Dislike = 0,
+                    IsReplyComment = true
+                };
+                _repo.Create(comment);
+                await _repo.SaveAll();
+                var replyComment = new CommentReply()
+                {
+                    CommentId = commentId,
+                    ReplyId = comment.Id,
+                    Date = DateTime.Now
+                };
+                _repo.Create(replyComment);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return NoContent();
+            }
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
+        }
+        [Authorize]
+        [HttpPut("{postId}/comments/{commentId}")]
+        public async Task<IActionResult> EditReplyComment(int postId, int commentId, [FromBody] CommentReplyDTO commentReplyDTO)
+        {
+            try
+            {
+                var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == postId, "Comments");
+                if (postFromDb == null)
+                {
+                    return NotFound(new
+                    {
+                        Error = "Không tìm thấy bài viết"
+                    });
+                }
+                if (!postFromDb.Comments.Any(c => c.Id == commentId))
+                {
+                    return NotFound(new
+                    {
+                        Error = "Không tìm thấy bình luận"
+                    });
+                }
+                if (await ValidateString(commentReplyDTO.Content))
+                {
+                    return BadRequest(new
+                    {
+                        validate = "Comment có chứa quá nhiều kí tự nhạy cảm"
+                    });
+                }
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var accountFromDb = await _repo.GetOneWithCondition<Account>(acc => acc.Id == userId);
+                if (accountFromDb.Locked > DateTime.Now)
+                {
+                    return BadRequest(new
+                    {
+                        Error = "Tài khoản của bạn đang bị khóa chức năng thảo luận"
+                    });
+                }
+                var commentFromDb = await _repo.GetOneWithConditionTracking<Comment>(c => c.Id == commentId);
+                if (userId != commentFromDb.AccountId && (!User.IsInRole("forumadmin") || !User.IsInRole("manager") || !User.IsInRole("superadmin")))
+                {
+                    return Unauthorized();
+                }
+                commentFromDb.Content = commentReplyDTO.Content;
+                var replyCommentFromDb = await _repo.GetOneWithConditionTracking<CommentReply>(cr => cr.ReplyId == commentId);
+                if (replyCommentFromDb != null)
+                {
+                    replyCommentFromDb.IsEdited = true;
+                }
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return NoContent();
+            }
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
+        }
+        [Authorize]
+        [HttpPut("{postId}/comments/{commentId}/like")]
+        public async Task<IActionResult> LikeComment(int postId, int commentId)
+        {
             var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == postId);
-            return Ok();
+            if (postFromDb == null)
+            {
+                return NotFound(new
+                {
+                    Error = "Không tìm thấy bài viết"
+                });
+            }
+            var commentOfPost = await _repo.GetOneWithConditionTracking<Comment>(comment => comment.PostId == postId && comment.Id == commentId);
+            if (commentOfPost == null)
+            {
+                return NotFound(new
+                {
+                    Error = "Không tìm thấy bình luận"
+                });
+            }
+            if (commentOfPost.AccountId == accountId)
+            {
+                return NoContent();
+            }
+            var likedComment = await _repo.GetOneWithCondition<LikedComment>(c => c.CommentId == commentOfPost.Id && c.AccountId == accountId);
+            if (likedComment == null)
+            {
+                var likeComment = new LikedComment()
+                {
+                    AccountId = accountId,
+                    CommentId = commentOfPost.Id,
+                    Like_at = DateTime.Now
+                };
+                commentOfPost.Like += 1;
+                _repo.Create(likeComment);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+            }
+            else
+            {
+                commentOfPost.Like -= 1;
+                _repo.Delete(likedComment);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+            }
+            return NoContent();
         }
+        [Authorize]
         [HttpDelete("{id}/comments/{commentId}")]
         public async Task<IActionResult> DeleteComment(int id, int commentId)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == id);
+            var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == id, "Comments");
             if (postFromDb == null)
             {
                 return NotFound(new
@@ -162,13 +378,37 @@ namespace Engrisk.Controllers
                     NotFound = "Không tìm thấy bài viết"
                 });
             }
-            var commentFromDb = await _repo.GetOneWithCondition<Comment>(comment => comment.Id == id && comment.AccountId == userId);
+            var commentFromDb = await _repo.GetOneWithConditionTracking<Comment>(comment => comment.Id == commentId, "Replies,LikedComments");
             if (commentFromDb == null)
             {
                 return NotFound(new
                 {
                     NotFound = "Không tìm thấy bình luận"
                 });
+            }
+            if (userId != commentFromDb.AccountId && !User.IsInRole("forumadmin") && !User.IsInRole("manager") && !User.IsInRole("superadmin"))
+            {
+                return Unauthorized();
+            }
+            if (commentFromDb.Replies.Count() > 0)
+            {
+                foreach (var reply in commentFromDb.Replies)
+                {
+                    var comment = await _repo.GetOneWithCondition<Comment>(c => c.Id == reply.ReplyId, "LikedComments");
+                    foreach (var like in comment.LikedComments)
+                    {
+                        _repo.Delete(like);
+                    }
+                    _repo.Delete(comment);
+                    _repo.Delete(reply);
+                }
+            }
+            if (commentFromDb.LikedComments.Count() > 0)
+            {
+                foreach (var like in commentFromDb.LikedComments)
+                {
+                    _repo.Delete(like);
+                }
             }
             _repo.Delete(commentFromDb);
             if (await _repo.SaveAll())
@@ -181,7 +421,8 @@ namespace Engrisk.Controllers
         [HttpPost("{id}/rating")]
         public async Task<IActionResult> UpDownVotePost(int id, [FromBody] RatingDTO rating)
         {
-            if(id != rating.Id){
+            if (id != rating.Id)
+            {
                 return NotFound();
             }
             var accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -210,19 +451,28 @@ namespace Engrisk.Controllers
             return StatusCode(500);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePost(int id, Post post)
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] PostUpdateDTO post)
         {
-            var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == id);
-            if (postFromDb == null)
+            try
             {
-                return NotFound();
+                var postFromDb = await _repo.GetOneWithConditionTracking<Post>(post => post.Id == id);
+                if (postFromDb == null)
+                {
+                    return NotFound();
+                }
+                _mapper.Map(post, postFromDb);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return NoContent();
             }
-            _repo.Update(post);
-            if (await _repo.SaveAll())
+            catch (System.Exception e)
             {
-                return Ok();
+
+                throw e;
             }
-            return StatusCode(500);
+
         }
         [HttpPut("{id}/lock")]
         public async Task<IActionResult> LockPost(int id)
@@ -251,20 +501,52 @@ namespace Engrisk.Controllers
             }
             return StatusCode(500);
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var postFromDb = await _repo.GetOneWithConditionTracking<Post>(post => post.Id == id);
-            if (postFromDb == null)
+            try
             {
-                return NotFound();
+                var postFromDb = await _repo.GetOneWithCondition<Post>(post => post.Id == id, "Comments, LikedPosts, PostRatings");
+                if (postFromDb == null)
+                {
+                    return NotFound();
+                }
+                foreach (var comment in postFromDb.Comments.Where(c => c.IsReplyComment == false))
+                {
+                    await DeleteComment(id, comment.Id);
+                    // var repliesOfComment = await _repo.GetAll<CommentReply>(r => r.CommentId == comment.Id);
+                    // foreach (var reply in repliesOfComment)
+                    // {
+                    //     _repo.Delete(reply);
+                    //     await _repo.SaveAll();
+                    // }
+                    // var likesComment = await _repo.GetAll<LikedComment>(c => c.CommentId == comment.Id);
+                    // _repo.Delete(comment);
+                    // await _repo.SaveAll();
+                }
+                foreach (var likePost in postFromDb.LikedPosts)
+                {
+                    _repo.Delete(likePost);
+                }
+                foreach (var postRating in postFromDb.PostRatings)
+                {
+                    _repo.Delete(postRating);
+                }
+                var transactionPost = await _repo.GetOneWithCondition<Post>(p => p.Id == id);
+                _repo.Delete(transactionPost);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return StatusCode(500);
             }
-            _repo.Delete(postFromDb);
-            if (await _repo.SaveAll())
+            catch (System.Exception e)
             {
-                return NoContent();
+
+                throw e;
             }
-            return StatusCode(500);
+
         }
         [HttpDelete]
         public async Task<IActionResult> DeletePosts()

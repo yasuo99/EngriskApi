@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
@@ -80,7 +81,15 @@ namespace Engrisk.Helper
             }
             return age;
         }
-        public static double MinusDate(this DateTime startDate, DateTime endDate)
+        public static double ConvertToTimestamp(this DateTime date)
+        {
+            DateTime epoch = DateTime.UnixEpoch;
+            TimeSpan result = date.Subtract(epoch);
+
+            double seconds = result.TotalMilliseconds;
+            return seconds;
+        }
+        public static double MinusDate(this DateTime endDate, DateTime startDate)
         {
             var timestamp = (endDate.Subtract(startDate)).TotalSeconds;
             return timestamp;
@@ -107,11 +116,9 @@ namespace Engrisk.Helper
             }
 
         }
-        public static async Task<IEnumerable<T>> Test<T>(this IFormFile file, T dest) where T : class
-        {
-
-            return null;
-        }
+        ///<summary>
+        ///<para>Đọc file từ excel chỉ nhận các file *.csv hoặc *.xlsx</para>
+        ///</summary>
         public static async Task<DataSet> ReadExcel(this IFormFile file)
         {
             using (var stream = file.OpenReadStream())
@@ -129,6 +136,26 @@ namespace Engrisk.Helper
                     return result;
                 }
             }
+        }
+        ///<summary>
+        ///<p>Thay đổi một property của một list được phân trang thành null sử dụng reflection</p>
+        ///</summary>
+        public static PagingList<T> SetNullProperty<T>(this PagingList<T> source, string property)
+        {
+            foreach (var item in source)
+            {
+                PropertyInfo prop = item.GetType().GetProperty(property);
+                if (prop != null)
+                {
+                    prop.SetValue(item, null);
+                }
+            }
+            return source;
+        }
+        public static T GetOneRandomFromList<T>(this IEnumerable<T> source){
+            var random = new Random();
+            var index = random.Next(0, source.Count());
+            return source.ElementAt(index);
         }
     }
 }

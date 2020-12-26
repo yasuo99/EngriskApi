@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Engrisk.Data;
 using Engrisk.DTOs;
+using Engrisk.DTOs.Quiz;
 using Engrisk.Helper;
 using Engrisk.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 namespace Engrisk.Controllers
 {
@@ -35,52 +37,129 @@ namespace Engrisk.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllQuizzes([FromQuery] SubjectParams subjectParams)
         {
-            return Ok(await _repo.GetAll<Quiz>(subjectParams, null, ""));
+            var quizzesFromDb = await _repo.GetAll<Quiz>(null, "Section, Questions");
+            var quizzes = _mapper.Map<IEnumerable<QuizDetailDTO>>(quizzesFromDb);
+            return Ok(quizzes);
         }
+        //Tạo quiz nhanh cho bài học từ vựng
         [HttpPost]
-        public async Task<IActionResult> CreateQuiz([FromForm] QuizDTO quizDTO)
+        public async Task<IActionResult> CreateQuiz([FromForm] QuizCreateDTO quizCreateDTO)
         {
-            Quiz quiz = new Quiz();
-            quiz = _mapper.Map(quizDTO, quiz);
-            var result = _cloud.UploadImage(quizDTO.File);
-            if (result != null)
+            try
             {
-                quiz.PublicId = result.PublicId;
-                quiz.QuizPhoto = result.PublicUrl;
-            };
-            _repo.Create(quiz);
-            if (await _repo.SaveAll())
-            {
-                return Ok(quiz);
+                var quiz = _mapper.Map<Quiz>(quizCreateDTO);
+                if (quizCreateDTO.File != null)
+                {
+                    var result = _cloud.UploadImage(quizCreateDTO.File);
+                    if (result != null)
+                    {
+                        quiz.PublicId = result.PublicId;
+                        quiz.QuizPhoto = result.PublicUrl;
+                    };
+                }
+                _repo.Create(quiz);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return NoContent();
             }
-            throw new Exception("Error on create new quiz");
+            catch (System.Exception e)
+            {
+                throw e;
+            }
+
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateQuiz(int id, Quiz quiz)
+        public async Task<IActionResult> UpdateQuiz(int id, [FromForm] QuizCreateDTO quiz)
         {
-            if (id != quiz.Id)
-            {
-                return BadRequest();
-            }
-            var quizFromDb = await _repo.GetOneWithCondition<Quiz>(u => u.Id == id);
+            var quizFromDb = await _repo.GetOneWithConditionTracking<Quiz>(u => u.Id == id);
             if (quizFromDb == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Error = "Không tìm thấy quiz"
+                });
             }
-            _repo.Update<Quiz>(quiz);
+            _mapper.Map(quiz, quizFromDb);
+            if(quiz.File != null){
+                if(!string.IsNullOrEmpty(quizFromDb.PublicId)){
+                    var deleteResult = _cloud.DeleteImage(quizFromDb.PublicId);
+                    if(deleteResult){
+                        var uploadResult = _cloud.UploadImage(quiz.File);
+                        if(uploadResult != null){
+                            quizFromDb.PublicId = uploadResult.PublicId;
+                            quizFromDb.QuizPhoto = uploadResult.PublicUrl;
+                        }
+                    }
+                }
+            }
             if (await _repo.SaveAll())
             {
-                return Ok(quiz);
+                return Ok();
             }
             throw new Exception("Error on updating quiz");
         }
-        [HttpDelete("delete/{id}")]
+        [HttpPut("{quizId}/questions/{questionId}")]
+        public async Task<IActionResult> AddQuestionToQuiz(int quizId, int questionId)
+        {
+            try
+            {
+                var quizFromDb = await _repo.GetOneWithCondition<Quiz>(u => u.Id == quizId);
+                if (quizFromDb == null)
+                {
+                    return NotFound(new
+                    {
+                        Error = "Không tìm thấy quiz"
+                    });
+                }
+                var questionFromDb = await _repo.GetOneWithCondition<Question>(q => q.Id == questionId);
+                if (questionFromDb == null)
+                {
+                    return NotFound(new
+                    {
+                        Error = "Không tìm thấy câu hỏi"
+                    });
+                }
+                var questionInQuiz = await _repo.GetOneWithCondition<QuizQuestion>(q => q.QuestionId == questionId && q.QuizId == quizId);
+                if (questionInQuiz == null)
+                {
+                    var quizQuestion = new QuizQuestion()
+                    {
+                        QuizId = quizId,
+                        QuestionId = questionId
+                    };
+                    _repo.Create(quizQuestion);
+                    if (await _repo.SaveAll())
+                    {
+                        return Ok();
+                    }
+                    return NoContent();
+                }
+                _repo.Delete(questionInQuiz);
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return NoContent();
+
+            }
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
+        }
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuiz(int id)
         {
-            var quizFromDb = await _repo.GetOneWithCondition<Quiz>();
+            var quizFromDb = await _repo.GetOneWithCondition<Quiz>(q => q.Id == id);
             if (quizFromDb == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Error = "Không tìm thấy quiz"
+                });
             }
             _repo.Delete<Quiz>(quizFromDb);
             if (await _repo.SaveAll())
@@ -89,52 +168,40 @@ namespace Engrisk.Controllers
             }
             throw new Exception("Error on deleting quiz");
         }
-        [HttpGet("{id}/do")]
-        public async Task<IActionResult> DoExam(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> DoQuiz(int id)
         {
-            var examFromDb = await _repo.GetOneWithConditionTracking<Quiz>(quiz => quiz.Id == id, "Questions");
-            if (examFromDb == null)
+            var quizQuery = await _repo.GetOneWithManyToMany<Quiz>(q => q.Id == id);
+            var quiz = await quizQuery.Include(q => q.Questions).ThenInclude(q => q.Question).FirstOrDefaultAsync();
+            if (quiz == null)
             {
                 return NotFound();
             }
-            var returnQuestions = _mapper.Map<ExamDTO>(examFromDb);
-            if (User.FindFirst(ClaimTypes.NameIdentifier) != null)
-            {
-                var history = new History()
-                {
-                    AccountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
-                    QuizId = id,
-                    StartDate = DateTime.Now,
-                    IsDone = false
-                };
-                _repo.Create(history);
-                await _repo.SaveAll();
-            }
+            var returnQuestions = _mapper.Map<QuizDTO>(quiz);
             return Ok(returnQuestions);
         }
         [HttpPost("{id}/done")]
         public async Task<IActionResult> DoneExam(int id, List<AnswerDTO> answers)
         {
-            var examFromDb = await _repo.GetOneWithConditionTracking<Quiz>(quiz => quiz.Id == id, "Questions");
-            if (examFromDb == null)
+            try
             {
-                return NotFound();
-            }
-            int score = 0;
-            foreach (var answer in answers)
-            {
-                var question = examFromDb.Questions.FirstOrDefault(question => question.QuestionId == answer.Id);
-                if (answer.Answer.Equals(question.Question.Answer))
+                var examFromDb = await _repo.GetOneWithConditionTracking<Quiz>(quiz => quiz.Id == id, "Questions");
+                if (examFromDb == null)
                 {
-                    answer.IsRightAnswer = true;
+                    return NotFound();
                 }
-                else
+                foreach (var answer in answers)
                 {
-                    answer.IsRightAnswer = false;
+                    var question = examFromDb.Questions.FirstOrDefault(question => question.QuestionId == answer.Id);
+                    if (answer.Answer.Equals(question.Question.Answer))
+                    {
+                        answer.IsRightAnswer = true;
+                    }
+                    else
+                    {
+                        answer.IsRightAnswer = false;
+                    }
                 }
-            }
-            if (score >= examFromDb.PassScore)
-            {
 
                 if (User.FindFirst(ClaimTypes.NameIdentifier) != null)
                 {
@@ -155,18 +222,22 @@ namespace Engrisk.Controllers
                     historyFromDb.DoneDate = DateTime.Now;
                     historyFromDb.TimeSpent = (int)Math.Round(DateTime.Now.MinusDate(historyFromDb.StartDate));
                     historyFromDb.IsDone = true;
-                    historyFromDb.Score = score;
                 }
-            }
-            if (await _repo.SaveAll())
-            {
-                return Ok(new
+                if (await _repo.SaveAll())
                 {
-                    score = score,
-                    answers = answers
-                });
+                    return Ok(new
+                    {
+                        answers = answers
+                    });
+                }
+                return NoContent();
             }
-            return StatusCode(500);
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
+
         }
     }
 }

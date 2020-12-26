@@ -62,20 +62,25 @@ namespace Engrisk.Controllers
                 if (file.Length > 0)
                 {
                     var examples = new List<Example>();
-                    if(file.ContentType.ToLower().Equals("application/json")){
+                    if (file.ContentType.ToLower().Equals("application/json"))
+                    {
                         var result = await file.DeserializeJson();
-                        foreach(var item in result){
-                            var example = new Example(){
+                        foreach (var item in result)
+                        {
+                            var example = new Example()
+                            {
                                 Eng = (string)item["eng"],
                                 Vie = (string)item["vie"],
                                 Inserted = DateTime.Now
                             };
-                            if(!await _repo.Exists(example)){
+                            if (!await _repo.Exists(example))
+                            {
                                 examples.Add(example);
                                 _repo.Create(example);
                             }
                         }
-                        if(await _repo.SaveAll()){
+                        if (await _repo.SaveAll())
+                        {
                             return Ok(examples);
                         }
                         return NoContent();
@@ -90,33 +95,42 @@ namespace Engrisk.Controllers
 
         }
         [HttpPost("import-excel")]
-        public async Task<IActionResult> ImportExcel([FromForm] IFormFile file){
-            if(file.Length > 0){
+        public async Task<IActionResult> ImportExcel([FromQuery] string sheet, [FromForm] IFormFile file)
+        {
+            if (file.Length > 0)
+            {
                 var extension = Path.GetExtension(file.FileName);
                 var examples = new List<Example>();
-                if(extension.Equals(".csv") || extension.Equals(".xlsx")){
+                if (extension.Equals(".csv") || extension.Equals(".xlsx"))
+                {
                     var result = await file.ReadExcel();
-                    var temp = result.Tables["Sheet1"];
-                    if(temp != null){
-                        foreach(DataRow row in temp.Rows){
-                            var example = new Example(){
+                    var temp = result.Tables[sheet];
+                    if (temp != null)
+                    {
+                        foreach (DataRow row in temp.Rows)
+                        {
+                            var example = new Example()
+                            {
                                 Eng = row["Eng"] == DBNull.Value ? null : (string)row["Eng"],
                                 Vie = row["Vie"] == DBNull.Value ? null : (string)row["Vie"],
                                 Inserted = DateTime.Now
                             };
                             var exampleFromDb = await _repo.GetOneWithCondition<Example>(e => e.Eng.ToLower().Trim().Equals(example.Eng.ToLower().Trim()));
-                            if(exampleFromDb == null){
+                            if (exampleFromDb == null)
+                            {
                                 examples.Add(example);
                                 _repo.Create(example);
                             }
-                            if(await _repo.SaveAll()){
-                                return Ok(examples);
-                            }
-                            return NoContent();
                         }
+                        if (await _repo.SaveAll())
+                        {
+                            return Ok(examples);
+                        }
+                        return NoContent();
                     }
                 }
-                return BadRequest(new {
+                return BadRequest(new
+                {
                     error = "File not supported"
                 });
             }

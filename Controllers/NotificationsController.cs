@@ -6,8 +6,10 @@ using AutoMapper;
 using Engrisk.Data;
 using Engrisk.DTOs;
 using Engrisk.Helper;
+using Engrisk.Hubs;
 using Engrisk.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Engrisk.Controllers
 {
@@ -21,64 +23,78 @@ namespace Engrisk.Controllers
         {
             _mapper = mapper;
             _repo = repo;
-
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] SubjectParams subjectParams)
+        public async Task<IActionResult> GetAll()
         {
-            var notifications = await _repo.GetAll<Notification>(subjectParams);
+            var notifications = await _repo.GetAll<Notification>(null, "");
+            var returnNotifications = notifications.OrderByDescending(noti => noti.PublishedDate);
+            return Ok(notifications);
+        }
+        [HttpGet("client/publishing")]
+        public async Task<IActionResult> GetPublishing( [FromQuery] SubjectParams subjectParams)
+        {
+            var notifications = await _repo.GetAll<Notification>(subjectParams, noti => noti.IsClientNotify == true && noti.IsPublish);
             var returnNotifications = notifications.OrderByDescending(noti => noti.PublishedDate);
             Response.AddPaginationHeader(notifications.CurrentPage, notifications.PageSize, notifications.TotalItems, notifications.TotalPages);
             return Ok(returnNotifications);
         }
-        [HttpGet("publishing")]
-        public async Task<IActionResult> GetPublishing([FromQuery] SubjectParams subjectParams){
-            var notifications = await _repo.GetAll<Notification>(subjectParams, noti => noti.IsPublish);
+         [HttpGet("admin/publishing")]
+        public async Task<IActionResult> GetAdminPublishing([FromQuery] SubjectParams subjectParams)
+        {
+            var notifications = await _repo.GetAll<Notification>(subjectParams, noti => noti.IsClientNotify == false && noti.IsPublish);
             var returnNotifications = notifications.OrderByDescending(noti => noti.PublishedDate);
             Response.AddPaginationHeader(notifications.CurrentPage, notifications.PageSize, notifications.TotalItems, notifications.TotalPages);
             return Ok(returnNotifications);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDetail(int id){
+        public async Task<IActionResult> GetDetail(int id)
+        {
             var notify = await _repo.GetOneWithCondition<Notification>(n => n.Id == id);
-            if(notify == null){
+            if (notify == null)
+            {
                 return NotFound();
             }
             return Ok(notify);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateNotify(NotificationCreateDTO notification)
+        public async Task<IActionResult> CreateNotify([FromBody] NotificationCreateDTO notification)
         {
             var notify = _mapper.Map<Notification>(notification);
             notify.IsPublish = false;
-            _repo.Create(notification);
+            _repo.Create(notify);
             if (await _repo.SaveAll())
             {
                 return Ok();
             }
             return BadRequest("Error on creating");
         }
-        [HttpPut("edit/{id}")]
-        public async Task<IActionResult> UpdateNotify(int id, NotificationCreateDTO notification)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateNotify(int id, [FromBody] NotificationCreateDTO notification)
         {
-            var notificationFromDb = await _repo.GetOneWithCondition<Notification>(notify => notify.Id == id);
+            var notificationFromDb = await _repo.GetOneWithConditionTracking<Notification>(notify => notify.Id == id);
             if (notificationFromDb == null)
             {
                 return NotFound();
             }
-            _mapper.Map(notificationFromDb, notification);
-            if(await _repo.SaveAll()){
+            _mapper.Map(notification, notificationFromDb);
+            if (await _repo.SaveAll())
+            {
                 return Ok();
             }
-            return BadRequest("Error on updating notification");
+            else
+            {
+                return NoContent();
+            }
         }
         [HttpPut("publish/{id}")]
         public async Task<IActionResult> Publish(int id)
         {
-            var notificationFromDb = await _repo.GetOneWithCondition<Notification>(noti => noti.Id == id);
+            var notificationFromDb = await _repo.GetOneWithConditionTracking<Notification>(noti => noti.Id == id);
             notificationFromDb.PublishedDate = DateTime.Now;
-            notificationFromDb.IsPublish = notificationFromDb.IsPublish? false : true;
-            if(await _repo.SaveAll()){
+            notificationFromDb.IsPublish = notificationFromDb.IsPublish ? false : true;
+            if (await _repo.SaveAll())
+            {
                 return Ok();
             }
             return BadRequest("Error on publishing");
@@ -87,12 +103,13 @@ namespace Engrisk.Controllers
         public async Task<IActionResult> DeleteNotify(int id)
         {
             var notificationFromDb = await _repo.GetOneWithCondition<Notification>(noti => noti.Id == id);
-            if(notificationFromDb == null)
+            if (notificationFromDb == null)
             {
                 return NotFound();
             }
             _repo.Delete(notificationFromDb);
-            if(await _repo.SaveAll()){
+            if (await _repo.SaveAll())
+            {
                 return Ok();
             }
             return BadRequest();

@@ -11,5 +11,6 @@ namespace Engrisk.Models
         public DateTime PublishedDate { get; set; }
         public bool IsPublish { get; set; }
         public string Type { get; set; }
+        public bool IsClientNotify { get; set; }
      }
 }

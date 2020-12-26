@@ -23,6 +23,7 @@ namespace Engrisk.Models
         /// </summary>
         public bool Streak { get; set; }
         public virtual IEnumerable<AccountBadge> AccountBadges { get; set; }
+        public virtual IEnumerable<AccountSection> Sections { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
         public virtual IEnumerable<AccountRole> Roles { get; set; }
         public virtual IEnumerable<History> Histories { get; set; }
@@ -36,6 +37,8 @@ namespace Engrisk.Models
         public virtual IEnumerable<PostRating> PostRatings { get; set; }
         public virtual IEnumerable<LikedPost> LikedPosts { get; set; }
         public virtual IEnumerable<LikedComment> LikedComments { get; set; }
+        public virtual IEnumerable<WordLearnt> Learned { get; set; }
+        public virtual List<AccountOTP> AccountOTP { get; set; }
         ///<summary>
         ///<para>Danh sách refresh token</para>
         ///</summary>

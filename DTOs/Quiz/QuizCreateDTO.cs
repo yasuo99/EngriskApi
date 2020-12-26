@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Engrisk.DTOs
+namespace Engrisk.DTOs.Quiz
 {
-    public class QuizDTO
+    public class QuizCreateDTO
     {
-        public int Id { get; set; }
         public IFormFile File { get; set; }
+        public int SectionId { get; set; }
         public string QuizName { get; set; }
         public int DifficultLevel { get; set; }
         public int ExpGain { get; set; }
-        public int PassScore { get; set; }
+        public int DurationTime { get; set; }
     }
 }

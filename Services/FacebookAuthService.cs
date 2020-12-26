@@ -57,7 +57,7 @@ namespace Engrisk.Services
             var socialAccount = JsonConvert.DeserializeObject<SocialAuthDTO>(response);
             return await GetOrCreateExternalLoginUser(UserLoginRequest.FacebookProvider, userId, socialAccount.Email, socialAccount.First_name + " " + socialAccount.Last_name, socialAccount.Picture.Data.Url);
         }
-        public async Task<Account> GetOrCreateExternalLoginUser(string provider, string key, string email,string fullname, string picture)
+        public async Task<Account> GetOrCreateExternalLoginUser(string provider, string key, string email, string fullname, string picture)
         {
             var user = await _userManager.FindByLoginAsync(provider, key);
             if (user != null)
@@ -72,17 +72,20 @@ namespace Engrisk.Services
                     UserName = key,
                     Email = email,
                     PhotoUrl = picture,
-                    Fullname = fullname
+                    Fullname = fullname,
+                    EmailConfirmed = true
                 };
-                await _userManager.CreateAsync(userFromEmail,_config.GetSection("Defaults:Account:Password").Value);
+                await _userManager.CreateAsync(userFromEmail, _config.GetSection("Defaults:Account:Password").Value);
             }
-            if(string.IsNullOrEmpty(userFromEmail.PhotoUrl)){
+            if (string.IsNullOrEmpty(userFromEmail.PhotoUrl))
+            {
                 userFromEmail.PhotoUrl = picture;
                 await _db.SaveChangesAsync();
             }
             var userInfo = new UserLoginInfo(provider, key, provider.ToUpperInvariant());
-            var loginResult = await _userManager.AddLoginAsync(userFromEmail, userInfo);  
-            if(loginResult.Succeeded){
+            var loginResult = await _userManager.AddLoginAsync(userFromEmail, userInfo);
+            if (loginResult.Succeeded)
+            {
                 return userFromEmail;
             }
             return null;

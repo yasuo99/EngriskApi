@@ -7,12 +7,14 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Engrisk.Data;
-using Engrisk.DTOs;
+using Engrisk.DTOs.Word;
 using Engrisk.Helper;
 using Engrisk.Models;
+using Engrisk.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,7 +28,8 @@ namespace Engrisk.Controllers
         private readonly ICRUDRepo _repo;
         private readonly IMapper _mapper;
         private readonly CloudinaryHelper _cloud;
-        public WordsController(ICRUDRepo repo, IMapper mapper, IOptions<CloudinarySettings> cloudinarySettings)
+        private readonly IUploadService _dropbox;
+        public WordsController(ICRUDRepo repo, IMapper mapper, IOptions<CloudinarySettings> cloudinarySettings, IUploadService dropbox)
         {
             var cloudAccount = new CloudinaryDotNet.Account()
             {
@@ -37,56 +40,97 @@ namespace Engrisk.Controllers
             _mapper = mapper;
             _repo = repo;
             _cloud = new CloudinaryHelper(cloudAccount);
+            _dropbox = dropbox;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllWord([FromQuery] SubjectParams subjectParams)
         {
-            var words = await _repo.GetAll<Word>(expression: null, includeProperties: "Examples",orderBy: null);
-            return Ok(words);
+            var wordsQueryable = await _repo.GetOneWithManyToMany<Word>();
+            var words = await wordsQueryable.Include(w => w.Examples).ThenInclude(w => w.Example).ToListAsync();
+            var returnWords = _mapper.Map<IEnumerable<WordDTO>>(words);
+            return Ok(returnWords);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWord(int id)
         {
-            var word = new Word();
-
-            if (User.FindFirst(ClaimTypes.NameIdentifier) != null)
-            {
-                if (User.IsInRole("learner"))
-                {
-                    word = await _repo.GetOneWithConditionTracking<Word>(word => word.Id == id, "Examples");
-                }
-                if (User.IsInRole("admin") || User.IsInRole("manager"))
-                {
-                    word = await _repo.GetOneWithConditionTracking<Word>(word => word.Id == id, "Examples,Groups");
-                }
-            }
+            var wordsQueryable = await _repo.GetOneWithManyToMany<Word>(w => w.Id == id);
+            var word = await wordsQueryable.Include(w => w.Examples).ThenInclude(w => w.Example).FirstOrDefaultAsync();
             if (word == null)
             {
                 return NotFound();
             }
-            return Ok(word);
+            var returnWord = _mapper.Map<WordDetailDTO>(word);
+            return Ok(returnWord);
         }
         [HttpGet("search/{word}")]
         public async Task<IActionResult> SearchWord([FromQuery] SubjectParams subjectParams, string word)
         {
-            var words = await _repo.GetAll<Word>(subjectParams, w => w.Eng.Contains(word));
-            return Ok();
+            var words = await _repo.GetAll<Word>(subjectParams, w => w.Eng.Contains(word) || w.Vie.Contains(word));
+            return Ok(words);
+        }
+        [HttpGet("detail")]
+        public async Task<IActionResult> GetWord([FromQuery] string search)
+        {
+            var wordsQueryable = await _repo.GetOneWithManyToMany<Word>(w => w.Eng.ToLower().Equals(search.ToLower()) || w.Vie.ToLower().Equals(search.ToLower()));
+            var word = await wordsQueryable.Include(w => w.Examples).ThenInclude(w => w.Example).FirstOrDefaultAsync();
+            if (word == null)
+            {
+                return NotFound();
+            }
+            var returnWord = _mapper.Map<WordDetailDTO>(word);
+            if (returnWord.Eng.ToLower().Equals(search.ToLower()))
+            {
+                return Ok(new
+                {
+                    direction = "en",
+                    word = returnWord
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    direction = "vi",
+                    word = returnWord
+                });
+            }
         }
         [HttpPost]
-        public async Task<IActionResult> CreateWord([FromForm] WordDTO wordDTO)
+        public async Task<IActionResult> CreateWord([FromForm] WordCreateDTO wordDTO)
         {
             var properties = new Dictionary<dynamic, dynamic>();
-            properties.Add("Eng", wordDTO.Eng);
+            if (string.IsNullOrEmpty(wordDTO.Eng))
+            {
+                return BadRequest(new
+                {
+                    Error = "Không được để trống fields"
+                });
+            }
+            properties.Add("Eng", wordDTO.Eng.ToLower());
             if (_repo.Exists<Word>(properties))
             {
-                return Conflict();
+                return Conflict(new
+                {
+                    Error = "Từ vựng bị trùng"
+                });
             }
             var word = _mapper.Map<Word>(wordDTO);
-            var result = _cloud.UploadImage(wordDTO.File);
-            if (result != null)
+            if (wordDTO.File != null)
             {
-                word.WordImg = result.PublicUrl;
-                word.PublicId = result.PublicId;
+                var result = _cloud.UploadImage(wordDTO.File);
+                if (result != null)
+                {
+                    word.WordImg = result.PublicUrl;
+                    word.PublicId = result.PublicId;
+                }
+            }
+            if (wordDTO.Audio != null)
+            {
+                var uploadResult = await _dropbox.UploadFile(wordDTO.Audio, "/Engrisk");
+                if (uploadResult != null)
+                {
+                    word.WordVoice = uploadResult.SharedUrl;
+                }
             }
             _repo.Create(word);
             if (await _repo.SaveAll())
@@ -115,7 +159,8 @@ namespace Engrisk.Controllers
                                 PublicId = (string)jToken["publicId"],
                                 Eng = (string)jToken["eng"],
                                 Vie = (string)jToken["vie"],
-                                Spelling = (string)jToken["spelling"]
+                                Spelling = (string)jToken["spelling"],
+                                WordVoice = (string)jToken["wordVoice"]
                             };
                             var wordFromDb = await _repo.GetOneWithCondition<Word>(w => w.Eng.ToLower().Trim().Equals(word.Eng.ToLower().Trim()));
                             if (wordFromDb == null)
@@ -147,7 +192,7 @@ namespace Engrisk.Controllers
             }
         }
         [HttpPost("import-excel")]
-        public async Task<IActionResult> ImportExcel([FromForm] IFormFile file)
+        public async Task<IActionResult> ImportExcel([FromQuery] string sheet, [FromForm] IFormFile file)
         {
             if (file.Length > 0)
             {
@@ -158,7 +203,7 @@ namespace Engrisk.Controllers
                     if (result != null)
                     {
                         var words = new List<Word>();
-                        var temp = result.Tables["Sheet1"];
+                        var temp = result.Tables[sheet];
                         if (temp != null)
                         {
                             foreach (DataRow row in temp.Rows)
@@ -195,35 +240,87 @@ namespace Engrisk.Controllers
             return NoContent();
         }
         [HttpPut("{wordId}")]
-        public async Task<IActionResult> UpdateWord(int wordId, Word word)
+        public async Task<IActionResult> UpdateWord(int wordId, [FromForm] WordCreateDTO word)
+        {
+            try
+            {
+                var wordFromDb = await _repo.GetOneWithConditionTracking<Word>(word => word.Id == wordId);
+                if (wordFromDb == null)
+                {
+                    return NotFound();
+                }
+                _mapper.Map(word, wordFromDb);
+                if (word.File != null)
+                {
+                    if (!string.IsNullOrEmpty(wordFromDb.PublicId))
+                    {
+                        var deleteResult = _cloud.DeleteImage(wordFromDb.PublicId);
+                        if (deleteResult)
+                        {
+                            var uploadResult = _cloud.UploadImage(word.File);
+                            if (uploadResult != null)
+                            {
+                                wordFromDb.WordImg = uploadResult.PublicUrl;
+                                wordFromDb.PublicId = uploadResult.PublicId;
+                            }
+                        }
+                    }
+                }
+                if (word.Audio != null)
+                {
+                    var audioUploadResult = await _dropbox.UploadFile(word.Audio, "/Engrisk");
+                    if (audioUploadResult != null)
+                    {
+                        wordFromDb.WordVoice = audioUploadResult.SharedUrl;
+                    }
+                }
+                if (await _repo.SaveAll())
+                {
+                    return Ok();
+                }
+                return NoContent();
+            }
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
+        }
+        [HttpPost("{wordId}/examples")]
+        public async Task<IActionResult> AddWordExample(int wordId, [FromBody] Example example)
         {
             var wordFromDb = await _repo.GetOneWithCondition<Word>(word => word.Id == wordId);
+            var exampleFromDb = await _repo.GetOneWithCondition<Example>(example => example.Eng.TrimStart().TrimEnd().Equals(example.Eng.TrimStart().TrimEnd()) || example.Vie.TrimStart().TrimEnd().Equals(example.Vie.TrimStart().TrimEnd()));
             if (wordFromDb == null)
             {
                 return NotFound();
             }
-            _repo.Update(word);
-            if (await _repo.SaveAll())
+            if (exampleFromDb == null)
             {
-                return Ok(word);
+                var newExample = new Example()
+                {
+                    Eng = example.Eng,
+                    Vie = example.Vie,
+                    Inserted = DateTime.Now
+                };
+                _repo.Create(newExample);
+                var wordExample = new WordExample()
+                {
+                    WordId = wordId,
+                    ExampleId = newExample.Id
+                };
+                _repo.Create(wordExample);
             }
-            return BadRequest("Error on updating word");
-        }
-        [HttpPost("{wordId}/examples/add/{exampleId}")]
-        public async Task<IActionResult> AddWordExample(int wordId, int exampleId)
-        {
-            var wordFromDb = await _repo.GetOneWithCondition<Word>(word => word.Id == wordId);
-            var exampleFromDb = await _repo.GetOneWithCondition<Example>(example => example.Id == exampleId);
-            if (wordFromDb == null || exampleFromDb == null)
+            else
             {
-                return NotFound();
+                var wordExample = new WordExample()
+                {
+                    WordId = wordId,
+                    ExampleId = exampleFromDb.Id
+                };
+                _repo.Create(wordExample);
             }
-            var wordExample = new WordExample()
-            {
-                WordId = wordId,
-                ExampleId = exampleId
-            };
-            _repo.Create(wordExample);
+
             if (await _repo.SaveAll())
             {
                 return Ok();
@@ -263,6 +360,29 @@ namespace Engrisk.Controllers
             }
             return StatusCode(500);
         }
+        [HttpDelete("{wordId}/examples/{exampleId}")]
+        public async Task<IActionResult> DeleteExample(int wordId, int exampleId)
+        {
+            var wordFromDb = await _repo.GetOneWithCondition<Word>(word => word.Id == wordId);
+            if (wordFromDb == null)
+            {
+                return NotFound();
+            }
+            var exampleFromDb = await _repo.GetOneWithCondition<Example>(e => e.Id == exampleId);
+            if (exampleFromDb == null)
+            {
+                return NotFound(new
+                {
+                    NotFound = "Không tìm thấy ví dụ"
+                });
+            }
+            _repo.Delete(exampleFromDb);
+            if (await _repo.SaveAll())
+            {
+                return NoContent();
+            }
+            return StatusCode(500);
+        }
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> DeleteWord(int wordId)
         {
@@ -276,7 +396,7 @@ namespace Engrisk.Controllers
             {
                 return NoContent();
             }
-            return BadRequest("Error on deleting word");
+            return BadRequest(new { Error = "Error on deleting word"});
         }
     }
 }

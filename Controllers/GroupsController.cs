@@ -7,12 +7,14 @@ using Engrisk.Data;
 using Engrisk.DTOs;
 using Engrisk.Helper;
 using Engrisk.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Engrisk.Controllers
 {
     [ApiController]
-    [Route("v1/[Controller]")]
+    [Route("api/v1/[Controller]")]
     public class GroupsController : ControllerBase
     {
         private readonly ICRUDRepo _repo;
@@ -23,10 +25,10 @@ namespace Engrisk.Controllers
             _repo = Repo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery]SubjectParams subjectParams)
+        public async Task<IActionResult> GetAll([FromQuery] SubjectParams subjectParams)
         {
-            var groupsFromDb = await _repo.GetAll<Group>(subjectParams);
-            var returnGroups = _mapper.Map<GroupDTO>(groupsFromDb);
+            var groupsFromDb = await _repo.GetAll<Group>(subjectParams, includeProperties: "Account");
+            var returnGroups = _mapper.Map<IEnumerable<GroupDTO>>(groupsFromDb);
             return Ok(returnGroups);
         }
         [HttpGet("{id}")]
@@ -40,63 +42,79 @@ namespace Engrisk.Controllers
             var returnGroup = _mapper.Map<GroupDTO>(groupFromDb);
             return Ok(returnGroup);
         }
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateGroup([FromBody] Group group)
         {
             int accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var properties = new Dictionary<dynamic, dynamic>();
             properties.Add("GroupName", group.GroupName);
+            properties.Add("AccountId", accountId);
             if (_repo.Exists<Group>(properties))
             {
                 return Conflict();
             }
             group.Created_At = DateTime.Now;
+            group.AccountId = accountId;
             _repo.Create(group);
-            if(await _repo.SaveAll()){
-                var returnGroup = _mapper.Map<GroupDTO>(group);
-                return CreatedAtAction("GetGroupDetail", new {id = group.Id}, returnGroup);
-            }
-            return StatusCode(500);
-        }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGroup(int id, [FromBody] string groupName){
-            int accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var groupFromDb = await _repo.GetOneWithCondition<Group>(group => group.Id == id);
-            if(groupFromDb == null)
+            if (await _repo.SaveAll())
             {
-                return NotFound();
-            }
-            if(groupFromDb.AccountId != accountId){
-                return Unauthorized();
-            }
-            groupFromDb.GroupName = groupName;
-            if(await _repo.SaveAll()){
                 return Ok();
             }
             return StatusCode(500);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateGroup(int id, [FromBody] string groupName)
+        {
+            int accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var groupFromDb = await _repo.GetOneWithCondition<Group>(group => group.Id == id);
+            if (groupFromDb == null)
+            {
+                return NotFound();
+            }
+            if (groupFromDb.AccountId != accountId)
+            {
+                return Unauthorized();
+            }
+            groupFromDb.GroupName = groupName;
+            if (await _repo.SaveAll())
+            {
+                return Ok();
+            }
+            return StatusCode(500);
+        }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
             int accountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var groupFromDb = await _repo.GetOneWithCondition<Group>(group => group.Id == id);
-            if(groupFromDb == null)
+            if (groupFromDb == null)
             {
-                return NotFound();
+                return NotFound(new {
+                    Error = "Không tìm thấy group"
+                });
+            }
+            if(groupFromDb.AccountId != accountId){
+                return Unauthorized();
             }
             _repo.Delete(groupFromDb);
             return Ok();
         }
         [HttpGet("accounts/{accountId}")]
-        public async Task<IActionResult> GetGroupsOfAccount(int accountId)
+        public async Task<IActionResult> GetGroupsOfAccount([FromQuery] SubjectParams subjectParams, int accountId)
         {
-            int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (id != accountId)
+            if (User.FindFirst(ClaimTypes.NameIdentifier) != null)
             {
-                return Unauthorized();
+                int id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (id != accountId)
+                {
+                    return Unauthorized();
+                }
             }
-            var groupsOfAcc = await _repo.GetAll<Group>(null, g => g.AccountId == accountId, "Words");
-            var returnGroups = _mapper.Map<GroupDTO>(groupsOfAcc);
+            var groupsOfAcc = await _repo.GetOneWithManyToMany<Group>(g => g.AccountId == accountId);
+            var groups = await groupsOfAcc.Include(a => a.Account).Include(g => g.Words).ThenInclude(g => g.Word).ThenInclude(w => w.Examples).ThenInclude(e => e.Example).ToListAsync();
+            var returnGroups = _mapper.Map<IEnumerable<GroupDTO>>(groups);
             if (groupsOfAcc == null)
             {
                 return NotFound();
@@ -118,25 +136,46 @@ namespace Engrisk.Controllers
             }
             return StatusCode(500);
         }
-        [HttpPost("{id}/words")]
-        public async Task<IActionResult> AddWordToGroup(int groupId, Word word)
+        [HttpPut("{groupId}/words/{wordId}")]
+        public async Task<IActionResult> AddWordToGroup(int groupId, int wordId)
         {
-            var wordFromDb = await _repo.GetOneWithCondition<Word>(w => w.Id == word.Id);
-            if (wordFromDb == null)
+            try
             {
-                return NotFound();
+                var wordFromDb = await _repo.GetOneWithCondition<Word>(w => w.Id == wordId);
+                if (wordFromDb == null)
+                {
+                    return NotFound();
+                }
+                var wordInGroup = await _repo.GetOneWithCondition<WordGroup>(w => w.WordId == wordId && w.GroupId == groupId);
+                if (wordInGroup != null)
+                {
+                    _repo.Delete(wordInGroup);
+                    if (await _repo.SaveAll())
+                    {
+                        return Ok();
+                    }
+                    return NoContent();
+                }
+                else
+                {
+                    var wordGroup = new WordGroup()
+                    {
+                        WordId = wordId,
+                        GroupId = groupId
+                    };
+                    _repo.Create(wordGroup);
+                    if (await _repo.SaveAll())
+                    {
+                        return Ok();
+                    }
+                    return NoContent();
+                }
             }
-            var wordGroup = new WordGroup()
+            catch (System.Exception e)
             {
-                WordId = word.Id,
-                GroupId = groupId
-            };
-            _repo.Create(wordGroup);
-            if (await _repo.SaveAll())
-            {
-                return Ok();
+
+                throw e;
             }
-            return StatusCode(500);
         }
         [HttpDelete("{groupId}/words/{wordId}")]
         public async Task<IActionResult> RemoveWordFromGroup(int groupId, int wordId)

@@ -12,12 +12,14 @@ namespace Engrisk.Data
         {
         }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<AccountOTP> AccountOTP { get; set; }
         public DbSet<Example> Examples { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Word> Word { get; set; }
         public DbSet<ReportError> ReportErrors { get; set; }
+        public DbSet<Section> Sections { get; set; }
         public DbSet<Quiz> Quiz { get; set; }
         public DbSet<Level> Levels { get; set; }
         public DbSet<Group> Groups { get; set; }
@@ -32,6 +34,7 @@ namespace Engrisk.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostRating> PostRatings { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<AccountSection> AccountSections { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<QuizQuestion> QuizQuestions { get; set; }
         public DbSet<CommentReply> CommentReplies { get; set; }
@@ -43,25 +46,33 @@ namespace Engrisk.Data
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Footer> Footers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<ListeningToeicRedeem> ListeningToeicRedeems { get; set; }
+        public DbSet<ReadingToeicRedeem> ReadingToeicRedeems { get; set; }
+        public DbSet<WordLearnt> WordLearnts { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             //Account Entity
-            builder.Entity<Account>().HasIndex(acc => acc.Email).IsUnique();
-            builder.Entity<Account>().HasIndex(acc => acc.UserName).IsUnique();
-            builder.Entity<Account>().HasIndex(acc => acc.PhoneNumber).IsUnique();
-            builder.Entity<Account>().HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.AccountBadges).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.Attendences).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.Posts).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.LikedPosts).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.LikedComments).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.Comments).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.Groups).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.Histories).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<Account>().HasMany(m => m.Storage).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Account>(acc =>
+            {
+                acc.HasIndex(acc => acc.UserName).IsUnique();
+                acc.HasIndex(acc => acc.Email).IsUnique();
+                acc.HasIndex(acc => acc.PhoneNumber).IsUnique();
+                acc.HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.AccountBadges).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Attendences).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Posts).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.LikedPosts).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.LikedComments).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Comments).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Groups).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.PostRatings).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Histories).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Storage).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+                acc.HasMany(m => m.Learned).WithOne(o => o.Account).OnDelete(DeleteBehavior.Cascade);
+            });
+
 
             //Account Role
             builder.Entity<AccountRole>(role =>
@@ -99,7 +110,9 @@ namespace Engrisk.Data
                                         .OnDelete(DeleteBehavior.Restrict);
             //Quiz entity
             builder.Entity<Quiz>().HasMany(m => m.Questions).WithOne(o => o.Quiz).OnDelete(DeleteBehavior.Cascade);
-
+            builder.Entity<Quiz>().HasIndex(i => i.QuizName).IsUnique();
+            //Section entity
+            builder.Entity<Section>().HasMany(m => m.Quizzes).WithOne(o => o.Section).OnDelete(DeleteBehavior.SetNull);
             //ExamQuestion Entity
             builder.Entity<ExamQuestion>(exam =>
             {
@@ -124,20 +137,20 @@ namespace Engrisk.Data
             builder.Entity<WordExample>().HasOne(o => o.Word)
                                         .WithMany(m => m.Examples)
                                         .HasForeignKey(key => key.WordId)
-                                        .OnDelete(DeleteBehavior.Restrict);
+                                        .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<WordExample>().HasOne(o => o.Example)
                                         .WithMany(m => m.Words)
                                         .HasForeignKey(key => key.ExampleId)
-                                        .OnDelete(DeleteBehavior.Restrict);
+                                        .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<WordGroup>().HasKey(key => new { key.GroupId, key.WordId });
             builder.Entity<WordGroup>().HasOne(o => o.Group)
                                         .WithMany(m => m.Words)
                                         .HasForeignKey(key => key.GroupId)
-                                        .OnDelete(DeleteBehavior.Restrict);
+                                        .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<WordGroup>().HasOne(o => o.Word)
                                         .WithMany(m => m.Groups)
                                         .HasForeignKey(key => key.WordId)
-                                        .OnDelete(DeleteBehavior.Restrict);
+                                        .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<AccountStorage>().HasKey(key => new { key.AccountId, key.ItemId });
             builder.Entity<AccountStorage>().HasOne(o => o.Account)
                                         .WithMany(m => m.Storage)
@@ -147,14 +160,27 @@ namespace Engrisk.Data
                                         .WithMany(m => m.Accounts)
                                         .HasForeignKey(key => key.ItemId)
                                         .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<CommentReply>().HasOne(o => o.Comment)
-                                        .WithMany(m => m.Comments)
+                                        .WithMany(m => m.Replies)
                                         .HasForeignKey(key => key.CommentId)
                                         .OnDelete(DeleteBehavior.ClientCascade);
             builder.Entity<CommentReply>().HasOne(o => o.Reply)
-                                        .WithMany(m => m.Replies)
+                                        .WithMany(m => m.Comments)
                                         .HasForeignKey(key => key.ReplyId)
                                         .OnDelete(DeleteBehavior.ClientCascade);
+            //Learning in section
+            builder.Entity<AccountSection>(acc =>
+            {
+                acc.HasKey(key => new { key.AccountId, key.SectionId });
+                acc.HasOne(o => o.Account).WithMany(m => m.Sections).OnDelete(DeleteBehavior.Restrict);
+                acc.HasOne(o => o.Section).WithMany(m => m.Accounts).OnDelete(DeleteBehavior.Restrict);
+            });
+            //word
+            builder.Entity<Word>().HasMany(m => m.Groups).WithOne(o => o.Word).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Word>().HasMany(m => m.Examples).WithOne(o => o.Word).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Word>().HasMany(m => m.Learned).WithOne(o => o.Word).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Group>().HasMany(m => m.Words).WithOne(o => o.Group).OnDelete(DeleteBehavior.Cascade);
             //comment
             builder.Entity<Comment>().HasOne(o => o.Account)
                                     .WithMany(m => m.Comments)
@@ -164,7 +190,7 @@ namespace Engrisk.Data
                                     .WithMany(m => m.Comments)
                                     .HasForeignKey(key => key.PostId)
                                     .OnDelete(DeleteBehavior.Cascade);
-            
+            builder.Entity<Comment>().HasMany(m => m.LikedComments).WithOne(o => o.Comment).OnDelete(DeleteBehavior.Cascade);
             //Post
             builder.Entity<Post>().HasMany(m => m.Comments).WithOne(o => o.Post).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Post>().HasMany(m => m.PostRatings).WithOne(o => o.Post).OnDelete(DeleteBehavior.Cascade);
@@ -186,14 +212,25 @@ namespace Engrisk.Data
                                     .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<LikedPost>().HasOne(o => o.Post)
                                     .WithMany(m => m.LikedPosts)
-                                    .HasForeignKey(key => key.PostId)
-                                    .OnDelete(DeleteBehavior.Restrict);
+                                    .HasForeignKey(key => key.PostId).OnDelete(DeleteBehavior.Restrict);
 
-            
+
             builder.Entity<LikedComment>().HasKey(key => new { key.AccountId, key.CommentId });
             builder.Entity<LikedComment>().HasOne(o => o.Account).WithMany(m => m.LikedComments).HasForeignKey(key => key.AccountId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<LikedComment>().HasOne(o => o.Comment).WithMany(m => m.LikedComments).HasForeignKey(key => key.CommentId).OnDelete(DeleteBehavior.Restrict);
-        }
 
+            builder.Entity<WordLearnt>(w =>
+            {
+                w.HasKey(k => new { k.AccountId, k.WordId });
+                w.HasOne(o => o.Account).WithMany(m => m.Learned).OnDelete(DeleteBehavior.Cascade);
+                w.HasOne(o => o.Word).WithMany(m => m.Learned).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<Question>(q =>
+            {
+                q.HasMany(m => m.Quizes).WithOne(o => o.Question).OnDelete(DeleteBehavior.Cascade);
+                q.HasMany(m => m.Exams).WithOne(o => o.Question).OnDelete(DeleteBehavior.Cascade);
+            });
+        }
     }
 }

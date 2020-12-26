@@ -11,11 +11,13 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Engrisk.Data;
 using Engrisk.DTOs;
+using Engrisk.DTOs.Account;
 using Engrisk.Helper;
 using Engrisk.Models;
 using Engrisk.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -63,20 +65,16 @@ namespace Engrisk.Controllers
             _cloud = new CloudinaryHelper(account);
         }
         [HttpGet]
-        [Authorize(Roles = "superadmin")]
-        public async Task<IActionResult> GetAll([FromQuery] SubjectParams subjectParams)
+        public async Task<IActionResult> GetAll()
         {
             int id = -1;
             if (User.FindFirst(ClaimTypes.NameIdentifier) != null)
             {
                 id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             }
-            var account = await _repo.GetAccountDetail(id);
-            var role = await _userManager.GetRolesAsync(account);
-            var accounts = await _repo.GetAll(subjectParams);
+            var accounts = await _repo.GetAll();
             var temp = accounts.Where(account => account.Id != id);
             var returnAccounts = _mapper.Map<IEnumerable<AccountDetailDTO>>(temp);
-            Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize, accounts.TotalItems, accounts.TotalPages);
             return Ok(returnAccounts);
         }
         [HttpGet("detail/{id}")]
@@ -161,20 +159,23 @@ namespace Engrisk.Controllers
             }
             if (accountFromDb == null)
             {
-                return BadRequest("Tài khoản không tồn tại");
+                return Unauthorized(new
+                {
+                    Error = "Không tìm thấy tài khoản"
+                });
             }
             if (accountFromDb.IsDisabled)
             {
-                return BadRequest(new
+                return Unauthorized(new
                 {
-                    error = "Tài khoản của bạn đã bị khóa vui lòng liên hệ admin!"
+                    Error = "Tài khoản đã bị khóa"
                 });
             }
             var result = await _signinManager.CheckPasswordSignInAsync(accountFromDb, accountLogin.Password, false);
             if (result.Succeeded)
             {
+                var token = await _repo.GenerateToken(accountFromDb, ipAddress());
                 var accountForDetail = _mapper.Map<AccountDetailDTO>(accountFromDb);
-                var token = await _repo.GenerateToken(accountFromDb,ipAddress());
                 setTokenCookie(token.RefreshToken);
                 return Ok(new
                 {
@@ -198,7 +199,8 @@ namespace Engrisk.Controllers
             // }
         }
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken(){
+        public async Task<IActionResult> RefreshToken()
+        {
             var refreshToken = Request.Cookies["refreshToken"];
             var response = await _repo.RefreshToken(refreshToken, ipAddress());
 
@@ -225,9 +227,11 @@ namespace Engrisk.Controllers
             return Ok(new { message = "Token revoked" });
         }
         [HttpGet("{accountId}/refresh-tokens")]
-        public async Task<IActionResult> GetRefreshToken(int accountId){
+        public async Task<IActionResult> GetRefreshToken(int accountId)
+        {
             var accountFromDb = await _repo.GetAccountDetail(accountId);
-            if(accountFromDb == null){
+            if (accountFromDb == null)
+            {
                 return NotFound();
             }
             return Ok(accountFromDb.RefreshTokens);
@@ -242,7 +246,7 @@ namespace Engrisk.Controllers
             {
                 return BadRequest("Phiên đăng nhập hết hạn");
             }
-            var token = await _repo.GenerateToken(account,ipAddress());
+            var token = await _repo.GenerateToken(account, ipAddress());
             var accountForDetail = _mapper.Map<AccountDetailDTO>(account);
             return Ok(new
             {
@@ -262,57 +266,231 @@ namespace Engrisk.Controllers
             {
                 return BadRequest();
             }
+            var token = await _repo.GenerateToken(account, ipAddress());
             var accountForDetail = _mapper.Map<AccountDetailDTO>(account);
-            var token = await _repo.GenerateToken(account,ipAddress());
             return Ok(new
             {
                 account = accountForDetail,
                 token = token.Token
             });
         }
-        [HttpPut("{accountId}/changepw")]
-        public async Task<IActionResult> UpdatePassword(int accountId, [FromBody] string newPassword)
+        [Authorize]
+        [HttpGet("{accountId}/posts-following")]
+        public async Task<IActionResult> GetFollowingPosts(int accountId, [FromQuery] SubjectParams subjectParams)
         {
-            return Ok();
+            var posts = await _cRUDRepo.GetAll<Post>(subjectParams, post => post.PostRatings.Any(r => r.AccountId == accountId) || post.Comments.Any(c => c.AccountId == accountId), includeProperties: "PostRatings,Account");
+            var returnPosts = _mapper.Map<IEnumerable<PostDTO>>(posts);
+            return Ok(returnPosts);
         }
+        [Authorize]
+        [HttpPut("{accountId}/changepw")]
+        public async Task<IActionResult> UpdatePassword(int accountId, [FromBody] AccountChangePwDTO changePwDTO)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (userId != accountId)
+                {
+                    return Unauthorized();
+                }
+                var result = await _repo.ChangePassword(accountId, changePwDTO.CurrentPassword, changePwDTO.NewPassword);
+                if (result)
+                {
+                    return Ok();
+                }
+                return BadRequest(new
+                {
+                    Error = "Mật khẩu cũ không chính xác"
+                });
+            }
+            catch (System.Exception e)
+            {
+                throw e;
+            }
+
+        }
+        [Authorize]
         [HttpPut("{accountId}")]
         public async Task<IActionResult> UpdateAccount(int accountId, [FromBody] AccountForUpdateDTO accountUpdate)
         {
-            // if (accountId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            // {
-            //     return Unauthorized();
-            // }
+            try
+            {
+                if (accountId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                {
+                    return Unauthorized();
+                }
+                var result = await _repo.UpdateAccount(accountId, accountUpdate);
+                if (result)
+                {
+                    return Ok();
+                }
+                return NoContent();
+            }
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string email)
+        {
+            if (await _repo.VerifyEmail(email))
+            {
+                return Ok();
+            }
+            return BadRequest(new
+            {
+                Error = "Tài khoản không tồn tại"
+            });
+        }
+        [HttpPost("active-email")]
+        public async Task<IActionResult> ActiveEmail([FromBody] VerifyEmailDTO email)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new
+                    {
+                        Error = "OTP không được để trống"
+                    });
+                }
+                var accountFromDb = await _repo.GetAccount(email.Email);
+                if (accountFromDb == null)
+                {
+                    return BadRequest(new
+                    {
+                        error = "Tài khoản không tồn tại"
+                    });
+                }
+                var accountOTP = await _cRUDRepo.GetOneWithConditionTracking<AccountOTP>(ao => ao.AccountId == accountFromDb.Id && ao.ValidUntil > DateTime.Now && ao.OTP == email.OTP);
+                if (accountOTP == null)
+                {
+                    return BadRequest(new
+                    {
+                        Error = "OTP đã hết hạn hoặc không tồn tại"
+                    });
+                }
+                var activeEmailResult = await _userManager.ConfirmEmailAsync(accountFromDb, accountOTP.Token);
+                if (activeEmailResult.Succeeded)
+                {
+                    _cRUDRepo.Delete(accountOTP);
+                    if (await _repo.SaveAll())
+                    {
+                        return Ok();
+                    }
+                    return NoContent();
+                }
+                return NoContent();
+            }
+            catch (System.Exception e)
+            {
+                throw e;
+            }
+        }
+        [HttpGet("forget-pw")]
+        public async Task<IActionResult> ForgotPassword([FromQuery] string email)
+        {
+            if (await _repo.ForgetPassword(email))
+            {
+                return Ok();
+            }
+            return BadRequest(new
+            {
+                Error = "Tài khoản không tồn tại"
+            });
+        }
+        [HttpPost("reset-pw")]
+        public async Task<IActionResult> ActivePassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new
+                    {
+                        error = "Không được để trống"
+                    });
+                }
+                if (!resetPasswordDTO.ConfirmPassword.Equals(resetPasswordDTO.NewPassword))
+                {
+                    return BadRequest(new
+                    {
+                        error = "Mật khẩu mới và xác nhận mật khẩu không chính xác"
+                    });
+                }
+                var accountFromDb = await _repo.GetAccount(resetPasswordDTO.Email);
+                if (accountFromDb == null)
+                {
+                    return BadRequest(new
+                    {
+                        error = "Tài khoản không tồn tại"
+                    });
+                }
+                var accountOTP = await _cRUDRepo.GetOneWithConditionTracking<AccountOTP>(ao => ao.AccountId == accountFromDb.Id && ao.ValidUntil > DateTime.Now);
+                if (accountOTP == null)
+                {
+                    return BadRequest(new
+                    {
+                        Error = "OTP đã hết hạn"
+                    });
+                }
+                if (resetPasswordDTO.OTP != accountOTP.OTP)
+                {
+                    return BadRequest(new
+                    {
+                        Error = "OTP không đúng"
+                    });
+                }
+                var result = await _repo.ResetPassword(accountFromDb, accountOTP.Token, resetPasswordDTO.NewPassword);
+                if (result)
+                {
+                    _cRUDRepo.Delete(accountOTP);
+                    if (await _repo.SaveAll())
+                    {
+                        return Ok();
+                    }
+
+                }
+                return BadRequest();
+            }
+            catch (System.Exception e)
+            {
+                throw e;
+            }
+        }
+        [Authorize]
+        [HttpPut("{accountId}/avatar")]
+        public async Task<IActionResult> UpdateAvatar(int accountId, [FromForm] PhotoDTO photoDTO)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (userId != accountId)
+            {
+                return Unauthorized();
+            }
             var accountFromDb = await _repo.GetAccountDetail(accountId);
             if (accountFromDb == null)
             {
                 return NotFound();
             }
-            _mapper.Map(accountUpdate, accountFromDb);
-            if (await _repo.SaveAll())
+            if (!string.IsNullOrEmpty(accountFromDb.PublicId))
             {
-                return NoContent();
-            }
-            throw new Exception("Error on updating account information");
-        }
-        [HttpPut("{accountId}/avatar")]
-        public async Task<IActionResult> UpdateAvatar(int accountId, [FromForm] PhotoDTO photoDTO){
-            var accountFromDb = await _repo.GetAccountDetail(accountId);
-            if(accountFromDb == null){
-                return NotFound();
-            }
-            if(string.IsNullOrEmpty(accountFromDb.PhotoUrl)){
                 _cloud.DeleteImage(accountFromDb.PublicId);
             }
             var result = _cloud.UploadImage(photoDTO.File);
             accountFromDb.PhotoUrl = result.PublicUrl;
             accountFromDb.PublicId = result.PublicId;
-            if(await _repo.SaveAll()){
+            if (await _repo.SaveAll())
+            {
                 return Ok();
             }
             return StatusCode(500);
         }
+        [Authorize]
         [HttpPut("{accountId}/ban")]
-        public async Task<IActionResult> BanAccount(int accountId, [FromBody] int hour)
+        public async Task<IActionResult> BanAccount(int accountId, [FromQuery] int hour)
         {
             var accountFromDb = await _repo.GetAccountDetail(accountId);
             if (accountFromDb == null)
@@ -322,10 +500,27 @@ namespace Engrisk.Controllers
             accountFromDb.Locked = DateTime.Now.AddHours(hour);
             if (await _repo.SaveAll())
             {
-                return NoContent();
+                return Ok();
             }
-            return StatusCode(500);
+            return NoContent();
         }
+        [Authorize]
+        [HttpPut("{accountId}/unban")]
+        public async Task<IActionResult> UnbanAccount(int accountId)
+        {
+            var accountFromDb = await _repo.GetAccountDetail(accountId);
+            if (accountFromDb == null)
+            {
+                return NotFound();
+            }
+            accountFromDb.Locked = new DateTime();
+            if (await _repo.SaveAll())
+            {
+                return Ok();
+            }
+            return NoContent();
+        }
+        [Authorize]
         [HttpPut("{accountId}/disable")]
         public async Task<IActionResult> DisableAccount(int accountId)
         {
@@ -334,15 +529,15 @@ namespace Engrisk.Controllers
             {
                 return NotFound();
             }
-            accountFromDb.IsDisabled = true;
+            accountFromDb.IsDisabled = accountFromDb.IsDisabled ? false : true;
             if (await _repo.SaveAll())
             {
-                return NoContent();
+                return Ok();
             }
-            return StatusCode(500);
+            return NoContent();
         }
-        [HttpPost("{accountId}/roles")]
-        public async Task<IActionResult> EditRole(int accountId, [FromBody] IEnumerable<string> roles)
+        [HttpPut("{accountId}/roles")]
+        public async Task<IActionResult> EditRole(int accountId, [FromBody] RoleDTO role)
         {
             try
             {
@@ -351,12 +546,24 @@ namespace Engrisk.Controllers
                 {
                     return NotFound();
                 }
-                var result = await _userManager.AddToRolesAsync(accountFromDb, roles);
-                if (result.Succeeded)
+                if (accountFromDb.Roles.Any(r => r.Role.Name == role.RoleName))
                 {
-                    return Ok();
+                    var removeResult = await _userManager.RemoveFromRoleAsync(accountFromDb, role.RoleName);
+                    if (removeResult.Succeeded)
+                    {
+                        return Ok();
+                    }
                 }
-                return StatusCode(500);
+                else
+                {
+                    var result = await _userManager.AddToRoleAsync(accountFromDb, role.RoleName);
+                    if (result.Succeeded)
+                    {
+                        return Ok();
+                    }
+                }
+
+                return NoContent();
             }
             catch (System.Exception e)
             {

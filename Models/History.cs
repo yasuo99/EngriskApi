@@ -10,12 +10,11 @@ namespace Engrisk.Models
         [ForeignKey("AccountId")]
         public virtual Account Account { get; set; }
         public int QuizId { get; set; }
-        [ForeignKey("QuizzId")]
+        [ForeignKey("QuizId")]
         public virtual Quiz Quiz { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime DoneDate{get;set;}
         public bool IsDone { get; set; }
         public int TimeSpent { get; set; }
-        public int Score { get; set; }
     }
 }

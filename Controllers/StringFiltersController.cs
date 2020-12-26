@@ -91,8 +91,8 @@ namespace Engrisk.Controllers
             }
             return NoContent();
         }
-        [HttpPost("import-excel")]
-        public async Task<IActionResult> ImportExcel([FromForm] IFormFile file)
+        [HttpPost("import-excel/{sheet}")]
+        public async Task<IActionResult> ImportExcel([FromForm] IFormFile file, string sheet)
         {
             if (file.Length > 0)
             {
@@ -101,7 +101,7 @@ namespace Engrisk.Controllers
                 {
                     var filters = new List<StringFilter>();
                     var result = await file.ReadExcel();
-                    var temp = result.Tables["Sheet1"];
+                    var temp = result.Tables[sheet];
                     if (temp != null)
                     {
                         foreach (DataRow row in temp.Rows)
