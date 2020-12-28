@@ -33,6 +33,12 @@ namespace Engrisk.Data
             _mapper = mapper;
         }
 
+        public async Task<Account> AccountAccountForBlog(int id)
+        {
+            var accountFromDb = await _db.Accounts.Where(acc => acc.Id == id).Include(s => s.Sections).Include(q => q.Histories).Include(e => e.ExamHistories).Include(w => w.Learned).FirstOrDefaultAsync();
+            return accountFromDb;
+        }
+
         public async Task<bool> ChangePassword(int id, string currenPass, string newPassword)
         {
             var accountFromDb = await _userManager.FindByIdAsync(id.ToString());
@@ -185,13 +191,13 @@ namespace Engrisk.Data
 
         public async Task<Account> GetAccountDetail(string identify)
         {
-            var accountFromDb = await _db.Accounts.Include(a => a.Roles).ThenInclude(r => r.Role).Include(a => a.Learned).ThenInclude(l => l.Word).FirstOrDefaultAsync(u => u.UserName.Equals(identify) || u.Email.Equals(identify));
+            var accountFromDb = await _db.Accounts.Include(a => a.Roles).ThenInclude(r => r.Role).FirstOrDefaultAsync(u => u.UserName.Equals(identify) || u.Email.Equals(identify));
             return accountFromDb;
         }
 
         public async Task<Account> GetAccountDetail(int id)
         {
-            var accountFromDb = await _db.Accounts.Include(a => a.Roles).ThenInclude(r => r.Role).Include(a => a.Learned).ThenInclude(l => l.Word).FirstOrDefaultAsync(u => u.Id == id);
+            var accountFromDb = await _db.Accounts.Include(a => a.Roles).ThenInclude(r => r.Role).FirstOrDefaultAsync(u => u.Id == id);
             return accountFromDb;
         }
 

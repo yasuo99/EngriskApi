@@ -54,6 +54,13 @@ namespace Engrisk.Controllers
             var returnExams = _mapper.Map<IEnumerable<ExamDTO>>(examsFromDb);
             return Ok(returnExams);
         }
+        [HttpGet("accounts/ranking")]
+        public async Task<IActionResult> GetRankingExam([FromQuery] string category)
+        {
+            var exams = await _repo.GetAll<ExamHistory>(e => e.IsDoing == false, "Exam, Account");
+            var returnRanking = exams.OrderBy(e => e.TotalTime).OrderByDescending(e => e.Score).GroupBy(e => e.ExamId).Select(e => new ExamRankingDTO() { ExamId = e.FirstOrDefault().ExamId, ExamTitle = e.FirstOrDefault().Exam.Title, Score = e.Max(e => e.Score), AccountId = e.FirstOrDefault().AccountId, AccountUsername = e.FirstOrDefault().Account.UserName, TotalTime = e.FirstOrDefault().TotalTime, TotalScore = e.FirstOrDefault().Exam.TotalScore });
+            return Ok(returnRanking);
+        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDetail(int id)
         {
@@ -231,7 +238,7 @@ namespace Engrisk.Controllers
         {
             try
             {
-                var examFromDb = await _repo.GetOneWithCondition<Exam>(exam => exam.Id == id, "Questions");
+                var examFromDb = await _repo.GetOneWithConditionTracking<Exam>(exam => exam.Id == id, "Questions");
                 if (examFromDb == null)
                 {
                     return NotFound(new
@@ -240,6 +247,7 @@ namespace Engrisk.Controllers
                     });
                 }
                 var questionOfExam = examFromDb.Questions.FirstOrDefault(q => q.QuestionId == questionId);
+                var questionFromDb = await _repo.GetOneWithCondition<Question>(q => q.Id == questionId);
                 if (questionOfExam == null)
                 {
                     var questionExam = new ExamQuestion()
@@ -247,14 +255,32 @@ namespace Engrisk.Controllers
                         QuestionId = questionId,
                         ExamId = id,
                     };
-                    _repo.Create(questionExam);
-                    if (await _repo.SaveAll())
+                    if (questionFromDb.IsListeningQuestion)
                     {
-                        return Ok();
+                        examFromDb.TotalListening += 1;
                     }
-                    return NoContent();
+                    else
+                    {
+                        examFromDb.TotalReading += 1;
+                    }
+                    _repo.Create(questionExam);
                 }
-                _repo.Delete(questionOfExam);
+                else
+                {
+                    if (questionFromDb.IsListeningQuestion)
+                    {
+                        examFromDb.TotalListening -= 1;
+                    }
+                    else
+                    {
+                        examFromDb.TotalReading -= 1;
+                    }
+
+                    _repo.Delete(questionOfExam);
+                }
+                var listening = await _repo.GetOneWithCondition<ListeningToeicRedeem>(n => n.NumOfSentences == examFromDb.TotalListening);
+                var reading = await _repo.GetOneWithCondition<ReadingToeicRedeem>(n => n.NumOfSentences == examFromDb.TotalReading);
+                examFromDb.TotalScore = listening.Score + reading.Score;
                 if (await _repo.SaveAll())
                 {
                     return Ok();

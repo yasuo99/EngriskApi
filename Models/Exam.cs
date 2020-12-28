@@ -12,6 +12,9 @@ namespace Engrisk.Models
         public DateTime Create_At { get; set; }
         public int Price { get; set; }
         public int Exp { get; set; }
+        public int TotalListening { get; set; }
+        public int TotalReading { get; set; }
+        public int TotalScore{get;set;}
         public int Duration { get; set; }
         public virtual IEnumerable<ExamQuestion> Questions { get; set; }
         public virtual IEnumerable<ExamHistory> ExamHistories { get; set; }

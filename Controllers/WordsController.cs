@@ -11,6 +11,7 @@ using Engrisk.DTOs.Word;
 using Engrisk.Helper;
 using Engrisk.Models;
 using Engrisk.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,124 @@ namespace Engrisk.Controllers
             var words = await wordsQueryable.Include(w => w.Examples).ThenInclude(w => w.Example).ToListAsync();
             var returnWords = _mapper.Map<IEnumerable<WordDTO>>(words);
             return Ok(returnWords);
+        }
+        [HttpGet("export-json")]
+        public async Task<IActionResult> Export()
+        {
+            var wordsFromDb = await _repo.GetAll<Word>(null, "");
+            var result = JsonConvert.SerializeObject(wordsFromDb);
+            await System.IO.File.WriteAllTextAsync(@"E:\words.json", result);
+            return Ok();
+        }
+        [HttpGet("accounts/ranking")]
+        public async Task<IActionResult> GetWordLearntRanking()
+        {
+            var wordLearnt = await _repo.GetAll<WordLearnt>(null, "Account");
+            var returnRanking = wordLearnt.GroupBy(g => g.AccountId).Select(w => new WordLearnedDTO() { AccountId = w.Key, Learned = w.Count(), AccountUsername = w.FirstOrDefault().Account.UserName, AccountPhotourl = w.FirstOrDefault().Account.PhotoUrl, AccountFullname = w.FirstOrDefault().Account.Fullname }).OrderByDescending(l => l.Learned).Take(3);
+            return Ok(returnRanking);
+        }
+        [Authorize]
+        [HttpGet("accounts/{accountId}/learnt")]
+        public async Task<IActionResult> GetWordLearnt(int accountId){
+            var learntWords = await _repo.GetAll<WordLearnt>(w => w.AccountId == accountId, "Word");
+            var returnLearntWords = _mapper.Map<IEnumerable<WordLearntDTO>>(learntWords);
+            return Ok(returnLearntWords);
+        }
+        [HttpPost("practice")]
+        public async Task<IActionResult> Practice([FromBody] IEnumerable<Word> words)
+        {
+            var random = new Random();
+            List<WordPracticeDTO> questions = new List<WordPracticeDTO>();
+            foreach (var word in words)
+            {
+                var type = random.Next(1, 4);
+                var answer = random.Next(1, 4);
+                var wordsFromDb = await _repo.GetAll<Word>(w => w.Id != word.Id, "");
+                WordPracticeDTO q = new WordPracticeDTO();
+                switch (type)
+                {
+                    case 1:
+                        q.Content = word.Eng;
+                        q.IsQuizQuestion = true;
+                        q.A = answer == 1 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.B = answer == 2 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.C = answer == 3 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.D = answer == 4 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        break;
+                    case 2:
+                        q.PhotoUrl = word.WordImg;
+                        q.Audio = word.WordVoice;
+                        q.IsListeningQuestion = true;
+                        q.IsQuizQuestion = true;
+                        q.A = answer == 1 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.B = answer == 2 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.C = answer == 3 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.D = answer == 4 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        break;
+                    case 3:
+                        q.Audio = word.WordVoice;
+                        q.IsListeningQuestion = true;
+                        q.IsQuizQuestion = true;
+                        q.A = answer == 1 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.B = answer == 2 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.C = answer == 3 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        q.D = answer == 4 ? word.Vie : wordsFromDb.GetOneRandomFromList().Vie;
+                        break;
+                    default:
+                        q.Content = word.Vie;
+                        q.IsQuizQuestion = true;
+                        q.A = answer == 1 ? word.Eng : wordsFromDb.GetOneRandomFromList().Eng;
+                        q.B = answer == 2 ? word.Eng : wordsFromDb.GetOneRandomFromList().Eng;
+                        q.C = answer == 3 ? word.Eng : wordsFromDb.GetOneRandomFromList().Eng;
+                        q.D = answer == 4 ? word.Eng : wordsFromDb.GetOneRandomFromList().Eng;
+                        break;
+                }
+                switch (answer)
+                {
+                    case 1:
+                        q.Answer = q.A;
+                        break;
+                    case 2:
+                        q.Answer = q.B;
+                        break;
+                    case 3:
+                        q.Answer = q.C;
+                        break;
+                    case 4:
+                        q.Answer = q.D;
+                        break;
+                    default:
+                        break;
+                }
+                questions.Add(q);
+            }
+            return Ok(questions);
+        }
+        [Authorize]
+        [HttpPost("practice/done")]
+        public async Task<IActionResult> PracticeDone([FromBody] IEnumerable<Word> words)
+        {
+            foreach (var word in words)
+            {
+                var wordLearntFromDb = await _repo.GetOneWithConditionTracking<WordLearnt>(w => w.WordId == word.Id);
+                if (wordLearntFromDb == null)
+                {
+                    var wordLearn = new WordLearnt()
+                    {
+                        WordId = word.Id,
+                        AccountId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                        LastPractice = DateTime.Now
+                    };
+                    _repo.Create(wordLearn);
+                }
+                else{
+                    wordLearntFromDb.LastPractice = DateTime.Now;
+                }
+            }
+            if(await _repo.SaveAll()){
+                return Ok();
+            }
+            return NoContent();
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWord(int id)
@@ -396,7 +515,7 @@ namespace Engrisk.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(new { Error = "Error on deleting word"});
+            return BadRequest(new { Error = "Error on deleting word" });
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Engrisk.DTOs
         public int AccountId { get; set; }
         public string AccountPhotoUrl { get; set; }
         public string AccountUsername { get; set; }
+        public bool IsVerified { get; set; }
         [Required]
         public string Comment { get; set; }
         public DateTime Date { get; set; }

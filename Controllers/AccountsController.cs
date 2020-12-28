@@ -80,12 +80,12 @@ namespace Engrisk.Controllers
         [HttpGet("detail/{id}")]
         public async Task<IActionResult> GetAccountDetail(int id)
         {
-            var user = await _repo.GetAccountDetail(id);
+            var user = await _repo.AccountAccountForBlog(id);
             if (user == null)
             {
                 return NotFound();
             }
-            var returnUser = _mapper.Map<AccountDetailDTO>(user);
+            var returnUser = _mapper.Map<AccountBlogDTO>(user);
             return Ok(returnUser);
         }
         [HttpPost("validation")]
@@ -119,31 +119,39 @@ namespace Engrisk.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(AccountForRegisterDTO accountForRegister)
         {
-            if (_repo.Exists(accountForRegister.Email) || _repo.Exists(accountForRegister.Username))
+            try
             {
-                return Conflict();
-            }
-            // byte[] passwordHashed, passwordSalt;
-            // HashPassword(accountForRegister.Password, out passwordHashed, out passwordSalt);
-            var account = new Engrisk.Models.Account()
-            {
-                UserName = accountForRegister.Username,
-                Fullname = accountForRegister.Fullname,
-                Address = accountForRegister.Address,
-                Email = accountForRegister.Email,
-                DateOfBirth = accountForRegister.DateOfBirth,
-                PhoneNumber = accountForRegister.PhoneNumber
-            };
-            var accountCreated = await _userManager.CreateAsync(account, accountForRegister.Password);
-            if (accountCreated.Succeeded)
-            {
-                foreach (var role in accountForRegister.Roles)
+                if (_repo.Exists(accountForRegister.Email) || _repo.Exists(accountForRegister.Username))
                 {
-                    await _userManager.AddToRoleAsync(account, role);
+                    return Conflict();
                 }
-                return CreatedAtAction("GetAccountDetail", new { id = account.Id }, account);
+                // byte[] passwordHashed, passwordSalt;
+                // HashPassword(accountForRegister.Password, out passwordHashed, out passwordSalt);
+                var account = new Engrisk.Models.Account()
+                {
+                    UserName = accountForRegister.Username,
+                    Fullname = accountForRegister.Fullname,
+                    Address = accountForRegister.Address,
+                    Email = accountForRegister.Email,
+                    DateOfBirth = accountForRegister.DateOfBirth,
+                    PhoneNumber = accountForRegister.PhoneNumber
+                };
+                var accountCreated = _userManager.CreateAsync(account, accountForRegister.Password).Result;
+                if (accountCreated.Succeeded)
+                {
+                    foreach (var role in accountForRegister.Roles)
+                    {
+                        await _userManager.AddToRoleAsync(account, role);
+                    }
+                    return CreatedAtAction("GetAccountDetail", new { id = account.Id }, account);
+                }
+                return BadRequest();
             }
-            return BadRequest();
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(AccountForLoginDTO accountLogin)

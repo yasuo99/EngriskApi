@@ -203,15 +203,18 @@ namespace Engrisk.Controllers
                 var userQuizQuery = await _repo.GetOneWithManyToMany<Quiz>(quiz => quiz.Id == newQuiz.Id);
                 var userQuiz = await userQuizQuery.Include(e => e.Questions).ThenInclude(q => q.Question).FirstOrDefaultAsync();
                 var returnQuiz = _mapper.Map<QuizDTO>(userQuiz);
-                var history = new History()
+                if (returnQuiz.Questions.Count() > 0)
                 {
-                    AccountId = userId,
-                    QuizId = userQuiz.Id,
-                    StartDate = DateTime.Now,
-                    IsDone = false
-                };
-                _repo.Create(history);
-                await _repo.SaveAll();
+                    var history = new History()
+                    {
+                        AccountId = userId,
+                        QuizId = userQuiz.Id,
+                        StartDate = DateTime.Now,
+                        IsDone = false
+                    };
+                    _repo.Create(history);
+                    await _repo.SaveAll();
+                }
                 return Ok(returnQuiz);
             }
             var anonymousQuiz = section.Quizzes.Skip(currentQuiz).Take(1).FirstOrDefault();

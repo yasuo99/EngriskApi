@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using AutoMapper;
 using Engrisk.DTOs;
+using Engrisk.DTOs.Account;
 using Engrisk.DTOs.Comment;
 using Engrisk.DTOs.Exam;
 using Engrisk.DTOs.Post;
@@ -21,7 +22,14 @@ namespace Engrisk.Helper
             .ForMember(account => account.Age, source => source.MapFrom(src => src.DateOfBirth.CalculateAge()))
             .ForMember(account => account.Roles, options => options.MapFrom(src => src.Roles.Select(r => r.Role.Name)))
             .ForMember(acc => acc.RefreshToken, opts => opts.MapFrom(src => src.RefreshTokens.Count() > 0 ? src.RefreshTokens.Last().Token : "" ))
-            .ForMember(acc => acc.IsBanned, opts => opts.MapFrom(src => src.Locked > DateTime.Now));
+            .ForMember(acc => acc.IsBanned, opts => opts.MapFrom(src => src.Locked > DateTime.Now))
+            .ForMember(acc => acc.IsVerified, opts => opts.MapFrom(sourceMember=> sourceMember.EmailConfirmed));
+            CreateMap<Account,AccountBlogDTO>()
+            .ForMember(account => account.Age, source => source.MapFrom(src => src.DateOfBirth.CalculateAge()))
+            .ForMember(acc => acc.IsBanned, opts => opts.MapFrom(src => src.Locked > DateTime.Now))
+            .ForMember(acc => acc.WordLearned, opts => opts.MapFrom(src => src.Learned.Count()))
+            .ForMember(acc => acc.ExamDone, opts => opts.MapFrom(src => src.ExamHistories.Count()))
+            .ForMember(acc => acc.QuizDone, opts => opts.MapFrom(src => src.Sections.Select(s => s.QuizDoneCount).Sum()));    
             CreateMap<AccountDetailDTO,Account>().ForAllMembers(opts => opts.Condition((src,dest,srcMember) => srcMember != null));
             CreateMap<AccountForUpdateDTO, Account>().ForAllMembers(opts => opts.Condition((src,dest,srcMember) => srcMember != null));
             CreateMap<AccountAttendance, AttendanceDTO>()
@@ -117,13 +125,15 @@ namespace Engrisk.Helper
             CreateMap<QuestionCreateDTO,Question>().ForAllMembers(opts => opts.Condition((src,dest,srcMember) => srcMember != null));
             CreateMap<NotificationCreateDTO,Notification>().ForAllMembers(opts => opts.Condition((src,dest,srcMember) => srcMember != null));
             CreateMap<Post,PostDetailDTO>()
+            .ForMember(post => post.AccountVerified, opts => opts.MapFrom(src => src.Account.EmailConfirmed))
             .ForMember(post => post.AccountPhotoUrl, opts => opts.MapFrom(src => src.Account.PhotoUrl))
             .ForMember(post => post.Rating, opts => opts.MapFrom(src => src.PostRatings.Sum(s => s.Rating)/(src.PostRatings.Count() == 0 ? 1 : src.PostRatings.Count())))
             .ForMember(post => post.AccountUsername, opts => opts.MapFrom(src => src.Account.UserName))
             .ForMember(post => post.PostRatings, opts => opts.MapFrom(src => src.PostRatings.Select(r => new RatingDTO(){Id = r.PostId,AccountId = r.AccountId, AccountUsername = r.Account.UserName, Rating = r.Rating })));
             CreateMap<Comment,CommentDTO>().ForMember(c => c.AccountUsername, opts => opts.MapFrom(src => src.Account.UserName))
             .ForMember(c => c.Comment, opts => opts.MapFrom(src => src.Content))
-            .ForMember(c => c.AccountPhotoUrl, opts => opts.MapFrom(src => src.Account.PhotoUrl));
+            .ForMember(c => c.AccountPhotoUrl, opts => opts.MapFrom(src => src.Account.PhotoUrl))
+            .ForMember(c => c.IsVerified, opts => opts.MapFrom(src => src.Account.EmailConfirmed));
             CreateMap<WordLearnt,WordLearntDTO>().ForMember(w => w.WordCategory, opts => opts.MapFrom(src => src.Word.WordCategory))
             .ForMember(w => w.Eng, opts => opts.MapFrom(src => src.Word.Eng));
             CreateMap<History,QuizHistoryDTO>().ForMember(h => h.SectionName,opts => opts.MapFrom(src => src.Quiz.QuizName))
@@ -134,6 +144,7 @@ namespace Engrisk.Helper
             .ForMember(c => c.Dislike, opts => opts.MapFrom(src => src.Reply.Dislike))
             .ForMember(c => c.AccountPhotoUrl, opts => opts.MapFrom(src => src.Reply.Account.PhotoUrl))
             .ForMember(c => c.AccountUsername, opts => opts.MapFrom(src => src.Reply.Account.UserName))
+            .ForMember(c => c.AccountVerified, opts => opts.MapFrom(src => src.Reply.Account.EmailConfirmed))
             .ForMember(c => c.AccountId, opts => opts.MapFrom(src => src.Reply.AccountId));
         }
     }

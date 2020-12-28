@@ -99,7 +99,10 @@ namespace Engrisk.Controllers
                 return Unauthorized();
             }
             _repo.Delete(groupFromDb);
-            return Ok();
+            if(await _repo.SaveAll()){
+                return Ok();
+            }
+            return NoContent();
         }
         [HttpGet("accounts/{accountId}")]
         public async Task<IActionResult> GetGroupsOfAccount([FromQuery] SubjectParams subjectParams, int accountId)

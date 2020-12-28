@@ -11,6 +11,7 @@ namespace Engrisk.Data
         Task<IEnumerable<Account>> GetAll();
         Task<Account> GetAccountDetail(string identify);
         Task<Account> GetAccountDetail(int id);
+        Task<Account> AccountAccountForBlog(int id);
         Task<Account> GetAccount(string identity);
         Task<Account> CreateAccount(Account account);
         Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountForUpdateDTO);

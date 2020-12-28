@@ -9039,11 +9039,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Thanh\\Desktop\\Engrisk\\Engrisk.csproj",
+      "projectUniqueName": "E:\\TLCN\\Engrisk\\Engrisk.csproj",
       "projectName": "Engrisk",
-      "projectPath": "C:\\Users\\Thanh\\Desktop\\Engrisk\\Engrisk.csproj",
+      "projectPath": "E:\\TLCN\\Engrisk\\Engrisk.csproj",
       "packagesPath": "C:\\Users\\Thanh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Thanh\\Desktop\\Engrisk\\obj\\",
+      "outputPath": "E:\\TLCN\\Engrisk\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
