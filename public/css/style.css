@@ -484,6 +484,8 @@ form ul .suggest{list-style-type: none;}
 .hinhthuc{width: 200px;}
 /* ---------------------------QUẢN LÝ QUIZ - EXAM---------------------------- */
 /* -------------------------------------------------------------------------- */
+.tuvung{width: 180px;}
+#dataTable .chucnang{width: 200px!important;}
 .chucnang{width: 100px;}
 .nav-tabs .nav-item{cursor: pointer;}
 
