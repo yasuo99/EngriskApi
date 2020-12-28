@@ -76,10 +76,10 @@ class NapTienPage extends Component {
                                         </DropdownButton>
                                     </div>
                                 </div>
-                                <div className="nd mt-5">
+                                {/* <div className="nd mt-5">
                                     {this.state.method === "Stripe" && <Stripe amount={this.state.sotien} />}
                                     {this.state.method === "Paypal" && <Paypal amount={this.state.sotien} />}
-                                </div>
+                                </div> */}
                             </div>
                         </main>
 

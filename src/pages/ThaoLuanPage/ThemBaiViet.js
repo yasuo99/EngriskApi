@@ -23,9 +23,13 @@ class ThemBaiViet extends Component {
     async componentDidMount() {
         this.isComponentMounted = true;
         if (this.isComponentMounted) {
-            if (this.props.isLoggedIn) {
-                var result = await this.fetchFollowingPosts();
-                this.setState({ followingPosts: result })
+            if (!this.props.account.isVerified) {
+                window.location = '/thao-luan';
+            } else {
+                if (this.props.isLoggedIn) {
+                    var result = await this.fetchFollowingPosts();
+                    this.setState({ followingPosts: result })
+                }
             }
         }
     }
@@ -36,11 +40,12 @@ class ThemBaiViet extends Component {
             content: this.state.content
         }
         console.log(post);
-        this.props.CreatePost(post);
+        await this.props.CreatePost(post);
         this.setState({
             content: "",
             title: ""
         })
+        window.location = '/thao-luan';
     }
     async fetchFollowingPosts() {
         let token = localStorage.getItem('token');
@@ -50,6 +55,12 @@ class ThemBaiViet extends Component {
         var newContent = evt.editor.getData();
         console.log(newContent);
         localStorage.setItem('content', newContent);
+    }
+    handleChange(e) {
+        e.preventDefault();
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
     onBlur(evt) {
     }
@@ -70,8 +81,8 @@ class ThemBaiViet extends Component {
                                         <div className="form-baiviet">
                                             <input type="submit" className="btn float-right" onClick={this.createPost} value="Đăng" />
                                             <Link to="/thao-luan" type="button" className="btn float-right mr-3">HỦY</Link>
-                                            <textarea style={{ resize: "none" }} type="text" className="tieude" placeholder="Gõ tiêu đề bài viết" onChange={(e) => this.setState({ title: e.target.value })} />
-                                            <textarea style={{ height: "400px" }} placeholder="Nhập nội dung bài viết" onChange={(e) => this.setState({ content: e.target.value })} className="tieude" />
+                                            <textarea style={{ resize: "none" }} value={this.state.title} type="text" className="tieude" placeholder="Gõ tiêu đề bài viết" onChange={(e) => this.handleChange(e)} name="title" />
+                                            <textarea style={{ height: "400px" }} value={this.state.content} placeholder="Nhập nội dung bài viết" onChange={(e) => this.handleChange(e)} name="content" className="tieude" />
                                         </div>
                                     </div>
                                     <div className="col-4 mt-5">

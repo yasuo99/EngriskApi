@@ -1,11 +1,40 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import examApi from '../../api/examApi';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 
 class RankingExam extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            examRanking: []
+        }
+        this.isComponentMounted = false;
+    }
+    async componentDidMount() {
+        this.isComponentMounted = true;
+        const examRanking = await this.fetchExamRanking();
+        if (this.isComponentMounted) {
+            this.setState({
+                examRanking: examRanking
+            })
+        }
+    }
+    fetchExamRanking = async () => {
+        return examApi.getRanking();
+    }
     render() {
+        const renderRanking = this.state.examRanking.map((rank) =>
+            <tr key={rank.examId} className="table-warning">
+                <td><img src="/image/ranking.png" /></td>
+                <td><span><a href={"/blog?id="+rank.accountId}><img src="/image/teamwork.png" />{rank.accountUsername}</a></span></td>
+                <td>{rank.examTitle}</td>
+                <td><span className="label label-success">{rank.score}/{rank.totalScore}</span></td>
+                <td>{Math.round(rank.totalTime / 60)} phút</td>
+            </tr>
+        );
         return (
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
@@ -33,48 +62,7 @@ class RankingExam extends Component {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="text-center">
-                                                    <tr className="table-warning">
-                                                        <td><img src="/image/ranking.png" /></td>
-                                                        <td><span><img src="/image/teamwork.png" />NguyenLap</span></td>
-                                                        <td>Test 1</td>
-                                                        <td><span className="label label-success">95/100</span></td>
-                                                        <td>45 phút</td>
-                                                    </tr>
-                                                    <tr className="table-success">
-                                                        <td><img src="/image/silver-medal.png" /></td>
-                                                        <td><span><img src="/image/teamwork.png" />NguyenLap</span></td>
-                                                        <td>Test 1</td>
-                                                        <td><span className="label label-success">95/100</span></td>
-                                                        <td>45 phút</td>
-                                                    </tr>
-                                                    <tr className="table-info">
-                                                        <td><img src="/image/bronze-medal.png" /></td>
-                                                        <td><span><img src="/image/teamwork.png" />NguyenLap</span></td>
-                                                        <td>Test 1</td>
-                                                        <td><span className="label label-success">95/100</span></td>
-                                                        <td>45 phút</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>4</td>
-                                                        <td><span><img src="/image/teamwork.png" />NguyenLap</span></td>
-                                                        <td>Test 1</td>
-                                                        <td><span className="label label-success">95/100</span></td>
-                                                        <td>45 phút</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>5</td>
-                                                        <td><span><img src="/image/teamwork.png" />NguyenLap</span></td>
-                                                        <td>Test 1</td>
-                                                        <td><span className="label label-success">95/100</span></td>
-                                                        <td>45 phút</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>6</td>
-                                                        <td><span><img src="/image/teamwork.png" />NguyenLap</span></td>
-                                                        <td>Test 1</td>
-                                                        <td><span className="label label-success">95/100</span></td>
-                                                        <td>45 phút</td>
-                                                    </tr>
+                                                   {renderRanking}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -86,6 +74,9 @@ class RankingExam extends Component {
                 </div>
             </div>
         );
+    }
+    componentWillUnmount() {
+        this.isComponentMounted = false;
     }
 }
 export default RankingExam;

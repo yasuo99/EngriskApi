@@ -79,9 +79,9 @@ class ThaoLuanPage extends Component {
                                             <div className="col-8">
                                                 <h3>Diễn Đàn Ngôn Ngữ</h3>
                                             </div>
-                                            <div className="col-4 text-right">
+                                            {this.props.isVerified && <div className="col-4 text-right">
                                                 <Link className="btn btn-primary" to="/thao-luan/them-bai-viet">ĐĂNG BÀI MỚI</Link>
-                                            </div>
+                                            </div>}
                                         </div>
                                         <ul className="nav nav-tabs">
                                             <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#tabone"><i className="fa fa-book" /> ĐANG ĐƯỢC YÊU THÍCH</a> </li>
@@ -119,10 +119,11 @@ class ThaoLuanPage extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const { id } = state.auth.account;
+    const { id, isVerified } = state.auth.account;
     const { isLoggedIn } = state.auth;
     return {
         id: id,
+        isVerified: isVerified,
         isLoggedIn: isLoggedIn
     }
 }

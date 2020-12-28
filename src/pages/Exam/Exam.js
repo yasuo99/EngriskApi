@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Badge, OverlayTrigger, Popover } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import examApi from '../../api/examApi';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
 
-export default class Exam extends Component {
+class Exam extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +17,8 @@ export default class Exam extends Component {
                 currentPage: 1,
                 pageSize: 4
             },
-            hasMore: true
+            hasMore: true,
+            histories: []
         }
         this.isComponentMounted = false;
     }
@@ -27,7 +29,13 @@ export default class Exam extends Component {
             this.setState({
                 exams: exams
             })
-            console.log(exams);
+            if(this.props.isLoggedIn){
+                const histories = await this.fetchHistories(this.props.account.id);
+                this.setState({
+                    histories: histories
+                })
+                console.log(histories);
+            }
         }
     }
     fetchExam = async () => {
@@ -57,6 +65,9 @@ export default class Exam extends Component {
             })
         }
     }
+    fetchHistories = async (id) => {
+        return await examApi.getHistories(id);
+    }
     render() {
         const popover = (
             <Popover id="popover-basic">
@@ -76,6 +87,7 @@ export default class Exam extends Component {
                 <Popover.Title as="h3">{exam.title}</Popover.Title>
                 <Popover.Content>
                     {exam.detail}
+                    {this.props.isLoggedIn && this.state.histories.some(el => el.examId === exam.id) && <p>Kết quả thi tốt nhất: Điểm: {this.state.histories.find((history) => history.examId === exam.id) && this.state.histories.find((history) => history.examId === exam.id).score }</p>}
                 </Popover.Content>
             </Popover>}>
                 <div className="card-hoc pt-2 mb-3">
@@ -84,7 +96,7 @@ export default class Exam extends Component {
                             <img src="/image/welcome.jpg" alt="welcome" className="img-hoc" />
                         </div>
                         <div className="col-8">
-                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge>
+                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge> {this.state.histories.some(el => el.examId == exam.id) && <Badge variant="success">Đã làm</Badge>}
                             <p>Exp: {exam.exp}  </p>
                             <p>Price: {exam.price}</p>
                             <p>Duration: {exam.duration}</p>
@@ -102,15 +114,6 @@ export default class Exam extends Component {
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
                         <HeaderClient></HeaderClient>
-                        <div className="dropdown dropdown-exam">
-                            <a className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Lọc danh sách exam
-                                            </a>
-                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a className="dropdown-item"  >Học Tập</a>
-                                <a className="dropdown-item" >Gia Đình</a>
-                            </div>
-                        </div>
                         <main id="scroll">
                             <div className="container">
                                 <div className="row">
@@ -143,3 +146,11 @@ export default class Exam extends Component {
         this.isComponentMounted = false;
     }
 }
+const mapStateToProps = (state) => {
+    const {isLoggedIn, account} = state.auth;
+    return{
+        isLoggedIn: isLoggedIn,
+        account: account
+    }
+}
+export default connect(mapStateToProps)(Exam)

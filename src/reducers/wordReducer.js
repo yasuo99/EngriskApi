@@ -1,7 +1,6 @@
 import { toast } from "react-toastify"
 var initialState = {
-    authError_Email: null,
-    authError_Pass: null
+    words: []
 };
 
 const wordReducer = (state = initialState, action) => {
@@ -9,6 +8,18 @@ const wordReducer = (state = initialState, action) => {
         case "FETCH_WORDS":
             toast("Test");
             return state;
+        case "PRACTICE":
+            toast("Practice");
+            return {
+                ...initialState,
+                words: action.words
+            };
+        case "DONE": 
+            toast('Luyện tập kết thúc');
+            return {
+                ...initialState,
+                words: []
+            }
         default: return state;
     }
 };

@@ -97,7 +97,7 @@ class QLListCauHoi extends Component {
                 const result = await questionApi.createQuestion(formData);
                 if (result.status === 200) {
                     toast("Thêm câu hỏi thành công");
-                    var questions = await this.fetchQuestion();
+                    var questions = await this.fetchQuestions();
                     if (this.isComponentMounted) {
                         this.setState({
                             modalCreate: false,

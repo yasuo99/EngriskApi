@@ -23,3 +23,9 @@ export const createWord = async (body) =>  {
         toast(error.response.data.error)
     })
 };
+export const wordPractice = (body) => {
+    return dispatch => dispatch({type: "PRACTICE" , words: body});
+}
+export const donePractice = () => {
+    return dispatch => dispatch({type: "DONE"})
+}
