@@ -59,19 +59,19 @@ const routes = [
     {
         path: '/blog',
         exact: true,
-        main: () => <Blog />,
+        main: (location) => <Blog location={location} />,
         guard: false,
         roles: []
     },
     {
-        path: '/rankingexam',
+        path: '/ranking-exam',
         exact: true,
         main: () => <RankingExam />,
         guard: false,
         roles: []
     },
     {
-        path: '/rankingword',
+        path: '/ranking-word',
         exact: true,
         main: () => <RankingWord />,
         guard: false,
@@ -115,7 +115,7 @@ const routes = [
     {
         path: '/thao-luan-chi-tiet/:postId',
         exact: true,
-        main: (match) => <ThaoLuanChiTietPage match={match}/>,
+        main: (match) => <ThaoLuanChiTietPage match={match} />,
         guard: false,
         roles: []
     },
@@ -241,42 +241,50 @@ const routes = [
     {
         path: '/sections/:sectionId/do',
         exact: true,
-        main: (match) => <Hoc match={match}/>,
+        main: (match) => <Hoc match={match} />,
         guard: false,
+        roles: []
+    },
+    ,
+    {
+        path: '/practice',
+        exact: true,
+        main: (match) => <Hoc match={match} />,
+        guard: true,
         roles: []
     },
     {
         path: '/exam',
         exact: true,
-        main: () => <Exam/>,
+        main: () => <Exam />,
         guard: false,
         roles: []
     },
     {
         path: '/lichsu-exam',
         exact: true,
-        main: () => <HistroriesExam/>,
+        main: () => <HistroriesExam />,
         guard: false,
         roles: []
     },
     {
         path: '/exam/:examId',
         exact: true,
-        main: (match) => <ExamPage match={match}/>,
+        main: (match) => <ExamPage match={match} />,
         guard: true,
         roles: []
     },
     {
         path: '/signin',
         exact: true,
-        main: (location) => <SignInPage location={location}/>,
+        main: (location) => <SignInPage location={location} />,
         guard: false,
         roles: []
     },
     {
         path: '/signup',
         exact: true,
-        main: (location) => <SignUpPage location={location}/>,
+        main: (location) => <SignUpPage location={location} />,
         guard: false,
         roles: []
     },
@@ -292,74 +300,74 @@ const routes = [
         exact: true,
         main: () => <ManagementWord />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-thongbao',
         exact: true,
         main: () => <ManagementInfor />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-tailieu',
         exact: true,
         main: () => <ManagementDoc />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-cauhoi',
         exact: true,
         main: () => <ManagementQuestion />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-naptien',
         exact: true,
         main: () => <ManagementPayment />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-quiz',
         exact: true,
-        main: () => <ManagementQuiz/>,
+        main: () => <ManagementQuiz />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-exam',
         exact: true,
-        main: () => <ManagementExam/>,
+        main: () => <ManagementExam />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-section',
         exact: true,
-        main: () => <ManagementSection/>,
+        main: () => <ManagementSection />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-taikhoan',
         exact: true,
-        main: () => <ManagementAccount/>,
+        main: () => <ManagementAccount />,
         guard: true,
         roles: ["superadmin"]
     },
     {
         path: '/quanly-bangdiem',
         exact: true,
-        main: () => <ManagementScore/>,
+        main: () => <ManagementScore />,
         guard: true,
         roles: ["superadmin"]
-    },
+    }, {
         path: '/quanly-phanquyen',
         exact: true,
-        main: () => <ManagementRole/>,
+        main: () => <ManagementRole />,
         guard: true,
         roles: ["superadmin"]
     }
@@ -374,12 +382,12 @@ const routes = [
     {
         path: '/access-denied',
         exact: true,
-        main: (location) => <QuyenTruyCap location={location}/>,
+        main: (location) => <QuyenTruyCap location={location} />,
         guard: false,
         roles: []
     },
     {
-        main: () => <NotFoundPage/>
+        main: () => <NotFoundPage />
     }
 ];
 

@@ -9,6 +9,10 @@ const examApi = {
         const url = "exams/manage";
         return axiosClient.get(url);
     },
+    getRanking: () => {
+        const url = 'exams/accounts/ranking';
+        return axiosClient.get(url);
+    },
     getExam: (id) => {
         const url = `/exams/${id}`;
         return axiosClient.get(url);

@@ -35,7 +35,11 @@ const postApi = {
     },
     deletePost: (id) => {
         const url = `/posts/${id}`;
-        return axiosClient.delete(url);
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
+        return axiosClient.delete(url, {headers});
     },
     lockPost: (id) => {
         const url = `/posts/${id}/lock`;
@@ -63,10 +67,26 @@ const postApi = {
             authorization: "Bearer " + token
         }
         const url = `/posts/${postId}/comments/${commentId}/like`;
-        return axiosClient.put(url,null, {headers});
+        return axiosClient.put(url, null, { headers });
     },
-    dislikeComment: (commentId) => {
-
+    updateComment: (postId, commentId, comment) => {
+        const url = `/posts/${postId}/comments/${commentId}`;
+        const body = {
+            content: comment
+        }
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
+        return axiosClient.put(url, body, { headers });
+    },
+    deleteComment: (postId, commentId) => {
+        const url = `/posts/${postId}/comments/${commentId}`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: "Bearer " + token
+        }
+        return axiosClient.delete(url, { headers });
     }
     ,
     ratingPost: (id) => {

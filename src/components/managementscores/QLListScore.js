@@ -3,7 +3,7 @@ import { appendScript } from "../../config/appendScript";
 import "datatables.net-dt/js/dataTables.dataTables.js"
 import "datatables.net-dt/css/jquery.dataTables.min.css"
 import $ from 'jquery'
-
+import { Button, Modal } from 'react-bootstrap'
 class QLListScore extends Component {
     constructor(props) {
         super(props);

@@ -25,6 +25,11 @@ class SignInPage extends Component {
           return <Redirect to="/admin" />
         }
       }
+      else {
+        if (decodedToken.role === "superadmin" || decodedToken.role === "manager") {
+          return <Redirect to="/admin" />
+        }
+      }
       console.log(decodedToken);
     }
     const { isLoggedIn } = this.props;

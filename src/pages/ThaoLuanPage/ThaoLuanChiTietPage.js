@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import BinhLuanPost from '../../components/thaoluan/BinhLuanPost';
 import ContentPost from '../../components/thaoluan/ContentPost';
 import PhanHoiPost from '../../components/thaoluan/PhanHoiPost';
@@ -15,8 +15,9 @@ class ThaoLuanChiTietPage extends Component {
         super(props);
         this.state = {
             post: { comments: [] },
-            comment: "",
-            filter: ""
+            comment: null,
+            filter: "",
+            redirect: false
         }
         this.isComponentMounted = false;
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,13 +27,19 @@ class ThaoLuanChiTietPage extends Component {
         this.isComponentMounted = true;
         const { match: { match: { params } } } = this.props;
         const post = await this.fetchPostDetail(params.postId);
-        console.log(post);
         if (this.isComponentMounted) {
-            this.setState({
-                post: post
-            });
+            if (post) {
+                this.setState({
+                    post: post
+                });
+            }
+            else{
+                window.location = '/not-found'
+            }
+
         }
     }
+
     fetchPostDetail = async (id, params) => {
         return await postApi.getDetail(id, params);
     }
@@ -43,20 +50,24 @@ class ThaoLuanChiTietPage extends Component {
         console.log(this.state);
     }
     async handleSubmit() {
-        let comment = {
-            comment: this.state.comment
-        }
-        let result = (await postApi.commentToPost(this.state.post.id, comment)).status;
-        if (result === 200) {
-            this.refreshPost();
-            this.setState({
-                comment: ""
-            })
+        if (this.state.comment == '') {
+            toast('Bình luận không được để trống');
+        } else {
+            let comment = {
+                comment: this.state.comment
+            }
+            let result = (await postApi.commentToPost(this.state.post.id, comment)).status;
+            if (result === 200) {
+                this.refreshPost();
+                this.setState({
+                    comment: ''
+                })
+            }
         }
     }
     cancel() {
         this.setState({
-            comment: ""
+            comment: ''
         });
     }
     replyComment = async (comment, commentId) => {
@@ -64,9 +75,12 @@ class ThaoLuanChiTietPage extends Component {
         const body = {
             content: comment
         }
-        let result = await (await postApi.replyComment(params.postId, commentId, body)).status;
-        if (result === 200) {
+        let result = await postApi.replyComment(params.postId, commentId, body);
+        if (result.status === 200) {
             await this.refreshPost();
+        }
+        else {
+            toast("Bình luận không được để trống")
         }
     }
     refreshPost = async () => {
@@ -84,10 +98,10 @@ class ThaoLuanChiTietPage extends Component {
     likeComment = async (commentId) => {
         const { match: { match: { params } } } = this.props;
         var result = await postApi.likeComment(params.postId, commentId);
-        if(result.status === 200){
+        if (result.status === 200) {
             await this.refreshPost();
         }
-        else{
+        else {
             toast(result.error)
         }
     }
@@ -106,6 +120,40 @@ class ThaoLuanChiTietPage extends Component {
             });
         }
     }
+    updateComment = async (postId, commentId, body) => {
+        const result = await postApi.updateComment(postId, commentId, body);
+        if (result.status === 200) {
+            toast("Thành công");
+            const { match: { match: { params } } } = this.props;
+            const post = await this.fetchPostDetail(params.postId);
+            console.log(post);
+            if (this.isComponentMounted) {
+                this.setState({
+                    post: post
+                });
+            }
+        }
+        else {
+            toast("Thất bại")
+        }
+    }
+    deleteComment = async (postId, commentId) => {
+        const result = await postApi.deleteComment(postId, commentId);
+        if (result.status === 200) {
+            toast("Thành công");
+            const { match: { match: { params } } } = this.props;
+            const post = await this.fetchPostDetail(params.postId);
+            console.log(post);
+            if (this.isComponentMounted) {
+                this.setState({
+                    post: post
+                });
+            }
+        }
+        else {
+            toast("Thất bại")
+        }
+    }
     render() {
         return (
             <div id="wrapper">
@@ -121,7 +169,7 @@ class ThaoLuanChiTietPage extends Component {
                                     </div>
                                 </div>
                                 <ContentPost post={this.state.post}></ContentPost>
-                                {this.props.isLoggedIn && <div className="binhluan">
+                                {this.props.isLoggedIn && this.props.account.isBanned === false && <div className="binhluan">
                                     <div className="row mt-5">
                                         <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.account.photoUrl || "/image/default-user-image.png"} /></div>
                                         <div className="col-md-11">
@@ -129,6 +177,12 @@ class ThaoLuanChiTietPage extends Component {
                                             <button type="button" className="btn btn-primary mr-3 mt-2" onClick={this.handleSubmit}>ĐĂNG</button>
                                             <button type="button" className="btn btn-primary mt-2" onClick={this.cancel}>HỦY</button>
                                         </div>
+                                    </div>
+                                </div>}
+                                {this.props.account.isBanned && <div className="row mt-5">
+                                    <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.account.photoUrl || "/image/default-user-image.png"} /></div>
+                                    <div className="col-md-11">
+                                        <p class="text-danger mt-4">Tài khoản của bạn hiện đang bị khóa bình luận</p>
                                     </div>
                                 </div>}
                                 <div className="row mt-5 kechan">
@@ -151,7 +205,7 @@ class ThaoLuanChiTietPage extends Component {
                                     </div>
                                 </div>
                                 <div className="phanhoi-binhluan">
-                                    <PhanHoiPost comments={this.state.post.comments} replyComment={this.replyComment} likeComment={this.likeComment}></PhanHoiPost>
+                                    <PhanHoiPost comments={this.state.post.comments} replyComment={this.replyComment} likeComment={this.likeComment} postId={this.state.post.id} updateComment={this.updateComment} deleteComment={this.deleteComment}></PhanHoiPost>
                                 </div>
                             </div>
                         </section>

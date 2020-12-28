@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Button, Modal } from 'react-bootstrap'
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
+import postApi from "../../api/postApi";
 class ContentPost extends Component {
     constructor(props) {
         super(props);
@@ -13,6 +15,9 @@ class ContentPost extends Component {
         };
     }
     submitEdit(e) {
+        const body = {
+
+        }
         this.setState({
         });
         this.closeEdit();
@@ -37,10 +42,15 @@ class ContentPost extends Component {
             modalDelete: false,
         });
     }
-    submitDelete(e) {
-        this.setState({
+    submitDelete = async (e) => {
+        const result = await postApi.deletePost(this.props.post.id);
+        if(result.status === 200){
+            window.location = '/thao-luan';
+        }
+        else{
+            toast('Xóa thất bại');
+        }
 
-        });
         this.closeDelete();
     }
     handleChange(e) {
@@ -58,16 +68,15 @@ class ContentPost extends Component {
                     <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.post.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                     <div className="col-md-9 pt-3">
                         <h5>{this.props.post.title}</h5>
-                        <a href="#">{this.props.post.accountUsername}</a>
+                        <a href={"/blog?id=" +this.props.post.accountId}>{this.props.post.accountUsername} {this.props.post.accountVerified && <img src="/image/check.png" alt='check-img' />}</a>
                         <hr />
                         <p className="mt-3 mb-3">{this.props.post.content}</p>
                     </div>
-                    {(this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("admin") || this.props.account.roles.includes("manager") || this.props.post.accountUsername === this.props.account.username) && <div className="col-2 chucnang">
-                        <Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button>
+                    {(this.props.post.accountUsername === this.props.account.username && this.props.account.isBanned === false) && <div className="col-2 chucnang"><Button variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i className="fa fa-edit" /></Button></div>}
+                    {(this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("forummod") || this.props.account.roles.includes("superadmin") || this.props.account.roles.includes("manager"))  && <div className="col-2 chucnang">
                         <Button variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i className="fa fa-trash" /></Button>
                     </div>}
                     <div className="baocao">
-                        <a href="#" className="mr-3">Báo cáo <i className="fa fa-flag"></i></a>
                         <div className="rate">
                             <ul className="rate-area">
                                 <input type="radio" id="5-star" name="crating" defaultValue={5} />

@@ -13,6 +13,9 @@ import sectionApi from '../../api/sectionApi';
 import { Button, Modal } from 'react-bootstrap'
 import { appendScript } from '../../config/appendScript'
 import { Fragment } from 'react';
+import { toast } from 'react-toastify';
+import wordApi from '../../api/wordApi';
+import { donePractice } from '../../actions/wordActions';
 
 class Hoc extends PureComponent {
     constructor(props) {
@@ -36,48 +39,78 @@ class Hoc extends PureComponent {
             isRight: false,
             modal: false,
             authResult: {},
-            totalTime: 0
+            totalTime: 0,
         }
 
         this.handleUnload = this.handleUnload.bind(this);
     }
     async componentDidMount() {
         window.addEventListener('beforeunload', this.handleUnload);
-        console.log(this.props);
-        const { match: { match: { params } } } = this.props;
-        const result = await this.fetchQuestions(params.sectionId);
-        console.log(result);
+        const { match: { match: { params, path } } } = this.props;
         this.isComponentMounted = true;
-        try {
+        //Kiểm tra có phải là bài quiz practice hay không
+        //Không phải thì là bài quiz của section
+        if (path !== '/practice') {
+            const result = await this.fetchQuestions(params.sectionId);
+            try {
+                if (this.isComponentMounted) {
+                    if (result.questions.length > 0) {
+                        this.setState({
+                            sectionId: params.sectionId,
+                            questions: result.questions,
+                            currentQuestion: result.questions[this.state.index],
+                            id: this.state.index,
+                            quiz: result,
+                            loading: false
+                        })
+                        if (!this.props.isLoggedIn) {
+                            this.calculateSpent = setInterval(() => {
+                                if (this.isComponentMounted) {
+                                    this.setState({
+                                        totalTime: this.state.totalTime + 1
+                                    })
+                                }
+                            }, 1000)
+                        }
+                    }
+                    else {
+                        toast("Hiện chưa có câu hỏi cho bài quiz này");
+                        this.setState({
+                            loading: true
+                        })
+                    }
+
+                }
+            }
+            catch (error) {
+                console.log(error);
+                this.setState({ loading: false });
+            }
+        } else {
+            const questions = await wordApi.practice(this.props.words);
+            console.log(questions);
             if (this.isComponentMounted) {
-                if (result) {
+                if (questions.length > 0) {
                     this.setState({
-                        sectionId: params.sectionId,
-                        questions: result.questions,
-                        currentQuestion: result.questions[this.state.index],
+                        questions: questions,
+                        currentQuestion: questions[this.state.index],
+                        quiz: { ...this.state.quiz, questions: questions },
                         id: this.state.index,
-                        quiz: result,
                         loading: false
                     })
                     this.calculateSpent = setInterval(() => {
-                        this.setState({
-                            totalTime: this.state.totalTime + 1
-                        })
+                        if (this.isComponentMounted) {
+                            this.setState({
+                                totalTime: this.state.totalTime + 1
+                            })
+                        }
                     }, 1000)
                 }
                 else {
-                    this.setState({
-                        loading: true
-                    })
+                    this.setState({ loading: true })
                 }
-
             }
         }
-        catch (error) {
-            console.log(error);
-            this.setState({ loading: false });
-        }
-        appendScript("https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js");
     }
     fetchQuestions = async (sectionId) => {
         try {
@@ -110,45 +143,89 @@ class Hoc extends PureComponent {
         }
     }
     submitAnswer = async () => {
-        const answer = {
-            id: this.state.currentQuestion.id,
-            answer: this.state.answer,
-            isRightAnswer: false
-        }
-        const result = await submitQuestion(this.state.currentQuestion.id, answer);
+        const { match: { match: { path } } } = this.props;
         this.setState({
-            index: this.state.index + 1,
             checked: true
         })
-        if (!result.isRightAnswer) {
-            this.setState({
-                remainQuestion: [...this.state.remainQuestion, this.state.currentQuestion],
-                isRight: false
-            })
-        } else {
-            this.setState({
-                rightAnswer: this.state.rightAnswer + 1,
-                isRight: true
-            })
-        }
-        if (this.reachEnd()) {
-            if (this.state.rightAnswer !== this.state.quiz.questions.length) {
+        let rightAnswer = this.state.rightAnswer;
+        let remainQuestion = this.state.remainQuestion;
+        if (path !== '/practice') {
+            const answer = {
+                id: this.state.currentQuestion.id,
+                answer: this.state.answer,
+                isRightAnswer: false
+            }
+            const result = await submitQuestion(this.state.currentQuestion.id, answer);
+            if (!result.isRightAnswer) {
+                remainQuestion = [...remainQuestion, this.state.currentQuestion];
                 this.setState({
-                    questions: [...this.state.questions, ...this.state.remainQuestion.sort(() => Math.random() - 0.5)],
-                    remainQuestion: []
+                    remainQuestion: [...this.state.remainQuestion, this.state.currentQuestion],
+                    isRight: false
+                })
+            } else {
+                this.setState({
+                    rightAnswer: this.state.rightAnswer + 1,
+                    isRight: true
+                })
+            }
+        }
+        else {
+            if (this.state.answer == this.state.currentQuestion.answer) {
+                rightAnswer += 1;
+                this.setState({
+                    rightAnswer: rightAnswer,
+                    isRight: true
                 });
+            } else {
+                remainQuestion = [...remainQuestion, this.state.currentQuestion];
+                this.setState({
+                    remainQuestion: remainQuestion,
+                    isRight: false
+                })
+            }
+        }
+        if (this.state.index === this.state.questions.length - 1) {
+            console.log(this.state.rightAnswer);
+            if (path !== '/practice') {
+                if (this.state.rightAnswer !== this.state.quiz.questions.length) {
+                    this.setState({
+                        questions: [...this.state.questions, ...remainQuestion.sort(() => Math.random() - 0.5)],
+                        remainQuestion: []
+                    });
+                }
+                else {
+                    const result = await this.submitQuiz();
+                    this.setState({
+                        done: true,
+                        authResult: result
+                    })
+                }
             }
             else {
-                const result = await this.submitQuiz();
-                clearInterval(this.calculateSpent);
-                this.setState({
-                    done: true,
-                    authResult: result
-                })
-
+                if (rightAnswer !== this.state.quiz.questions.length) {
+                    this.setState({
+                        questions: [...this.state.questions, ...remainQuestion.sort(() => Math.random() - 0.5)],
+                        remainQuestion: []
+                    });
+                }
+                else {
+                    clearInterval(this.calculateSpent);
+                    const result = await wordApi.donePractice(this.props.words);
+                    if(result.status === 200){
+                        this.props.donePractice();
+                    }
+                    else{
+                        toast('Lỗi');
+                    }
+                    this.setState({
+                        done: true,
+                    })
+                }
             }
         }
-        console.log(this.state);
+        this.setState({
+            index: this.state.index + 1,
+        })
     }
     submitQuiz = async () => {
         return await sectionApi.doneQuiz(this.state.sectionId, this.state.quiz.id);
@@ -163,14 +240,15 @@ class Hoc extends PureComponent {
         e.preventDefault();
         this.setColor(5);
         this.selectedAnswer(e, 5);
-        console.log(this.state);
         if (!this.reachEnd()) {
             this.setState({
                 currentQuestion: this.state.questions[this.state.index],
                 checked: false,
                 result: false,
+                isRight: false
             })
         }
+        console.log(this.state);
     }
     skipQuestion = () => {
         this.setState({
@@ -179,7 +257,7 @@ class Hoc extends PureComponent {
         })
         let tempIndex = this.state.index + 1;
         let remainQuestion = [...this.state.remainQuestion, this.state.currentQuestion]
-        if (!this.reachEnd()) {
+        if (tempIndex < this.state.questions.length) {
             this.setState({
                 currentQuestion: this.state.questions[tempIndex],
                 checked: false,
@@ -207,7 +285,7 @@ class Hoc extends PureComponent {
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
                             <HeaderClient></HeaderClient>
-                            
+
                             <main id="hoc2">
                                 <div className="container">
                                     <div className="row kechan mt-5 kechan d-flex">
@@ -246,11 +324,11 @@ class Hoc extends PureComponent {
                                             <div className="col-8 offset-2">
                                                 {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
                                                     <p className="mb-5">Có nghĩa là?</p></div>
-                                                    <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
+                                                    {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div>}</div>}
                                                 {currentQuestion.isListeningQuestion === true &&
                                                     <div className="row">
                                                         <b>{currentQuestion.content}</b>
-                                                        <ReactPlayer url={currentQuestion.audio} controls width="500px" height="30px" />
+                                                        <ReactPlayer url={currentQuestion.audio} controls width="500px" height="30px" playing={true} />
                                                     </div>}
                                                 <div className="row mt-2">
                                                     <div className="col-6">
@@ -278,7 +356,7 @@ class Hoc extends PureComponent {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={isRight === true ? "row mt-3 thongbao-ketqua khungKq" : "row mt-3 khungKq"}>
+                                        <div className={checked ? (isRight ? "row mt-3 thongbao-ketqua khungKq" : "row mt-3 thongbao-ketquasai") : "row mt-3 khungKq"}>
                                             <div className="col-3">
                                                 {checked === false && <button className="btn btn-primary" onClick={this.skipQuestion}>Bỏ qua</button>}
                                             </div>
@@ -298,7 +376,7 @@ class Hoc extends PureComponent {
                                     <Modal.Body> Thời gian hoàn thành của bạn là: {this.props.isLoggedIn ? this.state.authResult.timeSpent : this.state.totalTime} giây
                                    </Modal.Body>
                                     <Modal.Footer>
-                                        <Button variant="secondary" onClick={() => this.modalClose()}>Trở lại</Button>
+                                        <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/home">Học tiếp</Link>
                                     </Modal.Footer>
                                 </Modal>
                                 <Footer></Footer>
@@ -323,13 +401,16 @@ class Hoc extends PureComponent {
 }
 const mapStateToProps = (state) => {
     const { auth } = state;
+    const { words } = state.word;
     return {
         account: auth.account,
-        isLoggedIn: auth.isLoggedIn
+        isLoggedIn: auth.isLoggedIn,
+        words: words
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
+        donePractice: () => dispatch(donePractice())
     };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Hoc);

@@ -29,7 +29,7 @@ class SubMenuClient extends Component {
           <li className="nav-item">
             <Link className="nav-link" to="/flashcard">
               <img src="/image/shooting-stars.png" className="mr-2" />
-              <span>Học từ vựng</span></Link>
+              <span>Flashcard</span></Link>
           </li>
           <hr className="sidebar-divider" />
           <li className="nav-item">

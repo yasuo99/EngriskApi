@@ -5,13 +5,30 @@ import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import { connect } from 'react-redux';
 import ReactTimeAgo from 'react-time-ago/commonjs/ReactTimeAgo';
+import wordApi from '../../api/wordApi';
 
 class TuVungPage extends Component {
     constructor(props) {
         super(props);
+        this.isComponentMounted = false;
+        this.state = {
+            words: []
+        }
+    }
+    async componentDidMount(){
+        this.isComponentMounted = true;
+        const words = await this.fetchLearntWord();
+        if(this.isComponentMounted){
+            this.setState({
+                words: words
+            })
+        }
+    }
+    fetchLearntWord = async () => {
+        return await wordApi.getLearntWord(this.props.account.id);
     }
     render() {
-        const renderWordLearnts = this.props.account.learned.map((word) =>
+        const renderWordLearnts = this.state.words.map((word) =>
             <tr key={word.wordId}>
                 <td><a href="#">{word.eng}</a></td>
                 <td>{word.wordCategory}</td>
@@ -49,6 +66,9 @@ class TuVungPage extends Component {
             </div>
 
         );
+    }
+    componentWillUnmount(){
+        this.isComponentMounted = false;
     }
 }
 const mapStateToProps = (state) => {

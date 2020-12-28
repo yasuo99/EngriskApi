@@ -13,9 +13,13 @@ const groupApi = {
         const url = `/groups/${id}`;
         return axiosClient.get(url);
     },
-    createGroup: (accountId, body) => {
+    createGroup: (body) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer '+token
+        }
         const url = `/groups`;
-        return axiosClient.post(url,body);
+        return axiosClient.post(url,body, {headers});
     },
     addWordToGroup: (groupId,wordId) => {
         const url = `/groups/${groupId}/words/${wordId}`;
@@ -31,8 +35,12 @@ const groupApi = {
         return axiosClient.put(url,body);
     },
     deleteGroup: (id) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        }
         const url =  `/groups/${id}`;
-        return axiosClient.delete(url);
+        return axiosClient.delete(url,{headers});
     }
 
 };

@@ -178,7 +178,7 @@ class QLListExam extends Component {
         }
 
     }
-    async deleteExam(e) {
+    deleteExam = async (e) => {
         e.preventDefault();
         try {
             const result = await examApi.deleteExam(this.state.seletedExam);
@@ -346,7 +346,7 @@ class QLListExam extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => this.modalQuestionCreate()}>Trở lại</Button>
-                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
+                        <Button variant="primary" onClick={(e) => this.modalQuestionCreate(e)}>Lưu lại</Button>
                     </Modal.Footer>
                 </Modal>
                 <Modal show={this.state.modalUpdate} onHide={this.modalUpdate}>

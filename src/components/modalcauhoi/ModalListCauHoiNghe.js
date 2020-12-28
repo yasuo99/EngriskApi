@@ -15,7 +15,7 @@ class ModalListCauHoiNghe extends Component {
         });
     }
     addQuestion(id){
-        this.props.addQuestion(this.props.exam.id, id);
+        this.props.addQuestion(this.props.exam.id, Number.parseInt(id));
     }
     render() {
         const renderQuestions = this.props.questions.map((question) =>
@@ -33,7 +33,7 @@ class ModalListCauHoiNghe extends Component {
                 </td>
                 <td>{question.answer}</td>
                 <td>
-                <Switch id={question.id} onChange={(props,event,id) => this.props.addQuestion(this.props.exam.id, id)} checked={this.props.exam.questions.some(el => el.id === question.id)}></Switch>
+                <Switch id={question.id.toString()} onChange={(props,event,id) => this.props.addQuestion(this.props.exam.id, id)} checked={this.props.exam.questions.some(el => el.id === question.id)}></Switch>
                 </td>
             </tr>
         );

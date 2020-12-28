@@ -14,6 +14,10 @@ const wordApi = {
         const url = `/words/${id}`;
         return axiosClient.get(url);
     },
+    ranking: () => {
+        const url = `/words/accounts/ranking`;
+        return axiosClient.get(url);
+    },
     searchDetail: (params) => {
         const url = `/words/detail`;
         return axiosClient.get(url,{params});
@@ -34,6 +38,26 @@ const wordApi = {
     delete: (id, body) => {
         const url = `/words/${id}`;
         return axiosClient.delete(url, body);
+    },
+    practice: (body) => {
+        const url = `/words/practice`;
+        return axiosClient.post(url, body);
+    },
+    donePractice: (body) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        }
+        const url = `/words/practice/done`;
+        return axiosClient.post(url,body, {headers});
+    },
+    getLearntWord: (id) => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        }
+        const url = `/words/accounts/${id}/learnt`;
+        return axiosClient.get(url,{headers});
     }
 }
 export default wordApi;

@@ -12,6 +12,8 @@ import { doExam, doneExam } from '../../actions/examActions';
 import Countdown from 'react-countdown';
 import { Fragment } from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import ReactPaginate from 'react-paginate';
 class ExamPage extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,7 @@ class ExamPage extends Component {
         this.state = {
             examId: 0,
             questions: [],
-            currentQuestion: {}, //Câu hỏi hiện tại
+            currentQuestion: { toeicPart: 1 }, //Câu hỏi hiện tại
             remainQuestion: [], //Số câu hỏi bị bỏ qua hoặc sai,
             answers: [],
             exam: {},
@@ -35,6 +37,18 @@ class ExamPage extends Component {
             empty: false,
             start: Date.now(),
             modal: false,
+            tutorial: [
+                "Đối với mỗi câu hỏi trong phần này, bạn sẽ nghe thấy bốn câu về một bức tranh trong sách kiểm tra của bạn. Khi bạn nghe những câu mô tả về bức tranh, bạn sẽ chọn một câu mô tả đúng nhất những gì bạn nhìn thấy trong hình. Sau đó tìm số câu hỏi trên phiếu trả lời của bạn và đánh dấu câu trả lời của bạn. Lưu ý: các câu mô tả sẽ không được in trong đề thi và bạn chỉ được nghe một lần.",
+                "Bạn sẽ nghe một câu hỏi hoặc câu nói và ba câu trả lời được nói bằng tiếng Anh. Chúng sẽ không được in trong đề thi của bạn và sẽ chỉ được nói một lần. Chọn câu trả lời đúng nhất cho câu hỏi hoặc câu đó và chọn đáp án (A), (B) hoặc (C).",
+                "Bạn sẽ nghe thấy một số cuộc hội thoại giữa hai người, thậm chí là ba hoặc bốn người. Bạn sẽ được yêu cầu trả lời ba câu hỏi về những gì các nhân vật nói trong mỗi cuộc trò chuyện. Lựa chọn câu trả lời đúng nhất cho mỗi câu hỏi và chọ đáp án  (A), (B), (C) hoặc (D) trên phiếu trả lời của bạn. Các cuộc hội thoại sẽ không được in trong đề thi của bạn và sẽ được nói chỉ một lần.",
+                "Bạn sẽ nghe một số cuộc nói chuyện được phát ra bởi một người nói. Bạn sẽ được yêu cầu trả lời ba câu hỏi về những gì được đề cập trong mỗi cuộc trò chuyện. Chọn câu trả lời cho từng câu hỏi và đánh dấu các đáp án như (A), (B), (C) hoặc (D) trên phiếu trả lời của bạn. Các cuộc trò chuyện sẽ không được được in trong đề thi của bạn và sẽ chỉ được nói một lần.",
+
+                "Một từ hoặc cụm từ bị thiếu trong mỗi câu đưa ravà sẽ kèm theo những câu trả lời. Bạn phải chọn câu trả lời đúng nhất để hoàn thành câu và  chọn đáp án (A), (B), (C) hoặc (D) trên bài thi của bạn.",
+                "Đọc các văn bản được cho sẵn trong bài thi. Sẽ có một từ hoặc cụm từ bị thiếu trong một số câu. Sẽ có 4 đáp án được đưa ra. Bạn phải  lựa chọn câu trả lời đúng nhất để hoàn thành văn bản. Và bạn nhớ đánh dấu đáp án  (A), (B), (C) hoặc (D) trên phiếu trả lời của bạn.",
+                "Trong phần này, bạn sẽ đọc những văn bản,chẳng hạn như các bài báo và tạp chí, thư, và mẫu  quảng cáo. Mỗi văn bản được đi kèm với một số câu hỏi . Bạn phải chọn câu trả lời đúng nhất cho mỗi câu hỏi và đánh dấu đáp án (A), (B), (C) hoặc (D) trên phiếu trả lời của bạn.",
+            ],
+            paginStart: 1,
+            paginEnd: 10
         }
         this.handleUnload = this.handleUnload.bind(this);
     }
@@ -81,6 +95,7 @@ class ExamPage extends Component {
                 })
             }
             else {
+                toast("Hiện chưa có câu hỏi cho exam này")
                 this.setState({
                     empty: true
                 })
@@ -189,6 +204,14 @@ class ExamPage extends Component {
     nextQuestion = (e) => {
         e.preventDefault();
         this.removeSelected();
+        const currentQuestion = this.state.currentQuestion;
+        if (currentQuestion.isListeningQuestion) {
+            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            console.log(found);
+            if (found[0].isListeningQuestion) {
+                found[0].listened = true;
+            }
+        }
         let tempIndex = this.state.index + 1;
         if (tempIndex < this.state.questions.length) {
             this.setState({
@@ -229,6 +252,14 @@ class ExamPage extends Component {
     previousQuestion = (e) => {
         let tempIndex = this.state.index - 1;
         this.removeSelected();
+        const currentQuestion = this.state.currentQuestion;
+        if (currentQuestion.isListeningQuestion) {
+            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            console.log(found);
+            if (found[0].isListeningQuestion) {
+                found[0].listened = true;
+            }
+        }
         if (tempIndex >= 0) {
             this.setState({
                 done: false,
@@ -259,6 +290,14 @@ class ExamPage extends Component {
         }
     }
     selectQuestion = (index) => {
+        const currentQuestion = this.state.currentQuestion;
+        if (currentQuestion.isListeningQuestion) {
+            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            console.log(found);
+            if (found[0].isListeningQuestion) {
+                found[0].listened = true;
+            }
+        }
         this.setState({
             index: index - 1,
             currentQuestion: this.state.questions[index - 1],
@@ -320,11 +359,18 @@ class ExamPage extends Component {
         }
     }
     listenningTimeout = () => {
+        const currentQuestion = this.state.currentQuestion;
+        if (currentQuestion.isListeningQuestion) {
+            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            if (found[0].isListeningQuestion) {
+                found[0].listened = true;
+            }
+        }
         var timeout = setInterval(() => {
             this.skipQuestion();
             this.removeSelected();
             clearInterval(timeout);
-        }, 3000);
+        }, 27000);
     }
     modalOpen() {
         this.setState({ modal: true });
@@ -337,14 +383,14 @@ class ExamPage extends Component {
     render() {
         let active = this.state.index + 1;
         let items = [];
-        items.push(<Pagination.Prev key={0} onClick={(e) => this.previousQuestion(e)} />);
-        for (let i = 1; i <= this.state.questions.length; i++) {
-            items.push(<Pagination.Item key={i} active={i === active} onClick={() => this.selectQuestion(i)} style={{ backgroundColor: "green" }}>
-                {i}{this.state.answers[i - 1] !== undefined && this.state.answers[i - 1].answer !== '' && <Badge variant="success">✔</Badge>}
-                {this.state.answers[i - 1] !== undefined && this.state.answers[i - 1].flag && <Badge variant="danger"><i className="fa fa-flag"></i></Badge>}
-            </Pagination.Item>)
-        }
-        items.push(<Pagination.Next key={this.state.questions.length + 1} onClick={(e) => this.nextQuestion(e)} />)
+        // items.push(<Pagination.Prev key={0} onClick={(e) => this.previousQuestion(e)} />);
+        // for (let i = this.state.paginStart; i <= this.state.paginEnd; i++) {
+        //     items.push(<Pagination.Item key={i} active={i === active} onClick={() => this.selectQuestion(i)} style={{ backgroundColor: "green" }}>
+        //         {i}{this.state.answers[i - 1] !== undefined && this.state.answers[i - 1].answer !== '' && <Badge variant="success">✔</Badge>}
+        //         {this.state.answers[i - 1] !== undefined && this.state.answers[i - 1].flag && <Badge variant="danger"><i className="fa fa-flag"></i></Badge>}
+        //     </Pagination.Item>)
+        // }
+        // items.push(<Pagination.Next key={this.state.questions.length + 1} onClick={(e) => this.nextQuestion(e)} />)
         const { examId, currentQuestion, loading, rightAnswer, checked, exam, index, done, submitted } = this.state;
         if (loading) {
             return (
@@ -367,7 +413,7 @@ class ExamPage extends Component {
                                     </div>
                                 </div>
                             </main>
-                           
+
                             <Footer></Footer>
                         </div>
                     </div>
@@ -386,10 +432,6 @@ class ExamPage extends Component {
                                 <HeaderClient></HeaderClient>
                                 <main id="hoc2">
                                     <div className="container">
-                                        <div className="mt-4">
-                                            <Pagination size="lg" className="justify-content-center"
-                                            >{items}</Pagination>
-                                        </div>
                                         <div className="row kechan mt-5">
                                             <div className="col-4">Time left: <Countdown date={this.state.start + exam.duration * 60 * 1000} onComplete={this.submitExam} /></div>
                                             <div className="col-4"></div>
@@ -404,7 +446,8 @@ class ExamPage extends Component {
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened == false &&
                                                     <div className="row">
                                                         <b>Chọn đáp án đúng</b>
-                                                        <ReactPlayer url={currentQuestion.audio} controls playing={!this.state.listened} width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
+                                                        <ReactPlayer url={currentQuestion.audio} playing={!this.state.listened} width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
+                                                        {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div>}
                                                     </div>}
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
                                                 <p>{currentQuestion.content}</p>
@@ -433,15 +476,33 @@ class ExamPage extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-2"><button className="btn btn-outline-danger" onClick={this.flagQuestion}>{this.state.answers[index] !== undefined && this.state.answers[index].flag ? "Bỏ gắn cờ" : "Gắn cờ"}<i className="fa fa-flag"></i></button></div>
+                                        </div>
+                                        <div className="mt-4">
+                                            {/* <Pagination size="lg" className="justify-content-center"
+                                            >{items}</Pagination> */}
+                                            <ReactPaginate
+                                                previousLabel={'Quay lại'}
+                                                nextLabel={'Tiếp theo'}
+                                                nextClassName={'page-item'}
+                                                nextLinkClassName={'page-link'}
+                                                previousClassName={'page-item'}
+                                                previousLinkClassName={'page-link'}
+                                                pageClassName={'page-item'}
+                                                pageLinkClassName={'page-link'}
+                                                breakLabel={'...'}
+                                                breakClassName={'page-item'}
+                                                breakLinkClassName={'page-link'}
+                                                pageCount={this.state.questions.length}
+                                                marginPagesDisplayed={2}
+                                                pageRangeDisplayed={5}
+                                                onPageChange={(e) => this.selectQuestion(e.selected + 1)}
+                                                containerClassName={'justify-content-center pagination pagination-lg'}
+                                                subContainerClassName={'pages pagination'}
+                                                activeClassName={'active'}
+                                            />
                                         </div>
                                         <div className="row mt-3">
-                                            <div className={"col-3"}>
-                                                {index > 0 && <button className="btn btn-primary" onClick={this.previousQuestion}>Quay lại</button>}
-                                            </div>
-                                            <div className="col-6"></div>
-                                            <div className="col-3 text-right">
-                                                {done === false && <Link className="btn btn-primary" to="#" onClick={this.nextQuestion}>Tiếp theo</Link>}
+                                            <div className="offset-6 col-3 text-right">
                                                 {done && submitted === false && <button className="btn btn-primary" onClick={this.submitExam}>Nộp bài</button>}
                                                 {submitted && <Link className="btn btn-primary" to={"/ketqua-exam/" + examId}>Xem đáp án</Link>}
                                             </div>
@@ -452,8 +513,8 @@ class ExamPage extends Component {
                                     <Modal.Header closeButton onClick={() => this.modalClose()}>
                                         <Modal.Title>Hướng dẫn làm bài</Modal.Title>
                                     </Modal.Header>
-                                    <Modal.Body>Đối với mỗi câu hỏi, bạn sẽ thấy một hình ảnh và bạn sẽ nghe thấy bốn câu lệnh ngắn. Các tuyên bố sẽ chỉ được nói một lần. Chúng sẽ không được in trong sách kiểm tra của bạn vì vậy bạn phải lắng nghe cẩn thận để hiểu những gì người nói nói. Khi bạn nghe thấy bốn câu nói, hãy nhìn vào hình và chọn câu mô tả đúng nhất những gì bạn thấy trong hình. Chọn câu trả lời đúng nhất A, B, C hoặc D
-                                   </Modal.Body>
+                                    <Modal.Body>{this.state.tutorial[(Number.parseInt(currentQuestion.toeicPart) - 1)]}
+                                    </Modal.Body>
                                     <Modal.Footer>
                                         <Button variant="secondary" onClick={() => this.modalClose()}>Trở lại</Button>
                                     </Modal.Footer>

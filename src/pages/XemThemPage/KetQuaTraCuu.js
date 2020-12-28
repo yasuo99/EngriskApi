@@ -9,6 +9,7 @@ import Search from '../../components/xemthem/Search';
 import groupApi from '../../api/groupApi';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
+import { Button, Modal } from 'react-bootstrap';
 
 class KetQuaTraCuu extends Component {
     constructor(props) {
@@ -20,7 +21,9 @@ class KetQuaTraCuu extends Component {
                     examples: []
                 }
             },
-            groups: []
+            groups: [],
+            modalGroup: false,
+            groupName: ''
         }
         this.selectGroup = this.selectGroup.bind(this);
         this.isComponentMounted = false;
@@ -55,24 +58,55 @@ class KetQuaTraCuu extends Component {
     fetchGroup = async (id) => {
         return await groupApi.getGroupsOfAccount(id);
     }
-    addWordToGroup = async (groupId,wordId) => {
-        return await groupApi.addWordToGroup(groupId,wordId);
+    addWordToGroup = async (groupId, wordId) => {
+        return await groupApi.addWordToGroup(groupId, wordId);
     }
     selectGroup = async (e) => {
         const groupId = e.target.id;
         var result = await this.addWordToGroup(groupId, this.state.result.word.id);
-        if(result.status === 200){
+        if (result.status === 200) {
             toast("Thành công");
             const groups = await this.fetchGroup(this.props.account.id);
-            if(this.isComponentMounted){
+            if (this.isComponentMounted) {
                 this.setState({
                     groups: groups
                 })
             }
         }
-        else{
+        else {
             toast("Thêm từ vựng vào nhóm thất bại");
         }
+    }
+    createGroup = async (e) => {
+        const body = {
+            groupName: this.state.groupName
+        }
+        if (this.state.groupName !== '') {
+            const result = await groupApi.createGroup(body);
+            if (result.status === 200) {
+                toast('Tạo group thành công');
+                if (this.isComponentMounted) {
+                    if (this.props.isLoggedIn) {
+                        const groups = await this.fetchGroup(this.props.account.id);
+                        this.setState({
+                            groups: groups,
+                            groupName: '',
+                            modalGroup: false
+                        })
+                    }
+                }
+            }
+            else {
+                toast('Tạo group thất bại')
+            }
+        } else {
+            toast('Tên group không được để trống');
+        }
+
+    }
+    modalGroup = (e) => {
+        console.log('dm');
+        this.state.modalGroup ? this.setState({ modalGroup: false }) : this.setState({ modalGroup: true });
     }
     render() {
         const { result } = this.state;
@@ -110,12 +144,13 @@ class KetQuaTraCuu extends Component {
                                                         Thêm vào danh sách</button>
                                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         {renderGroups}
+                                                        <a onClick={(e) => this.modalGroup(e)} className="dropdown-item" href="#">Thêm group</a>
                                                     </div>
                                                 </div>
                                             </div>}
                                         </div>
                                         <h5 className="text2 mt-2">BẢN DỊCH</h5>
-                                        <h3 className="mt-3"><img src={result.direction === 'en' ? "/image/vietnamxl.png" : "/image/english-language.png"} className="mr-2"/>{result.direction === 'en' ? result.word.vie : result.word.eng}</h3>
+                                        <h3 className="mt-3"><img src={result.direction === 'en' ? "/image/vietnamxl.png" : "/image/english-language.png"} className="mr-2" />{result.direction === 'en' ? result.word.vie : result.word.eng}</h3>
                                         <h5 className="text2 mt-4">VÍ DỤ</h5>
                                         {renderExamples}
                                     </div>
@@ -126,7 +161,23 @@ class KetQuaTraCuu extends Component {
                         <Footer></Footer>
                     </div>
                 </div>
-
+                <Modal show={this.state.modalGroup} onHide={this.modalGroup}>
+                    <Modal.Header closeButton onClick={() => this.modalGroup()}>
+                        <Modal.Title>Thêm group</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="form-group pt-3">
+                            <div className="card-input mt-4">
+                                <span>Tên group</span>
+                                <textarea placeholder="Nhập tên group" value={this.state.groupName} onChange={(e) => this.setState({ groupName: e.target.value })} className="tieude" />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => this.modalGroup()}>Trở lại</Button>
+                        <Button variant="primary" onClick={(e) => this.createGroup(e)}>Lưu lại</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
 
         );

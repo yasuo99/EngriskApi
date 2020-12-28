@@ -10,13 +10,14 @@ class SignUp extends Component {
     passwordConfirm: "",
     dateOfBirth: "",
     address: "",
-    mobilePhone: "",
+    phoneNumber: "",
+    fullname: '',
     file: null,
   };
   onFileChange = event => {
     this.setState({ file: event.target.files[0] });
 
-};
+  };
   handleChange = (event) => {
     this.setState({
       [event.target.id]: event.target.value,
@@ -34,15 +35,16 @@ class SignUp extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    var { id, email, password, passwordConfirm, username, dateOfBirth, address, mobilePhone, file } = this.state;
+    var { id, email, password, passwordConfirm, username, dateOfBirth, address, phoneNumber, file, fullname } = this.state;
     var user = {
       id: id,
       email: email,
       password: password,
       username: username,
+      fullname: fullname,
       dateOfBirth: dateOfBirth,
       address: address,
-      phone: mobilePhone,
+      phone: phoneNumber,
       passwordConfirm: passwordConfirm,
       file: file,
       roles: ["learner"]
@@ -51,12 +53,13 @@ class SignUp extends Component {
     this.setState({
       username: "",
       email: "",
+      fullname: '',
       password: "",
       passwordConfirm: "",
       dateOfBirth: "",
       address: "",
-      mobilePhone: "",
-      file:null,
+      phoneNumber: "",
+      file: null,
     })
   };
   render() {
@@ -67,7 +70,7 @@ class SignUp extends Component {
         onSubmit={this.handleSubmit}
       >
         <div className="wrap-input100 validate-input mb-3">
-          <span className="label-input100">Tên tài khoản</span>
+          <span className="label-input100">Username</span>
           <input className="input100" name="username" placeholder="Nhập tên tài khoản"
             required
             type="text"
@@ -76,10 +79,18 @@ class SignUp extends Component {
           ></input>
         </div>
         <div className="wrap-input100 validate-input mb-3" data-validate="Username is required"> <span className="label-input100">Email</span>
-          <input className="input100" placeholder="Nhập tên tài khoản"
+          <input className="input100" placeholder="Nhập email"
             required
             type="email"
             id="email"
+            onChange={this.handleChange}
+          ></input>
+        </div>
+        <div className="wrap-input100 validate-input mb-3" data-validate="Username is required"> <span className="label-input100">Họ và tên</span>
+          <input className="input100" placeholder="Họ và tên"
+            required
+            type="text"
+            id="fullname"
             onChange={this.handleChange}
           ></input>
         </div>
@@ -118,15 +129,15 @@ class SignUp extends Component {
           ></input>
         </div>
         <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">Số điện thoại</span>
-          <input className="input100" name="mobilePhone" placeholder="Nhập số điện thoại"
+          <input className="input100" name="phoneNumber" placeholder="Nhập số điện thoại"
             required
             type="text"
-            id="mobilePhone"
+            id="phoneNumber"
             onChange={this.handleChange}
           ></input>
         </div>
-        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">File hình ảnh</span>
-          <input className="input100" name="mobilePhone" placeholder="Nhập số điện thoại"
+        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">Avatar</span>
+          <input className="input100" name="file"
             required
             type="file"
             id="file"

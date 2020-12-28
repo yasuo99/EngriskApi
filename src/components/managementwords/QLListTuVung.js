@@ -21,6 +21,7 @@ class QLListTuVung extends Component {
             spellingCreate: "",
             categoryCreate: "",
             imageCreate: null,
+            audio: null,
             // Phần edit
             englishEdit: "",
             vietNamEdit: "",
@@ -53,8 +54,7 @@ class QLListTuVung extends Component {
     }
 
     onFileChange = event => {
-        this.setState({ imageCreate: event.target.files[0] });
-        console.log(this.state);
+        this.setState({ [event.target.name]: event.target.files[0] });
     };
     handleChange(e) {
         var target = e.target;
@@ -74,11 +74,12 @@ class QLListTuVung extends Component {
         formData.append("wordCategory", categoryCreate);
         formData.append('spelling', spellingCreate)
         formData.append("file", imageCreate);
+        formData.append('audio', this.state.audio)
         await createWord(formData)
         var result = await this.fetchWord();
         if (this.isComponentMounted) {
             this.setState({
-                words: result
+                words: result,
             })
         }
         this.closeCreate();
@@ -87,14 +88,15 @@ class QLListTuVung extends Component {
         this.setState({ modalCreate: true });
     }
 
-    closeCreate() {
+    closeCreate = () => {
         this.setState({
             englishCreate: "",
             vietNamCreate: "",
             spellingCreate: "",
             categoryCreate: "",
             imageCreate: null,
-            modalCreate: false
+            modalCreate: false,
+            audio: null
         });
     }
     // Xử lý modal edit
@@ -116,7 +118,7 @@ class QLListTuVung extends Component {
             oldImage: word.wordImg
         });
     }
-    closeEdit() {
+    closeEdit = () => {
         this.setState({
             englishEdit: "",
             vietNamEdit: "",
@@ -159,7 +161,7 @@ class QLListTuVung extends Component {
     openDelete(e) {
         this.setState({ modalDelete: true, selectedWord: e.target.dataset.id });
     }
-    closeDelete() {
+    closeDelete = () => {
         this.setState({
             modalDelete: false,
         });
@@ -223,7 +225,7 @@ class QLListTuVung extends Component {
 
                 </table>}
                 {/* Modal create */}
-                <Modal show={this.state.modalCreate}>
+                <Modal show={this.state.modalCreate} onHide={this.closeCreate}>
                     <Modal.Header closeButton onClick={() => this.closeCreate()}>
                         <Modal.Title>Thêm từ vựng</Modal.Title>
                     </Modal.Header>
@@ -260,6 +262,16 @@ class QLListTuVung extends Component {
                                 />
                             </div>
                             <div className="card-input">
+                                <span>File phát âm</span>
+                                <input
+                                    type="file"
+                                    name="audio"
+                                    accept="audio/*"
+                                    onChange={this.onFileChange}
+                                    required
+                                />
+                            </div>
+                            <div className="card-input">
                                 <span>Loại từ</span>
                                 <select
                                     value={categoryCreate}
@@ -289,7 +301,7 @@ class QLListTuVung extends Component {
                     </Modal.Footer>
                 </Modal>
                 {/* Modal phần xóa */}
-                <Modal show={this.state.modalDelete}>
+                <Modal show={this.state.modalDelete} onHide={this.closeDelete}>
                     <Modal.Header closeButton onClick={() => this.closeDelete()}>
                         <Modal.Title>Xác nhận xóa từ vựng</Modal.Title>
                     </Modal.Header>
@@ -300,7 +312,7 @@ class QLListTuVung extends Component {
                     </Modal.Footer>
                 </Modal>
                 {/* Modal phần sửa */}
-                <Modal show={this.state.modalEdit}>
+                <Modal show={this.state.modalEdit} onHide={this.closeEdit}>
                     <Modal.Header closeButton onClick={() => this.closeEdit()}>
                         <Modal.Title>Cập nhật từ vựng</Modal.Title>
                     </Modal.Header>
@@ -350,7 +362,7 @@ class QLListTuVung extends Component {
                                 </select>
                             </div>
                             <div className="card-input mt-2">
-                                <img src={this.state.oldImage} alt="" width="100px" height="100px"/>
+                                <img src={this.state.oldImage} alt="" width="100px" height="100px" />
                             </div>
                             <div className="card-input">
                                 <span>Hình ảnh minh họa </span>

@@ -363,7 +363,7 @@ class QLListQuiz extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => this.modalQuestionCreate()}>Trở lại</Button>
-                        <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
+                        <Button variant="primary" onClick={(e) => this.modalQuestionCreate(e)}>Lưu lại</Button>
                     </Modal.Footer>
                 </Modal>
 

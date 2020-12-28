@@ -10,7 +10,7 @@ const accountApi = {
         return axiosClient.get(url, { headers });
     },
     getDetail: (id) => {
-        const url = `/accounts/${id}`;
+        const url = `/accounts/detail/${id}`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: "Bearer " + token
@@ -80,6 +80,21 @@ const accountApi = {
             roleName: roleName
         }
         return axiosClient.put(url,body, {headers});
+    },
+    sendEmailActive: (email) => {
+        const url = `/account/verify-email`;
+        const params = {
+            email: email
+        };
+        return axiosClient.get(url,{params});
+    },
+    activeEmail: (otp, email) => {
+        const url = `/account/active-email`;
+        const params = {
+            email: email,
+            otp: otp
+        }
+        return axiosClient.post(url, {params});
     }
 }
 export default accountApi;
