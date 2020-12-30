@@ -14,6 +14,7 @@ import { Fragment } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
+import Answer from '../../components/answer/Answer';
 class ExamPage extends Component {
     constructor(props) {
         super(props);
@@ -48,7 +49,9 @@ class ExamPage extends Component {
                 "Trong phần này, bạn sẽ đọc những văn bản,chẳng hạn như các bài báo và tạp chí, thư, và mẫu  quảng cáo. Mỗi văn bản được đi kèm với một số câu hỏi . Bạn phải chọn câu trả lời đúng nhất cho mỗi câu hỏi và đánh dấu đáp án (A), (B), (C) hoặc (D) trên phiếu trả lời của bạn.",
             ],
             paginStart: 1,
-            paginEnd: 10
+            paginEnd: 10,
+            shuffleAnswers: [],
+            currentShuffleAnswer: []
         }
         this.handleUnload = this.handleUnload.bind(this);
     }
@@ -69,6 +72,7 @@ class ExamPage extends Component {
     fetchQuestions = async (examId) => {
         try {
             const exam = await doExam(examId);
+            console.log(exam);
             if (exam.questions.length > 0) {
                 this.setState({
                     examId: examId,
@@ -78,7 +82,9 @@ class ExamPage extends Component {
                     exam,
                     loading: false
                 });
+                this.shuffleAnswer(exam.questions[this.state.index]);
                 let answers = [];
+                let shuffleAnswers = [];
                 exam.questions.forEach(question => {
                     let currentAnswer = {
                         id: question.id,
@@ -89,9 +95,18 @@ class ExamPage extends Component {
                         listened: false
                     };
                     answers.push(currentAnswer);
+                    let questionShuffleAnswer = [];
+                    questionShuffleAnswer.push(question.a);
+                    questionShuffleAnswer.push(question.b);
+                    questionShuffleAnswer.push(question.c);
+                    questionShuffleAnswer.push(question.d);
+                    questionShuffleAnswer = questionShuffleAnswer.sort(() => Math.random() - 0.5)
+                    shuffleAnswers.push(questionShuffleAnswer);
                 });
                 this.setState({
-                    answers: answers
+                    answers: answers,
+                    shuffleAnswers: shuffleAnswers,
+                    currentShuffleAnswer: shuffleAnswers[this.state.index]
                 })
             }
             else {
@@ -213,7 +228,9 @@ class ExamPage extends Component {
             }
         }
         let tempIndex = this.state.index + 1;
+        console.log(tempIndex);
         if (tempIndex < this.state.questions.length) {
+            this.shuffleAnswer();
             this.setState({
                 index: tempIndex,
                 currentQuestion: this.state.questions[tempIndex],
@@ -261,6 +278,7 @@ class ExamPage extends Component {
             }
         }
         if (tempIndex >= 0) {
+            this.shuffleAnswer();
             this.setState({
                 done: false,
                 index: tempIndex,
@@ -298,12 +316,15 @@ class ExamPage extends Component {
                 found[0].listened = true;
             }
         }
+        console.log(index);
         this.setState({
             index: index - 1,
             currentQuestion: this.state.questions[index - 1],
+            currentShuffleAnswer: this.state.shuffleAnswers[index-1],
             selected: ''
         });
         let stateCurrentQuestion = this.state.questions[index - 1];
+        this.shuffleAnswer(stateCurrentQuestion);
         let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
         if (currentAnswer.length > 0) {
             if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
@@ -356,6 +377,7 @@ class ExamPage extends Component {
             if (found[0].isListeningQuestion) {
                 found[0].listened = true;
             }
+            this.shuffleAnswer();
         }
     }
     listenningTimeout = () => {
@@ -379,6 +401,18 @@ class ExamPage extends Component {
         this.setState({
             modal: false
         });
+    }
+    shuffleAnswer = (currentQuestion) => {
+        // let answers = [];
+        // answers.push(currentQuestion.a);
+        // answers.push(currentQuestion.b);
+        // answers.push(currentQuestion.c);
+        // answers.push(currentQuestion.d);
+        // answers = answers.sort(() => Math.random() - 0.5)
+        // this.setState({
+        //     shuffleAnswers: answers
+        // })
+        // console.log(answers);
     }
     render() {
         let active = this.state.index + 1;
@@ -451,30 +485,7 @@ class ExamPage extends Component {
                                                     </div>}
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
                                                 <p>{currentQuestion.content}</p>
-                                                <div className="row mt-2">
-                                                    <div className="col-6">
-                                                        <button className={currentQuestion.a ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
-                                                            {currentQuestion.a}
-                                                        </button>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <button className={currentQuestion.b ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
-                                                            {currentQuestion.b}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-6">
-                                                        <button className={currentQuestion.c ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
-                                                            {currentQuestion.c}
-                                                        </button>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <button className={currentQuestion.d ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
-                                                            {currentQuestion.d}
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <Answer answers={this.state.currentShuffleAnswer} setColor={this.setColor} selectedAnswer={this.selectedAnswer}></Answer>
                                             </div>
                                         </div>
                                         <div className="mt-4">

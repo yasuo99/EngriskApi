@@ -33,6 +33,7 @@ class KetQuaExam extends Component {
                     {question.content}
                 </div>
                 <div className="dapan">
+                    {question.userAnswer === '' && <p className="text-danger">Không chọn đáp án</p>}
                     <ol type="A" className="ml-4">
                         <li className={question.a ? (question.a === question.answer ? "text-success" : (question.a === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.a}</li>
                         <li className={question.b ? (question.b === question.answer ? "text-success" : (question.b === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.b}</li>

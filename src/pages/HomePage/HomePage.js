@@ -114,6 +114,7 @@ class HomePage extends PureComponent {
 
                   </div>
                 </div>
+               
               </div>
             </main>
             <Footer></Footer>
