@@ -87,6 +87,9 @@ class Exam extends Component {
                 <Popover.Title as="h3">{exam.title}</Popover.Title>
                 <Popover.Content>
                     {exam.detail}
+                    <p>Số câu hỏi nghe: {exam.totalListening}</p>
+                    <p>Số câu hỏi đọc: {exam.totalReading}</p>
+                    <p>Tổng điểm bài thi: {exam.totalScore}</p>
                     {this.props.isLoggedIn && this.state.histories.some(el => el.examId === exam.id) && <p>Kết quả thi tốt nhất: Điểm: {this.state.histories.find((history) => history.examId === exam.id) && this.state.histories.find((history) => history.examId === exam.id).score }</p>}
                 </Popover.Content>
             </Popover>}>
@@ -99,7 +102,7 @@ class Exam extends Component {
                             <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge> {this.state.histories.some(el => el.examId == exam.id) && <Badge variant="success">Đã làm</Badge>}
                             <p>Exp: {exam.exp}  </p>
                             <p>Price: {exam.price}</p>
-                            <p>Duration: {exam.duration}</p>
+                            <p>Duration: {exam.duration} minutes</p>
                         </div>
                         <div className="col-2 pr-4">
                             <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Do <i className="fa fa-pencil"></i></Link>
