@@ -293,7 +293,7 @@ const routes = [
         exact: true,
         main: () => <Admin />,
         guard: true,
-        roles: []
+        roles: ["superadmin","manager"]
     },
     {
         path: '/quanly-tuvung',
@@ -363,7 +363,7 @@ const routes = [
         exact: true,
         main: () => <ManagementScore />,
         guard: true,
-        roles: ["superadmin"]
+        roles: ["superadmin", "manager"]
     }, {
         path: '/quanly-phanquyen',
         exact: true,
