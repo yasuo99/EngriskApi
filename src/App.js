@@ -32,7 +32,8 @@ class App extends Component {
           path={route.path}
           exact={route.exact}
           component={route.main}
-          guard={route.guard}/>
+          guard={route.guard}
+          roles = {route.roles}/>
         )
       })
     }
