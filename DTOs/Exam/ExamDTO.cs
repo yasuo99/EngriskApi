@@ -12,6 +12,9 @@ namespace Engrisk.DTOs
         public string Detail { get; set; }
         public int ExpGain { get; set; }
         public int Price { get; set; }
+        public int TotalListening { get; set; }
+        public int TotalReading { get; set; }
+        public int TotalScore{get;set;}
         public int Duration { get; set; }
         public bool IsNew { get; set; }
         public double Start_At { get; set; }

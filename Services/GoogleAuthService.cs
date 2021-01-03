@@ -5,6 +5,7 @@ using Engrisk.Models;
 using Google.Apis.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
@@ -17,7 +18,8 @@ namespace Engrisk.Services
         private readonly UserManager<Account> _userManager;
         private readonly ApplicationDbContext _db;
         private readonly IConfiguration _config;
-        public GoogleAuthService(ApplicationDbContext db, IOptions<GoogleAuthConfig> googleConfig, UserManager<Account> userManager, IConfiguration config)
+        private readonly IAuthRepo _authRepo;
+        public GoogleAuthService(ApplicationDbContext db, IOptions<GoogleAuthConfig> googleConfig, UserManager<Account> userManager, IConfiguration config, IAuthRepo authRepo)
         {
             _db = db;
             _googleConfig = new GoogleAuthConfig()
@@ -27,13 +29,15 @@ namespace Engrisk.Services
             };
             _userManager = userManager;
             _config = config;
+            _authRepo = authRepo;
         }
         public async Task<Account> GetOrCreateExternalLoginUser(string provider, string key, string email, string fullname, string picture)
         {
             var user = await _userManager.FindByLoginAsync(provider, key);
             if (user != null)
             {
-                return user;
+                var account = await _authRepo.GetAccountDetail(user.Id);
+                return account;
             }
             var userFromEmail = await _userManager.FindByEmailAsync(email);
             if (userFromEmail == null)

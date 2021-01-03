@@ -107,7 +107,6 @@ namespace Engrisk.Controllers
                     _repo.Create(history);
                     await _repo.SaveAll();
                 }
-                returnExam.Start_At = histories.Start_At.ConvertToTimestamp();
                 return Ok(returnExam);
             }
             return Ok(returnExam);

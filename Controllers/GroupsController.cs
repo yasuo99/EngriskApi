@@ -34,11 +34,12 @@ namespace Engrisk.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroupDetail(int id)
         {
-            var groupFromDb = await _repo.GetOneWithCondition<Group>(group => group.Id == id, "Account,Words");
-            if (groupFromDb == null)
+            var queryGroup = await _repo.GetOneWithManyToMany<Group>(group => group.Id == id);
+            if (queryGroup == null)
             {
                 return NotFound();
             }
+            var groupFromDb = await queryGroup.Include(g => g.Account).Include(w => w.Words).ThenInclude(w => w.Word).FirstOrDefaultAsync();
             var returnGroup = _mapper.Map<GroupDTO>(groupFromDb);
             return Ok(returnGroup);
         }
@@ -91,15 +92,18 @@ namespace Engrisk.Controllers
             var groupFromDb = await _repo.GetOneWithCondition<Group>(group => group.Id == id);
             if (groupFromDb == null)
             {
-                return NotFound(new {
+                return NotFound(new
+                {
                     Error = "Không tìm thấy group"
                 });
             }
-            if(groupFromDb.AccountId != accountId){
+            if (groupFromDb.AccountId != accountId)
+            {
                 return Unauthorized();
             }
             _repo.Delete(groupFromDb);
-            if(await _repo.SaveAll()){
+            if (await _repo.SaveAll())
+            {
                 return Ok();
             }
             return NoContent();

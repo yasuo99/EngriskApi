@@ -21,7 +21,8 @@ namespace Engrisk.Services
         private readonly IHttpClientFactory _httpClient;
         private readonly FacebookAuthConfig _facebookConfig;
         private readonly IConfiguration _config;
-        public FacebookAuthService(ApplicationDbContext db, UserManager<Account> userManager, IOptions<FacebookAuthConfig> facebookConfig, IHttpClientFactory httpClient, IConfiguration config)
+        private readonly IAuthRepo _authRepo;
+        public FacebookAuthService(ApplicationDbContext db, UserManager<Account> userManager, IOptions<FacebookAuthConfig> facebookConfig, IHttpClientFactory httpClient, IConfiguration config, IAuthRepo authRepo)
         {
             _db = db;
             _userManager = userManager;
@@ -32,6 +33,7 @@ namespace Engrisk.Services
             };
             _httpClient = httpClient;
             _config = config;
+            _authRepo = authRepo;
         }
 
         public async Task<Account> Authenticate(UserLoginRequest request)
@@ -62,7 +64,8 @@ namespace Engrisk.Services
             var user = await _userManager.FindByLoginAsync(provider, key);
             if (user != null)
             {
-                return user;
+                var account = await _authRepo.GetAccountDetail(user.Id);
+                return account;
             }
             var userFromEmail = await _userManager.FindByEmailAsync(email);
             if (userFromEmail == null)
