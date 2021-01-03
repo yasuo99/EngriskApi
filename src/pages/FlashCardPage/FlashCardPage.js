@@ -159,6 +159,23 @@ class FlashCardPage extends Component {
             practice: true
         })
     }
+    removeWordFromGroup = async (e) => {
+        e.preventDefault();
+        const result = await groupApi.addWordToGroup(this.state.currentGroup.id, e.target.dataset.id);
+        if(result.status === 200){
+            toast('Xóa từ vựng khỏi nhóm thành công');
+            const wordsInGroup = await groupApi.getDetail(this.state.currentGroup.id);
+            console.log(wordsInGroup);
+            if(this.isComponentMounted){
+                this.setState({
+                    words: wordsInGroup.words
+                })
+            }
+        }
+        else{
+            toast('Xóa từ vựng khỏi nhóm thất bại');
+        }
+    }
     render() {
         let groups = [];
         let words = [];
@@ -167,7 +184,7 @@ class FlashCardPage extends Component {
             groups.push(<Dropdown.Item onClick={(e) => this.selectGroup(e)} key={i} id={i}>{this.state.groups[i - 1] && this.state.groups[i - 1].groupName}</Dropdown.Item>)
         }
         for (let i = 0; i < this.state.words.length; i++) {
-            words.push(<li key={i} id={i} className="text-center word-list" onClick={this.selectWord}>{this.state.words[i].eng}</li>)
+            words.push(<li key={i} id={i} data-id={this.state.words[i].id} className="text-center word-list" onClick={this.selectWord} onDoubleClick={(e) => this.removeWordFromGroup(e)}>{this.state.words[i].eng}</li>)
         }
         // const examples = this.state.currentWord.examples.map((example) =>
         //     <p key={example.id}>{example.eng}</p>
