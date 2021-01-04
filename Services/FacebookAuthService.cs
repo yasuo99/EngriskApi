@@ -78,7 +78,10 @@ namespace Engrisk.Services
                     Fullname = fullname,
                     EmailConfirmed = true
                 };
-                await _userManager.CreateAsync(userFromEmail, _config.GetSection("Defaults:Account:Password").Value);
+                var result = await _userManager.CreateAsync(userFromEmail, _config.GetSection("Defaults:Account:Password").Value);
+                if(result.Succeeded){
+                    await _userManager.AddToRoleAsync(userFromEmail, "learner");
+                }
             }
             if (string.IsNullOrEmpty(userFromEmail.PhotoUrl))
             {
