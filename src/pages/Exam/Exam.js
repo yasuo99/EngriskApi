@@ -115,7 +115,7 @@ class Exam extends Component {
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
                 <div id="content-wrapper" className="d-flex flex-column">
-                    <div id="content">
+                    <div id="content" style={{overflow: 'auto', height:'100vh'}}>
                         <HeaderClient></HeaderClient>
                         <main id="scroll">
                             <div className="container">
@@ -131,7 +131,7 @@ class Exam extends Component {
                                                     <b>Hiện chưa có exam mới !!</b>
                                                 </p>
                                             }
-                                            scrollableTarget="content-wrapper"
+                                            height={500}
                                         >{renderExam}
                                         </InfiniteScroll>}
                                     </div>

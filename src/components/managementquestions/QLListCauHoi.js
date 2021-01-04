@@ -182,6 +182,9 @@ class QLListCauHoi extends Component {
         if (this.state.toeicPart == 0) {
             formData.append('isQuizQuestion', true);
         }
+        else{
+            formData.append('toeicPart', this.state.toeicPart);
+        }
         try {
             const result = await questionApi.updateQuestion(this.state.selectQuestion,formData);
             if (result.status === 200) {

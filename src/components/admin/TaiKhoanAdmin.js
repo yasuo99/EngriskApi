@@ -15,8 +15,12 @@ class TaiKhoanAdmin extends Component {
         </Link>
         <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
           <Link className="dropdown-item" to="/admin">
-            <i className="fa fa-user fa-sm fa-fw mr-2 text-gray-400" />
+            <i className="fa fa-columns fa-sm fa-fw mr-2 text-gray-400" />
                 Dashboard
+              </Link>
+          <Link className="dropdown-item" to="/home">
+            <i className="fa fa-home fa-sm fa-fw mr-2 text-gray-400" />
+                Trang chủ
               </Link>
           <div className="dropdown-divider" />
           <Link className="dropdown-item" to="#" onClick={this.props.logout}>
