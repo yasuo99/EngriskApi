@@ -37,7 +37,7 @@ export class QLListSection extends Component {
                 sections: sections
             });
             $(function () {
-                $("#dataTableExam").DataTable();
+                $("#dataTableSection").DataTable();
             });
         }
     }
@@ -203,7 +203,7 @@ export class QLListSection extends Component {
         const { sectionName, description } = this.state;
         return (
             <div>
-                <button className="btn btn-success mr-2 mb-3" onClick={e => this.modalCreate(e)} ><i className="fa fa-plus" /> Thêm bài exam</button>
+                <button className="btn btn-success mr-2 mb-3" onClick={e => this.modalCreate(e)} ><i className="fa fa-plus" /> Thêm bài học</button>
                 <Modal show={this.state.modalCreate} onHide={this.modalCreate}>
                     <Modal.Header closeButton onClick={() => this.modalCreate()}>
                         <Modal.Title>Thêm bài học</Modal.Title>
@@ -249,7 +249,7 @@ export class QLListSection extends Component {
                         <Button variant="primary" onClick={(e) => this.submitCreate(e)}>Lưu lại</Button>
                     </Modal.Footer>
                 </Modal>
-                {this.isComponentMounted && <table className="table table-bordered" id="dataTableExam" width="100%" cellSpacing={0}>
+                {this.isComponentMounted && <table className="table table-bordered" id="dataTableSection" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
                             <th >Tên section</th>
@@ -266,7 +266,7 @@ export class QLListSection extends Component {
                 </table>}
                 <Modal show={this.state.modalEdit} onHide={this.modalEdit}>
                     <Modal.Header closeButton onClick={() => this.modalEdit()}>
-                        <Modal.Title>Thêm bài học</Modal.Title>
+                        <Modal.Title>Sửa bài học</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <form onSubmit={this.submitCreate}>
@@ -323,9 +323,9 @@ export class QLListSection extends Component {
                 </Modal>
                 <Modal show={this.state.modalDelete} onHide={this.modalDelete}>
                     <Modal.Header closeButton onClick={this.modalDelete}>
-                        <Modal.Title>Xác nhận xóa exam</Modal.Title>
+                        <Modal.Title>Xác nhận xóa bài học</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Bạn có chắc chắn muốn xóa exam này ra khỏi hệ thống không?</Modal.Body>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa bài học này ra khỏi hệ thống không?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => this.modalDelete()}>Trở lại</Button>
                         <Button variant="primary" onClick={this.submitDelete}>Lưu lại</Button>

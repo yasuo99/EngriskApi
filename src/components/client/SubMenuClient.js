@@ -55,7 +55,7 @@ class SubMenuClient extends Component {
               <img src="/image/dictionary.png" className="mr-2" />
               <span>Từ vựng</span></Link>
           </li>
-          <div className="text-center d-none d-md-inline mt-5">
+          <div className="text-center d-none d-md-inline">
             <button className="rounded-circle border-0 fa fa-chevron-right " id="sidebarToggle" onClick={this.toggle}/>
           </div>
         </ul>

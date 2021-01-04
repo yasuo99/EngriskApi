@@ -134,7 +134,7 @@ class QLListQuiz extends Component {
         this.setState({ modalCreate: true });
     }
 
-    closeCreate() {
+    closeCreate = () => {
         this.setState({
             modalCreate: false,
         });
@@ -192,9 +192,11 @@ class QLListQuiz extends Component {
             const result = await quizApi.addQuestionToquiz(quizId, questionId);
             if (result.status === 200) {
                 toast("Thành công");
-                var quiz = await this.fetchQuiz(quizId)
+                var quizzes = await this.fetchQuizzes()
+                var quiz = await this.fetchQuiz(quizId);
                 if (this.isComponentMounted) {
                     this.setState({
+                        quizzes: quizzes,
                         quiz: quiz
                     })
                 }

@@ -85,7 +85,6 @@ class HomePage extends PureComponent {
               </div>
             </div>
             <div>
-
               <Link className="btn btn-primary do-btn" to={`/sections/${section.id}/do`}>Do <i className="fa fa-pencil"></i></Link>
             </div>
           </div>
@@ -102,13 +101,14 @@ class HomePage extends PureComponent {
             <main>
               <div className="container">
                 <div className="row">
-                  <div id="trangchu" className="col-10 offset-1">
+                  <div id="trangchu" className="col-10 offset-1" style={{height: '80vh'}}>
                     {this.isComponentMounted && <InfiniteScroll
                       dataLength={this.state.sections.length}
                       next={this.fetchMoreSections}
                       hasMore={this.state.hasMore}
                       loader={<h4>Loading...</h4>}
-                      scrollableTarget="content-wrapper"
+                      scrollThreshold={0.5}
+                      height={500}
                     >{renderSections}
                     </InfiniteScroll>}
 
