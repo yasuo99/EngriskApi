@@ -41,7 +41,7 @@ class Hoc extends PureComponent {
             authResult: {},
             totalTime: 0,
         }
-
+        this.time = 0;
         this.handleUnload = this.handleUnload.bind(this);
     }
     async componentDidMount() {
@@ -65,11 +65,7 @@ class Hoc extends PureComponent {
                         })
                         if (!this.props.isLoggedIn) {
                             this.calculateSpent = setInterval(() => {
-                                if (this.isComponentMounted) {
-                                    this.setState({
-                                        totalTime: this.state.totalTime + 1
-                                    })
-                                }
+                                this.time += 1
                             }, 1000)
                         }
                     }
@@ -99,11 +95,9 @@ class Hoc extends PureComponent {
                         loading: false
                     })
                     this.calculateSpent = setInterval(() => {
-                        if (this.isComponentMounted) {
-                            this.setState({
-                                totalTime: this.state.totalTime + 1
-                            })
-                        }
+                        this.calculateSpent = setInterval(() => {
+                            this.time += 1
+                        }, 1000)
                     }, 1000)
                 }
                 else {
@@ -144,9 +138,6 @@ class Hoc extends PureComponent {
     }
     submitAnswer = async () => {
         const { match: { match: { path } } } = this.props;
-        this.setState({
-            checked: true
-        })
         let rightAnswer = this.state.rightAnswer;
         let remainQuestion = this.state.remainQuestion;
         if (path !== '/practice') {
@@ -156,16 +147,17 @@ class Hoc extends PureComponent {
                 isRightAnswer: false
             }
             const result = await submitQuestion(this.state.currentQuestion.id, answer);
+            this.setState({
+                isRight: result.isRightAnswer
+            })
             if (result.isRightAnswer) {
                 this.setState({
                     rightAnswer: this.state.rightAnswer + 1,
-                    isRight: true
                 })
             } else {
                 remainQuestion = [...remainQuestion, this.state.currentQuestion];
                 this.setState({
                     remainQuestion: [...this.state.remainQuestion, this.state.currentQuestion],
-                    isRight: false
                 })
             }
         }
@@ -225,6 +217,7 @@ class Hoc extends PureComponent {
             }
         }
         this.setState({
+            checked: true,
             index: this.state.index + 1,
         })
     }
@@ -281,6 +274,7 @@ class Hoc extends PureComponent {
     render() {
         const { match: { match: { path } } } = this.props;
         const { sectionId, currentQuestion, loading, rightAnswer, checked, quiz, index, done, isRight } = this.state;
+        console.log(isRight);
         if (loading) {
             return (
                 <div id="wrapper">
@@ -376,10 +370,10 @@ class Hoc extends PureComponent {
                                     <Modal.Header closeButton onClick={() => this.modalClose()}>
                                         <Modal.Title><img src="/image/check-mark.png"></img> Chúc mừng bạn đã hoàn thành bài quiz</Modal.Title>
                                     </Modal.Header>
-                                    <Modal.Body> Thời gian hoàn thành của bạn là: {path !== '/practice' ? (this.props.isLoggedIn ? this.state.authResult.timeSpent : this.state.totalTime) : this.state.totalTime} giây
+                                    <Modal.Body> Thời gian hoàn thành của bạn là: {path !== '/practice' ? (this.props.isLoggedIn ? this.state.authResult.timeSpent : this.time) : this.time} giây
                                    </Modal.Body>
                                     <Modal.Footer>
-                                        <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/home">Học tiếp</Link>
+                                       {path !== '/practice' ? <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/home">Học tiếp</Link> : <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/flashcard">Học tiếp</Link>} 
                                     </Modal.Footer>
                                 </Modal>
                                 <Footer></Footer>
