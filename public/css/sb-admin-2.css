@@ -9779,7 +9779,7 @@ a:focus {
   background-color: #F2F7FD;
   width: 100%;
   overflow-x: hidden;
-  height: 115vh;
+  /* height: 115vh; */
 }
 
 #wrapper #content-wrapper #content {
@@ -10295,7 +10295,7 @@ a:focus {
 
 .sidebar {
   width: 6.5rem;
-  min-height: 115vh;
+  min-height: 100vh;
 }
 
 .sidebar .nav-item {

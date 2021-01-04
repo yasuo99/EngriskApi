@@ -61,7 +61,7 @@ a.text-primary:hover{color: #48871B}
 .banbe .btn-banbe .btn1{width: 300px;border:2px solid #ccc;margin-bottom: 20px;}
 .banbe .btn-banbe .btn2{width: 145px;border:2px solid #ccc;margin-right: 10px;}
 .banbe .btn-banbe .btn3{width: 145px;border:2px solid #ccc;}
-
+/* footer {position: fixed;} */
 footer .kechan{border-top: 3px solid #ccc;}
 footer a{color: #828282}
 footer a:hover{color: #77B748;text-decoration: none;}
@@ -155,9 +155,10 @@ form ul .suggest{list-style-type: none;}
 #hoc2 .active{background-color: #77B748;}
 #hoc2 .active p{color: #fff;}
 #hoc2 img{width: 150px;height: 150px;}
-.thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 150px;border-radius: 20px;}
+.thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 150px;border-radius: 20px;padding-top: 30px;}
 .thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 150px;padding-top: 30px;border-radius: 20px;}
-.thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;}
+.thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;background-color: #f04141;}
+.thongbao-ketquasai .btn:active{background-color: #d61f1f!important;}
 .thongbao-ketquasai p{font-size: 16px;color: #4f4f4f;}
 /* ---------------------------------Cài đặt---------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -552,6 +553,7 @@ form ul .suggest{list-style-type: none;}
 }
 
 #rankingWord .card {
+  height: 500px;
   border-radius: 5px;
   box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
   border: none;
