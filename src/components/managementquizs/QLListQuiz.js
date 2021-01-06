@@ -68,7 +68,7 @@ class QLListQuiz extends Component {
         return quizApi.getDetail(id);
     }
     fetchSections = async () => {
-        return sectionApi.getAll();
+        return sectionApi.getManage();
     }
     fetchListeningQuestion = async (id) => {
         const params = {

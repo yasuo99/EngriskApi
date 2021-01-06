@@ -4,10 +4,10 @@ import FormSearchAdmin from "./FormSearchAdmin";
 import TaiKhoanAdmin from "./TaiKhoanAdmin";
 import ThongBaoAdmin from "./ThongBaoAdmin";
 import ListTinNhan from "./ListTinNhan";
+import { connect } from "react-redux";
 
 class HeaderAdmin extends Component {
   render() {
-    const account = JSON.parse(localStorage.getItem('account'));
     return (
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
@@ -17,10 +17,16 @@ class HeaderAdmin extends Component {
         <ul className="navbar-nav ml-auto">
           <ThongBaoAdmin></ThongBaoAdmin>
           <div className="topbar-divider d-none d-sm-block" />
-          <TaiKhoanAdmin account={account}></TaiKhoanAdmin>
+          <TaiKhoanAdmin account={this.props.account}></TaiKhoanAdmin>
         </ul>
       </nav>
     )
   }
 }
-export default HeaderAdmin;
+const mapStateToProps = (state) => {
+  const account = state.auth;
+  return {
+    account: account
+  }
+}
+export default connect(mapStateToProps)(HeaderAdmin);

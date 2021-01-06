@@ -5,14 +5,14 @@ import { toggleSidenav } from '../../actions/sidenavAction';
 import { appendScript } from '../../config/appendScript'
 
 class SubMenuClient extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this)
   }
   componentDidMount() {
     appendScript("/js/sb-admin-2.min.js");
   }
-  toggle(){
+  toggle() {
     this.props.toggleSidenav(this.props.collapse);
   }
   render() {
@@ -55,8 +55,15 @@ class SubMenuClient extends Component {
               <img src="/image/dictionary.png" className="mr-2" />
               <span>Từ vựng</span></Link>
           </li>
+          <hr className="sidebar-divider" />
+          {this.props.isLoggedIn &&
+            <li className="nav-item">
+              <Link className="nav-link" to="/progress">
+                <img src="/image/analytics.png" className="mr-2" />
+                <span>Phân tích</span></Link>
+            </li>}
           <div className="text-center d-none d-md-inline">
-            <button className="rounded-circle border-0 fa fa-chevron-right " id="sidebarToggle" onClick={this.toggle}/>
+            <button className="rounded-circle border-0 fa fa-chevron-right " id="sidebarToggle" onClick={this.toggle} />
           </div>
         </ul>
       </div>
@@ -64,9 +71,11 @@ class SubMenuClient extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  const {collapse} = state.sidenav
+  const { collapse } = state.sidenav
+  const { isLoggedIn } = state.auth
   return {
-    collapse: collapse
+    collapse: collapse,
+    isLoggedIn: isLoggedIn
   }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -74,4 +83,4 @@ const mapDispatchToProps = (dispatch) => {
     toggleSidenav: (collapse) => dispatch(toggleSidenav(collapse))
   }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(SubMenuClient);
+export default connect(mapStateToProps, mapDispatchToProps)(SubMenuClient);

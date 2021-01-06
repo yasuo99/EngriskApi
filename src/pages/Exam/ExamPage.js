@@ -120,6 +120,7 @@ class ExamPage extends Component {
         }
     }
     selectedAnswer = (e, position) => {
+        console.log(e.target.dataset.answer);
         if (this.state.selected === position) {
             this.setState({
                 selected: null,
@@ -133,7 +134,7 @@ class ExamPage extends Component {
         if (e) {
             const currentAnswer = {
                 id: this.state.currentQuestion.id,
-                answer: e.target.innerHTML,
+                answer: e.target.dataset.answer,
                 selected: position,
                 flag: false
             }
@@ -142,7 +143,7 @@ class ExamPage extends Component {
                 found[0].listened = true;
             }
             found[0].selected = position;
-            found[0].answer = e.target.innerHTML;
+            found[0].answer = e.target.dataset.answer;
             console.log(this.state.answers);
         }
 
@@ -485,7 +486,7 @@ class ExamPage extends Component {
                                                     </div>}
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
                                                 <p>{currentQuestion.content}</p>
-                                                <Answer answers={this.state.currentShuffleAnswer} setColor={this.setColor} selectedAnswer={this.selectedAnswer}></Answer>
+                                                <Answer answers={this.state.currentShuffleAnswer} question={this.state.currentQuestion} setColor={this.setColor} selectedAnswer={this.selectedAnswer}></Answer>
                                             </div>
                                         </div>
                                         <div className="mt-4">

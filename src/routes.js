@@ -47,6 +47,7 @@ import RankingWord from './pages/RankingPage/RankingWord'
 import XacNhanEmail from './pages/CaiDatPage/XacNhanEmail';
 
 import ManagementRole from './pages/Admin/ManagementRole';
+import Progress from './pages/Progress/Progress';
 
 const routes = [
     {
@@ -236,6 +237,13 @@ const routes = [
         exact: true,
         main: () => <QuenMatKhau />,
         guard: false,
+        roles: []
+    },
+    {
+        path: '/progress',
+        exact: true,
+        main: () => <Progress/>,
+        guard: true,
         roles: []
     },
     {
