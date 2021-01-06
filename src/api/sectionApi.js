@@ -11,6 +11,16 @@ const sectionApi = {
             }
         }
         return axiosClient.get(url, { params, headers: header });
+    },getManage: (params, auth) => {
+        const url = "/sections/manage";
+        let header = ''
+        if (auth) {
+            const token = localStorage.getItem('token');
+            header = {
+                "Authorization": "Bearer " + token
+            }
+        }
+        return axiosClient.get(url, { params, headers: header });
     },
     doQuiz: (id, params) => {
         let token = localStorage.getItem('token');

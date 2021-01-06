@@ -213,7 +213,7 @@ class FlashCardPage extends Component {
 
                                         </div>
                                         <div className="d-flex justify-content-end p-0 offset-md-3 col-3">
-                                            {this.state.currentGroup.words.length > 0 && <button onClick={(e) => this.practice(e)} className="btn btn-success">Luyện tập</button>}
+                                            <button onClick={(e) => this.practice(e)} className="btn btn-success">Luyện tập</button>
                                         </div>
                                     </div>
                                     <div className="row mt-4">
@@ -227,15 +227,16 @@ class FlashCardPage extends Component {
                                             <div className="flip-container">
                                                 <div className="flippable flashcard">
                                                     <div className="front">
-                                                        <h2 className="text-primary">{currentWord.eng}</h2>
+                                                        <h2 className="text-primary">{currentWord.eng} <span>({currentWord.wordCategory})</span></h2>
                                                         <p>{currentWord.spelling}</p>
-                                                        <ReactPlayer controls url={currentWord.wordVoice} width="150px" height="30px" style={{ margin: '0 0 0 180px' }}></ReactPlayer>
-                                                        {/* {examples} */}
+                                                        <ReactPlayer controls url={currentWord.wordVoice} width="150px" height="30px" style={{ margin: '0 0 5px 180px' }}></ReactPlayer>
+                                                        {currentWord.examples.length > 0 && <p class="mt-2">{currentWord.examples[0].eng}</p>}
                                                     </div>
                                                     <div className="back">
                                                         <div className="row">
                                                             <div className="col-8"><img src={currentWord.wordImg || "image/card.jpeg"} className="img-flashcard card-img-top" /></div>
                                                             <div className="col-4"> <p>{currentWord.vie}</p></div>
+                                                           
                                                         </div>
                                                     </div>
                                                 </div>

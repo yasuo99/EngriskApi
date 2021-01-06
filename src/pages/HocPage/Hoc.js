@@ -319,13 +319,14 @@ class Hoc extends PureComponent {
                                         </div>
                                         <div className="row kechan mt-5">
                                             <div className="col-8 offset-2">
-                                                {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
-                                                    <p className="mb-5">Có nghĩa là?</p></div>
-                                                    {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div>}</div>}
+                                                {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-9"><h2>{currentQuestion.content}</h2>
+                                                    {currentQuestion.isFillOutQuestion ? <p>Điền vào chỗ trống</p> : <p className="mb-5">Có nghĩa là?</p>}</div>
+                                                    {currentQuestion.photoUrl &&<div className="col-3"><img src={currentQuestion.photoUrl} alt="" /><br/>Chọn đáp án đúng</div>}</div>}
                                                 {currentQuestion.isListeningQuestion === true &&
                                                     <div className="row">
                                                         <b>{currentQuestion.content}</b>
                                                         <ReactPlayer url={currentQuestion.audio} controls width="500px" height="30px" playing={true} />
+                                                        {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /><br/>Chọn đáp án đúng</div>}
                                                     </div>}
                                                 <div className="row mt-2">
                                                     <div className="col-6">

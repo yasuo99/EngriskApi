@@ -144,7 +144,7 @@ form ul .suggest{list-style-type: none;}
 
 /* ---------------------------------HỌC 2------------------------------------ */
 /* -------------------------------------------------------------------------- */
-#hoc2 .dapan{border: 1px solid #ccc; width: 300px; height: 50px;margin-bottom: 20px;}
+#hoc2 .dapan{border: 1px solid #ccc; width: 300px; height: 50px;margin-bottom: 20px; cursor: pointer;}
 #hoc2 .khungKq{height: 120px;border-top: 2px solid #ccc;border-bottom: 2px solid #ccc;}
 #hoc2 .dapan:active{background-color: #77B748;}
 #hoc2 .dapan:hover{background-color: #77B748;}
@@ -154,7 +154,7 @@ form ul .suggest{list-style-type: none;}
 #hoc2 .btn{margin-top: 30px;border-radius: 10px;box-shadow: 3px 3px 3px #77B748;border: 0;font-weight: bold;font-size: 18px;padding: 5px 15px;}
 #hoc2 .active{background-color: #77B748;}
 #hoc2 .active p{color: #fff;}
-#hoc2 img{width: 150px;height: 150px;}
+#hoc2 img{width:340px;height: 170px;}
 .thongbao-ketqua{background-color: #a6d684be;color: #48871B;width: 100%;height: 150px;border-radius: 20px;padding-top: 30px;}
 .thongbao-ketquasai{background-color: #eb8080bd;width: 100%;height: 150px;padding-top: 30px;border-radius: 20px;}
 .thongbao-ketquasai .btn{box-shadow: 3px 3px 3px #f04141!important;background-color: #f04141;}
@@ -287,7 +287,7 @@ form ul .suggest{list-style-type: none;}
       
       
 #flashcard .front { z-index: 2;color: white;}
-#flashcard .front h2{margin-top: 40px;}
+#flashcard .front h2{margin-top: 30px;}
 #flashcard .front p{font-size: 16px;}
 #flashcard .back {transform: rotateY(180deg);background-color: #fff;}
 #flashcard .back p{font-size: 20px;margin-top: 80px;}

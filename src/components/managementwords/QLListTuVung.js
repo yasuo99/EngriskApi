@@ -358,10 +358,10 @@ class QLListTuVung extends Component {
                                     onChange={e => this.handleChange(e)}
                                     name="categoryEdit" required>
                                     <option value="">- Chọn loại từ -</option>
-                                    <option value="Danh từ">Danh từ</option>
-                                    <option value="Tính từ">Tính từ</option>
-                                    <option value="Động từ">Động từ</option>
-                                    <option value="Trạng từ">Trạng từ</option>
+                                    <option value="n">Danh từ</option>
+                                    <option value="adj">Tính từ</option>
+                                    <option value="v">Động từ</option>
+                                    <option value="adv">Trạng từ</option>
                                 </select>
                             </div>
                             <div className="card-input mt-2">

@@ -17,6 +17,38 @@ const accountApi = {
         }
         return axiosClient.get(url, { headers });
     },
+    getExamProgress: (id) => {
+        const url = `/accounts/${id}/exam-progress`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        };
+        return axiosClient.get(url,{headers});
+    },
+    getQuizProgress: (id) => {
+        const url = `/accounts/${id}/quiz-progress`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        };
+        return axiosClient.get(url,{headers});
+    },
+    getWordProgress: (id) => {
+        const url = `/accounts/${id}/word-progress`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        };
+        return axiosClient.get(url,{headers});
+    },
+    quizProgress: (id) => {
+        const url = `/accounts/${id}/quiz-progress`;
+        const token = localStorage.getItem('token');
+        const headers = {
+            authorization: 'Bearer ' + token
+        };
+        return axiosClient.get(url,{headers});
+    },
     updateAccount: (id, body) => {
         const url = `/accounts/${id}`;
         const token = localStorage.getItem('token');

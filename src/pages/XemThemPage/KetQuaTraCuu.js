@@ -112,9 +112,9 @@ class KetQuaTraCuu extends Component {
         const { result } = this.state;
         const renderExamples = this.state.result.word.examples.map((example) =>
             <div key={example.id} className="row">
-                <div className="col-8 offset-2">
-                    <h5 className="gachchan text-primary"><img src="/image/united-states.png" /> {example.eng}</h5>
-                    <h5><img src="/image/vietnam.png" /> {example.vie}</h5>
+                <div className="col-12 offset-1">
+                    <h5 className="text-primary"><img src="/image/united-states.png" /> {example.eng}</h5>
+                    <h5 className="gachchan"><img src="/image/vietnam.png" /> {example.vie}</h5>
                 </div>
             </div>
         );
@@ -137,7 +137,7 @@ class KetQuaTraCuu extends Component {
                                 <div className="row">
                                     <div className="col-10 offset-1 mt-4">
                                         <div className="row">
-                                            <div className="col-8"><h2 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h2></div>
+                                            <div className="col-8"><h2 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h2><h5>Từ loại: {result.word.wordCategory}</h5></div>
                                             {this.props.isLoggedIn && <div className="col-4 mt-4 text-right">
                                                 <div className="dropdown">
                                                     <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -42,7 +42,7 @@ export class QLListSection extends Component {
         }
     }
     fetchSection = async () => {
-        return sectionApi.getAll()
+        return sectionApi.getManage()
     }
     handleChange(e) {
         this.setState({
