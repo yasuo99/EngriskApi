@@ -50,17 +50,6 @@ class SignUp extends Component {
       roles: ["learner"]
     };
     this.props.signUp(user);
-    this.setState({
-      username: "",
-      email: "",
-      fullname: '',
-      password: "",
-      passwordConfirm: "",
-      dateOfBirth: "",
-      address: "",
-      phoneNumber: "",
-      file: null,
-    })
   };
   render() {
     const { authError_Email, authError_Pass } = this.props
