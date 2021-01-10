@@ -136,7 +136,7 @@ class QLListTuVung extends Component {
         formData.append("vie", this.state.vietNamEdit);
         formData.append("wordCategory", this.state.categoryEdit);
         formData.append('spelling', this.state.spellingEdit);
-        formData.append("file", this.state.imageCreate);
+        formData.append("file", this.state.imageEdit);
         try {
             const result = await wordApi.update(this.state.currentWord.id, formData);
             console.log(result);
