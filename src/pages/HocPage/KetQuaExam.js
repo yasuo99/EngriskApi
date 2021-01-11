@@ -70,6 +70,7 @@ class KetQuaExam extends Component {
                                 <div>Bài thi: {this.state.result.answer.title}</div>
                                 <div>Kinh nghiệm: {this.state.result.answer.expGain}</div>
                                 <div>Thời gian làm bài: {this.state.result.answer.duration} phút</div>
+                                <div>Số câu đúng: {this.props.result.listening + this.props.result.reading}/{this.state.result.answer.questions.length}</div>
                                 <div>Điểm: {this.props.result.score} (listening: {this.props.result.listening} câu, reading: {this.props.result.reading} câu)</div>
                                 <hr />
                                 {renderQuestions}

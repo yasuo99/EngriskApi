@@ -23,7 +23,7 @@ class ModalListCauHoiDoc extends Component {
                 <td>
                     {question.c}</td>
                 <td>
-                    {question.c}
+                    {question.d}
                 </td>
                 <td>{question.answer}</td>
                 <td>
