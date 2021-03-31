@@ -10439,7 +10439,8 @@ a:focus {
 }
 
 .sidebar hr.sidebar-divider {
-  margin: 0 1rem 1rem;
+  margin-bottom: 10px;
+  margin-top: 0px;
 }
 
 .sidebar .sidebar-heading {
