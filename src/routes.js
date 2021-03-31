@@ -45,8 +45,11 @@ import Blog from './pages/CaiDatPage/Blog';
 import RankingExam from './pages/RankingPage/RankingExam'
 import RankingWord from './pages/RankingPage/RankingWord'
 import XacNhanEmail from './pages/CaiDatPage/XacNhanEmail';
-
+import ManagementQuiz_Exam from './pages/Admin/ManagementQuiz_Exam';
 import ManagementRole from './pages/Admin/ManagementRole';
+import FlashCard from './pages/FlashCard/FlashCard';
+import FlashCardDetail from './pages/FlashCard/FlashCardDetail';
+import Learn from './pages/LearnPage/Learn';
 import Progress from './pages/Progress/Progress';
 
 const routes = [
@@ -194,8 +197,29 @@ const routes = [
         path: '/flashcard',
         exact: true,
         main: () => <FlashCardPage />,
-        guard: false,
-        roles: []
+        // guard: false,
+        // roles: []
+    },
+    {
+        path: '/card',
+        exact: true,
+        main: () => <FlashCard />,
+        // guard: false,
+        // roles: []
+    },
+    {
+        path: '/card-detail',
+        exact: true,
+        main: () => <FlashCardDetail />,
+        // guard: false,
+        // roles: []
+    },
+    {
+        path: '/learn',
+        exact: true,
+        main: () => <Learn />,
+        // guard: false,
+        // roles: []
     },
     // {
     //     path: '/caidatmatkhau',
@@ -215,8 +239,8 @@ const routes = [
         path: '/caidatchung',
         exact: true,
         main: () => <CaiDatChung />,
-        guard: true,
-        roles: []
+        // guard: true,
+        // roles: []
     },
     {
         path: '/reset-password',
@@ -342,8 +366,15 @@ const routes = [
         path: '/quanly-quiz',
         exact: true,
         main: () => <ManagementQuiz />,
-        guard: true,
-        roles: ["superadmin", "manager"]
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
+        path: '/quanly-quiz_exam',
+        exact: true,
+        main: () => <ManagementQuiz_Exam />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-exam',
