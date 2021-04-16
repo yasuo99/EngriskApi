@@ -208,9 +208,9 @@ const routes = [
         // roles: []
     },
     {
-        path: '/card-detail',
+        path: '/card-detail/:cardId',
         exact: true,
-        main: () => <FlashCardDetail />,
+        main: (match) => <FlashCardDetail match={match}/>,
         // guard: false,
         // roles: []
     },
