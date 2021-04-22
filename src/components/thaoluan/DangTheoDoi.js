@@ -18,9 +18,9 @@ class DangTheoDoi extends Component {
             <div className="theodoi mt-4">
                 <div className="row pt-3">
                     <div className="col-8">
-                        <h4>Đang Theo Dõi:</h4>
+                        <h4>Đang Theo Dõi</h4>
                     </div>
-                    <div className="col-4"><a href="#">SỬA ĐỔI</a></div>
+                    {/* <div className="col-4"><a href="#">SỬA ĐỔI</a></div> */}
                 </div>
                 {renderPosts}
             </div>

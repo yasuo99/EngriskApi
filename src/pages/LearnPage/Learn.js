@@ -11,7 +11,7 @@ class Learn extends Component {
             selectedOption: "",
             modalDisplay: false,
             useKeyBoard: false,
-            typeQuestion: "QuizSapXep",
+            typeQuestion: "QuizHinhAnh",
             check: "",
             next: false,
             chooseImg: false,
