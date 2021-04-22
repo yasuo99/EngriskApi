@@ -51,7 +51,8 @@ import FlashCard from './pages/FlashCard/FlashCard';
 import FlashCardDetail from './pages/FlashCard/FlashCardDetail';
 import Learn from './pages/LearnPage/Learn';
 import Progress from './pages/Progress/Progress';
-
+import Quiz_Exam from "./components/managementquiz_exam/Quiz_Exam";
+import Word from './components/managementwords/Words';
 const routes = [
     {
         path: '/home',
@@ -113,8 +114,8 @@ const routes = [
         path: '/thao-luan/them-bai-viet',
         exact: true,
         main: () => <ThemBaiViet />,
-        guard: true,
-        roles: []
+        // guard: true,
+        // roles: []
     },
     {
         path: '/thao-luan-chi-tiet/:postId',
@@ -328,11 +329,18 @@ const routes = [
         roles: ["superadmin","manager"]
     },
     {
+        path: '/tuvung',
+        exact: true,
+        main: () => <Word />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
         path: '/quanly-tuvung',
         exact: true,
         main: () => <ManagementWord />,
-        guard: true,
-        roles: ["superadmin", "manager"]
+        // guard: true,
+        // roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-thongbao',
@@ -373,6 +381,13 @@ const routes = [
         path: '/quanly-quiz_exam',
         exact: true,
         main: () => <ManagementQuiz_Exam />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
+        path: '/quiz_exam',
+        exact: true,
+        main: () => <Quiz_Exam />,
         // guard: true,
         // roles: ["superadmin", "manager"]
     },

@@ -31,10 +31,8 @@ class SubMenu extends Component {
               <Link className="collapse-item" to="/quanly-tailieu">Tài liệu</Link>
               <Link className="collapse-item" to="/quanly-tuvung">Từ vựng</Link>
               <Link className="collapse-item" to="/quanly-vidu">Ví dụ</Link>
-              <Link className="collapse-item" to="/quanly-cauhoi">Câu hỏi</Link>
-              <Link className="collapse-item" to="/quanly-exam">Bài exam</Link>
+              <Link className="collapse-item" to="/quanly-quiz_exam">Quiz/Exam</Link>
               <Link className="collapse-item" to="/quanly-section">Bài học</Link>
-              <Link className="collapse-item" to="/quanly-quiz">Bài quiz</Link>
 
             </div>
           </div>

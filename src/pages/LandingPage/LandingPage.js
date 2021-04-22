@@ -6,14 +6,13 @@ import Footer from "../Footer/Footer"
 class LandingPage extends Component {
     render() {
         return (
-            <div>
+            <div >
         <header id="duolingo">
           <div className="container-fluid">
-            <h1 className="text-primary pt-3 pl-5 ml-5">THANH LẬP</h1>
-            <div className="row">
+            <div className="row pt-3">
               <div className="col-6">
                 <div id="orbit-container">
-                  <div className="orbit" style={{fontSize: '16px'}}>
+                  <div className="orbit">
                     <ul className="orbit-wrap">
                       <li className="orbit-center">
                         <a href="/learn">
@@ -59,10 +58,10 @@ class LandingPage extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-6 nd text-center">
+              <div className="col-6 nd text-center pt-5">
                 <h3 className="text-center text-primary">The limits of my language mean the limits of my world.</h3>
-                <Link type="button" className="btn btn-primary mt-4" to="/home">Bắt Đầu</Link>
-                <Link type="button" className="btn btn-primary mt-4" to="/signin">Tôi Đã Có Tài Khoản</Link>
+                <Link type="button" className="btn btn-home mt-4" to="/home">Bắt Đầu</Link>
+                <Link type="button" className="btn btn-signin mt-4" to="/signin">Tôi Đã Có Tài Khoản</Link>
               </div>
             </div>
           </div>
@@ -70,10 +69,10 @@ class LandingPage extends Component {
         <main id="nd-duolingo">
           <div className="container mb-5">
             <div className="row cachhoc mt-5 pb-5 kechan">
-              <div className="col-2"><img src="image/owl.png" /></div>
-              <div className="col-10">
-                <h3 className="pt-2">Cách tốt nhất để học một ngôn ngữ</h3>
-                <p>Học tập cùng THANHLAP sẽ vô cùng vui nhộn và gây nghiện. Kiếm điểm khi trả lời các câu hỏi đúng,
+              <div className="col-2 offset-1"><img src="image/owl.png" /></div>
+              <div className="col-8">
+                <h3 className="title">Cách tốt nhất để học một ngôn ngữ</h3>
+                <p className="content">Học tập cùng THANHLAP sẽ vô cùng vui nhộn và gây nghiện. Kiếm điểm khi trả lời các câu hỏi đúng,
                   chạy đua cùng thời gian, hay nâng lên cấp độ. Những bài học nhỏ gọn thực sự hiệu quả giúp người
                   học nâng cao trình độ tiếng anh.</p>
               </div>
@@ -85,20 +84,20 @@ class LandingPage extends Component {
             </div>
             <div className="row mt-5 mb-5 pb-5 kechan">
               <div className="col-4">
-                <h4>Cá nhân hóa bài học</h4>
-                <p>Những bài học của Duolingo phù hợp với cách học tập của riêng bạn. Các bài tập được tùy chỉnh để
+                <h4><img src="/image/rating.png"></img> Cá nhân hóa bài học</h4>
+                <p className="pt-2">Những bài học của Duolingo phù hợp với cách học tập của riêng bạn. Các bài tập được tùy chỉnh để
                   giúp bạn học và ôn luyện từ vựng thật hiệu quả.</p>
-                <h4>Được chấm điểm ngay lập tức</h4>
-                <p>Ngay lập tức biết được câu trả lời nào bạn làm đúng. Khi bạn bỏ lỡ một thử thách, chúng tôi sẽ
+                <h4 className="pt-4"><img src="/image/rating.png"></img> Được chấm điểm ngay lập tức</h4>
+                <p className="pt-2">Ngay lập tức biết được câu trả lời nào bạn làm đúng. Khi bạn bỏ lỡ một thử thách, chúng tôi sẽ
                   nhanh chóng chỉ cho bạn cách cải thiện.</p>
               </div>
               <div className="col-4 text-center"><img src="image/laptop.png" /></div>
               <div className="col-4">
-                <h4>Nhận phần thưởng ảo khích lệ việc học</h4>
-                <p>Mỗi khi bạn học được kỹ năng mới hoặc lên cấp, bạn sẽ nhận được tiền tệ ảo dùng để mua vật phẩm.
+                <h4><img src="/image/rating.png"></img> Nhận phần thưởng ảo khích lệ việc học</h4>
+                <p className="pt-2">Mỗi khi bạn học được kỹ năng mới hoặc lên cấp, bạn sẽ nhận được tiền tệ ảo dùng để mua vật phẩm.
                 </p>
-                <h4>Cải thiện trình độ một cách nhanh chóng</h4>
-                <p>Một nghiên cứu đã cho thấy 34 giờ học trên Duolingo tương đương với một học kỳ tại bậc đại học.
+                <h4 className="pt-4"><img src="/image/rating.png"></img> Cải thiện trình độ một cách nhanh chóng</h4>
+                <p className="pt-2">Một nghiên cứu đã cho thấy 34 giờ học trên Duolingo tương đương với một học kỳ tại bậc đại học.
                 </p>
               </div>
             </div>
