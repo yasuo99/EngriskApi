@@ -11,16 +11,17 @@ import Paypal from '../../components/paypal/Paypal';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { Formik, Field, Form } from "formik";
+import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 const post = {
     contentPost: '',
-    fileImg:'',
+    fileImg: '',
 }
 
 class ImgPost extends React.Component {
     state = {
         loading: false,
-        imgPost: undefined
+        imgPost: []
     };
 
     componentWillReceiveProps(nextProps) {
@@ -29,32 +30,52 @@ class ImgPost extends React.Component {
         }
 
         this.setState({ loading: true }, () => {
-            let reader = new FileReader();
 
-            reader.onloadend = () => {
-                this.setState({ loading: false, imgPost: reader.result });
-            };
+            var fileLists = Array.from(nextProps.fileImg);
+            console.log(fileLists);
+            var i = 0;
+            fileLists.forEach((value) => {
+                i++;
+                console.log(i);
+                let reader = new FileReader();
 
-            reader.readAsDataURL(nextProps.fileImg);
+                reader.onloadend = () => {
+                    this.setState({ loading: false, imgPost: [...this.state.imgPost, reader.result] });
+                };
+                reader.readAsDataURL(value);
+            })
         });
     }
 
     render() {
-        const { fileImg } = this.props;
-        const {imgPost } = this.state;
-
-        if (!fileImg) {
+        if (!this.state.loading) {
+            const { fileImg } = this.props;
+            const { imgPost } = this.state;
+            if (!fileImg) {
+                return (
+                    <div></div>
+                )
+            }
+            var fileLists = Array.from(fileImg);
+            console.log(fileLists);
+            const renderImage = fileLists.map((value, index) => {
+                <img key={index}
+                    src={imgPost[index]}
+                    alt={value.name}
+                    className="display-ImgPost"
+                />
+            })
+            return (
+                <div>
+                    {renderImage}
+                </div>
+            );
+        }
+        else {
             return (
                 <div></div>
             )
         }
-        return (
-            <img
-                src={imgPost}
-                alt={fileImg.name}
-                className="display-ImgPost"
-            />
-        );
     }
 }
 
@@ -88,7 +109,7 @@ class ImgPost extends React.Component {
 //             return (
 //                 <input
 //                 type="file"
-              
+
 //             />
 //             )
 //         }
@@ -107,7 +128,8 @@ class ThaoLuanPage extends Component {
             allPosts: [],
             newPosts: [],
             highRatePosts: [],
-            followingPosts: []
+            followingPosts: [],
+            selectImages: []
         };
         this.isComponentMounted = false;
     }
@@ -149,12 +171,26 @@ class ThaoLuanPage extends Component {
     componentWillUnmount() {
         this.isComponentMounted = false;
     }
+    selectImages = (event) => {
+        console.log(event.currentTarget.files);
+        var images = Array.from(event.currentTarget.files);
+        let imagesUrl = [];
+        images.forEach((value) => {
+            var image = URL.createObjectURL(value);
+            imagesUrl.push(image);
+        })
+        console.log(imagesUrl);
+        this.setState({ selectImages: imagesUrl });
+    }
     render() {
         const renderHighRatePost = this.state.allPosts.map((post) =>
             <Post key={post.id} post={post} />
         )
         const renderNewPost = this.state.newPosts.map((post) =>
             <Post key={post.id} post={post} />
+        )
+        const renderImages = this.state.selectImages.map((image, index) =>
+            <img key={index} src={image} className="img-thumbnail" alt="dm" />
         )
         return (
             <div id="wrapper">
@@ -193,33 +229,37 @@ class ThaoLuanPage extends Component {
                                             </div>
                                             <div className="tab-pane fade" id="tabfour" role="tabpanel">
                                                 <div className="boxContent">
-                                                    <img src="/image/user2.png" className="img-user"></img>
-                                                    <p className="username">Nguyễn Lập</p>
+                                                    <img src="/image/user.png" className="img-user"></img>
+                                                    <p className="username">{this.state.username}</p>
                                                     <Formik
                                                         initialValues={post}
                                                         onSubmit={async (values, { resetForm }) => {
                                                             await new Promise((r) => setTimeout(r, 500));
                                                             console.log(values.fileImg)
-                                                            if(values.fileImg===undefined){
+                                                            if (values.fileImg === undefined) {
                                                                 alert(JSON.stringify(
-                                                                    {values:{
-                                                                        contentPost:values.contentPost,
-                                                                    
-                                                                    }}, null, 2));
+                                                                    {
+                                                                        values: {
+                                                                            contentPost: values.contentPost,
+
+                                                                        }
+                                                                    }, null, 2));
                                                                 resetForm({});
                                                                 console.log(values.fileImg)
                                                             }
-                                                            else{
+                                                            else {
                                                                 alert(JSON.stringify(
-                                                                    {values:{
-                                                                        contentPost:values.contentPost,
-                                                                        fileImg:values.fileImg.name
-                                                                    
-                                                                    }}, null, 2));
+                                                                    {
+                                                                        values: {
+                                                                            contentPost: values.contentPost,
+                                                                            fileImg: values.fileImg.name
+
+                                                                        }
+                                                                    }, null, 2));
                                                                 resetForm({});
                                                                 // console.log(values.fileImg)
                                                             }
-                                                           
+
                                                         }}
                                                     >
                                                         {({ values, setFieldValue }) => (
@@ -233,10 +273,10 @@ class ThaoLuanPage extends Component {
                                                                             id="contentPost"
                                                                             name="contentPost"
                                                                             component="textarea"
-                                                                            defaultValue={""} />
+                                                                        />
                                                                     </div>
                                                                     {/* <FilePost file={values.file} /> */}
-                                                                    <ImgPost fileImg={values.fileImg} />
+                                                                    {renderImages}
                                                                     <div className="row">
                                                                         <div className="function">
                                                                             <div className="col-11">
@@ -246,12 +286,14 @@ class ThaoLuanPage extends Component {
                                                                                 <label htmlFor="imgPost"><img src="/image/pictures.png"></img>
 
                                                                                     <Field type="file"
+                                                                                        multiple
                                                                                         accept="image/png, image/jpeg"
                                                                                         className="f-image"
                                                                                         id="imgPost"
                                                                                         name="imgPost"
                                                                                         onChange={(event) => {
-                                                                                            setFieldValue("fileImg", event.currentTarget.files[0]);
+                                                                                            this.selectImages(event);
+                                                                                            setFieldValue("fileImg", event.currentTarget.files);
                                                                                         }}
                                                                                     />
                                                                                 </label>
@@ -306,12 +348,13 @@ class ThaoLuanPage extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const { id, isVerified } = state.auth.account;
+    const { id, isVerified, username } = state.auth.account;
     const { isLoggedIn } = state.auth;
     return {
         id: id,
         isVerified: isVerified,
-        isLoggedIn: isLoggedIn
+        isLoggedIn: isLoggedIn,
+        username: username
     }
 }
 export default connect(mapStateToProps)(ThaoLuanPage);

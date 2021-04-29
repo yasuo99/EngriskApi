@@ -152,6 +152,7 @@ class Quiz_Exam extends Component {
             isDispalyForm: true,
             check: 1,
             srcAnswer: '',
+            questions: []
         }
     }
 
@@ -274,9 +275,9 @@ class Quiz_Exam extends Component {
                                                             as="select"
                                                             id="level"
                                                             name="level">
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
+                                                            <option value="easy">Dễ</option>
+                                                            <option value="medium">Vừa</option>
+                                                            <option value="hard">Khó</option>
                                                         </Field>
                                                     </div>
                                                     <div className="row justify-content-end function">
