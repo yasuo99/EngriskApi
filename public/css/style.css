@@ -2711,12 +2711,17 @@ form ul .suggest {
   padding: 10px;
   margin-bottom: 5px;
 }
-#quiz .main .item-question .card:hover {
+#quiz .main .item-question .cardActive{
+  background-color: #ccf1ed;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+/* #quiz .main .item-question .card:hover {
   background-color: #ccf1ed;
 }
 #quiz .main .item-question .card:active {
   background-color: #ccf1ed;
-}
+} */
 #quiz .main .item-question .order {
   color: #1A535C;
   font-weight: bold;
@@ -2887,7 +2892,7 @@ form ul .suggest {
 #quiz .main .question .titleQuestion {
   text-align: center;
   margin-top: 10px;
-  width: 630px;
+  width: 100%;
   height: 60px;
   border-radius: 10px;
   border: none;
@@ -2899,7 +2904,7 @@ form ul .suggest {
 #quiz .main .question .titleQuestionToeic{
   text-align: center;
   margin-top: 10px;
-  width: 630px;
+  width: 100%;
   height: 60px;
   border-radius: 10px;
   border: none;
@@ -2913,7 +2918,7 @@ form ul .suggest {
   font-style: italic;
 }
 #quiz .main .question .boxImg {
-  margin-left: 30%;
+  margin-left: 35%;
   width: 230px;
   height: 230px;
   position: relative;
@@ -3005,7 +3010,7 @@ form ul .suggest {
 #quiz .main .question .itemAnswer {
   margin-top: 10px;
   margin-left: 10%;
-  width: 500px;
+  width: 80%;
   padding: 10px 5px;
   background-color: #fff;
   border-radius: 10px;
@@ -3105,7 +3110,7 @@ form ul .suggest {
 }
 #quiz .main .question .btn-addAnswer {
   margin-top: 2%;
-  margin-left: 38%;
+  margin-left: 40%;
 }
 #quiz .main .question .fa-plus::before{
   padding-right: 10px;
@@ -3125,7 +3130,7 @@ form ul .suggest {
 #quiz .main .question .boxWord {
   margin: 20px 0;
   padding: 10px;
-  width: 630px;
+  width: 100%;
   height: 150px;
   background-color: #fff;
   border-radius: 20px;
@@ -3157,7 +3162,7 @@ form ul .suggest {
   font-size: 14px;
 }
 #quiz .main .question .answerSort .textareaSort {
-  width: 630px;
+  width: 100%;
   height: 150px;
   outline: none;
   border: 2px solid #ccc;
