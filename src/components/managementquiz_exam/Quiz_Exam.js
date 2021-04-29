@@ -152,6 +152,7 @@ class Quiz_Exam extends Component {
             isDispalyForm: true,
             check: 1,
             srcAnswer: '',
+            active: true,
         }
     }
 
@@ -164,6 +165,13 @@ class Quiz_Exam extends Component {
         this.setState({
             imgAnswer: e.currentTarget.files[0],
         })
+
+    }
+    changeActive = () =>{
+       this.setState(prevState => ({
+        active:!prevState.active
+       }))
+        console.log(this.state.active)
 
     }
     // handleSubmit = (e) => {
@@ -213,7 +221,7 @@ class Quiz_Exam extends Component {
     render() {
         // var srcc = this.state.src.replace("C:\\fakepath\\", "/image/");
         // var srcAnswer = this.state.srcAnswer.replace("C:\\fakepath\\", "/image/");
-        var { check } = this.state;
+        var { check,active } = this.state;
 
         return (
             <div>
@@ -295,7 +303,7 @@ class Quiz_Exam extends Component {
                                     {/* Thông tin quiz/exam: kết thúc */}
                                     <div className="item-question">
                                         <ol type="1">
-                                            <div className="card">
+                                            <div className={active === true ? 'card' : 'cardActive'} onClick={()=>this.changeActive()}>
                                                 <p className="order">Câu hỏi <li></li></p>
                                                 <div className="card bg-light">
                                                     <div className="card-body">
@@ -319,33 +327,7 @@ class Quiz_Exam extends Component {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div className="card">
-                                                <p className="order">Câu hỏi <li></li></p>
-                                                <div className="card bg-light">
-                                                    <div className="card-body">
-                                                        <div className="card-title text-center">
-                                                            <p className="question">Đây là đất nước nào?</p>
-                                                            <img src="/image/english (1).jpg" />
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-6">
-                                                                <p className="answerTrue">Anh quốc</p>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <p className="answer">Anh quốc</p>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <p className="answer">Anh quốc</p>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <p className="answer">Anh quốc</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {/* <button className="btn btn-add" type="submit"><img src="/image/plus (1).png" /> Thêm câu hỏi</button> */}
+                                            </div>{/* <button className="btn btn-add" type="submit"><img src="/image/plus (1).png" /> Thêm câu hỏi</button> */}
                                             <a className="exit" href="#">Quay lại</a>
                                         </ol>
                                     </div>
@@ -442,6 +424,7 @@ class Quiz_Exam extends Component {
                                                             (
                                                                 <div className="col-md-8 kedoc">
                                                                     <div className="question">
+                                                                        <div className="boxQuestion">
                                                                         <Field
                                                                             className="titleQuestion"
                                                                             placeholder="Nhập câu hỏi..."
@@ -525,7 +508,7 @@ class Quiz_Exam extends Component {
                                                                                 </FieldArray>
                                                                             </ol>
                                                                         </div>
-
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             )
