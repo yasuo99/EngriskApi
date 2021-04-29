@@ -321,6 +321,7 @@ footer h5 {
 #thaoluan .tab-content{
   background: #fff;
   height: 350px;
+  overflow-y:auto;
 }
 #thaoluan .tab-content .row {
   border-bottom: 2px solid #ccc;
@@ -386,40 +387,53 @@ footer h5 {
   background: #f2f2f2;
   border-radius: 50%;
 }
+
+#wrapper .imgPost img{
+  width: 32px;
+}
+#wrapper .imgPost input[type="file"] {
+  display: none;
+}
 #tabfour img{
   width: 50px;
   padding: 5px;
-  position: relative;
 } 
+
 #tabfour{
-  padding: 10px 50px;
+  padding: 10px 140px 0px 50px;
+
 }
 #tabfour .username{
-  position: absolute;
   display: inline;
   margin-left: 15px;
   font-size: 18px;
-  margin-top: 20px;
   color: #4ECDC4;
 }
 #tabfour .contentPost{
   padding: 10px;
   width: 100%;
-  height: 100px;
+  height: 130px;
+  display: block;
 }
 #tabfour .row{
   border-bottom: 0px!important;
+  padding: 10px 20px;
 }
 #tabfour .function{
-  margin-top: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px 10px;
+  width: 100%;
+  display: flex;
 }
 #tabfour .function .title{
   display: inline;
-  margin-right: 180px;
   font-size: 16px;
+}
+#tabfour .display-ImgPost{
+  width: 50%;
+  height: auto;
+  margin-top: 20px;
 }
 #tabfour .save{
   margin-top: 10px;
@@ -435,7 +449,10 @@ footer h5 {
 #tabfour .f-image{
   width: 32px;
 }
-#tabfour .f-file{
+#tabfour .filePost input[type="file"]{
+  display: none;
+}
+#tabfour .filePost img{
   width: 32px;
 }
 /* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
@@ -1656,6 +1673,10 @@ form ul .suggest {
   font-size: 16px;
   color: #333;
 }
+#learn .boxContent .answerQuestionMatchWord{
+  height: 310px;
+  margin-top: 20px;
+}
  .modal-content {
   font-size: 16px;
 }
@@ -2870,7 +2891,19 @@ form ul .suggest {
   height: 60px;
   border-radius: 10px;
   border: none;
-  background-color: rgba(63, 63, 63, 0.6);
+  background-color: rgba(63, 63, 63, 0.4);
+  color: #fff;
+  outline: none;
+  padding-top: 20px;
+}
+#quiz .main .question .titleQuestionToeic{
+  text-align: center;
+  margin-top: 10px;
+  width: 630px;
+  height: 60px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(63, 63, 63, 0.4);
   color: #fff;
   outline: none;
   padding-top: 20px;
@@ -2885,15 +2918,16 @@ form ul .suggest {
   height: 230px;
   position: relative;
 }
+#quiz .main .question .display-ImgQuestion{
+  width: 230px;
+  height: 230px;
+}
 #quiz .main .question .boxImgAnswer {
   width: 100px;
   height: 90px;
   position: relative;
 }
-#quiz .main .question .display-ImgQuestion {
-  width: 230px;
-  height: 230px;
-}
+ 
 #quiz .main .question .display-ImgAnswer {
   width: 100px;
   height: 90px;

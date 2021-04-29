@@ -14,9 +14,92 @@ import { Formik, Field, Form } from "formik";
 
 const post = {
     contentPost: '',
-    fileImage: '',
-    fileContent: '',
+    fileImg:'',
 }
+
+class ImgPost extends React.Component {
+    state = {
+        loading: false,
+        imgPost: undefined
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.fileImg) {
+            return;
+        }
+
+        this.setState({ loading: true }, () => {
+            let reader = new FileReader();
+
+            reader.onloadend = () => {
+                this.setState({ loading: false, imgPost: reader.result });
+            };
+
+            reader.readAsDataURL(nextProps.fileImg);
+        });
+    }
+
+    render() {
+        const { fileImg } = this.props;
+        const {imgPost } = this.state;
+
+        if (!fileImg) {
+            return (
+                <div></div>
+            )
+        }
+        return (
+            <img
+                src={imgPost}
+                alt={fileImg.name}
+                className="display-ImgPost"
+            />
+        );
+    }
+}
+
+// class FilePost extends React.Component {
+//     state = {
+//         loading: false,
+//         filePost: undefined
+//     };
+
+//     componentWillReceiveProps(nextProps) {
+//         if (!nextProps.file) {
+//             return;
+//         }
+
+//         this.setState({ loading: true }, () => {
+//             let reader = new FileReader();
+
+//             reader.onloadend = () => {
+//                 this.setState({ loading: false, filePost: reader.result });
+//             };
+
+//             reader.readAsDataURL(nextProps.file);
+//         });
+//     }
+
+//     render() {
+//         const { file } = this.props;
+//         const {filePost } = this.state;
+
+//         if (!file) {
+//             return (
+//                 <input
+//                 type="file"
+              
+//             />
+//             )
+//         }
+//         return (
+//             <input
+//                 type="file"
+//                 src={filePost}
+//             />
+//         );
+//     }
+// }
 class ThaoLuanPage extends Component {
     constructor(props) {
         super(props);
@@ -109,68 +192,94 @@ class ThaoLuanPage extends Component {
 
                                             </div>
                                             <div className="tab-pane fade" id="tabfour" role="tabpanel">
-                                                <img src="/image/user2.png" className="img-user"></img>
-                                                <p className="username">Nguyễn Lập</p>
-                                                <Formik
-                                                    initialValues={post}
-                                                    onSubmit={async (values, { resetForm }) => {
-                                                        await new Promise((r) => setTimeout(r, 500));
-                                                        alert(JSON.stringify(values, null, 2));
-                                                        resetForm({})
-                                                    }}
-                                                >
-                                                    {({ }) => (
-                                                        <div>
-                                                            <Form className="content" >
-                                                                {/* <div className="fileMemory">
-                                                                <label htmlFor="fileMemory">Chọn file ảnh
-                                                            <Field
-                                                                        type="file"
-                                                                        id="fileMemory"
-                                                                        name="fileMemory" />
-                                                                </label>
-                                                            </div>
-                                                            <div className="contentMemory">
-                                                                <Field
-                                                                    className="contentMemory"
-                                                                    placeholder="Nhập nội dung thẻ nhớ"
-                                                                    type="text"
-                                                                    id="contentMemory"
-                                                                    name="contentMemory"
-                                                                    component="textarea"
-                                                                    defaultValue={""} />
-                                                            </div>
-
-                                                            <div className="row function">
-                                                                <button className="createMemory" type="submit" >TẠO THẺ</button>
-                                                            </div> */}
-                                                                <div className="contentPost">
-                                                                    <Field
-                                                                        className="contentPost"
-                                                                        placeholder="Bạn muốn chia sẻ điều gì thế?"
-                                                                        type="text"
-                                                                        id="contentPost"
-                                                                        name="contentPost"
-                                                                        component="textarea"
-                                                                        defaultValue={""} />
-                                                                </div>
-                                                                <div className="row">
-                                                                    <div className="col-8 offset-2 ">
+                                                <div className="boxContent">
+                                                    <img src="/image/user2.png" className="img-user"></img>
+                                                    <p className="username">Nguyễn Lập</p>
+                                                    <Formik
+                                                        initialValues={post}
+                                                        onSubmit={async (values, { resetForm }) => {
+                                                            await new Promise((r) => setTimeout(r, 500));
+                                                            console.log(values.fileImg)
+                                                            if(values.fileImg===undefined){
+                                                                alert(JSON.stringify(
+                                                                    {values:{
+                                                                        contentPost:values.contentPost,
+                                                                    
+                                                                    }}, null, 2));
+                                                                resetForm({});
+                                                                console.log(values.fileImg)
+                                                            }
+                                                            else{
+                                                                alert(JSON.stringify(
+                                                                    {values:{
+                                                                        contentPost:values.contentPost,
+                                                                        fileImg:values.fileImg.name
+                                                                    
+                                                                    }}, null, 2));
+                                                                resetForm({});
+                                                                // console.log(values.fileImg)
+                                                            }
+                                                           
+                                                        }}
+                                                    >
+                                                        {({ values, setFieldValue }) => (
+                                                            <div>
+                                                                <Form className="content" >
+                                                                    <div className="contentPost">
+                                                                        <Field
+                                                                            className="contentPost"
+                                                                            placeholder="Bạn muốn chia sẻ điều gì thế?"
+                                                                            type="text"
+                                                                            id="contentPost"
+                                                                            name="contentPost"
+                                                                            component="textarea"
+                                                                            defaultValue={""} />
+                                                                    </div>
+                                                                    {/* <FilePost file={values.file} /> */}
+                                                                    <ImgPost fileImg={values.fileImg} />
+                                                                    <div className="row">
                                                                         <div className="function">
-                                                                            <p className="title">Thêm vào bài viết</p>
-                                                                            <img src="/image/pictures.png" className="f-image"></img>
-                                                                            <img src="/image/file-storage.png" className="f-file"></img>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-8 offset-2">
-                                                                        <button className="save" type="submit" >Đăng</button>
-                                                                    </div>
+                                                                            <div className="col-11">
+                                                                                <p className="title">Thêm vào bài viết</p>
+                                                                            </div>
+                                                                            <div className="imgPost">
+                                                                                <label htmlFor="imgPost"><img src="/image/pictures.png"></img>
 
-                                                                </div>
-                                                            </Form>
-                                                        </div>
-                                                    )}
-                                                </Formik>
+                                                                                    <Field type="file"
+                                                                                        accept="image/png, image/jpeg"
+                                                                                        className="f-image"
+                                                                                        id="imgPost"
+                                                                                        name="imgPost"
+                                                                                        onChange={(event) => {
+                                                                                            setFieldValue("fileImg", event.currentTarget.files[0]);
+                                                                                        }}
+                                                                                    />
+                                                                                </label>
+                                                                            </div>
+                                                                            {/* <div className="filePost">
+                                                                                <label htmlFor="filePost"><img src="/image/file-storage.png"></img>
+
+                                                                                    <Field type="file"
+                                                                                        className="f-file"
+                                                                                        id="filePost"
+                                                                                        name="filePost"
+                                                                                        onChange={(event) => {
+                                                                                            setFieldValue("file", event.currentTarget.files[0]);
+                                                                                        }}
+                                                                                    />
+                                                                                </label>
+                                                                            </div> */}
+                                                                            {/* <img src="/image/file-storage.png" className="f-file"></img> */}
+                                                                        </div>
+                                                                        <button className="save" type="submit" >Đăng</button>
+
+
+                                                                    </div>
+                                                                </Form>
+                                                            </div>
+                                                        )}
+                                                    </Formik>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
