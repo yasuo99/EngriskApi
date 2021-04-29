@@ -6,7 +6,10 @@ import { logOut } from '../../actions/authActions';
 const TaiKhoanClient = ({ status, account }) => {
     const dispatch = useDispatch();
     const dispatchLogout = () => { dispatch(logOut()); window.location.reload()}
+    console.log(status);
     if (status === true) {
+        console.log("dm");
+        console.log(status);
         return (
             <li className="nav-item dropdown no-arrow">
                 <Link className="nav-link dropdown-toggle" to="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

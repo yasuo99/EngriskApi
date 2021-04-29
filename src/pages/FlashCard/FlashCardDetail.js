@@ -6,6 +6,7 @@ import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import wordCategoryApi from "../../api/2.0/wordCategoryApi";
 import ReactPlayer from "react-player";
+import wordApi from "../../api/2.0/wordApi";
 class FlashCardDetail extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +18,9 @@ class FlashCardDetail extends Component {
             wordCategory: { words: [] },
             currentWord: {},
             wordIndex: 0,
-            audioPlay: false
+            audioPlay: false,
+            imgSrc: {},
+            selectedImg: {}
         }
         this.isComponentMounted = false;
     }
@@ -61,16 +64,19 @@ class FlashCardDetail extends Component {
             modalCreate: false,
         })
     }
-    submitCreate = () => {
+    submitCreate = async () => {
         let formData = new FormData();
-        formData.append('file', this.state.imageMemory);
-        formData.append('content', this.state.contentMemory)
+        formData.append('image', this.state.imageMemory);
+        formData.append('title', this.state.contentMemory)
+        await wordApi.createMem(this.state.currentWord.id, formData);
         this.closeCreate();
     }
     fileChange(e) {
         this.setState({
-            [e.target.name]: e.target.files[0]
+            [e.target.name]: e.target.files[0],
+            selectedImg: URL.createObjectURL(e.target.files[0])
         });
+        // Would see a path?
     }
     nextWord = (e) => {
         console.log("dm");
@@ -95,14 +101,14 @@ class FlashCardDetail extends Component {
         }
     }
     playAudio = (e) => {
-        this.state.audioPlay ? this.setState({audioPlay: false}) : this.setState({audioPlay: true});
+        this.state.audioPlay ? this.setState({ audioPlay: false }) : this.setState({ audioPlay: true });
     }
     shuffleCard = (e) => {
         localStorage.setItem(this.state.wordCategory.id, "shuffle");
         var shuffled = this.state.wordCategory.words.sort(() => Math.random() - 0.5)
         console.log(shuffled);
         this.setState({
-            wordCategory: {words: shuffled},
+            wordCategory: { words: shuffled },
             currentWord: shuffled[this.state.wordIndex]
         })
     }
@@ -121,7 +127,7 @@ class FlashCardDetail extends Component {
                                     <div className="col-md-3 kedoc">
                                         <Link to="/card" className="textReturn"><i className="fa fa-chevron-left"></i> Trở về</Link>
                                         <h4 className="title">Thẻ ghi nhớ</h4>
-                                        <ProgressBar className="mt-5 mb-2" variant="success" now={this.state.wordIndex/this.state.wordCategory.words.length*100}/>
+                                        <ProgressBar className="mt-5 mb-2" variant="success" now={this.state.wordIndex / this.state.wordCategory.words.length * 100} />
                                         <div className="row">
                                             <div className="col-6 textProgress">TIẾN ĐỘ</div>
                                             <div className="col-6 textPoint">{this.state.wordIndex}/{this.state.wordCategory.words.length}</div>
@@ -136,7 +142,7 @@ class FlashCardDetail extends Component {
                                             <div className="col-10">
                                                 <div className="boxContent">
                                                     <img onClick={this.playAudio} src="/image/sound.png" className="sound"></img>
-                                                    {this.state.currentWord.wordVoice !== null && <ReactPlayer playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({audioPlay: false})} url={`http://localhost:5000/api/v2/streaming/audio?path=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
+                                                    {this.state.currentWord.wordVoice !== null && <ReactPlayer playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={`http://localhost:5000/api/v2/streaming/audio?path=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
                                                     <h1 className="word">{this.state.currentWord.eng}</h1>
                                                     <p className="synonym">(v) ({this.state.currentWord.vie})</p>
                                                     <p className="typeWord">v</p>
@@ -185,18 +191,28 @@ class FlashCardDetail extends Component {
                                                                         <Modal.Header closeButton onClick={() => this.closeCreate()}>
                                                                             <Modal.Title>
                                                                                 <p className="title">Tạo mem cho:</p>
-                                                                                <h5 className="mt-2">Abide by : (v) to comply with, to conform ( Tuân theo )</h5>
+                                                                                <h5 className="mt-2">{this.state.currentWord.eng} : {this.state.currentWord.vie}</h5>
                                                                             </Modal.Title>
                                                                         </Modal.Header>
                                                                         <Modal.Body>
                                                                             <div className="form-group">
 
                                                                                 <div className="card-input">
-                                                                                    <input type="file" name="file" accept="image/png, image/jpeg" onChange={e => this.fileChange(e)} />
+                                                                                    <div className="row">
+                                                                                        <div className="col-6">
+                                                                                            <label htmlFor="">Ảnh mem</label>
+                                                                                            <input type="file" name="file" accept="image/png, image/jpeg" onChange={e => this.fileChange(e)} />
+                                                                                        </div>
+                                                                                        <div className="col-6">
+                                                                                            <img src={this.state.selectedImg} alt="" className="img-thumbnail"/>
+                                                                                        </div>
+                                                                                    </div>
+
                                                                                 </div>
                                                                                 <div className="card-input mt-2">
+                                                                                    <label htmlFor="">Gợi ý</label>
                                                                                     <textarea
-                                                                                        placeholder="Something memorable..."
+                                                                                        placeholder="Gợi ý giúp dễ nhớ hơn..."
                                                                                         type="text"
                                                                                         name="contentMemory"
                                                                                         onChange={e => this.handleChange(e)}></textarea>

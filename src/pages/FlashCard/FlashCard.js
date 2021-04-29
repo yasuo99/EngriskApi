@@ -16,6 +16,7 @@ class FlashCard extends Component {
     async componentDidMount() {
         this.isComponentMounted = true;
         var wordCategories = await this.fetchWordCategories();
+        console.log(wordCategories.items);
         if (this.isComponentMounted) {
 
             this.setState({
@@ -62,7 +63,7 @@ class FlashCard extends Component {
                             <div className="boxCommunicate">
                                 <h5>CHỦ ĐỀ GIAO TIẾP HẰNG NGÀY</h5>
                                 <div className="container">
-                                    <Carousel centerMode={true} centerSlidePercentage={32} infiniteLoop={true} onClickItem={(index,item) => console.log(item)} showThumbs={false} >
+                                    <Carousel centerMode={true} centerSlidePercentage={32} infiniteLoop={false} onClickItem={(index,item) => console.log(item)} showThumbs={false} >
                                         {renderCategories}
                                     </Carousel>
 
