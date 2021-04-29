@@ -32,6 +32,7 @@ const HeaderClient = () => {
       dispatch({ type: "TOKEN_EXPIRED" });
     }
   }, [isExpired]);
+  console.log(account);
   return (
     <nav id="nav" className="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
       <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
