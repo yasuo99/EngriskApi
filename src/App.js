@@ -12,7 +12,7 @@ const hubConnection = new signalR.HubConnectionBuilder().configureLogging(signal
 class App extends Component {
   constructor() {
     super();
-    hubConnection == null ? hubConnection.stop() : hubConnection.start();
+    hubConnection == null ? hubConnection.start() : hubConnection.stop();
   }
   render() {
     return (
