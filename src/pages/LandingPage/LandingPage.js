@@ -9,7 +9,7 @@ class LandingPage extends Component {
             <div >
         <header id="duolingo">
           <div className="container-fluid">
-            <div className="row pt-3">
+            <div className="row">
               <div className="col-6">
                 <div id="orbit-container">
                   <div className="orbit">
@@ -21,30 +21,31 @@ class LandingPage extends Component {
                       </li>
                       <li>
                         <ul className="ring-1">
-                          <li />
+                        <li></li>
                           <li>
-                            <a href="https://www.facebook.com/howkteam/" className="orbit-icon1">
+                            <a href="https://www.facebook.com/howkteam/" className="orbit-icon">
                               <img className="img-fluid" src="image/hoidap.png" />
                             </a>
                           </li>
                           <li>
-                            <a href="/donate" className="orbit-icon3">
+                            <a href="/donate" className="orbit-icon">
                               <img className="img-fluid" src="image/taitro.png" />
                             </a>
                           </li>
+                          
                         </ul>
                       </li>
                       <li>
                         <ul className="ring-2">
                           <li />
                           <li>
-                            <a href="/about/contact" className="orbit-icon2">
+                            <a href="/about/contact" className="orbit-icon">
                               <img className="img-fluid" src="image/phanhoi.png" />
                             </a>
                           </li>
                           <li />
                           <li>
-                            <a href="https://www.facebook.com/groups/howkteam/" className="orbit-icon4">
+                            <a href="https://www.facebook.com/groups/howkteam/" className="orbit-icon">
                               <img className="img-fluid" src="image/tailieu.png" />
                             </a>
                           </li>
@@ -58,10 +59,22 @@ class LandingPage extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-6 nd text-center pt-5">
-                <h3 className="text-center text-primary">The limits of my language mean the limits of my world.</h3>
-                <Link type="button" className="btn btn-home mt-4" to="/home">Bắt Đầu</Link>
+              <div className="col-6 nd ">
+                <div className="row">
+                <h3 className="title">The limits of my language mean the limits of my world.</h3>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 offset-3">
+                  <Link type="button" className="btn btn-home mt-4" to="/home">Bắt Đầu</Link>
+                  </div>
+                
+                </div>
+                <div className="row">
+                <div className="col-md-6 offset-3">
                 <Link type="button" className="btn btn-signin mt-4" to="/signin">Tôi Đã Có Tài Khoản</Link>
+                </div>
+                
+                </div>
               </div>
             </div>
           </div>

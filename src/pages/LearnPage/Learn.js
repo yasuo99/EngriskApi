@@ -12,7 +12,7 @@ class Learn extends Component {
             selectedOption: "",
             modalDisplay: false,
             useKeyBoard: false,
-            typeQuestion: "QuizNoiTu",
+            typeQuestion: "ToeicReading",
             check: "",
             next: false,
             chooseImg: false,
@@ -114,15 +114,15 @@ class Learn extends Component {
                                                 <div className="titleQuestion">
                                                     <img src="/image/question.png" alt="question"></img>
                                                     <p className="title">What is your name?</p>
-                                                    
+
                                                 </div>
-                                                
+
                                                 <div className="answerQuestion">
-                                                <ReactAudioPlayer
+                                                    <ReactAudioPlayer
                                                         src="my_audio_file.ogg"
                                                         autoPlay
                                                         controls
-                                                        style={{height:'30px'}}
+                                                        style={{ height: '30px' }}
                                                     />
                                                     <div className="itemAnswer">
                                                         <div className="row">
@@ -389,6 +389,50 @@ class Learn extends Component {
                                                                     <p className="itemAnswer">Tôi</p>
                                                                     <p className="itemAnswer">Tôi</p>
                                                                     <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Em</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Em</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Em</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Em</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Em</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Em</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
+                                                                    <p className="itemAnswer">Tôi</p>
 
                                                                 </div>
                                                                 {checkSort === "" ? "" : (checkSort === true ? (
@@ -409,39 +453,108 @@ class Learn extends Component {
                                                     </div>
                                                 )
                                                 : (typeQuestion === 'QuizNoiTu' ?
-                                                (
-                                                    <div>
-                                                        <div className="titleQuestion">
-                                                            <img src="/image/question.png" alt="question"></img>
-                                                            <p className="title">Nối các từ vựng thành một cụm từ có nghĩa</p>
-                                                        </div>
-                                                        <div className="answerQuestionMatchWord">
-                                                            <div className="itemQuestion">
-                                                                <div className="row mt-4">
-                                                                    <div className="col-6">
-                                                                        <div className="boxWord">
-                                                                            
-                                                                        </div>
-                                                                    </div>
-    
-                                                                </div>
-    
+                                                    (
+                                                        <div>
+                                                            <div className="titleQuestion">
+                                                                <img src="/image/question.png" alt="question"></img>
+                                                                <p className="title">Nối các từ vựng thành một cụm từ có nghĩa</p>
                                                             </div>
-                                                            {check === "" ? "" : (check === true ? (
-                                                                <div className="boxNotifyCorrect">
-                                                                    <p className="title">Correct</p>
-                                                                    <p className="content">Well done !</p>
+                                                            <div className="answerQuestionMatchWord">
+                                                                <div className="row mt-4">
+                                                                    <div className="col-md-6">
+                                                                        <div className="row">
+                                                                            <div className="col-md-6 offset-md-3">
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                
+                                                                            </div>
+
+                                                                        </div>
+                                                                    
+                                                                    </div>
+                                                                    <div className="col-md-6">
+                                                                    <div className="row">
+                                                                            <div className="col-md-6">
+                                                                                <ol type="A">
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        
+                                                                                    </div>
+                                                                                </div> 
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        
+                                                                                    </div>
+                                                                                </div> 
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        
+                                                                                    </div>
+                                                                                </div> 
+                                                                                <div className="boxWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
+                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
+                                                                                        
+                                                                                    </div>
+                                                                                </div> 
+                                                                                </ol>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    
+                                                                    </div>
                                                                 </div>
-                                                            ) : (
-                                                                <div className="boxNotifyIncorrect">
-                                                                    <p className="title">Incorrect</p>
-                                                                    <p className="content">Sorry, sorry. Incorrect</p>
-                                                                </div>
-                                                            ))}
+                                                                {check === "" ? "" : (check === true ? (
+                                                                    <div className="boxNotifyCorrect">
+                                                                        <p className="title">Correct</p>
+                                                                        <p className="content">Well done !</p>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="boxNotifyIncorrect">
+                                                                        <p className="title">Incorrect</p>
+                                                                        <p className="content">Sorry, sorry. Incorrect</p>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+
                                                         </div>
-    
-                                                    </div>
-                                                )
+                                                    )
                                                     : (typeQuestion === 'ToeicReading' ?
                                                         (
                                                             <div>
