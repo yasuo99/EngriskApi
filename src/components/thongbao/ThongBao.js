@@ -6,7 +6,7 @@ class ThongBao extends Component {
         super(props);
     }
     render() {
-        console.log("dm");
+console.log("dm");
         return (
             <div className="boxInfor">
                 <img src="/image/banner1.jpg" className="img-100 img-fluid img-infor" />

@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { signIn } from "./../../actions/authActions"
-import { Redirect } from "react-router-dom";
-import wordApi from '../../api/wordApi';
-import { useJwt } from "react-jwt";
-import jwtDecode from "jwt-decode";
 
 class SignIn extends Component {
   state = {

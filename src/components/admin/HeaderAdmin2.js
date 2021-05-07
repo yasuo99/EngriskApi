@@ -1,9 +1,6 @@
 import React, { Component } from "react"
-import { Link } from "react-router-dom"
-import FormSearchAdmin from "./FormSearchAdmin";
 import TaiKhoanAdmin from "./TaiKhoanAdmin";
 import ThongBaoAdmin from "./ThongBaoAdmin";
-import ListTinNhan from "./ListTinNhan";
 import { connect } from "react-redux";
 
 class HeaderAdmin2 extends Component {
