@@ -27,7 +27,7 @@ class ThongBaoAdmin extends Component {
     const renderNotifications = this.state.notifications.map((notify) =>
       <Link key={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url || "/"}>
         <div className="mr-3">
-          <div className={"icon-circle" + " bg-" + notify.type}>
+          <div className={`icon-circle bg-${notify.type}`}>
             <i className="fa fa-donate text-white" />
           </div>
         </div>
@@ -39,7 +39,7 @@ class ThongBaoAdmin extends Component {
     )
     return (
       <li className="nav-item dropdown no-arrow mx-1">
-        <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a className="nav-link dropdown-toggle" href="/" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i className="fa fa-bell fa-fw" />
           <span className="badge badge-danger badge-counter">{this.state.notifications.length}+</span>
         </a>
@@ -48,7 +48,7 @@ class ThongBaoAdmin extends Component {
             Alerts Center
               </h6>
           {renderNotifications}
-          <a className="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+          <a className="dropdown-item text-center small text-gray-500" href="/">Show All Alerts</a>
         </div>
       </li>
 
