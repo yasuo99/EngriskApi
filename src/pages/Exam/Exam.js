@@ -1,3 +1,4 @@
+import { HubConnectionState } from '@microsoft/signalr';
 import React, { Component } from 'react'
 import { Badge, OverlayTrigger, Popover } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -6,6 +7,7 @@ import { Link } from 'react-router-dom';
 import examApi from '../../api/examApi';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
+import { connection } from '../../signalR/createSignalRConnection';
 import Footer from '../Footer/Footer';
 
 class Exam extends Component {
@@ -26,6 +28,15 @@ class Exam extends Component {
         this.isComponentMounted = true;
         var exams = await this.fetchExam();
         if (this.isComponentMounted) {
+            if(connection.state == HubConnectionState.Disconnected){
+                connection.start();
+            }
+            connection.on("NewExam", (data) => {
+                var exam = JSON.parse(data);
+                this.setState({
+                    exams: [exam,...this.state.exams]
+                })
+            })
             this.setState({
                 exams: exams
             })

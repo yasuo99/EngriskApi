@@ -15,8 +15,16 @@ class FlashCardDetail extends Component {
             modalCreate: false,
             imageMemory: null,
             check: false,
-            wordCategory: { words: [] },
-            currentWord: {},
+            wordCategory: {
+                words: [
+                    {
+                        memories: []
+                    }
+                ]
+            },
+            currentWord: {
+                memories: []
+            },
             wordIndex: 0,
             audioPlay: false,
             imgSrc: {},
@@ -39,7 +47,7 @@ class FlashCardDetail extends Component {
     }
     handleChange = (e) => {
         this.setState({
-            [e.target.id]: e.target.value
+            [e.target.name]: e.target.value
         })
     }
     ToToggleForm = () => {
@@ -66,8 +74,9 @@ class FlashCardDetail extends Component {
     }
     submitCreate = async () => {
         let formData = new FormData();
-        formData.append('image', this.state.imageMemory);
-        formData.append('title', this.state.contentMemory)
+        formData.append('WordId', this.state.currentWord.id);
+        formData.append('Image', this.state.imageMemory);
+        formData.append('Title', this.state.title)
         await wordApi.createMem(this.state.currentWord.id, formData);
         this.closeCreate();
     }
@@ -114,6 +123,18 @@ class FlashCardDetail extends Component {
     }
     render() {
         var { memory, check } = this.state;
+        const renderMemories = this.state.currentWord.memories.map((memory, index) =>
+            <div className="carousel-item" key={index} onChange={this.handleChange} onClick={this.ToToggleMemory} id="check">
+                <div className="row">
+                    <div className="col">
+                        <div className="cardMemory">
+                            <img src={`http://localhost:5000/api/v2/streaming/image?image=${memory.memImg}`} alt="imageMemory" className="imageMemory"></img>
+                            <p className="contentMemory">{memory.title}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
         return (
 
             <div id="wrapper">
@@ -173,16 +194,7 @@ class FlashCardDetail extends Component {
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className="carousel-item" onChange={this.handleChange} onClick={this.ToToggleMemory} id="check">
-                                                                                    <div className="row">
-                                                                                        <div className="col">
-                                                                                            <div className="cardMemory">
-                                                                                                <img src="/image/english (1).jpg" alt="imageMemory" className="imageMemory"></img>
-                                                                                                <p className="contentMemory">To cooperate with that company, he had to abide by the contract's conditions.</p>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                                {renderMemories}
                                                                                 <a className="carousel-control-prev" href="#owl-carousel" data-slide="prev"> <span className="fa fa-chevron-left" aria-hidden="true"></span></a> <a className="carousel-control-next" href="#owl-carousel" data-slide="next"> <span className="fa fa-chevron-right" aria-hidden="true"></span></a>
                                                                             </div>
 
@@ -201,10 +213,10 @@ class FlashCardDetail extends Component {
                                                                                     <div className="row">
                                                                                         <div className="col-6">
                                                                                             <label htmlFor="">Ảnh mem</label>
-                                                                                            <input type="file" name="file" accept="image/png, image/jpeg" onChange={e => this.fileChange(e)} />
+                                                                                            <input type="file" name="imageMemory" accept="image/png, image/jpeg" onChange={e => this.fileChange(e)} />
                                                                                         </div>
                                                                                         <div className="col-6">
-                                                                                            <img src={this.state.selectedImg} alt="" className="img-thumbnail"/>
+                                                                                            <img src={this.state.selectedImg} alt="" className="img-thumbnail" />
                                                                                         </div>
                                                                                     </div>
 
@@ -214,7 +226,7 @@ class FlashCardDetail extends Component {
                                                                                     <textarea
                                                                                         placeholder="Gợi ý giúp dễ nhớ hơn..."
                                                                                         type="text"
-                                                                                        name="contentMemory"
+                                                                                        name="title"
                                                                                         onChange={e => this.handleChange(e)}></textarea>
                                                                                 </div>
                                                                             </div>

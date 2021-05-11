@@ -9,10 +9,11 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import { signal } from './signalR/signalR';
 const store = createStore(
   rootReducer,
-  compose(applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+  compose(applyMiddleware(thunk, signal),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()),
 )
 TimeAgo.addDefaultLocale(en)
 ReactDOM.render(
