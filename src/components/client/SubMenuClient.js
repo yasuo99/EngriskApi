@@ -49,7 +49,7 @@ class SubMenuClient extends Component {
                 placement={placement}
                 overlay={
                   <Tooltip id={`tooltip-${placement}`}>
-                    Flash Card
+                    Học từ vựng
                   </Tooltip>
                 }
               >

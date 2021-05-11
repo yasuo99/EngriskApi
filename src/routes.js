@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from './pages/HomePage/HomePage';
+import HomePage from './pages/HomePage/Home';
 import ThaoLuanPage from './pages/ThaoLuanPage/ThaoLuanPage';
 import ThaoLuanChiTietPage from './pages/ThaoLuanPage/ThaoLuanChiTietPage';
 import CuaHangPage from './pages/CuaHangPage/CuaHangPage';
@@ -53,6 +53,7 @@ import Learn from './pages/LearnPage/Learn';
 import Progress from './pages/Progress/Progress';
 import Quiz_Exam from "./components/managementquiz_exam/Quiz_Exam";
 import Word from './components/managementwords/Words';
+import Quiz_Word from './components/managementquiz_exam/Quiz_Word';
 const routes = [
     {
         path: '/home',
@@ -343,6 +344,13 @@ const routes = [
         // roles: ["superadmin", "manager"]
     },
     {
+        path: '/quiz-tuvung',
+        exact: true,
+        main: () => <Quiz_Word />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
         path: '/quanly-thongbao',
         exact: true,
         main: () => <ManagementInfor />,
@@ -409,8 +417,8 @@ const routes = [
         path: '/quanly-taikhoan',
         exact: true,
         main: () => <ManagementAccount />,
-        guard: true,
-        roles: ["superadmin"]
+        // guard: true,
+        // roles: ["superadmin"]
     },
     {
         path: '/quanly-bangdiem',
@@ -422,8 +430,8 @@ const routes = [
         path: '/quanly-phanquyen',
         exact: true,
         main: () => <ManagementRole />,
-        guard: true,
-        roles: ["superadmin"]
+        // guard: true,
+        // roles: ["superadmin"]
     }
     ,
     {

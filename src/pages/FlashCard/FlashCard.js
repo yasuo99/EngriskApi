@@ -52,6 +52,7 @@ class FlashCard extends Component {
                     <div id="content">
                         <HeaderClient></HeaderClient>
                         <main id="flashcard">
+                            <div className="container">
                             <div className="boxList">
                                 <select
                                     id="listword"
@@ -162,7 +163,7 @@ class FlashCard extends Component {
 
                                 </div>
                             </div>
-
+                            </div>
                         </main>
                     </div>
                 </div>
