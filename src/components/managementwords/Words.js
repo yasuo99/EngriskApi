@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from "react-browser-router";
 import SubMenu from "../admin/SubMenu";
-import HeaderAdmin from "../admin/HeaderAdmin";
+import HeaderAdmin3 from "../admin/HeaderAdmin3";
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 const word = {
     vocabulary: '',
     typeOfWord: '',
     topic: 'Giao tiếp hàng ngày',
     synonym: '',
-    mean:'',
+    mean: '',
 }
 const memory = {
     fileMemory: '',
@@ -23,18 +23,18 @@ class Word extends Component {
                     <SubMenu></SubMenu>
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
-                            <HeaderAdmin></HeaderAdmin>
+                            <HeaderAdmin3></HeaderAdmin3>
                             <div className="container word">
                                 <Link className="fa fa-chevron-left" to="/quanly-tuvung"> <i>Trở về</i></Link>
                                 <div className="row p-LeftRight">
-                                    <div className="col-4 border-wordLeft"></div>
-                                    <div className="col-4 text-center title">
+                                    <div className="col-md-4 border-wordLeft"></div>
+                                    <div className="col-md-4 text-center title">
                                         <h4>THÔNG TIN TỪ VỰNG</h4>
                                     </div>
-                                    <div className="col-4 border-wordRight"></div>
+                                    <div className="col-md-4 border-wordRight"></div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-8">
+                                    <div className="col-md-8">
                                         <Formik
                                             initialValues={word}
                                             onSubmit={async (values, { resetForm }) => {
@@ -46,60 +46,86 @@ class Word extends Component {
                                             {({ resetForm }) => (
                                                 <Form className="content" >
                                                     <div className="vocabulary">
-                                                        <label htmlFor="vocabulary">Từ vựng:</label>
-                                                        <Field
-                                                            type="text"
-                                                            placeholder="Nhập từ vựng"
-                                                            required
-                                                            id="vocabulary"
-                                                            name="vocabulary"></Field>
+                                                        <div className="row">
+                                                            <div className="col-md-4 text-right pt-2">
+                                                                <label htmlFor="vocabulary">Từ vựng:</label>
+                                                            </div>
+                                                            <div className="col-8">
+                                                                <Field
+                                                                    type="text"
+                                                                    placeholder="Nhập từ vựng"
+                                                                    required
+                                                                    id="vocabulary"
+                                                                    name="vocabulary"></Field>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div className="typeOfWord" >
-                                                        <label htmlFor="typeOfWord">Loại từ:</label>
-                                                        <Field
-                                                            as="select"
-                                                            name="typeOfWord"
-                                                            id="typeOfWord">
-                                                            <option value="Danh từ">Danh từ</option>
-                                                            <option value="Tính từ">Tính từ</option>
-                                                            <option value="Động từ">Động từ</option>
-                                                            <option value="Trạng từ">Trạng từ</option>
-                                                        </Field>
+                                                        <div className="row">
+                                                            <div className="col-md-4 text-right pt-2">
+                                                                <label htmlFor="typeOfWord">Loại từ:</label>
+                                                            </div>
+                                                            <div className="col-md-8">
+                                                                <Field
+                                                                    as="select"
+                                                                    name="typeOfWord"
+                                                                    id="typeOfWord">
+                                                                    <option value="Danh từ">Danh từ</option>
+                                                                    <option value="Tính từ">Tính từ</option>
+                                                                    <option value="Động từ">Động từ</option>
+                                                                    <option value="Trạng từ">Trạng từ</option>
+                                                                </Field>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div className="topic">
-                                                        <label htmlFor="topic">Chủ đề:</label>
-                                                        <Field
-                                                            as="select"
-                                                            name="topic"
-                                                            id="topic">
-                                                            <option value="Giao tiếp hằng ngày">Giao tiếp hằng ngày</option>
-                                                            <option value="Toeic">Toeic</option>
-                                                        </Field>
+                                                        <div className="row">
+                                                            <div className="col-md-4 text-right pt-2">
+                                                                <label htmlFor="topic">Chủ đề:</label>
+                                                            </div>
+                                                            <div className="col-md-8">
+                                                                <Field
+                                                                    as="select"
+                                                                    name="topic"
+                                                                    id="topic">
+                                                                    <option value="Giao tiếp hằng ngày">Giao tiếp hằng ngày</option>
+                                                                    <option value="Toeic">Toeic</option>
+                                                                </Field>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div className="synonym">
-                                                        <label htmlFor="synonym">Từ đồng nghĩa:</label>
-                                                        <Field
-                                                            type="text"
-                                                            placeholder="Nhập từ đồng nghĩa"
-                                                            name="synonym"
-                                                            id="synonym"
-                                                            required></Field> 
-                                                    </div>
-                                                    <div className="mean">
-                                                        <label htmlFor="synonym">Nghĩa từ vựng:</label>
-                                                        <Field
-                                                            type="text"
-                                                            placeholder="Nhập nghĩa của từ vựng"
-                                                            name="mean"
-                                                            id="mean"
-                                                            required></Field>
-                                                    </div>
-                                                    <div className="row justify-content-center function">
-
-                                                        <div className="col-md-2">
-                                                            <button className="save" type="submit" >Lưu lại</button>
+                                                        <div className="row">
+                                                            <div className="col-md-4 text-right pt-2">
+                                                                <label htmlFor="synonym">Từ đồng nghĩa:</label>
+                                                            </div>
+                                                            <div className="col-md-8">
+                                                                <Field
+                                                                    type="text"
+                                                                    placeholder="Nhập từ đồng nghĩa"
+                                                                    name="synonym"
+                                                                    id="synonym"
+                                                                    required></Field>
+                                                            </div>
                                                         </div>
-                                                        <div className="col-md-3">
+                                                    </div>
+                                                    <div className="mean"><div className="row">
+                                                        <div className="col-md-4 text-right pt-2">
+                                                            <label htmlFor="synonym">Nghĩa từ vựng:</label>
+                                                        </div>
+                                                        <div className="col-md-8">
+                                                            <Field
+                                                                type="text"
+                                                                placeholder="Nhập nghĩa của từ vựng"
+                                                                name="mean"
+                                                                id="mean"
+                                                                required></Field>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    <div className="row function">
+                                                        <div className="col-md-8 offset-md-4">
+                                                            <button className="save" type="submit" >Lưu lại</button>
                                                             <button className="reset" onClick={() => resetForm(word)}>Làm mới</button>
                                                         </div>
                                                     </div>
@@ -108,7 +134,7 @@ class Word extends Component {
                                         </Formik>
 
                                     </div>
-                                    <div className="col-4 border-left">
+                                    <div className="col-md-4 border-left">
                                         <h5 className="titleMemory text-center pt-3">TẠO THẺ GHI NHỚ</h5>
                                         <div>
                                             <Formik
