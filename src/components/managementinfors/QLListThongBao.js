@@ -6,6 +6,7 @@ import $ from 'jquery'
 import notificationApi from "../../api/notificationApi";
 import { Button, Modal } from 'react-bootstrap';
 import { toast } from "react-toastify";
+import notificationApiV2 from "../../api/2.0/notificationApi";
 class QLListThongBao extends Component {
     constructor(props) {
         super(props);
@@ -62,18 +63,15 @@ class QLListThongBao extends Component {
             content: this.state.content,
             url: this.state.url,
             type: this.state.type,
-            isClientNotify: this.state.side === "client" ? true : false
+            accountId: 1
         }
         try {
-            const result = await notificationApi.createNotification(notify);
-            if (result.status === 200) {
+            const result = await notificationApiV2.create(notify);
+            if (result) {
                 toast("Thêm thành công");
-                var notifications = await this.fetchNotification();
-                if (this.isComponentMounted) {
-                    this.setState({
-                        notifications: notifications
-                    });
-                }
+                this.setState({
+                    notifications: [...this.state.notifications, result]
+                })
                 this.closeCreate();
             }
             else {
@@ -191,14 +189,10 @@ class QLListThongBao extends Component {
                 <td>{notification.publishedDate}</td>
                 <td>{notification.content}</td>
                 <td>{notification.type}</td>
-                <td>{notification.isClientNotify ? "Client" : "Admin"}</td>
                 <td>
                     <Button data-id={notification.id} variant="primary" className="btn btn-primary mr-2" onClick={e => this.openEdit(e)}><i data-id={notification.id} className="fa fa-edit" /></Button>
                     <Button data-id={notification.id} variant="primary" className="btn btn-danger" onClick={e => this.openDelete(e)}><i data-id={notification.id} className="fa fa-trash" /></Button>
 
-                </td>
-                <td>
-                    <Switch id={notification.id} onChange={(props, event, id) => this.publishNotification(id)} checked={notification.isPublish} />
                 </td>
             </tr>
         );
@@ -212,9 +206,7 @@ class QLListThongBao extends Component {
                             <th className="ngayTB">Ngày thông báo</th>
                             <th >Nội dung thông báo</th>
                             <th>Loại thông báo</th>
-                            <th>Client/ admin</th>
                             <th className="chucnang" />
-                            <th className="lock"></th>
                         </tr>
                     </thead>
                     <tbody>

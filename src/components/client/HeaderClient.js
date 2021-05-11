@@ -4,6 +4,7 @@ import { useJwt } from "react-jwt";
 import ThongBaoClient from "./ThongBaoClient";
 import TaiKhoanClient from "./TaiKhoanClient"
 import TaiKhoanAdmin from "../admin/TaiKhoanAdmin";
+import TinNhanClient from "./TinNhanClient";
 
 const HeaderClient = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const HeaderClient = () => {
       </button>
       <ul className="navbar-nav ml-auto">
         <ThongBaoClient></ThongBaoClient>
+        <TinNhanClient></TinNhanClient>
         <div className="topbar-divider d-none d-sm-block" />
         {(account.roles.some(el => el === "superadmin") || account.roles.some(el => el === "manager")) && <TaiKhoanAdmin account={account}></TaiKhoanAdmin>}
         {(account.roles.some(el => el !== "superadmin") && account.roles.some(el => el !== "manager") || !isLoggedIn) && <TaiKhoanClient status={isLoggedIn} account={account}></TaiKhoanClient>}</ul>

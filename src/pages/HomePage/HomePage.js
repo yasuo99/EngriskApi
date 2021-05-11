@@ -1,3 +1,4 @@
+import { HubConnectionState } from '@microsoft/signalr';
 import React, { PureComponent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { connect } from 'react-redux';
@@ -7,8 +8,7 @@ import HeaderAdmin from '../../components/admin/HeaderAdmin';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
-
-
+import { connection } from '../../signalR/createSignalRConnection'
 class HomePage extends PureComponent {
   constructor(props) {
     super(props);
@@ -32,6 +32,15 @@ class HomePage extends PureComponent {
       })
     }
     if (this.isComponentMounted) {
+      if (connection.state == HubConnectionState.Disconnected) {
+        connection.start();
+      }
+      connection.on('AddSection', (data) => {
+        var section = JSON.parse(data);
+        this.setState({
+          sections: [...this.state.sections, section]
+        })
+      })
       this.setState({
         sections: result
       });
@@ -79,13 +88,15 @@ class HomePage extends PureComponent {
             <p>test</p>
           </div>
           <div className="col-2 pr-4">
-            <div className="progress">
-              <div className="progress-bar progress-bar-success" style={{ width: (section.dpa / (section.totalQuizzes === 0 ? 1 : section.totalQuizzes)) * 100 }}>
-                <span className="text-light pl-2">{(section.dpa / (section.totalQuizzes === 0 ? 1 : section.totalQuizzes)) * 100}%</span>
-              </div>
-            </div>
+            {section.totalQuizzes > 0 &&
+              <div className="progress">
+                <div className="progress-bar progress-bar-success" style={{ width: (section.dpa / (section.totalQuizzes === 0 ? 1 : section.totalQuizzes)) * 100 }}>
+                  <span className="text-light pl-2">{(section.dpa / (section.totalQuizzes === 0 ? 1 : section.totalQuizzes)) * 100}%</span>
+                </div>
+              </div>}
             <div>
-              <Link className="btn btn-primary do-btn" to={`/sections/${section.id}/do`}>Do <i className="fa fa-pencil"></i></Link>
+              {section.totalQuizzes > 0 ? <Link className="btn btn-primary do-btn" to={`/sections/${section.id}/do`}>Do <i className="fa fa-pencil"></i></Link> : <p className="text-center">Chưa có quiz cho bài học này</p>}
+
             </div>
           </div>
         </div>
@@ -97,24 +108,16 @@ class HomePage extends PureComponent {
         <SubMenuClient></SubMenuClient>
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
-          <HeaderClient></HeaderClient>
+            <HeaderClient></HeaderClient>
             <main>
               <div className="container">
                 <div className="row">
                   <div id="trangchu" className="col-10 offset-1">
-                    {this.isComponentMounted && <InfiniteScroll
-                      dataLength={this.state.sections.length}
-                      next={this.fetchMoreSections}
-                      hasMore={this.state.hasMore}
-                      loader={<h4>Loading...</h4>}
-                      scrollThreshold={0.5}
-                      height={500}
-                    >{renderSections}
-                    </InfiniteScroll>}
-
+                    {this.isComponentMounted &&
+                      renderSections}
                   </div>
                 </div>
-               
+
               </div>
             </main>
             <Footer></Footer>

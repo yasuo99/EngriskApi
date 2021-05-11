@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import Moment from 'moment';
-import notificationApi from '../../api/notificationApi';
 import * as signalR from '@microsoft/signalr';
 import { connect } from 'react-redux';
+import { connection } from '../../signalR/createSignalRConnection';
+import notificationApiV2 from '../../api/2.0/notificationApi';
 const hubConnection = new signalR.HubConnectionBuilder().configureLogging(signalR.LogLevel.Debug).withUrl("http://localhost:5000/notification", {
   accessTokenFactory: () => localStorage.getItem("token") || null
 }).build();
@@ -13,7 +14,8 @@ class ThongBaoClient extends Component {
     this.state = {
       notifications: [],
       params: {
-        pageSize: 4
+        currentPage: 1,
+        pageSize: 5
       }
     }
     this.isComponentMounted = false;
@@ -22,39 +24,61 @@ class ThongBaoClient extends Component {
   async componentDidMount() {
     Moment.locale("en");
     this.isComponentMounted = true;
-    if(this.props.isLoggedIn){
-      hubConnection.start();
-      hubConnection.on('Notification', (data) => {
-        if (this.isComponentMounted) {
-          this.setState({
-            notifications: data
-          })
-        }
-      })
+    if (this.props.isLoggedIn) {
+      if (connection.state == signalR.HubConnectionState.Disconnected) {
+        connection.start();
+        connection.on('NewNotification', (data) => {
+          var notification = JSON.parse(data);
+          console.log(notification);
+          if (this.isComponentMounted) {
+            this.setState({
+              notifications: [notification,...this.state.notifications]
+            })
+          }
+        })
+      }
+
     }
-    const result = await this.fetchNotifications(this.state.params);
+    const result = await this.fetchNotifications(this.props.account.id,this.state.params);
+    console.log(result);
     if (this.isComponentMounted) {
       if (result) {
         this.setState({
-          notifications: result
+          notifications: result.items
         });
       }
     }
   }
-  fetchNotifications = async (params) => {
+  fetchNotifications = async (id, params) => {
     try {
-      const notifications = await notificationApi.getPublishing(params);
+      const notifications = await notificationApiV2.get(id, params);
       return notifications;
     } catch (error) {
       console.log(error);
     }
   }
+  displayNotificationType = (type) => {
+    switch (type) {
+      case 0:
+        return "info"
+      case 1:
+        return "success"
+      case 2:
+        return "danger"
+      default:
+        break;
+    }
+  }
+  seenNotification = async (id) => {
+    return await notificationApiV2.seenNotification(this.props.account.id, id);
+  }
   render() {
     const { notifications } = this.state;
+    console.log(notifications);
     const renderNotifications = this.state.notifications.map((notify) =>
-      <Link key={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url || "/"}>
+      <Link key={notify.id} data-id={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url || "#"} onClick={(e) => this.seenNotification(e.target.dataset.id)}>
         <div className="mr-3">
-          <div className={"icon-circle" + " bg-" + notify.type}>
+          <div className={"icon-circle" + " bg-" + this.displayNotificationType(notify.type)}>
             <i className="fa fa-donate text-white" />
           </div>
         </div>
@@ -93,9 +117,10 @@ class ThongBaoClient extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  const { isLoggedIn } = state.auth;
+  const { isLoggedIn, account } = state.auth;
   return ({
-    isLoggedIn: isLoggedIn
+    isLoggedIn: isLoggedIn,
+    account: account
   })
 }
 export default connect(mapStateToProps)(ThongBaoClient);
