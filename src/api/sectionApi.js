@@ -10,6 +10,7 @@ const sectionApi = {
                 "Authorization": "Bearer " + token
             }
         }
+        console.log(params);
         return axiosClient.get(url, { params, headers: header });
     },getManage: (params, auth) => {
         const url = "/sections/manage";

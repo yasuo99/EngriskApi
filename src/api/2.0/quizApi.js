@@ -1,12 +1,20 @@
 import axiosClientv2 from "../../config/axiosClientv2";
 const clientUrl = `account/${JSON.parse(localStorage.getItem('account'))?.id}/quizzes`
-const adminUrl = '/quizzes'
 const quizApi = {
     getAll: async () => {
-       return await  axiosClientv2.get()
+        const adminUrl = '/quizzes'
+        return await axiosClientv2.get(adminUrl)
     },
-    create: async (quiz) => {
-        return await axiosClientv2.post(adminUrl, quiz);
+    getUserQuizzes: async (id) => {
+        const url = `/quizzes/user/${JSON.parse(localStorage.getItem('account')).id}`;
+        return await axiosClientv2.get(url);
+    },
+    create: async (quiz, side) => {
+        const url = side ? "/quizzes": `/quizzes/user/${JSON.parse(localStorage.getItem('account')).id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.post(url, quiz, {headers});
     }
 }
 export default quizApi;

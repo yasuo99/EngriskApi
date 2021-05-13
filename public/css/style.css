@@ -23,12 +23,12 @@ p {
   font-size: 14px;
   color: #777;
 }
-.btn-primary{
-  background-color: #116eee!important;
-  border: #0a428f!important;
+.btn-primary {
+  background-color: #116eee !important;
+  border: #0a428f !important;
 }
-.btn-primary:hover{
-  background-color: #0a428f!important;
+.btn-primary:hover {
+  background-color: #0a428f !important;
 }
 /* .btn-primary:hover{background-color:#48871B!important}
 .btn-primary-border:hover{background-color:#48871B!important;color: #fff} */
@@ -62,32 +62,35 @@ p {
   font-size: 16px;
   color: #fff;
 }
-#subMenu .header{
+#subMenu .header {
   margin-bottom: 60%;
 }
-#subMenu .logoHome{
+#subMenu .logoHome {
   width: 100px;
 }
-.sidebar .nav-item svg{margin-right: 10%;margin-left: 10%;}
-.sidebar .nav-item .nav-link{
+.sidebar .nav-item svg {
+  margin-right: 10%;
+  margin-left: 10%;
+}
+.sidebar .nav-item .nav-link {
   padding-top: 0px;
 }
-#subMenu .nav-item .nav-link{
-  fill: rgba(255, 255, 255, .5);
+#subMenu .nav-item .nav-link {
+  fill: rgba(255, 255, 255, 0.5);
   margin-bottom: 20%;
 }
-#subMenu .nav-item .nav-link:active{
+#subMenu .nav-item .nav-link:active {
   fill: rgba(255, 255, 255, 1);
   margin-bottom: 20%;
 }
-#subMenu .test{
-  margin:auto 1rem 2.625rem;
+#subMenu .test {
+  margin: auto 1rem 2.625rem;
   padding-left: 5%;
 }
-#subMenu .nav-item .nav-link svg{
+#subMenu .nav-item .nav-link svg {
   fill: inherit;
 }
-#subMenu .header .logo{
+#subMenu .header .logo {
   margin-left: 33%;
   display: block;
   margin-top: 8%;
@@ -98,7 +101,7 @@ p {
   font-size: 18px;
   font-weight: bold;
 }
-#subMenu .nav-item .home{
+#subMenu .nav-item .home {
   color: #fff;
   fill: #fff;
 }
@@ -110,72 +113,72 @@ p {
   height: 100vh;
   background-attachment: fixed;
 }
-#wrapper .btn-quiz{
+#wrapper .btn-quiz {
   background: #116eee;
   color: #fff;
 }
-#wrapper .btn-quiz:hover{
+#wrapper .btn-quiz:hover {
   background: #0a428f;
 }
-#wrapper .loaibai{
+#wrapper .loaibai {
   width: 200px;
 }
-#wrapper .tenbaiquiz{
+#wrapper .tenbaiquiz {
   width: 250px;
 }
-#wrapper .motaquiz{
+#wrapper .motaquiz {
   width: 300px;
 }
-#wrapper .dokhoquiz{
+#wrapper .dokhoquiz {
   width: 100px;
 }
-#wrapper .tuvung{
+#wrapper .tuvung {
   width: 200px;
 }
-#wrapper .loaitu{
+#wrapper .loaitu {
   width: 100px;
 }
-#wrapper .chude{
+#wrapper .chude {
   width: 200px;
 }
 #wrapper .nghia{
   width: 150px;
 }
-#wrapper .tudongnghia{
+#wrapper .tudongnghia {
   width: 150px;
 }
-#wrapper .btn-quizWord{
+#wrapper .btn-quizWord {
   background: #008a22;
   color: #fff;
 }
-#wrapper .btn-quizWord:hover{
+#wrapper .btn-quizWord:hover {
   background: #00661a;
 }
-#wrapper .btn-word{
+#wrapper .btn-word {
   background: #116eee;
   color: #fff;
 }
-#wrapper .btn-word:hover{
+#wrapper .btn-word:hover {
   background: #0a428f;
 }
-#wrapper .word .title{
+#wrapper .word .title {
   color: #116eee;
 }
-#wrapper .word .border-wordLeft{
-  border-bottom: 2px solid #fff!important;
+#wrapper .word .border-wordLeft {
+  border-bottom: 2px solid #fff !important;
   margin-bottom: 10px;
 }
-#wrapper .word .border-wordRight{
-  border-bottom: 2px solid #fff!important;
+#wrapper .word .border-wordRight {
+  border-bottom: 2px solid #fff !important;
   margin-bottom: 10px;
 }
-#wrapper .word .fa-chevron-left:hover{
+#wrapper .word .fa-chevron-left:hover {
   color: #116eee;
 }
-#wrapper .word .carousel-inner .fa-chevron-right::before{
-  font-size: 16px!important;
+#wrapper .word .carousel-inner .fa-chevron-right::before {
+  font-size: 16px !important;
 }
-#wrapper .word .carousel-inner .fa-chevron-left:hover{
+#wrapper .word .carousel-inner .fa-chevron-left:hover {
   color: #666;
 }
 #trangchu .link-title {
@@ -343,7 +346,7 @@ footer h5 {
 }
 /* -----------------------------------THẢO LUẬN------------------------------- */
 /* --------------------------------------------------------------------------- */
-#thaoluan{
+#thaoluan {
   height: 75%;
 }
 #thaoluan h2 {
@@ -351,7 +354,7 @@ footer h5 {
 }
 #thaoluan .btn {
   outline: none;
-  box-shadow: 3px 3px 3px #4ECDC4;
+  box-shadow: 3px 3px 3px #4ecdc4;
   border: none;
   padding: 10px;
   border-radius: 20px;
@@ -366,10 +369,10 @@ footer h5 {
   text-decoration: none;
   color: #0a428f;
 }
-#thaoluan .tab-content{
+#thaoluan .tab-content {
   background: #fff;
   height: 90%;
-  overflow-y:auto;
+  overflow-y: auto;
   position: relative;
 }
 
@@ -399,8 +402,8 @@ footer h5 {
   color: #666;
 }
 
-#thaoluan .searchFollowingPost:focus{
-  color: #666
+#thaoluan .searchFollowingPost:focus {
+  color: #666;
 }
 
 #thaoluan .searchButton {
@@ -430,14 +433,14 @@ footer h5 {
 #thaoluan .nd-theodoi:hover {
   background-color: #ccc;
 }
-#thaoluan .img-user{
+#thaoluan .img-user {
   margin-top: 10px;
   margin-left: 10px;
   background: #f2f2f2;
   border-radius: 50%;
 }
 
-#wrapper .img-thumbnail{
+#wrapper .img-thumbnail {
   margin-top: 20px;
   width: 40%;
   height: 150px;
@@ -447,60 +450,60 @@ footer h5 {
 #wrapper .imgPost input[type="file"] {
   display: none;
 }
-#tabfour img{
+#tabfour img {
   width: 50px;
   padding: 5px;
-} 
-#tabone{
+}
+#tabone {
   position: absolute;
   width: 100%;
 }
-#tabtwo{
+#tabtwo {
   position: absolute;
   width: 100%;
 }
-#tabthree{
+#tabthree {
   position: absolute;
   width: 100%;
 }
-#tabfour{
+#tabfour {
   padding: 10px 140px 0px 50px;
   position: absolute;
   width: 100%;
 }
-#tabfour .username{
+#tabfour .username {
   display: inline;
   margin-left: 15px;
   font-size: 18px;
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
-#tabfour .contentPost{
+#tabfour .contentPost {
   padding: 10px;
   width: 100%;
   height: 130px;
   display: block;
 }
-#tabfour .row{
-  border-bottom: 0px!important;
+#tabfour .row {
+  border-bottom: 0px !important;
   padding: 10px 20px;
 }
-#tabfour .function{
+#tabfour .function {
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px 10px;
   width: 100%;
   display: flex;
 }
-#tabfour .function .title{
+#tabfour .function .title {
   display: inline;
   font-size: 16px;
 }
-#tabfour .display-ImgPost{
+#tabfour .display-ImgPost {
   width: 50%;
   height: auto;
   margin-top: 20px;
 }
-#tabfour .save{
+#tabfour .save {
   margin-top: 10px;
   background: #116eee;
   color: #fff;
@@ -508,16 +511,16 @@ footer h5 {
   padding: 10px 0;
   border-radius: 5px;
 }
-#tabfour .save:hover{
+#tabfour .save:hover {
   background: #0a428f;
 }
-#tabfour .f-image{
+#tabfour .f-image {
   width: 32px;
 }
-#tabfour .filePost input[type="file"]{
+#tabfour .filePost input[type="file"] {
   display: none;
 }
-#tabfour .filePost img{
+#tabfour .filePost img {
   width: 32px;
 }
 /* -----------------------------CHI TIẾT THẢO LUẬN---------------------------- */
@@ -906,55 +909,45 @@ form ul .suggest {
   border: 1px solid rgba(33, 150, 243, 0.5);
   animation: rotate360 210s linear infinite;
 }
-ul[class^=ring] {
-  border: solid 1px rgba(33,150,243,.8);
+ul[class^="ring"] {
+  border: solid 1px rgba(33, 150, 243, 0.8);
   border-radius: 50%;
   list-style: none;
   box-sizing: content-box;
 }
-ul[class^=ring] li {
+ul[class^="ring"] li {
   display: block;
   position: absolute;
   top: 50%;
   left: 50%;
 }
-#duolingo ul.ring-1 li .orbit-icon{
+#duolingo ul.ring-1 li .orbit-icon {
   width: 5.6em;
   height: 5.6em;
   margin: -9.5em;
   line-height: 1.2em;
   background-color: transparent;
 }
-#duolingo ul.ring-2 li .orbit-icon{
+#duolingo ul.ring-2 li .orbit-icon {
   width: 4.6em;
   height: 4.6em;
   margin: 3.2em;
   line-height: 1.2em;
   background-color: transparent;
 }
-.ring-2>*:nth-of-type(2) {
-  transform: rotate(
-    -170deg
-    ) translate(13em) rotate(
-    90deg);
+.ring-2 > *:nth-of-type(2) {
+  transform: rotate(-170deg) translate(13em) rotate(90deg);
 }
-.ring-2>*:nth-of-type(4) {
-  transform: rotate( 
-    -90deg
-     ) translate(11em) rotate( 
-    180deg
-    );
+.ring-2 > *:nth-of-type(4) {
+  transform: rotate(-90deg) translate(11em) rotate(180deg);
 }
-.ring-1>*:nth-of-type(1) {
-  transform: rotate(126.6666666667deg) translate(10em) rotate(-126.6666666667deg);
+.ring-1 > *:nth-of-type(1) {
+  transform: rotate(126.6666666667deg) translate(10em)
+    rotate(-126.6666666667deg);
 }
 
-.ring-1>*:nth-of-type(3) {
-  transform: rotate(
-    9deg
-    ) translate(10em) rotate(
-    -105deg
-    );
+.ring-1 > *:nth-of-type(3) {
+  transform: rotate(9deg) translate(10em) rotate(-105deg);
 }
 .orbit-icon {
   width: 1.6em;
@@ -968,7 +961,7 @@ ul[class^=ring] li {
   align-items: center;
   justify-content: center;
   text-align: center;
-  transition: .2s ease-out;
+  transition: 0.2s ease-out;
 }
 #duolingo ul.ring-2 {
   width: 15em;
@@ -981,32 +974,32 @@ ul[class^=ring] li {
   height: 10em;
   border: 1px solid rgba(33, 150, 243, 0.5);
 }
-#duolingo .orbit-container{
+#duolingo .orbit-container {
   position: relative;
   text-align: center;
 }
-#duolingo .orbit-wrap{
+#duolingo .orbit-wrap {
   list-style: none;
   font-size: 1.3em;
 }
-#duolingo .orbit-wrap > li{
+#duolingo .orbit-wrap > li {
   position: absolute;
   left: 50%;
   top: 80%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 #duolingo .orbit-center {
- z-index: 5;
- font-size: 4em;
- width: 1.8em;
- text-align: center;
- border-radius: 50%;
- transition: .2s ease-out;
+  z-index: 5;
+  font-size: 4em;
+  width: 1.8em;
+  text-align: center;
+  border-radius: 50%;
+  transition: 0.2s ease-out;
 }
 #duolingo li {
   list-style: none;
 }
-#duolingo .nd .title{
+#duolingo .nd .title {
   padding: auto;
   margin: auto;
   color: #116eee;
@@ -1016,7 +1009,7 @@ ul[class^=ring] li {
   margin-top: 15%;
 }
 
-#duolingo .btn{
+#duolingo .btn {
   color: #fff;
   background: #116eee;
   font-size: 18px;
@@ -1033,15 +1026,17 @@ ul[class^=ring] li {
   transition: all 0.3s ease 0s;
   border-radius: 10px;
 }
-#duolingo .btn:focus{ color: #fff; }
-#duolingo .btn:hover{
+#duolingo .btn:focus {
+  color: #fff;
+}
+#duolingo .btn:hover {
   color: #fff;
   background: #0a428f;
   border: none;
   outline: none;
 }
-#duolingo .btn:before{
-  content: '';
+#duolingo .btn:before {
+  content: "";
   background: linear-gradient(to left, transparent, #0a428f);
   height: 100%;
   position: absolute;
@@ -1051,9 +1046,11 @@ ul[class^=ring] li {
   transition: all 0.3s ease 0s;
 }
 
-#duolingo .btn:hover:before{ width: 100%; }
-#nd-duolingo .cachhoc .title{
-  margin:10px 0;
+#duolingo .btn:hover:before {
+  width: 100%;
+}
+#nd-duolingo .cachhoc .title {
+  margin: 10px 0;
 }
 #nd-duolingo .cachhoc .content {
   font-size: 16px;
@@ -1077,7 +1074,7 @@ ul[class^=ring] li {
   font-weight: bold;
   border-radius: 30px;
 } */
-#footer-duolingo .btn-primary{
+#footer-duolingo .btn-primary {
   color: #fff;
   background: #116eee;
   font-size: 21px;
@@ -1094,15 +1091,17 @@ ul[class^=ring] li {
   transition: all 0.3s ease 0s;
   border-radius: 10px;
 }
-#footer-duolingo .btn-primary:focus{ color: #fff; }
-#footer-duolingo .btn-primary:hover{
+#footer-duolingo .btn-primary:focus {
+  color: #fff;
+}
+#footer-duolingo .btn-primary:hover {
   color: #fff;
   background: #0a428f;
   border: none;
   outline: none;
 }
-#footer-duolingo .btn-primary:before{
-  content: '';
+#footer-duolingo .btn-primary:before {
+  content: "";
   background: linear-gradient(to right, transparent, #0a428f);
   height: 100%;
   /* width: 30%; */
@@ -1112,7 +1111,9 @@ ul[class^=ring] li {
   z-index: -1;
   transition: all 0.3s ease 0s;
 }
-#footer-duolingo .btn:hover:before{ width: 100%; }
+#footer-duolingo .btn:hover:before {
+  width: 100%;
+}
 
 #conference-timeline {
   position: relative;
@@ -1449,186 +1450,190 @@ ul[class^=ring] li {
   transform: translate3d(0, -50px, 0);
   transition: all 0.7s ease 0s;
 }
-.boxItem .btn:hover{
+.boxItem .btn:hover {
   background: #0a428f;
 }
-#flashcard .boxList{
+#flashcard .boxList {
   margin-left: 30px;
   margin-bottom: 10px;
 }
-#flashcard .boxCommunicate{
+#flashcard .boxCommunicate {
   padding-bottom: 10px;
 }
-#flashcard .gachchan{
-  margin: 30px 40px 0px 20px!important;
+#flashcard .gachchan {
+  margin: 30px 40px 0px 20px !important;
 }
-#flashcard .boxCommunicate h5{
+#flashcard .boxCommunicate h5 {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-left: 30px;
   color: #116eee;
 }
-#flashcard .boxToeic h5{
+#flashcard .boxToeic h5 {
   margin-top: 15px;
   margin-bottom: 15px;
   margin-left: 30px;
   color: #116eee;
 }
-#flashcard .carousel-control-prev, .carousel-control-next{
-  width: 10%!important;
+#flashcard .carousel-control-prev,
+.carousel-control-next {
+  width: 10% !important;
 }
 /* --------------------------------- FlashCard-Detail----------------------------- */
 /* --------------------------------------------------------------------------- */
-#flashcard-detail{
+#flashcard-detail {
   padding-top: 15px;
 }
-#flashcard-detail .fa-chevron-left:before{
-  color: #1A535C;
+#flashcard-detail .fa-chevron-left:before {
+  color: #1a535c;
 }
-#flashcard-detail .textReturn{
+#flashcard-detail .textReturn {
   font-style: italic;
-  color: #1A535C;
+  color: #1a535c;
   font-weight: bold;
 }
 #flashcard-detail .kedoc {
   border-right: 2px solid #ccc;
 }
-#flashcard-detail .title{
+#flashcard-detail .title {
   margin-top: 50px;
   margin-left: 60px;
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
-#flashcard-detail .textProgress{
+#flashcard-detail .textProgress {
   font-size: 14px;
   font-weight: bold;
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
-#flashcard-detail .textPoint{
+#flashcard-detail .textPoint {
   font-size: 14px;
   text-align: end;
   font-weight: bold;
-  color: #4ECDC4;
+  color: #4ecdc4;
 }
-#flashcard-detail .btn-training{
+#flashcard-detail .btn-training {
   margin-top: 100px;
   width: 180px;
   margin-left: 30px;
   padding: 10px;
-  color: #4ECDC4;
+  color: #4ecdc4;
   font-weight: bold;
-  border: 1px solid #4ECDC4;
+  border: 1px solid #4ecdc4;
   border-radius: 10px;
 }
-#flashcard-detail .btn-training:hover{
+#flashcard-detail .btn-training:hover {
   border-radius: 10px;
-  border: 1px solid #4ECDC4;
-  color: #4ECDC4;
-  box-shadow: 0px 4px 8px #4ECDC4;
+  border: 1px solid #4ecdc4;
+  color: #4ecdc4;
+  box-shadow: 0px 4px 8px #4ecdc4;
 }
-#flashcard-detail .btn-test{
+#flashcard-detail .btn-test {
   margin-top: 10px;
   margin-left: 30px;
   padding: 10px;
   width: 180px;
-  color: #4ECDC4;
+  color: #4ecdc4;
   font-weight: bold;
-  border: 1px solid #4ECDC4;
+  border: 1px solid #4ecdc4;
   border-radius: 10px;
 }
-#flashcard-detail .btn-test:hover{
+#flashcard-detail .btn-test:hover {
   border-radius: 10px;
-  border: 1px solid #4ECDC4;
-  color: #4ECDC4;
-  box-shadow: 0px 4px 8px #4ECDC4;
+  border: 1px solid #4ecdc4;
+  color: #4ecdc4;
+  box-shadow: 0px 4px 8px #4ecdc4;
 }
-#flashcard-detail .btn-mix{
+#flashcard-detail .btn-mix {
   margin-top: 10px;
   margin-left: 30px;
   padding: 10px;
   width: 180px;
-  color: #4ECDC4;
+  color: #4ecdc4;
   font-weight: bold;
-  border: 1px solid #4ECDC4;
+  border: 1px solid #4ecdc4;
   border-radius: 10px;
 }
-#flashcard-detail .btn-mix:hover{
+#flashcard-detail .btn-mix:hover {
   border-radius: 10px;
-  border: 1px solid #4ECDC4;
-  color: #4ECDC4;
-  box-shadow: 0px 4px 8px #4ECDC4;
+  border: 1px solid #4ecdc4;
+  color: #4ecdc4;
+  box-shadow: 0px 4px 8px #4ecdc4;
 }
-#flashcard-detail .btn-add{
+#flashcard-detail .btn-add {
   margin-top: 10px;
   margin-left: 30px;
   padding: 10px;
   width: 180px;
-  color: #4ECDC4;
+  color: #4ecdc4;
   font-weight: bold;
-  border: 1px solid #4ECDC4;
+  border: 1px solid #4ecdc4;
   border-radius: 10px;
 }
-#flashcard-detail .btn-add:hover{
+#flashcard-detail .btn-add:hover {
   border-radius: 10px;
-  border: 1px solid #4ECDC4;
-  color: #4ECDC4;
-  box-shadow: 0px 4px 8px #4ECDC4;
+  border: 1px solid #4ecdc4;
+  color: #4ecdc4;
+  box-shadow: 0px 4px 8px #4ecdc4;
 }
-#flashcard-detail .boxContent{
+#flashcard-detail .boxContent {
   margin-top: 30px;
   margin-left: 50px;
 }
-#flashcard-detail .boxContent .word{
-  color: #4ECDC4;
+#flashcard-detail .boxContent .word {
+  color: #4ecdc4;
   font-size: 42px;
   padding: 10px 0;
   border-bottom: 2px solid #ccc;
 }
-#flashcard-detail .boxContent .synonym{
+#flashcard-detail .boxContent .synonym {
   font-size: 34px;
   color: #aaa;
   border-bottom: 2px solid #ccc;
   margin-bottom: 10px;
 }
-#flashcard-detail .boxContent .typeWord{
+#flashcard-detail .boxContent .typeWord {
   display: inline;
   font-weight: bold;
   font-size: 24px;
   padding: 5px 10px;
   border-radius: 10px;
-  background: #1A535C;
+  background: #1a535c;
   color: #fff;
 }
-#flashcard-detail .boxContent .btn-memory{
+#flashcard-detail .boxContent .btn-memory {
   display: block;
   padding: 10px 15px;
-  background: #4ECDC4;
-  color:#fff;
+  background: #4ecdc4;
+  color: #fff;
   border-radius: 10px;
   margin-top: 40px;
   margin-left: 200px;
 }
-#flashcard-detail .boxContent .btn-memory:hover{
-  background: #1A535C;
-  box-shadow: 0px 3px 5px #1A535C;
+#flashcard-detail .boxContent .btn-memory:hover {
+  background: #1a535c;
+  box-shadow: 0px 3px 5px #1a535c;
 }
-#flashcard-detail .btn-next{
+#flashcard-detail .btn-next {
   margin-top: 30px;
- background: #999;
- color: #1A535C;
- padding: 20px 10px;
- border-radius: 10px;
+  background: #999;
+  color: #1a535c;
+  padding: 20px 10px;
+  border-radius: 10px;
 }
-#flashcard-detail .btn-next:hover{
-  background: #1A535C;
+#flashcard-detail .btn-next:hover {
+  background: #1a535c;
   color: #fff;
   border-radius: 10px;
 }
-#flashcard-detail .btn-next h5{padding-top: 10px;}
-#flashcard-detail .carousel-control-prev .fa, .carousel-control-next .fa::before{
-  font-size: 24px!important;
-  color: #666!important;
+#flashcard-detail .btn-next h5 {
+  padding-top: 10px;
 }
-#flashcard-detail .boxMemory{
+#flashcard-detail .carousel-control-prev .fa,
+.carousel-control-next .fa::before {
+  font-size: 24px !important;
+  color: #666 !important;
+}
+#flashcard-detail .boxMemory {
   margin-left: 90px;
   padding-top: 30px;
   text-align: center;
@@ -1638,16 +1643,16 @@ ul[class^=ring] li {
   width: 50%;
   height: 180px;
 }
-#flashcard-detail .boxMemory i{
+#flashcard-detail .boxMemory i {
   font-size: 70px;
   color: #999;
 }
-#flashcard-detail .boxMemory .content{
+#flashcard-detail .boxMemory .content {
   color: #ccc;
   font-size: 24px;
   font-weight: bold;
 }
-#flashcard-detail .cardMemory{
+#flashcard-detail .cardMemory {
   margin-left: 90px;
   width: 50%;
   height: 220px;
@@ -1656,58 +1661,58 @@ ul[class^=ring] li {
   padding: 10px;
   text-align: center;
 }
-#flashcard-detail .cardMemory:hover{
+#flashcard-detail .cardMemory:hover {
   border-radius: 10px;
-  border: 1px solid #4ECDC4;
-  box-shadow: 0px 5px 10px #4ECDC4;
+  border: 1px solid #4ecdc4;
+  box-shadow: 0px 5px 10px #4ecdc4;
 }
-#flashcard-detail .cardMemory .imageMemory{
+#flashcard-detail .cardMemory .imageMemory {
   width: 250px;
   height: 150px;
 }
 /* ---------------------------------Learn--------------------------------- */
 /* --------------------------------------------------------------------------- */
-#learn .btn-listQuestion{
+#learn .btn-listQuestion {
   float: right;
   margin-top: 30px;
   color: #116eee;
   font-style: italic;
   font-size: 18px;
 }
-#learn .boxContent{
+#learn .boxContent {
   float: left;
   width: 100%;
 }
-#learn .btn-listQuestion:hover{
+#learn .btn-listQuestion:hover {
   color: #0a428f;
   text-decoration-line: underline;
 }
-#learn .boxContent .titleQuestion{
+#learn .boxContent .titleQuestion {
   display: flex;
   margin-top: 30px;
 }
-#learn .boxContent .titleQuestion img{
+#learn .boxContent .titleQuestion img {
   margin-right: 15px;
   width: 32px;
   height: 32px;
 }
-#learn .boxContent .titleQuestion .title{
+#learn .boxContent .titleQuestion .title {
   font-size: 24px;
 }
-#learn .boxContent .answerQuestion{
+#learn .boxContent .answerQuestion {
   min-height: 310px;
   margin-top: 20px;
 }
-#learn .boxContent .answerQuestion .itemAnswer .radioAnswer{
+#learn .boxContent .answerQuestion .itemAnswer .radioAnswer {
   width: 24px;
   height: 24px;
   margin-top: 20px;
 }
-#learn .boxContent .answerQuestion .itemAnswer .answer{
+#learn .boxContent .answerQuestion .itemAnswer .answer {
   font-size: 21px;
   margin-top: 15px;
 }
-#learn .boxContent .btn-check{
+#learn .boxContent .btn-check {
   padding: 5px 15px;
   background: #116eee;
   color: #fff;
@@ -1715,7 +1720,7 @@ ul[class^=ring] li {
   float: right;
   margin-bottom: 20px;
 }
-#learn .boxContent .btn-continue{
+#learn .boxContent .btn-continue {
   float: right;
   padding: 5px 15px;
   background: #116eee;
@@ -1723,11 +1728,11 @@ ul[class^=ring] li {
   font-size: 16px;
   margin-bottom: 20px;
 }
-#learn .boxContent .answerQuestion .check{
+#learn .boxContent .answerQuestion .check {
   margin-top: -15px;
   margin-right: 10px;
 }
-#learn .boxContent .boxNotifyIncorrect{
+#learn .boxContent .boxNotifyIncorrect {
   width: 450px;
   height: 100px;
   border-top-right-radius: 15px;
@@ -1736,20 +1741,20 @@ ul[class^=ring] li {
   margin-left: 25%;
   margin-top: 20px;
 }
-#learn .boxContent .boxNotifyIncorrect .title{
+#learn .boxContent .boxNotifyIncorrect .title {
   padding: 10px 20px;
-  background: #F82E2E;
+  background: #f82e2e;
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
   color: #fff;
   font-size: 16px;
 }
-#learn .boxContent .boxNotifyIncorrect .content{
+#learn .boxContent .boxNotifyIncorrect .content {
   padding: 10px 20px;
   font-size: 16px;
   color: #333;
 }
-#learn .boxContent .boxNotifyCorrect{
+#learn .boxContent .boxNotifyCorrect {
   width: 450px;
   height: 100px;
   border-top-right-radius: 15px;
@@ -1758,7 +1763,7 @@ ul[class^=ring] li {
   margin-left: 25%;
   margin-top: 20px;
 }
-#learn .boxContent .boxNotifyCorrect .title{
+#learn .boxContent .boxNotifyCorrect .title {
   padding: 10px 20px;
   background: #116eee;
   border-top-right-radius: 15px;
@@ -1766,12 +1771,12 @@ ul[class^=ring] li {
   color: #fff;
   font-size: 16px;
 }
-#learn .boxContent .boxNotifyCorrect .content{
+#learn .boxContent .boxNotifyCorrect .content {
   padding: 10px 20px;
   font-size: 16px;
   color: #333;
 }
-#learn .boxContent .answerQuestionMatchWord{
+#learn .boxContent .answerQuestionMatchWord {
   /* max-height: 310px; */
   min-height: 310px;
   margin-top: 20px;
@@ -1786,13 +1791,13 @@ ul[class^=ring] li {
   background: #116eee;
   margin-bottom: 10px;
 }
-#learn .boxContent .answerQuestionMatchWord .boxWord .word{
+#learn .boxContent .answerQuestionMatchWord .boxWord .word {
   font-size: 18px;
   padding-left: 10%;
   padding-top: 2%;
   color: #fff;
 }
-#learn .boxContent .answerQuestionMatchWord .boxWord .answer{
+#learn .boxContent .answerQuestionMatchWord .boxWord .answer {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -1801,80 +1806,80 @@ ul[class^=ring] li {
   margin-left: 30%;
   font-size: 18px;
 }
-#learn .boxContent .answerQuestionMatchWord .boxWord .titleAnswer{
+#learn .boxContent .answerQuestionMatchWord .boxWord .titleAnswer {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   font-size: 18px;
   background: #fff;
 }
-#learn .boxContent .answerQuestionMatchWord .boxWord .titleAnswer li{
+#learn .boxContent .answerQuestionMatchWord .boxWord .titleAnswer li {
   margin-left: 85%;
-  padding-top:10%;
+  padding-top: 10%;
 }
- .modal-content {
+.modal-content {
   font-size: 16px;
 }
-.modal-header .question{
+.modal-header .question {
   text-align: left;
   width: 500px;
 }
-.modal-header .achieved{
+.modal-header .achieved {
   text-align: left;
   width: 180px;
 }
-.modal-header .point{
+.modal-header .point {
   text-align: left;
   width: 80px;
 }
-.modal-header .result{
+.modal-header .result {
   width: 100px;
 }
-.modal-header{
+.modal-header {
   background: #116eee;
   color: #fff;
 
 }
-.modal-title .title{
+.modal-title .title {
   color: #0a428f;
   color: 16px;
 }
-.modal-body .question{
+.modal-body .question {
   text-align: left;
-  width:50%;
+  width: 50%;
   padding-bottom: 10px;
   padding-top: 10px;
 }
-.modal-body .achieved{
+.modal-body .achieved {
   width: 160px;
   padding-left: 55px;
 }
-.modal-body .point{
+.modal-body .point {
   width: 100px;
   padding-left: 25px;
 }
-.modal-body .result{
+.modal-body .result {
   width: 100px;
   padding-left: 10px;
 }
-.modal-body tr{
+.modal-body tr {
   color: #333;
   width: 100%;
   border-bottom: 2px solid #ccc;
 }
-.modal-body tr:hover{
+.modal-body tr:hover {
   border-bottom: 2px solid #ccc;
   background-color: #116eee;
   color: #fff;
 }
 /* --------------------------------Learn Hình ảnh----------------------------- */
 /* --------------------------------------------------------------------------- */
-#learn .boxContent .answerQuestionImage{
+#learn .boxContent .answerQuestionImage {
   min-height: 320px;
 }
-#learn .boxContent .answerQuestionImage .itemAnswer{
+#learn .boxContent .answerQuestionImage .itemAnswer {
   background-color: #fff;
-  padding:20px;
+  padding: 20px;
   border-radius: 20px;
   height: 100%;
   text-align: center;
@@ -1886,20 +1891,18 @@ ul[class^=ring] li {
 #learn .boxContent .answerQuestionImage .itemAnswer .radioAnswer {
   text-align: right;
 }
-#learn .boxContent .answerQuestionImage .backgroundChoose{
-  background-color: #DDF4FF;
-  border: 2px solid #9ADFFF;
-
+#learn .boxContent .answerQuestionImage .backgroundChoose {
+  background-color: #ddf4ff;
+  border: 2px solid #9adfff;
 }
-#learn .boxContent .answerQuestionImage .itemAnswer:hover{
-  background-color: #DDF4FF;
-  border: 2px solid #9ADFFF;
-
+#learn .boxContent .answerQuestionImage .itemAnswer:hover {
+  background-color: #ddf4ff;
+  border: 2px solid #9adfff;
 }
-#learn .boxContent .answerQuestionImage .itemAnswer img{
+#learn .boxContent .answerQuestionImage .itemAnswer img {
   width: 100%;
 }
-#learn .boxContent .answerQuestionImage .itemAnswer .radioAnswer{
+#learn .boxContent .answerQuestionImage .itemAnswer .radioAnswer {
   width: 18px;
   height: 18px;
   margin-top: 5px;
@@ -1907,23 +1910,23 @@ ul[class^=ring] li {
 
 /* --------------------------------Learn Sắp Xếp----------------------------- */
 /* --------------------------------------------------------------------------- */
-#learn .boxContent .titleQuestionSort{
+#learn .boxContent .titleQuestionSort {
   display: flex;
 }
-#learn .boxContent .titleQuestionSort .title{
+#learn .boxContent .titleQuestionSort .title {
   height: 100%;
   font-size: 18px;
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 10px 20px;
 }
-#learn .boxContent .mt-7{
+#learn .boxContent .mt-7 {
   margin-top: 70px;
 }
-#learn .boxContent .answerQuestionSort{
+#learn .boxContent .answerQuestionSort {
   min-height: 220px;
 }
-#learn .boxContent .answerQuestionSort .box{
+#learn .boxContent .answerQuestionSort .box {
   margin-left: 7%;
   margin-top: 15px;
   width: 83%;
@@ -1932,12 +1935,12 @@ ul[class^=ring] li {
   border: 2px solid #ccc;
   background: #fff;
 }
-#learn .boxContent .answerQuestionSort .boxAnswer{
+#learn .boxContent .answerQuestionSort .boxAnswer {
   margin: 1% 7%;
   flex-wrap: wrap;
   display: flex;
 }
-#learn .boxContent .answerQuestionSort .itemAnswer{
+#learn .boxContent .answerQuestionSort .itemAnswer {
   display: inline;
   padding: 5px 15px;
   border: 1px solid #ccc;
@@ -1948,12 +1951,12 @@ ul[class^=ring] li {
   margin-top: 10px;
   cursor: pointer;
 }
-#learn .boxContent .keyboard{
+#learn .boxContent .keyboard {
   font-size: 18px;
   cursor: pointer;
   margin-top: 10px;
 }
-#learn .boxContent .useKeyBoard{
+#learn .boxContent .useKeyBoard {
   margin-left: 7%;
   margin-top: 15px;
   width: 83%;
@@ -1962,9 +1965,8 @@ ul[class^=ring] li {
   border: 2px solid #ccc;
   padding: 10px;
 }
-#learn .boxContent .boxKeyBoard{
+#learn .boxContent .boxKeyBoard {
   height: 230px;
-
 }
 /* ---------------------------------Thêm bài viết----------------------------- */
 /* --------------------------------------------------------------------------- */
@@ -2777,7 +2779,7 @@ ul[class^=ring] li {
   color: #fff;
 }
 /* QUIZ - WORD */
-#quiz .main .content .listWord{
+#quiz .main .content .listWord {
   min-height: 300px;
   max-height: 300px;
   overflow-y: auto;
@@ -2786,7 +2788,7 @@ ul[class^=ring] li {
 #quiz .main .functionQuestionWord{
   margin-top: 10%;
 }
-#quiz .main .functionQuestionWord .btn-add:hover{
+#quiz .main .functionQuestionWord .btn-add:hover {
   background: #0a428f;
 }
 #quiz .main .functionQuestionWord .btn-add {
@@ -2798,13 +2800,13 @@ ul[class^=ring] li {
   font-weight: 400;
   font-size: 16px;
 }
-#quiz .main .functionQuestionWord .fa-plus::before{
+#quiz .main .functionQuestionWord .fa-plus::before {
   padding-right: 10px;
 }
-#quiz .main .functionQuestionWord .fa-trash-o::before{
+#quiz .main .functionQuestionWord .fa-trash-o::before {
   padding-right: 10px;
 }
-#quiz .main .functionQuestionWord .btn-danger{
+#quiz .main .functionQuestionWord .btn-danger {
   font-size: 16px;
   padding: 10px;
 }
@@ -2823,18 +2825,18 @@ ul[class^=ring] li {
   padding: 10px;
   margin-bottom: 5px;
 }
-#quiz .main .item-questionWord .cardActive{
+#quiz .main .item-questionWord .cardActive {
   background-color: #ccf1ed;
   padding: 10px;
   margin-bottom: 5px;
 }
 #quiz .main .item-questionWord .order {
-  color: #1A535C;
+  color: #1a535c;
   font-weight: bold;
   font-style: italic;
   display: flex;
 }
-#quiz .main .item-questionWord .order li{
+#quiz .main .item-questionWord .order li {
   margin-left: 20px;
 }
 #quiz .main .item-questionWord .card-body {
@@ -2872,7 +2874,7 @@ ul[class^=ring] li {
   cursor: pointer;
 }
 /* -------------------------------QUẢN LÝ QUIZ - EXAM-------------------------- */
-#quiz{
+#quiz {
   width: 100%;
   height: 100vh;
 }
@@ -2977,7 +2979,7 @@ ul[class^=ring] li {
   padding: 10px;
   margin-bottom: 5px;
 }
-#quiz .main .item-question .cardActive{
+#quiz .main .item-question .cardActive {
   background-color: #ccf1ed;
   padding: 10px;
   margin-bottom: 5px;
@@ -2989,12 +2991,12 @@ ul[class^=ring] li {
   background-color: #ccf1ed;
 } */
 #quiz .main .item-question .order {
-  color: #1A535C;
+  color: #1a535c;
   font-weight: bold;
   font-style: italic;
   display: flex;
 }
-#quiz .main .item-question .order li{
+#quiz .main .item-question .order li {
   margin-left: 20px;
 }
 #quiz .main .item-question .card-body {
@@ -3028,13 +3030,13 @@ ul[class^=ring] li {
   font-weight: 400;
   font-size: 16px;
 }
-#quiz .main .functionQuestion .fa-plus::before{
+#quiz .main .functionQuestion .fa-plus::before {
   padding-right: 10px;
 }
-#quiz .main .functionQuestion .fa-trash-o::before{
+#quiz .main .functionQuestion .fa-trash-o::before {
   padding-right: 10px;
 }
-#quiz .main .functionQuestion .btn-danger{
+#quiz .main .functionQuestion .btn-danger {
   font-size: 16px;
   padding: 10px;
 }
@@ -3065,9 +3067,8 @@ ul[class^=ring] li {
   padding-top: 10px;
   padding-bottom: 20px;
   border-bottom: 2px solid #ccc;
- 
 }
-#quiz .main .info-quiz{
+#quiz .main .info-quiz {
   color: #666666;
 }
 #quiz .main .info-question .content .clock {
@@ -3100,7 +3101,7 @@ ul[class^=ring] li {
   text-align: right;
   padding-right: 40px;
 }
-#quiz .main .info-question .functionQuestion .btn-add:hover{
+#quiz .main .info-question .functionQuestion .btn-add:hover {
   background: #0a428f;
 }
 #quiz .main .info-question .functionQuestion .btn-warning {
@@ -3181,7 +3182,7 @@ ul[class^=ring] li {
   outline: none;
   padding-top: 20px;
 }
-#quiz .main .question .titleQuestionToeic{
+#quiz .main .question .titleQuestionToeic {
   text-align: center;
   margin-top: 10px;
   width: 100%;
@@ -3203,7 +3204,7 @@ ul[class^=ring] li {
   height: 230px;
   position: relative;
 }
-#quiz .main .question .display-ImgQuestion{
+#quiz .main .question .display-ImgQuestion {
   width: 230px;
   height: 230px;
 }
@@ -3212,7 +3213,7 @@ ul[class^=ring] li {
   height: 90px;
   position: relative;
 }
- 
+
 #quiz .main .question .display-ImgAnswer {
   width: 100px;
   height: 90px;
@@ -3230,8 +3231,8 @@ ul[class^=ring] li {
 }
 #quiz .main .question .item-answer {
   width: 21px;
- margin-top: 40px;
- margin-right: 5px;
+  margin-top: 40px;
+  margin-right: 5px;
   color: #2ed8b6;
 }
 #quiz .main .question .img-answer {
@@ -3299,7 +3300,7 @@ ul[class^=ring] li {
   padding: 10px 5px;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0px 2px 4px #4ECDC4;
+  box-shadow: 0px 2px 4px #4ecdc4;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -3316,7 +3317,7 @@ ul[class^=ring] li {
   margin-left: 5px;
   margin-top: 20px;
 }
-#quiz .main .question .itemAnswer .exitThree{
+#quiz .main .question .itemAnswer .exitThree {
   margin-top: 25px;
   margin-right: 30px;
   margin-left: -15px;
@@ -3380,10 +3381,10 @@ ul[class^=ring] li {
   margin-left: -10px;
   margin-top: 3px;
 }
-#quiz .main .question .itemAnswer .exit{
+#quiz .main .question .itemAnswer .exit {
   margin-left: -15px;
 }
-#quiz .main .question .itemAnswer .exit img{
+#quiz .main .question .itemAnswer .exit img {
   margin-top: -3px;
 }
 #quiz .main .question .itemAnswer .radioAnswerFile {
@@ -3397,7 +3398,7 @@ ul[class^=ring] li {
   margin-top: 2%;
   margin-left: 40%;
 }
-#quiz .main .question .fa-plus::before{
+#quiz .main .question .fa-plus::before {
   padding-right: 10px;
 }
 #quiz .main .question .btn-addAnswer {
@@ -3439,8 +3440,8 @@ ul[class^=ring] li {
   width: 150px;
   font-size: 14px;
 }
-#quiz .main .question .boxWord .words input{
-  width: 60px!important;
+#quiz .main .question .boxWord .words input {
+  width: 60px !important;
 }
 #quiz .main .question .boxWord ::placeholder {
   color: #666;
@@ -3461,18 +3462,18 @@ ul[class^=ring] li {
 }
 
 /* WORD */
-#wrapper .word .border-left{
+#wrapper .word .border-left {
   margin-top: 10px;
   margin-left: -30px;
   padding-left: 50px;
-  border-left: 2px solid #fff!important;
+  border-left: 2px solid #fff !important;
 }
-#wrapper .word .content label{
+#wrapper .word .content label {
   display: inline;
   font-size: 16px;
   color: #666;
 }
-#wrapper .word .content input{
+#wrapper .word .content input {
   background-color: #fff;
   color: #444;
   padding-left: 15px;
@@ -3498,26 +3499,26 @@ ul[class^=ring] li {
   position: relative;
   margin-bottom: 10px;
 }
-#wrapper .word .content .vocabulary{
+#wrapper .word .content .vocabulary {
   margin: 2rem 0 1rem 0;
 }
-#wrapper .word .content .typeOfWord{
+#wrapper .word .content .typeOfWord {
   margin-bottom: 1rem;
 }
-#wrapper .word .content .topic{
+#wrapper .word .content .topic {
   margin-bottom: 1rem;
 }
-#wrapper .word .content .synonym{
+#wrapper .word .content .synonym {
   margin-bottom: 1rem;
 }
-#wrapper .word .content .mean{
+#wrapper .word .content .mean {
   margin-bottom: 1rem;
 }
-#wrapper .word .content .function{
+#wrapper .word .content .function {
   margin-left: 0px;
   margin-top: 20px;
 }
-#wrapper .word .content .function .save{
+#wrapper .word .content .function .save {
   padding: 8px 15px;
   background: #116eee;
   color: #fff;
@@ -3526,23 +3527,23 @@ ul[class^=ring] li {
   margin-right: 30px;
   margin-left: -10px;
 }
-#wrapper .word .content .function .save:hover{
+#wrapper .word .content .function .save:hover {
   background: #0a428f;
 }
-#wrapper .word .content .function .reset{
+#wrapper .word .content .function .reset {
   padding: 8px 15px;
   background: #116eee;
   color: #fff;
   font-size: 16px;
   border-radius: 5px;
 }
-#wrapper .word .content .function .reset:hover{
+#wrapper .word .content .function .reset:hover {
   background: #0a428f;
 }
-#wrapper .word .titleMemory{
+#wrapper .word .titleMemory {
   color: #116eee;
 }
-#wrapper .word .content .fileMemory label{
+#wrapper .word .content .fileMemory label {
   display: table;
   color: #999;
   font-size: 16px;
@@ -3554,7 +3555,7 @@ ul[class^=ring] li {
   border-radius: 5px;
   margin-top: 20px;
 }
-#wrapper .word .content textarea{
+#wrapper .word .content textarea {
   padding: 8px 10px;
   width: 300px;
   height: 80px;
@@ -3564,22 +3565,22 @@ ul[class^=ring] li {
 #wrapper .word .content input[type="file"] {
   display: none;
 }
-#wrapper .word .content .function .createMemory{
+#wrapper .word .content .function .createMemory {
   width: 300px;
   background: #116eee;
   color: #fff;
   height: 40px;
   border-radius: 5px;
 }
-#wrapper .word .content .function .createMemory:hover{
+#wrapper .word .content .function .createMemory:hover {
   background: #0a428f;
 }
-#wrapper .word .boxMemory .content{
+#wrapper .word .boxMemory .content {
   color: #ccc;
   font-size: 16px;
   font-weight: bold;
 }
-#wrapper .word .cardMemory{
+#wrapper .word .cardMemory {
   margin-top: 20px;
   width: 250px;
   height: 160px;
@@ -3589,46 +3590,46 @@ ul[class^=ring] li {
   text-align: center;
   margin-left: 22px;
 }
-#wrapper .word .cardMemory:hover{
+#wrapper .word .cardMemory:hover {
   border-radius: 10px;
   border: 1px solid #116eee;
   box-shadow: 0px 5px 10px #116eee;
 }
-#wrapper .word .contentMemory{
+#wrapper .word .contentMemory {
   font-size: 13px;
 }
-#wrapper .word .cardMemory .imageMemory{
+#wrapper .word .cardMemory .imageMemory {
   width: 150px;
   height: 80px;
 }
-#wrapper .word .carousel-inner .carousel-control-prev{
+#wrapper .word .carousel-inner .carousel-control-prev {
   margin-left: -20px;
   color: #666;
 }
-#wrapper .word .carousel-inner .carousel-control-next{
+#wrapper .word .carousel-inner .carousel-control-next {
   color: #666;
 }
 
-#wrapper .word .p-LeftRight{
+#wrapper .word .p-LeftRight {
   padding-left: 50px;
   padding-right: 30px;
 }
-#wrapper .ql_word .table a{
-  height: 0px!important;
+#wrapper .ql_word .table a {
+  height: 0px !important;
   color: #fff;
 }
-#wrapper .ql_word .table a:hover{
+#wrapper .ql_word .table a:hover {
   color: #fff;
 }
-#wrapper .ql_quiz .table a{
-  height: 0px!important;
+#wrapper .ql_quiz .table a {
+  height: 0px !important;
   color: #fff;
 }
-#wrapper .ql_quiz .table a:hover{
+#wrapper .ql_quiz .table a:hover {
   color: #fff;
 }
-.nav-tabs .nav-link.active{
-  color: #116eee!important;
+.nav-tabs .nav-link.active {
+  color: #116eee !important;
 }
 /* HOME */
 #home .boxLesson {
@@ -3636,8 +3637,7 @@ ul[class^=ring] li {
   border-radius:8px;
   box-shadow: 0 0.125rem 0.5625rem -0.3125rem #d6dee6;
 }
-#home .boxLesson .headerLesson
-{
+#home .boxLesson .headerLesson {
   position: relative;
   overflow: hidden;
   display: flex;
@@ -3650,75 +3650,71 @@ ul[class^=ring] li {
   width: 100%;
   z-index: 1;
 }
-#home .boxLesson .collapse{
+#home .boxLesson .collapse {
   z-index: 2;
 }
-#home .boxLesson .headerLesson .iconLesson{
+#home .boxLesson .headerLesson .iconLesson {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
- width: 100%;
- height: 100%;
+  width: 100%;
+  height: 100%;
   flex: 0 0 auto;
 }
-#home .boxLesson .headerLesson .iconLesson img{
+#home .boxLesson .headerLesson .iconLesson img {
   border-radius: 50%;
 }
-#home .boxLesson .contentLesson{
+#home .boxLesson .contentLesson {
   padding: 0 1.25rem;
   flex: 1;
 }
-#home .boxLesson .contentLesson .title
-{
+#home .boxLesson .contentLesson .title {
   font-size: 1.125rem;
   line-height: 1.7;
   color: #252b2f;
   font-weight: 600;
 }
-#home .boxLesson .contentLesson .description
-{
-  font-size: .875rem;
-    line-height: 1.7;
-    color: #252b2f;
+#home .boxLesson .contentLesson .description {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #252b2f;
 }
-#home .boxLesson .progressLesson
-{
+#home .boxLesson .progressLesson {
   display: flex;
   align-items: center;
   flex: 1;
   width: 100%;
 }
-#home .boxLesson .progressLesson .textProgress{
+#home .boxLesson .progressLesson .textProgress {
   display: block;
   flex: 0 0 auto;
   width: 2.8125rem;
-  padding-left: .3125rem;
+  padding-left: 0.3125rem;
   text-align: right;
   color: #666e7e;
   font-weight: 800;
-  font-size: .875rem;
+  font-size: 0.875rem;
   line-height: 1.7;
 }
-#home .row{
-  margin-left: 0px!important;
-  margin-right: 0px!important;
+#home .row {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
 }
-#home .boxLesson .collapse .cardCollapse{
+#home .boxLesson .collapse .cardCollapse {
   background-color: #fff;
   padding: 1rem;
   /*  */
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   margin-top: -3px;
-  border-top: 1px solid #f2f7fd
+  border-top: 1px solid #f2f7fd;
 }
-#home .boxLesson .collapse .contentCollapse{
+#home .boxLesson .collapse .cardCollapse .contentCollapse {
   padding-left: 2.1rem;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-
 /*  */
 #danhsachthongbao .title{
   margin-top: 20px;

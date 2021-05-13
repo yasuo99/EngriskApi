@@ -17,7 +17,7 @@ class Exam extends Component {
             exams: [],
             params: {
                 currentPage: 1,
-                pageSize: 4
+                pageSize: 5
             },
             hasMore: true,
             histories: []
@@ -143,8 +143,7 @@ class Exam extends Component {
                                                 </p>
                                             }
                                             height={500}
-                                        >{renderExam}
-                                        </InfiniteScroll>}
+                                        >{renderExam}</InfiniteScroll>}
                                     </div>
                                 </div>
                             </div>
