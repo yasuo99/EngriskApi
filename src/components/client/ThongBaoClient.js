@@ -26,20 +26,24 @@ class ThongBaoClient extends Component {
     this.isComponentMounted = true;
     if (this.props.isLoggedIn) {
       if (connection.state == signalR.HubConnectionState.Disconnected) {
-        connection.start();
-        connection.on('NewNotification', (data) => {
-          var notification = JSON.parse(data);
-          console.log(notification);
-          if (this.isComponentMounted) {
-            this.setState({
-              notifications: [notification,...this.state.notifications]
-            })
-          }
-        })
+        try {
+          connection.start();
+          connection.on('NewNotification', (data) => {
+            var notification = JSON.parse(data);
+            console.log(notification);
+            if (this.isComponentMounted) {
+              this.setState({
+                notifications: [notification, ...this.state.notifications]
+              })
+            }
+          })
+        }catch{
+          console.log('loi');
+        }
       }
 
     }
-    const result = await this.fetchNotifications(this.props.account.id,this.state.params);
+    const result = await this.fetchNotifications(this.props.account.id, this.state.params);
     console.log(result);
     if (this.isComponentMounted) {
       if (result) {

@@ -6,6 +6,13 @@ import HeaderAdmin from "../../components/admin/HeaderAdmin";
 import { Button } from "react-bootstrap";
 
 class ManagementQuiz_Exam extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            exams: [],
+            quizzes: []
+        }
+    }
     render() {
         return (
             <div>
@@ -38,7 +45,7 @@ class ManagementQuiz_Exam extends Component {
                                                         <td>Quiz</td>
                                                         <td>Bài kiểm tra số 1</td>
                                                         <td>Kiểm tra nội dung về chủ đề gia đình</td>
-                                                        <td>2</td>
+                                                        <td>Dễ</td>
                                                         <td>
                                                             <Button variant="primary" className="btn btn-add mr-2" ><Link to='/quiz_exam' className="fa fa-plus"></Link></Button>
                                                             <Button variant="primary" className="btn btn-edit mr-2" ><Link to='/' className="fa fa-edit"></Link></Button>

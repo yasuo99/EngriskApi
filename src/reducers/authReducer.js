@@ -35,7 +35,7 @@ const authReducer = (state = initialState(), action) => {
 
   switch (action.type) {
     case "SIGN_IN": {
-      toast("Xin chào bạn đã đến với website");
+      toast("Xin chào bạn đã đến với website", {type: 'info'});
       return {
         ...state,
         isLoggedIn: true,
@@ -44,7 +44,7 @@ const authReducer = (state = initialState(), action) => {
       };
     }
     case "SIGN_IN_ERR": {
-      toast("Tài khoản hoặc mật khẩu không đúng");
+      toast("Tài khoản hoặc mật khẩu không đúng",{type: 'error'});
       return state;
     }
     case "SIGN_IN_ERR_PASS": {
@@ -52,12 +52,12 @@ const authReducer = (state = initialState(), action) => {
       return state;
     }
     case "SIGN_IN_ERR_EMAIL": {
-      toast("Tài khoản không tồn tại")
+      toast("Tài khoản không tồn tại", {type: 'error'})
       return state;
     }
     case "SIGN_UP": {
       toast("Đăng ký thành công");
-      toast("Xin chào bạn đã đến với website");
+      toast("Xin chào bạn đã đến với website",{type: 'success'});
       return state;
     }
     case "SIGN_UP_ERR": {
@@ -65,7 +65,7 @@ const authReducer = (state = initialState(), action) => {
       return state;
     }
     case "SIGN_UP_ERR_EMAIL": {
-      return { authError_Email: 'Email đã được đăng ký' }
+      return { authError_Email: 'Email đã được đăng ký'}
     }
     case "SIGN_UP_ERR_PASS": {
       return { authError_Pass: 'Mật khẩu xác nhận không đúng' }

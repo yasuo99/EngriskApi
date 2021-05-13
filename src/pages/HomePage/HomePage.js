@@ -16,21 +16,16 @@ class HomePage extends PureComponent {
       sections: [],
       params: {
         currentPage: 1,
-        pageSize: 4
+        pageSize: 10
       },
       hasMore: true
     };
     this.isComponentMounted = false;
   }
   async componentDidMount() {
+    console.log(this.state.params);
     this.isComponentMounted = true;
     const result = await this.fetchSections(this.state.params, this.props.isLoggedIn);
-    console.log(result);
-    if (result.length < 4) {
-      this.setState({
-        hasMore: false
-      })
-    }
     if (this.isComponentMounted) {
       if (connection.state == HubConnectionState.Disconnected) {
         connection.start();

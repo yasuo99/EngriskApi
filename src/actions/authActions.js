@@ -36,6 +36,7 @@ export const signIn = (user) => {
         const url = "/accounts/login";
         axiosClient.post(url, user)
             .then(res => {
+                console.log(res);
                 if (res) {
                     localStorage.setItem('account', JSON.stringify(res.account));
                     localStorage.setItem('token', res.token);
@@ -55,10 +56,13 @@ export const signIn = (user) => {
                 // } 
                 // console.log("a");
                 // return(dispatch({ type: "SIGN_IN_ERR_EMAIL" }))
-            }, error => {
-                toast(error.response.data.error)
             }).catch((error) => {
-                console.log(error.response.data.error);
+                if(error.response.status == 401){
+                    toast(error.response.data.error, {type: 'error'});
+                }
+                if(error.response.status == 400){
+                    return(dispatch({ type: "SIGN_IN_ERR"}))
+                }
             });
     };
 }
