@@ -138,8 +138,8 @@ p {
 #wrapper .chude{
   width: 200px;
 }
-#wrapper .tudongnghia{
-  width: 200px;
+#wrapper .nghia{
+  width: 150px;
 }
 #wrapper .tudongnghia{
   width: 150px;
@@ -1833,6 +1833,7 @@ ul[class^=ring] li {
 .modal-header{
   background: #116eee;
   color: #fff;
+
 }
 .modal-title .title{
   color: #0a428f;
@@ -2195,8 +2196,9 @@ ul[class^=ring] li {
   border: 1px solid #cfcece;
 }
 .modal-content {
-  width: 700px !important;
-  margin-left: -50px;
+  width: 900px !important;
+  margin-top: 100px;
+  margin-left: -150px;
 }
 .modal .card-input input {
   width: 100%;
@@ -2399,12 +2401,12 @@ ul[class^=ring] li {
   background-color: #068ce1;
   color: #fff;
 }
-
+/* 
 #danhsachthongbao .boxInfor {
   padding: 10px;
   box-shadow: 3px 3px 3px #a9cef5;
   border-radius: 10px;
-}
+} */
 
 .toggle.ios,
 .toggle-on.ios,
@@ -2782,7 +2784,7 @@ ul[class^=ring] li {
   overflow-x: hidden;
 }
 #quiz .main .functionQuestionWord{
-  margin-top: 20%;
+  margin-top: 10%;
 }
 #quiz .main .functionQuestionWord .btn-add:hover{
   background: #0a428f;
@@ -2807,10 +2809,15 @@ ul[class^=ring] li {
   padding: 10px;
 }
 #quiz .main .item-questionWord {
-  height: 290px;
+  height: 300px;
   margin-top: 10px;
   padding: 5px;
-  overflow-y: scroll;
+}
+#quiz .main .carousel-inner .fa-chevron-right::before{
+  font-size: 16px!important;
+}
+#quiz .main .carousel-inner .carousel-control-prev{
+  color: #666;
 }
 #quiz .main .item-questionWord .card {
   padding: 10px;
@@ -2961,7 +2968,7 @@ ul[class^=ring] li {
   color: #fac106;
 }
 #quiz .main .item-question {
-  height: 220px;
+  height: 48%;
   margin-top: 10px;
   padding: 5px;
   overflow-y: scroll;
@@ -3048,6 +3055,11 @@ ul[class^=ring] li {
 }
 #quiz .main .kedoc {
   border-right: 2px solid #ccc;
+  height: 94vh;
+  position: relative;
+}
+#quiz .main .kedoc-2 {
+  border-right: 2px solid #ccc;
 }
 #quiz .main .info-question .content .type {
   padding-top: 10px;
@@ -3079,8 +3091,14 @@ ul[class^=ring] li {
   border-bottom: 2px dotted #ccc;
 }
 #quiz .main .info-question .functionQuestion {
-  margin-top: 90%;
   font-size: 14px;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+#quiz .main .info-question .functionQuestion .f-add{
+  text-align: right;
+  padding-right: 40px;
 }
 #quiz .main .info-question .functionQuestion .btn-add:hover{
   background: #0a428f;
@@ -3260,17 +3278,17 @@ ul[class^=ring] li {
   outline: none;
 }
 #quiz .main .question .answerHinhAnh {
-  height: 180px;
+  height: 40vh;
   overflow: auto;
   padding-bottom: 10px;
 }
 #quiz .main .question .answerText {
-  height: 400px;
+  height: 70vh;
   overflow: auto;
   padding-bottom: 10px;
 }
 #quiz .main .question .answerSort .answerText {
-  height: 280px;
+  height: 50vh;
   overflow: auto;
   padding-bottom: 10px;
 }
@@ -3614,7 +3632,7 @@ ul[class^=ring] li {
 }
 /* HOME */
 #home .boxLesson {
-  padding-top: 1.25rem;
+  margin-top: 1.25rem;
   border-radius:8px;
   box-shadow: 0 0.125rem 0.5625rem -0.3125rem #d6dee6;
 }
@@ -3699,4 +3717,127 @@ ul[class^=ring] li {
   padding-left: 2.1rem;
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+/*  */
+#danhsachthongbao .title{
+  margin-top: 20px;
+}
+#danhsachthongbao .boxInfor {
+  margin-top: 1.25rem;
+  border-radius:8px;
+  box-shadow: 0 0.125rem 0.5625rem -0.3125rem #d6dee6;
+}
+#danhsachthongbao .boxInfor .header
+{
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  pointer-events: none;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 100%;
+  z-index: 1;
+}
+#danhsachthongbao .boxInfor .collapse{
+  z-index: 2;
+}
+#danhsachthongbao .boxInfor .header .avatar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+#danhsachthongbao .boxInfor .header img{
+  border-radius: 50%;
+}
+#danhsachthongbao .boxInfor .content{
+  padding: 0 1.25rem;
+  flex: 1;
+}
+#danhsachthongbao .boxInfor .content .dataInfo
+{
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #252b2f;
+  font-weight: 600;
+}
+#danhsachthongbao .row{
+  margin-left: 0px!important;
+  margin-right: 0px!important;
+}
+#danhsachthongbao .boxInfor .collapse .cardCollapse{
+  background-color: #fff;
+  padding: 1rem;
+  /*  */
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-top: -3px;
+  border-top: 1px solid #f2f7fd
+}
+#danhsachthongbao .boxInfor .collapse .contentCollapse{
+  padding-left: 2.1rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/*  */
+.form-group .search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.form-group .searchFollowingPost {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-right: none;
+  padding: 5px;
+  height: 35px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #666;
+}
+
+.form-group .searchFollowingPost:focus{
+  color: #666
+}
+
+.form-group .searchButton {
+  width: 40px;
+  height: 35px;
+  border: 1px solid #116eee;
+  background: #116eee;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+.form-group span{
+  color: #252b2f;
+}
+.form-group .titleInfo{
+  font-size: 18px;
+  color: #116eee;
+}
+.form-group .titleAccount{
+  color: #116eee;
+  margin-top: 10px;
+  font-size: 16px;
+}
+.form-group .boxAccount{
+  min-height: 250px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.form-group .boxAccount p{
+  font-size: 16px;
 }

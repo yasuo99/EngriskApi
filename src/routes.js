@@ -54,6 +54,8 @@ import Progress from './pages/Progress/Progress';
 import Quiz_Exam from "./components/managementquiz_exam/Quiz_Exam";
 import Word from './components/managementwords/Words';
 import Quiz_Word from './components/managementquiz_exam/Quiz_Word';
+import QuizExam_User from './components/managementquiz_exam/QuizExam_User';
+import QuizExamPage from './pages/QuizExamPage/QuizExamPage';
 const routes = [
     {
         path: '/home',
@@ -255,8 +257,8 @@ const routes = [
         path: '/thongbao',
         exact: true,
         main: () => <DanhSachThongBao />,
-        guard: true,
-        roles: []
+        // guard: true,
+        // roles: []
     },
     {
         path: '/quenmatkhau',
@@ -323,6 +325,27 @@ const routes = [
         roles: []
     },
     {
+        path: '/user/quanly-quiz_exam',
+        exact: true,
+        main: () => <QuizExamPage />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
+        path: '/user/quiz_exam',
+        exact: true,
+        main: () => <QuizExam_User />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
+        path: '/user-quiz_exam',
+        exact: true,
+        main: () => <QuizExamPage />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
         path: '/admin',
         exact: true,
         main: () => <Admin />,
@@ -354,8 +377,8 @@ const routes = [
         path: '/quanly-thongbao',
         exact: true,
         main: () => <ManagementInfor />,
-        guard: true,
-        roles: ["superadmin", "manager"]
+        // guard: true,
+        // roles: ["superadmin", "manager"]
     },
     {
         path: '/quanly-tailieu',

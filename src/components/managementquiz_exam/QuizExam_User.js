@@ -139,7 +139,7 @@ class Thumb_Answer extends React.Component {
         );
     }
 }
-class Quiz_Exam extends Component {
+class QuizExam_User extends Component {
 
     constructor(props) {
         super(props);
@@ -468,11 +468,13 @@ class Quiz_Exam extends Component {
 
         return (
             <div id="wrapper">
+                <SubMenuClient></SubMenuClient>
                  <div id="content-wrapper" className="d-flex flex-column">
-                {/* <SubMenuClient></SubMenuClient> */}
+                
                 <div id="quiz">
                    
-                        <div id="content"> <HeaderClient></HeaderClient>
+                        <div id="content"> 
+                        <HeaderClient></HeaderClient>
                             {/* header: bắt đầu */}
 
                             {/* header: kết thúc */}
@@ -1098,19 +1100,22 @@ class Quiz_Exam extends Component {
                                                                             </Field>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="row functionQuestion">
-                                                                        <div className="col-md-6 ">
+                                                                    <div className="functionQuestion">
+                                                                    <div className="row">
+                                                                        <div className="col-md-5 ">
                                                                             <button type="reset" className="btn btn-danger fa fa-trash-o" onClick={() => { this.deleteQuestion(); resetForm() }} >Xóa</button>
                                                                         </div>
                                                                         {Object.keys(this.state.selectedQuestion).length > 0 && <div className="col-md-3">
                                                                             <button className="btn btn-success btn-lg fa fa-save" onClick={(e) => this.saveQuestion(e, values)}> Lưu</button>
                                                                         </div>}
-                                                                        <div className="col-md-6">
+                                                                        <div className="col-md-7 f-add">
                                                                             {/* <p className="btn btn-warning"><img src="/image/duplicate.png" /> Sao chép</p> */}
                                                                             <button className="btn btn-add fa fa-plus" type="submit">Thêm câu hỏi</button>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                
+                                                                    </div>
+                                                                  </div>
                                                             </div>
                                                         </div>
                                                     </Form>
@@ -1138,4 +1143,4 @@ class Quiz_Exam extends Component {
         )
     }
 }
-export default Quiz_Exam;
+export default QuizExam_User;

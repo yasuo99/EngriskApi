@@ -33,7 +33,7 @@ class ManagementWord extends Component {
                                     <div className="card-body">
                                         <div className="table-responsive">
                                             <Link variant="primary" className="btn btn-word mr-2 mb-3" to="/tuvung"><i className="fa fa-plus" /> Thêm từ vựng</Link>
-                                            <Link variant="primary" className="btn btn-quizWord mr-2 mb-3" to="/quiz-tuvung"><i className="fa fa-plus" /> Thêm bài kiểm tra</Link>
+                                            {/* <Link variant="primary" className="btn btn-quizWord mr-2 mb-3" to="/quiz-tuvung"><i className="fa fa-plus" /> Thêm bài kiểm tra</Link> */}
                                             {/* <Button variant="primary" className="btn btn-success mr-2 mb-3"  ><i className="fa fa-plus" /> </Button> */}
                                             <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                                                 <thead>
@@ -55,7 +55,8 @@ class ManagementWord extends Component {
                                                         <td>Xin chào</td>
                                                         <td>
                                                             <Button variant="primary" className="btn btn-edit mr-2" ><Link to='/tuvung' className="fa fa-edit"></Link></Button>
-                                                            <Button variant="primary" className="btn btn-delete"><i className="fa fa-trash" /></Button>
+                                                            <Button variant="primary" className="btn btn-delete mr-2"><i className="fa fa-trash" /></Button>
+                                                            <Button variant="primary" className="btn btn-delete"><Link to='/quiz-tuvung' className="fa fa-plus" /></Button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
