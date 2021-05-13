@@ -28,11 +28,11 @@ class DanhSachThongBao extends Component {
         return await notificationApi.getPublishing(params);
     }
     render() {
-        const renderNotification = this.state.notification.map((notify) =>
-            <div key={notify.id} className="col-lg-4 col-md-4 pb-3">
-                <ThongBao notify={notify}></ThongBao>
-            </div>
-        );
+        // const renderNotification = this.state.notification.map((notify) =>
+        //     <div key={notify.id} className="col-lg-4 col-md-4 pb-3">
+        //         <ThongBao notify={notify}></ThongBao>
+        //     </div>
+        // );
         return (
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
@@ -40,14 +40,14 @@ class DanhSachThongBao extends Component {
                     <div id="content">
                         <HeaderClient></HeaderClient>
                         <section id="danhsachthongbao">
-                            <div className="container pt-3">
+                        <div className="container">
+                                <div className="col-md-10 offset-1">
                                 <h4 className="title">Danh sách thông báo</h4>
-                                <div className="row mt-3">
-                                   {renderNotification}
+                                    <ThongBao ></ThongBao>
                                 </div>
-                            </div>
+                                </div>
                         </section>
-                        <Footer></Footer>
+                        {/* <Footer></Footer> */}
                     </div>
                 </div>
             </div>

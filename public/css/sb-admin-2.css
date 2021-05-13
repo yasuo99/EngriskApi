@@ -5773,6 +5773,7 @@ a.close.disabled {
 .modal-title {
   margin-bottom: 0;
   line-height: 1.5;
+  font-size: 18px;
 }
 
 .modal-body {
@@ -10148,7 +10149,7 @@ a:focus {
 }
 
 .topbar {
-  height: 3rem;
+  height: 6vh;
 }
 
 .topbar #sidebarToggleTop {

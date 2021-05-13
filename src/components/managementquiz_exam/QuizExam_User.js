@@ -1,19 +1,14 @@
 import React, { Component } from "react";
-import { Formik, Field, Form, ErrorMessage, FieldArray, FormikProvider } from 'formik';
+import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 import HeaderClient from "../client/HeaderClient";
 import SubMenuClient from "../client/SubMenuClient";
 import { Button, Modal } from 'react-bootstrap'
 import quizApi from "../../api/2.0/quizApi";
-import examApiv2 from "../../api/2.0/examApi";
-import { connect } from "react-redux";
-import { toast } from "react-toastify";
-import sectionApi from "../../api/sectionApi";
 const info = {
     type: 'Quiz',
     title: '',
     description: '',
     difficult: 'easy',
-    sectionId: '',
     questions: [{
 
     }]
@@ -23,7 +18,7 @@ const question = {
     answers: [
         {
             content: '',
-            isQuestionAnswer: false,
+            isRightAnswer: false,
             image: null,
             isAudioAnswer: false,
         },
@@ -47,7 +42,7 @@ const validate = (values, props /* only available when using withFormik */) => {
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = 'Invalid email address';
     }
-    if (!values.answers.some(ans => ans.isQuestionAnswer === true)) {
+    if (!values.answers.some(ans => ans.isRightAnswer === true)) {
         errors.answers[0].name = 'Chọn đáp án là đáp án đúng'
     }
     //...
@@ -144,7 +139,7 @@ class Thumb_Answer extends React.Component {
         );
     }
 }
-class Quiz_Exam extends Component {
+class QuizExam_User extends Component {
 
     constructor(props) {
         super(props);
@@ -155,7 +150,7 @@ class Quiz_Exam extends Component {
             srcAnswer: '',
             active: true,
             subject: {
-                type: 'Quiz',
+                type: '',
                 title: '',
                 duration: 10,
                 description: '',
@@ -168,7 +163,6 @@ class Quiz_Exam extends Component {
                 duration: 10,
                 score: 1,
                 answerType: 1,
-                toeicPart: 0,
                 answers: [
 
                 ]
@@ -178,27 +172,16 @@ class Quiz_Exam extends Component {
             error: {
                 content: '',
                 modalStatus: false
-            },
-            side: false,
-            sections: []
+            }
+
         }
-        this.changeType = this.changeType.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         window.addEventListener('unload', function (event) {
             //call function to save you state in API or save in localStore
             localStorage.setItem('state', 1)
         });
-        const auth = this.props.account.roles.some(r => r == 'superadmin' || r == 'manager');
-        this.setState({ side: auth });
-        if (auth) {
-            var sections = await sectionApi.getManage({ auth });
-            console.log(sections);
-            this.setState({
-                sections: sections
-            })
-        }
     }
     handleResetAnswer = (e) => {
         this.setState({
@@ -222,67 +205,50 @@ class Quiz_Exam extends Component {
         this.state.error.modalStatus ? this.setState({ error: { modalStatus: false } }) : this.setState({ error: { modalStatus: true } })
     }
     addQuestion = (values) => {
-        console.log(values);
         var questions = this.state.subject.questions;
-        if (!values.answers.some(ans => ans.isQuestionAnswer)) {
-            toast('Câu hỏi phải có đáp án đúng', { type: 'warning', position: 'bottom-right' })
-            return false;
-        }
-        else {
-            if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isQuestionAnswer === true)) {
-                var question = {
-                    content: values.content,
-                    image: values.file,
-                    isAudioQuestion: values.isAudioQuestion,
-                    engVoice: values.engVoice,
-                    duration: this.state.questionSettings.duration,
-                    score: this.state.questionSettings.score,
-                    toeicPart: this.state.questionSettings.toeicPart == 0 ? null : this.state.questionSettings.toeicPart,
-                    explaination: values.explain,
-                    answers: this.state.check != 2 ? values.answers.filter(q => q.content != '') : values.answers,
-                }
-                switch (this.state.questionSettings.type) {
-                    case "Quiz":
-                        question.isQuizQuestion = true;
-                        break;
-                    case "QuestionFillout":
-                        question.isFilloutQuestion = true;
-                        break;
-                    case "QuizHinhAnh":
-                        question.isQuizQuestion = true;
-                        break;
-                    case "QuizSapXep":
-                        question.isArrangeQuestion = true;
-                        break;
-                    case "QuizNoiTu":
-                        question.isConnectionQuestion = true;
-                        break;
-                    case "ToeicReading":
-                        question.isReadingQuestion = true;
-                        break;
-                    default:
-                        break;
-                }
-                questions.push({
-                    question
-                })
-                console.log(this.state.subject.questions);
-                this.setState({
-                    subject: {
-                        ...this.state.subject,
-                        questions: questions,
-                        questionSettings: {
-                            ...this.state.questionSettings,
-                            toeicPart: 0,
-                            score: 5,
-                            duration: 10
-                        }
-                    }
-                })
-                return true;
+        if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isRightAnswer === true)) {
+            var question = {
+                content: values.content,
+                image: values.image,
+                isAudioQuestion: values.isAudioQuestion,
+                engVoice: values.engVoice,
+                toeicPart: values.toeicPart,
+                explaination: values.explain,
+                answers: values.answers.filter(q => q.content != ''),
             }
+            switch (this.state.questionSettings.type) {
+                case "Quiz":
+                    question.isQuizQuestion = true;
+                    break;
+                case "QuestionFillout":
+                    question.isFilloutQuestion = true;
+                    break;
+                case "QuizHinhAnh":
+                    question.isQuizQuestion = true;
+                    break;
+                case "QuizSapXep":
+                    question.isArrangeQuestion = true;
+                    break;
+                case "QuizNoiTu":
+                    question.isConnectionQuestion = true;
+                    break;
+                case "ToeicReading":
+                    question.isReadingQuestion = true;
+                    break;
+                default:
+                    break;
+            }
+            questions.push({
+                question
+            })
+            console.log(this.state.subject.questions);
+            this.setState({
+                subject: {
+                    ...this.state.subject,
+                    questions: questions
+                }
+            })
         }
-
     }
     questionSetting = (e) => {
         console.log(e.target.value);
@@ -381,14 +347,13 @@ class Quiz_Exam extends Component {
         })
     }
     saveQuestion = (e, values) => {
-        console.log(values);
         e.preventDefault();
         var currentIndex = this.state.subject.questions.indexOf(this.state.tempQuestion);
         var questions = this.state.subject.questions;
-        if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isQuestionAnswer === true)) {
+        if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isRightAnswer === true)) {
             var question = {
                 content: values.content,
-                image: values.file,
+                image: values.image,
                 isAudioQuestion: values.isAudioQuestion,
                 engVoice: values.engVoice,
                 toeicPart: values.toeicPart,
@@ -434,7 +399,7 @@ class Quiz_Exam extends Component {
         question.content = ''
         question.isAudioQuestion = false
         question.words = []
-        question.image = null
+        question.image = {}
     }
     deleteQuestion = () => {
         var questions = this.state.subject.questions;
@@ -449,97 +414,28 @@ class Quiz_Exam extends Component {
         this.clearQuestion();
     }
     createSubject = async (values) => {
-        console.log(values);
-        var tempQuestions = this.state.subject.questions.map((value, index) => {
-            return value.question;
-        })
         switch (values.type) {
             case 'Quiz':
                 console.log("dm");
                 var tempQuestions = this.state.subject.questions.map((value, index) => {
                     return value.question;
                 })
-                tempQuestions = tempQuestions.sort((a, b) => {
-                    if (a.answers.some(aa => aa.image != null) && !b.answers.some(ba => ba.image != null)) {
-                        return -1;
-                    }
-                    if (!a.answers.some(aa => aa.image != null) && b.answers.some(ba => ba.image != null)) {
-                        return 1;
-                    }
-                    return 0;
-                })
                 console.log(tempQuestions);
-                var formData = new FormData();
-                formData.set('sectionId', values.sectionId);
-                formData.set('quizName', values.title);
-                formData.set('detail', values.description);
-                formData.set('difficultLevel', values.difficult);
-                formData.set('isPrivate', this.state.side ? false : true);
-                formData.set('serializeQuestions', JSON.stringify(tempQuestions));
-                tempQuestions.forEach((value) => {
-                    formData.append('questionImages', value.image)
-                    value.answers.forEach((answer, index) => {
-                        formData.append('answerImages', answer.image)
-                    })
-                })
-
-                // let quiz = {
-                //     quizName: values.title,
-                //     detail: values.description,
-                //     difficultLevel: values.difficult,
-                //     isPrivate: true,
-                //     questions: tempQuestions
-                // }
-                // console.log(quiz);
-                var result = await quizApi.create(formData, this.state.side);
-                if (result) {
-                    toast('Thêm thành công', { type: 'success' });
-                    this.setState({
-                        subject: {
-                            questions: []
-                        },
-                    })
-                } else {
-                    toast('Thêm thất bại', { type: 'info' });
+                let quiz = {
+                    quizName: values.title,
+                    difficultLevel: values.difficult,
+                    isPrivate: true,
+                    questions: tempQuestions
                 }
-
+                console.log(quiz);
+                await quizApi.create(quiz);
+                this.setState({
+                    subject: {
+                        questions: []
+                    },
+                })
                 break;
             case 'Exam':
-                console.log(values);
-                var formData = new FormData();
-                formData.set('title', values.title);
-                formData.set('detail', values.description);
-                formData.set('difficultLevel', values.difficult);
-                formData.set('isPrivate', this.state.side ? false : true);
-                formData.set('duration', 100);
-                formData.set('pass', 10);
-                tempQuestions.forEach((value) => {
-                    if (value.image != null) {
-                        formData.append('QuestionImages', value.image);
-                    }
-                })
-                formData.set('stringifyQuestions', JSON.stringify(tempQuestions));
-                // let exam = {
-                //     title: values.title,
-                //     detail: values.description,
-                //     difficultLevel: values.difficult,
-                //     isPrivate: true,
-                //     pass: 10,
-                //     examQuestions: tempQuestions,
-                //     duration: 100
-                // }
-                // console.log(exam);
-                var result = await examApiv2.create(formData, this.state.side)
-                if (result != null) {
-                    toast('Thêm exam thành công', { type: 'success' })
-                    this.setState({
-                        subject: {
-                            questions: []
-                        },
-                    })
-                } else {
-                    toast('Thêm exam thất bại', { type: 'info' })
-                }
                 break;
             default:
                 break;
@@ -553,43 +449,13 @@ class Quiz_Exam extends Component {
         })
         this.clearQuestion();
     }
-    changeType = (e) => {
-        this.setState({
-            subject: {
-                ...this.state.subject,
-                type: e.target.value
-            },
-        });
-        switch (e.target.value) {
-            case "Quiz":
-                this.setState({
-                    check: 1,
-                    questionSettings: {
-                        ...this.state.questionSettings,
-                        type: 'Quiz'
-                    }
-                })
-                break;
-            case "Exam":
-                this.setState({
-                    check: 5,
-                    questionSettings: {
-                        ...this.state.questionSettings,
-                        type: 'Toeic'
-                    }
-                })
-                break;
-            default:
-                break;
-        }
-    }
     checkAnswer = (e, values) => {
         if (e.target.checked) {
             values.answers.forEach((value, index) => {
                 if (index == e.target.dataset.id) {
-                    value.isQuestionAnswer = true;
+                    value.isRightAnswer = true;
                 } else {
-                    value.isQuestionAnswer = false;
+                    value.isRightAnswer = false;
                 }
             })
         }
@@ -602,11 +468,13 @@ class Quiz_Exam extends Component {
 
         return (
             <div id="wrapper">
-                <div id="content-wrapper" className="d-flex flex-column">
-                    {/* <SubMenuClient></SubMenuClient> */}
-                    <div id="quiz">
-
-                        <div id="content"> <HeaderClient></HeaderClient>
+                <SubMenuClient></SubMenuClient>
+                 <div id="content-wrapper" className="d-flex flex-column">
+                
+                <div id="quiz">
+                   
+                        <div id="content"> 
+                        <HeaderClient></HeaderClient>
                             {/* header: bắt đầu */}
 
                             {/* header: kết thúc */}
@@ -634,26 +502,11 @@ class Quiz_Exam extends Component {
                                                                 <Field
                                                                     as="select"
                                                                     name="type"
-                                                                    id="type"
-                                                                    onClick={(e) => this.changeType(e)}>
+                                                                    id="type">
                                                                     <option value="Quiz">Quiz</option>
                                                                     <option value="Exam">Exam</option>
                                                                 </Field>
                                                             </div>
-                                                            {this.state.subject.type == 'Quiz' && <div className="title">
-                                                                <label htmlFor="section">Section</label>
-                                                                <Field
-                                                                    as="select"
-                                                                    id="sectionId"
-                                                                    name="sectionId">
-                                                                    <option>Chọn tên section</option>
-                                                                    {this.state.sections.map((value, index) =>
-                                                                        <option key={index} value={value.id}>{value.sectionName}</option>
-                                                                    )
-                                                                    }
-                                                                </Field>
-                                                            </div>}
-
                                                             <div className="title">
                                                                 <label htmlFor="title">Tên bài</label>
                                                                 <Field
@@ -706,12 +559,12 @@ class Quiz_Exam extends Component {
                                                                 <div className="card-body">
                                                                     <div className="card-title text-center">
                                                                         <p className="question">{question.question.content}</p>
-                                                                        {question.question.image != null ? <Thumb file={question.question.image} /> : <img src="/image/english (1).jpg" />}
+                                                                        <img src="/image/english (1).jpg" />
                                                                     </div>
                                                                     <div className="row">
                                                                         {question.question.answers !== undefined && question.question.answers.map((answer, j) =>
                                                                             <div className="col-6" key={j}>
-                                                                                <p className={answer.isQuestionAnswer === true ? 'answerTrue' : 'answer'}>{answer.content}</p>
+                                                                                <p className={answer.isRightAnswer === true ? 'answerTrue' : 'answer'}>{answer.content}</p>
                                                                             </div>
                                                                         )}
                                                                     </div>
@@ -731,12 +584,11 @@ class Quiz_Exam extends Component {
 
                                                 onSubmit={(values, { resetForm }) => {
                                                     console.log(values);
-                                                    const result = this.addQuestion(values);
+                                                    this.addQuestion(values);
                                                     // await new Promise((r) => setTimeout(r, 500));
-                                                    if (result) {
-                                                        resetForm({});
-                                                        this.resetQuestionForm();
-                                                    }
+                                                    resetForm({});
+                                                    this.resetQuestionForm();
+                                                    this.handleResetAnswer();
                                                 }}
                                             >
                                                 {({ values, setFieldValue, resetForm }) => (
@@ -796,10 +648,10 @@ class Quiz_Exam extends Component {
                                                                                                                         <div className="col-1">
 
                                                                                                                             <Field
-                                                                                                                                name={`answers.${index}.isQuestionAnswer`}
+                                                                                                                                name={`answers.${index}.isRightAnswer`}
                                                                                                                                 className="radioAnswerFile"
                                                                                                                                 type="checkbox"
-                                                                                                                                id="isQuestionAnswer"
+                                                                                                                                id="isRightAnswer"
                                                                                                                                 data-id={index}
                                                                                                                                 onClick={(e) => this.checkAnswer(e, values)}
                                                                                                                             />
@@ -827,7 +679,7 @@ class Quiz_Exam extends Component {
                                                                                                             type="button"
                                                                                                             className="btn btn-addAnswer fa fa-plus"
                                                                                                             onClick={() => push({
-                                                                                                                content: '', isQuestionAnswer: false, image: null,
+                                                                                                                content: '', isRightAnswer: false, image: {},
                                                                                                                 isAudioAnswer: false
                                                                                                             })}>
                                                                                                             Thêm đáp án
@@ -872,13 +724,12 @@ class Quiz_Exam extends Component {
                                                                                         </div>
                                                                                     </div>
 
-                                                                                    <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                            type="checkbox"
+                                                                                    <p>Chọn file nghe:
+                                                                            <Field
+                                                                                            type="file"
                                                                                             className="file mt-3"
-                                                                                            id="isAudioQuestion"
-                                                                                            name="isAudioQuestion" />
-                                                                                    </p>
+                                                                                            id="fileQuestion"
+                                                                                            name="fileQuestion" /></p>
                                                                                     <div className="answer answerHinhAnh">
                                                                                         <ol type="A">
                                                                                             <FieldArray name="answers">
@@ -886,38 +737,39 @@ class Quiz_Exam extends Component {
                                                                                                     <div>
                                                                                                         {values.answers.length > 0 &&
                                                                                                             values.answers.map((answer, index) => (
-                                                                                                                <div className="itemAnswer" key={index}>
-                                                                                                                    <div className="row">
-                                                                                                                        <div className="col-1 kedoc">
+                                                                                                                <div className="itemAnswer">
+                                                                                                                    <div className="row" key={index}>
+                                                                                                                        <div className="col-1 kedoc-2">
                                                                                                                             <p className="textOrder"><li></li></p>
                                                                                                                         </div>
                                                                                                                         <div className="col-9 kedoc-2">
                                                                                                                             <div className="row">
                                                                                                                                 <div className="col-8">
                                                                                                                                     <Field name={`answers.${index}.content`} type="text" placeholder="Nhập đáp án..." className="answerTextThree" />
+                                                                                                                                    <Field name={`answers.${index}.fileAnswer`} type="file" className="answerFile" />
                                                                                                                                 </div>
                                                                                                                                 <div className="col-4">
                                                                                                                                     <div className="boxImgAnswer">
                                                                                                                                         {/* { srcAnswer === '' ? <img src="/image/picture (1).png" className="display-ImgAnswer"/> : (<img src={this.state.srcAnswer.replace("C:\\fakepath\\", "/image/")} className="display-ImgAnswer"/>) } */}
 
-                                                                                                                                        <Thumb_Answer imgAnswer={values.answers[index].image}></Thumb_Answer>
+                                                                                                                                        <Thumb_Answer imgAnswer={values.file}></Thumb_Answer>
                                                                                                                                         <div className="itemImg">
-                                                                                                                                            <Field name={`answers.${index}.file`} type="file"
+                                                                                                                                            <Field name={`answers.${index}.imgAnswer`} type="file"
                                                                                                                                                 accept="image/png, image/jpeg"
                                                                                                                                                 className="item-answer fa fa-camera "
                                                                                                                                                 onBlur={e => this.handleImgQuestion(e)}
                                                                                                                                                 // onFocus={e => this.handleImgQuestion(e)}
                                                                                                                                                 // onChange={e => this.handleImgQuestion(e)}
-                                                                                                                                                id='image'
+                                                                                                                                                id='imgAnswer'
                                                                                                                                                 onChange={(event) => {
-                                                                                                                                                    setFieldValue(`answers.${index}.image`, event.currentTarget.files[0]);
+                                                                                                                                                    setFieldValue('file', event.currentTarget.files[0]);
                                                                                                                                                 }}
                                                                                                                                             />
                                                                                                                                             <img src="/image/delete1.png" className="img-answer"
                                                                                                                                                 // onClick={() => {this.handleResetAnswer() }} 
                                                                                                                                                 // onBlur={e => this.handleResetAnswer(e)}
                                                                                                                                                 onClick={() => {
-                                                                                                                                                    setFieldValue(`answers.${index}.image`, null);
+                                                                                                                                                    setFieldValue("imgAnswer", null);
                                                                                                                                                 }}
                                                                                                                                             >
 
@@ -929,7 +781,7 @@ class Quiz_Exam extends Component {
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                         <div className="col-1">
-                                                                                                                            <Field type="checkbox" name={`answers.${index}.isQuestionAnswer`} onClick={(e) => this.checkAnswer(e, values)} className="radioAnswerThree" />
+                                                                                                                            <Field type="checkbox" name={`answers.${index}.checkAnswer`} className="radioAnswerThree" />
                                                                                                                         </div>
                                                                                                                         <div className="col-1">
                                                                                                                             <button
@@ -948,7 +800,7 @@ class Quiz_Exam extends Component {
                                                                                                             className="btn btn-addAnswer fa fa-plus"
 
                                                                                                             onClick={() => push({
-                                                                                                                content: '', isQuestionAnswer: '', image: null,
+                                                                                                                content: '', isRightAnswer: '', image: {},
                                                                                                                 isAudioAnswer: false
                                                                                                             })}>
                                                                                                             {/* onBlur={()=>{this.handleResetAnswer()}} */}
@@ -975,12 +827,12 @@ class Quiz_Exam extends Component {
                                                                                             component="textarea"
                                                                                             defaultValue={""} />
                                                                                         {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-                                                                                        <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                                type="checkbox"
+                                                                                        <p>Chọn file nghe:
+                                                                                <Field
+                                                                                                type="file"
                                                                                                 className="file mt-3"
-                                                                                                id="isAudioQuestion"
-                                                                                                name="isAudioQuestion" />
+                                                                                                id="fileQuestion"
+                                                                                                name="fileQuestion" />
                                                                                         </p>
                                                                                         <div className="boxWord">
                                                                                             <FieldArray name="answers">
@@ -989,7 +841,7 @@ class Quiz_Exam extends Component {
                                                                                                         {values.answers.length > 0 &&
                                                                                                             values.answers.map((word, index) => (
                                                                                                                 <div key={index} className="word">
-                                                                                                                    <Field type="text" id="word" name={`answers.${index}.content`} value={word.content} placeholder="Nhập từ" onBlur={() => push({ content: '', isQuestionAnswer: '', image: null, isAudioAnswer: false })}>
+                                                                                                                    <Field type="text" id="word" name={`answers.${index}.content`} value={word.content} placeholder="Nhập từ" onBlur={() => push({ content: '', isRightAnswer: '', image: {}, isAudioAnswer: false })}>
 
                                                                                                                     </Field>
                                                                                                                     <button
@@ -1035,7 +887,7 @@ class Quiz_Exam extends Component {
                                                                                                             {values.answers.length > 0 &&
                                                                                                                 values.answers.map((word, index) => (
                                                                                                                     <div key={index} className="word">
-                                                                                                                        <Field type="text" id="word" name={`answers.${index}.content`} placeholder="Nhập từ" onBlur={() => push({ content: '', isQuestionAnswer: '', image: null, isAudioAnswer: false })}>
+                                                                                                                        <Field type="text" id="word" name={`answers.${index}.content`} placeholder="Nhập từ" onBlur={() => push({ content: '', isRightAnswer: '', image: {}, isAudioAnswer: false })}>
 
                                                                                                                         </Field>
                                                                                                                         <button
@@ -1098,7 +950,7 @@ class Quiz_Exam extends Component {
                                                                                                                     <button
                                                                                                                         type="button"
                                                                                                                         className="btn btn-addAnswer fa fa-plus"
-                                                                                                                        onClick={() => push({ content: '', isQuestionAnswer: '', image: null, isAudioAnswer: false })}>
+                                                                                                                        onClick={() => push({ content: '', isRightAnswer: '', image: {}, isAudioAnswer: false })}>
                                                                                                                         Thêm đáp án
                                                                       </button>
                                                                                                                 </div>
@@ -1117,46 +969,20 @@ class Quiz_Exam extends Component {
                                                                                     <div className="col-md-8 kedoc">
                                                                                         <div className="question">
                                                                                             <Field
-                                                                                                className="titleQuestion"
+                                                                                                className="titleQuestionToeic"
                                                                                                 placeholder="Nhập câu hỏi..."
                                                                                                 type="text"
-                                                                                                id="content"
-                                                                                                name="content"
+                                                                                                id="titleQuestion"
+                                                                                                name="titleQuestion"
                                                                                                 component="textarea"
-                                                                                                required />
-                                                                                            <div className="boxImg">
-                                                                                                <Thumb file={values.file} />
-                                                                                                <div className="itemImg">
-                                                                                                    <Field type="file"
-                                                                                                        accept="image/png, image/jpeg"
-                                                                                                        className="item-question fa fa-camera "
-                                                                                                        id="image"
-                                                                                                        name="image"
-                                                                                                        onChange={(event) => {
-                                                                                                            setFieldValue("file", event.currentTarget.files[0]);
-                                                                                                        }}
-                                                                                                    />
-                                                                                                    <img src="/image/delete1.png" className="img-question"
-                                                                                                        onClick={() => {
-                                                                                                            setFieldValue("file", null);
-                                                                                                        }}></img>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                                    type="checkbox"
-                                                                                                    className="file mt-3"
-                                                                                                    id="isAudioQuestion"
-                                                                                                    name="isAudioQuestion" />
-                                                                                            </p>
-
+                                                                                                defaultValue={""} />
                                                                                             <div className="answer answerText">
                                                                                                 <ol type="A">
-                                                                                                    <FieldArray name="answers">
+                                                                                                    <FieldArray name="answersToeicReading">
                                                                                                         {({ insert, remove, push }) => (
                                                                                                             <div>
-                                                                                                                {values.answers.length > 0 &&
-                                                                                                                    values.answers.map((answer, index) => (
+                                                                                                                {values.answersToeicReading.length > 0 &&
+                                                                                                                    values.answersToeicReading.map((answer, index) => (
                                                                                                                         <div className="itemAnswer" key={index}>
                                                                                                                             <div className="row" >
                                                                                                                                 <div className="col-1">
@@ -1165,14 +991,14 @@ class Quiz_Exam extends Component {
                                                                                                                                 </div>
                                                                                                                                 <div className="col-9">
                                                                                                                                     <Field
-                                                                                                                                        name={`answers.${index}.content`}
+                                                                                                                                        name={`answersToeicReading.${index}.content`}
                                                                                                                                         placeholder="Nhập đáp án..."
                                                                                                                                         type="text"
                                                                                                                                         className="answerFile"
                                                                                                                                         id="content"
                                                                                                                                     />
                                                                                                                                     <ErrorMessage
-                                                                                                                                        name={`answers.${index}.name`}
+                                                                                                                                        name={`answersToeicReading.${index}.name`}
                                                                                                                                         component="div"
                                                                                                                                         className="field-error"
                                                                                                                                     />
@@ -1180,14 +1006,14 @@ class Quiz_Exam extends Component {
                                                                                                                                 <div className="col-1">
 
                                                                                                                                     <Field
-                                                                                                                                        name={`answers.${index}.isQuestionAnswer`}
+                                                                                                                                        name={`answersToeicReading.${index}.rightAnswer`}
                                                                                                                                         className="radioAnswerFile"
                                                                                                                                         type="checkbox"
-                                                                                                                                        id="isQuestionAnswer"
-                                                                                                                                        onClick={(e) => this.checkAnswer(e, values)}
+                                                                                                                                        id="rightAnswer"
+
                                                                                                                                     />
                                                                                                                                     <ErrorMessage
-                                                                                                                                        name={`answers.${index}.name`}
+                                                                                                                                        name={`answersToeicReading.${index}.name`}
                                                                                                                                         component="div"
                                                                                                                                         className="field-error"
                                                                                                                                     />
@@ -1206,16 +1032,12 @@ class Quiz_Exam extends Component {
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                     ))}
-                                                                                                                {values.answers.length < 4 && <button
+                                                                                                                <button
                                                                                                                     type="button"
                                                                                                                     className="btn btn-addAnswer fa fa-plus"
-                                                                                                                    onClick={() => {
-                                                                                                                        if (values.answers.length < 4) {
-                                                                                                                            push({ content: '', isQuestionAnswer: false })
-                                                                                                                        }
-                                                                                                                    }}>
+                                                                                                                    onClick={() => push({ textAnswer: '', checkAnswer: '' })}>
                                                                                                                     Thêm đáp án
-                                                                      </button>}
+                                                                      </button>
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </FieldArray>
@@ -1232,95 +1054,68 @@ class Quiz_Exam extends Component {
                                                                     <div className="content">
                                                                         <div className="type">
                                                                             <p><img src="/image/info.png" /> Loại câu hỏi</p>
-                                                                            {this.state.subject.type == 'Quiz' &&
-                                                                                <Field
-                                                                                    id="type"
-                                                                                    as="select"
-                                                                                    name="type"
-                                                                                    value={this.state.questionSettings.type}
-                                                                                    onChange={this.ToToggleForm}
-                                                                                >
-                                                                                    <option value="Quiz">Quiz</option>
-                                                                                    <option value="QuizHinhAnh" >Quiz hình ảnh</option>
-                                                                                    <option value="QuizSapXep" >Sắp xếp từ vựng</option>
-                                                                                    <option value="QuizNoiTu" >Nối từ</option></Field>}
-                                                                            {this.state.subject.type == 'Exam' &&
-                                                                                <Field
-                                                                                    id="type"
-                                                                                    as="select"
-                                                                                    name="type"
-                                                                                    value={this.state.questionSettings.type}
-                                                                                    onChange={this.ToToggleForm}>
-                                                                                    <option value="Toeic" >Toeic</option>
-                                                                                </Field>
-                                                                            }
+                                                                            <Field
+                                                                                id="type"
+                                                                                as="select"
+                                                                                name="type"
+                                                                                value={this.state.questionSettings.type}
+                                                                                onChange={this.ToToggleForm}
 
+                                                                            >
+                                                                                <option value="Quiz">Quiz</option>
+                                                                                <option value="QuizHinhAnh" >Quiz hình ảnh</option>
+                                                                                <option value="QuizSapXep" >Sắp xếp từ vựng</option>
+                                                                                <option value="QuizNoiTu" >Nối từ</option>
+                                                                                <option value="ToeicReading" >Toeic đọc</option>
+                                                                            </Field>
                                                                         </div>
-                                                                        {this.state.subject.type == 'Quiz' ? <div>
-                                                                            <div className="time mt-2">
-                                                                                <p><img src="/image/clock (1).png" /> Thời gian trả lời câu hỏi</p>
-                                                                                <Field
-                                                                                    as="select"
-                                                                                    id="duration"
-                                                                                    name="duration"
-                                                                                    value={this.state.questionSettings.duration}
-                                                                                    onChange={(e) => this.questionSetting(e)}>
+                                                                        <div className="time mt-2">
+                                                                            <p><img src="/image/clock (1).png" /> Thời gian trả lời câu hỏi</p>
+                                                                            <Field
+                                                                                as="select"
+                                                                                id="duration"
+                                                                                name="duration"
+                                                                                value={this.state.questionSettings.duration}
+                                                                                onChange={(e) => this.questionSetting(e)}>
 
-                                                                                    <option value="10">10 giây</option>
-                                                                                    <option value="30">30 giây</option>
-                                                                                    <option value="45">45 giây</option>
-                                                                                    <option value="60">60 giây</option>
-                                                                                    <option value="90">90 giây</option>
-                                                                                </Field>
-                                                                            </div>
-                                                                            <div className="point mt-2">
-                                                                                <p><img src="/image/surprise.png" /> Số điểm đạt được</p>
-                                                                                <Field
-                                                                                    id="score"
-                                                                                    name="score"
-                                                                                    as="select"
-                                                                                    value={this.state.questionSettings.score}
-                                                                                    onChange={(e) => this.questionSetting(e)}>
-                                                                                    <option value="5">5 điểm</option>
-                                                                                    <option value="10">10 điểm</option>
-                                                                                    <option value="15">15 điểm</option>
-                                                                                    <option value="20">20 điểm</option>
-                                                                                </Field>
-                                                                            </div>
-                                                                        </div> : <div>
-                                                                            <div className="time mt-2">
-                                                                                <p><img src="/image/clock (1).png" /> Thuộc toeic part</p>
-                                                                                <Field
-                                                                                    as="select"
-                                                                                    id="toeicPart"
-                                                                                    name="toeicPart"
-                                                                                    value={this.state.questionSettings.toeicPart}
-                                                                                    onChange={(e) => this.questionSetting(e)}>
-                                                                                    <option value="1">1</option>
-                                                                                    <option value="2">2</option>
-                                                                                    <option value="3">3</option>
-                                                                                    <option value="4">4</option>
-                                                                                    <option value="5">5</option>
-                                                                                    <option value="6">6</option>
-                                                                                    <option value="7">7</option>
-                                                                                </Field>
-                                                                            </div>
-                                                                        </div>}
-
+                                                                                <option value="10">10 giây</option>
+                                                                                <option value="30">30 giây</option>
+                                                                                <option value="45">45 giây</option>
+                                                                                <option value="60">60 giây</option>
+                                                                                <option value="90">90 giây</option>
+                                                                            </Field>
+                                                                        </div>
+                                                                        <div className="point mt-2">
+                                                                            <p><img src="/image/surprise.png" /> Số điểm đạt được</p>
+                                                                            <Field
+                                                                                id="score"
+                                                                                name="score"
+                                                                                as="select"
+                                                                                value={this.state.questionSettings.score}
+                                                                                onChange={(e) => this.questionSetting(e)}>
+                                                                                <option value="5">5 điểm</option>
+                                                                                <option value="10">10 điểm</option>
+                                                                                <option value="15">15 điểm</option>
+                                                                                <option value="20">20 điểm</option>
+                                                                            </Field>
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="row functionQuestion">
-                                                                        <div className="col-md-6 ">
+                                                                    <div className="functionQuestion">
+                                                                    <div className="row">
+                                                                        <div className="col-md-5 ">
                                                                             <button type="reset" className="btn btn-danger fa fa-trash-o" onClick={() => { this.deleteQuestion(); resetForm() }} >Xóa</button>
                                                                         </div>
                                                                         {Object.keys(this.state.selectedQuestion).length > 0 && <div className="col-md-3">
                                                                             <button className="btn btn-success btn-lg fa fa-save" onClick={(e) => this.saveQuestion(e, values)}> Lưu</button>
                                                                         </div>}
-                                                                        <div className="col-md-6">
+                                                                        <div className="col-md-7 f-add">
                                                                             {/* <p className="btn btn-warning"><img src="/image/duplicate.png" /> Sao chép</p> */}
                                                                             <button className="btn btn-add fa fa-plus" type="submit">Thêm câu hỏi</button>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                
+                                                                    </div>
+                                                                  </div>
                                                             </div>
                                                         </div>
                                                     </Form>
@@ -1348,10 +1143,4 @@ class Quiz_Exam extends Component {
         )
     }
 }
-const mapStateToProps = state => {
-    const { account } = state.auth
-    return {
-        account: account
-    }
-}
-export default connect(mapStateToProps)(Quiz_Exam);
+export default QuizExam_User;
