@@ -85,8 +85,7 @@ class Home extends Component {
                         </div>
                         <div className="col-md-8">
                             <div className="contentLesson">
-                                <h2 className="title">{section.title}</h2>
-                                <p className="description">{section.description}</p>
+                                <h2 className="title">{section.sectionName}</h2>
                             </div>
                         </div>
                         <div className="col-md-3">
@@ -100,6 +99,7 @@ class Home extends Component {
                     <div className={index == 0 ? "collapse show border-top" : "collapse border-top"} id={`collapse${index}`}>
                         <div className="cardCollapse">
                             <div className="col-md-8 offset-1 contentCollapse">
+                                <p className="description">{section.description}</p>
                                 <div className="container">
                                     <button className="rounded-circle bg-info">Từ vựng</button>
                                     <button className="rounded-circle bg-info">Quiz</button>

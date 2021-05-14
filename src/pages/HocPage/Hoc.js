@@ -46,6 +46,7 @@ class Hoc extends PureComponent {
     }
     async componentDidMount() {
         window.addEventListener('beforeunload', this.handleUnload);
+       
         const { match: { match: { params, path } } } = this.props;
         this.isComponentMounted = true;
         //Kiểm tra có phải là bài quiz practice hay không

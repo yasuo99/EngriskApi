@@ -15,14 +15,20 @@ import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import Answer from '../../components/answer/Answer';
+import examApiv2 from '../../api/2.0/examApi';
+import queryString from 'querystring';
 class ExamPage extends Component {
     constructor(props) {
         super(props);
         this.isComponentMounted = false;
         this.state = {
-            examId: 0,
-            questions: [],
-            currentQuestion: { toeicPart: 1 }, //Câu hỏi hiện tại
+            examId: '',
+            questions: [
+                {
+                    answers: []
+                }
+            ],
+            currentQuestion: { toeicPart: 1, answers: [] }, //Câu hỏi hiện tại
             remainQuestion: [], //Số câu hỏi bị bỏ qua hoặc sai,
             answers: [],
             exam: {},
@@ -51,27 +57,107 @@ class ExamPage extends Component {
             paginStart: 1,
             paginEnd: 10,
             shuffleAnswers: [],
-            currentShuffleAnswer: []
+            currentShuffleAnswer: [{
+                id: '',
+                content: '',
+                questionId: ''
+            }]
         }
         this.handleUnload = this.handleUnload.bind(this);
+        this.pauseExam = this.pauseExam.bind(this);
     }
     async componentDidMount() {
         window.addEventListener('beforeunload', this.handleUnload);
-        const { match: { match: { params } } } = this.props;
-        this.isComponentMounted = true;
-        try {
-            if (this.isComponentMounted) {
-                this.fetchQuestions(params.examId);
+        window.addEventListener('unload', this.pauseExam);
+        const { location: { match: { params } } } = this.props;
+        const { location: { location: { search } } } = this.props;
+        var temp = queryString.parse(search.replace('?', ''));
+        if (temp.resume === 'true') {
+            var remainTime = await examApiv2.resumeExam(params.examId);
+            var saveExams = Array.from(JSON.parse(localStorage.getItem('saveExam')));
+            var currentExam = saveExams?.find(e => e.id === params.examId);
+            this.setState({
+                examId: params.examId,
+                exam: {
+                    ...currentExam,
+                    duration: remainTime
+                },
+                questions: currentExam.questions,
+                shuffleAnswers: currentExam.shuffleAnswers,
+                index: currentExam.currentQuestion,
+                answers: currentExam.answers,
+                currentQuestion: currentExam.questions[currentExam.currentQuestion],
+                currentShuffleAnswer: currentExam.shuffleAnswers[currentExam.currentQuestion],
+                loading: false,
+                selected: currentExam.answers[currentExam.currentQuestion].selected,
+                answer: currentExam.answers[currentExam.currentQuestion].answer
+            })
+        } else {
+            const saveExam = Array.from(JSON.parse(localStorage.getItem('saveExam')));
+            const exam = saveExam.filter(e => e.id == params.examId);
+            console.log('đang lưu', exam);
+            this.isComponentMounted = true;
+            try {
+                if (this.isComponentMounted) {
+                    this.fetchQuestions(params.examId);
+                }
+            }
+            catch (error) {
+                console.log(error);
+                this.setState({ loading: false });
             }
         }
-        catch (error) {
-            console.log(error);
-            this.setState({ loading: false });
+    }
+    pauseExam = async (e) => {
+        if (!this.state.submitted) {
+            let saveExam = []
+            var temp = localStorage.getItem('saveExam');
+            if (!temp) {
+                localStorage.setItem('saveExam', JSON.stringify(saveExam));
+            }
+            saveExam = Array.from(JSON.parse(localStorage.getItem('saveExam')));
+            let alreadySave = saveExam.some(e => e.id == this.state.exam.id);
+            console.log(alreadySave);
+            if (!alreadySave) {
+                var exam = this.state.exam;
+                exam.shuffleAnswers = this.state.shuffleAnswers
+                exam.answers = this.state.answers
+                exam.currentQuestion = this.state.index;
+                exam.isPause = true;
+                exam.pauseAt = this.getCurrentDateTime();
+                saveExam.push(this.state.exam)
+                localStorage.setItem('saveExam', JSON.stringify(saveExam));
+            }
+            else {
+                var exam = saveExam.find(e => e.id == this.state.exam.id);
+                var index = saveExam.indexOf(exam);
+                exam.currentQuestion = this.state.index;
+                exam.shuffleAnswers = this.state.shuffleAnswers;
+                exam.isPause = true;
+                exam.pauseAt = this.getCurrentDateTime();
+                exam.answers = this.state.answers
+                saveExam[index] = exam;
+                localStorage.setItem('saveExam', JSON.stringify(saveExam));
+            }
         }
+    }
+    getCurrentDateTime = () => {
+        var date = new Date();
+        var day = date.getDate();       // yields date
+        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+        var year = date.getFullYear();  // yields year
+        var hour = date.getHours();     // yields hours 
+        var minute = date.getMinutes(); // yields minutes
+        var second = date.getSeconds(); // yields seconds
+
+        // After this construct a string with the above results as below
+        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second;
+        return time;
     }
     fetchQuestions = async (examId) => {
         try {
             const exam = await doExam(examId);
+
             console.log(exam);
             if (exam.questions.length > 0) {
                 this.setState({
@@ -88,6 +174,7 @@ class ExamPage extends Component {
                 exam.questions.forEach(question => {
                     let currentAnswer = {
                         id: question.id,
+                        questionId: question.id,
                         answer: '',
                         selected: '',
                         flag: false,
@@ -96,11 +183,14 @@ class ExamPage extends Component {
                     };
                     answers.push(currentAnswer);
                     let questionShuffleAnswer = [];
-                    questionShuffleAnswer.push(question.a);
-                    questionShuffleAnswer.push(question.b);
-                    questionShuffleAnswer.push(question.c);
-                    questionShuffleAnswer.push(question.d);
-                    questionShuffleAnswer = questionShuffleAnswer.sort(() => Math.random() - 0.5)
+                    question.answers.forEach((value) => {
+                        questionShuffleAnswer.push({
+                            content: value.answer,
+                            id: value.id,
+                            questionId: question.id
+                        });
+                        questionShuffleAnswer = questionShuffleAnswer.sort(() => Math.random() - 0.5)
+                    })
                     shuffleAnswers.push(questionShuffleAnswer);
                 });
                 this.setState({
@@ -108,6 +198,7 @@ class ExamPage extends Component {
                     shuffleAnswers: shuffleAnswers,
                     currentShuffleAnswer: shuffleAnswers[this.state.index]
                 })
+                console.log(shuffleAnswers);
             }
             else {
                 toast("Hiện chưa có câu hỏi cho exam này")
@@ -132,16 +223,12 @@ class ExamPage extends Component {
             })
         }
         if (e) {
-            const currentAnswer = {
-                id: this.state.currentQuestion.id,
-                answer: e.target.dataset.answer,
-                selected: position,
-                flag: false
-            }
-            let found = this.state.answers.filter(el => el.id === currentAnswer.id);
+            let found = this.state.answers.filter(el => el.questionId === this.state.currentQuestion.id);
+            console.log(found);
             if (found[0].isListeningQuestion) {
                 found[0].listened = true;
             }
+            found[0].id = e.target.dataset.id
             found[0].selected = position;
             found[0].answer = e.target.dataset.answer;
             console.log(this.state.answers);
@@ -222,7 +309,7 @@ class ExamPage extends Component {
         this.removeSelected();
         const currentQuestion = this.state.currentQuestion;
         if (currentQuestion.isListeningQuestion) {
-            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            let found = this.state.answers.filter(el => el.questionId === currentQuestion.id);
             console.log(found);
             if (found[0].isListeningQuestion) {
                 found[0].listened = true;
@@ -239,7 +326,7 @@ class ExamPage extends Component {
                 checked: false
             });
             let stateCurrentQuestion = this.state.questions[tempIndex];
-            let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
+            let currentAnswer = this.state.answers.filter(el => el.questionId === stateCurrentQuestion.id);
             if (currentAnswer.length > 0) {
                 if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
                     this.setState({
@@ -272,7 +359,7 @@ class ExamPage extends Component {
         this.removeSelected();
         const currentQuestion = this.state.currentQuestion;
         if (currentQuestion.isListeningQuestion) {
-            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            let found = this.state.answers.filter(el => el.questionId === currentQuestion.id);
             console.log(found);
             if (found[0].isListeningQuestion) {
                 found[0].listened = true;
@@ -288,7 +375,7 @@ class ExamPage extends Component {
                 checked: false
             });
             let stateCurrentQuestion = this.state.questions[tempIndex];
-            let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
+            let currentAnswer = this.state.answers.filter(el => el.questionId === stateCurrentQuestion.id);
             if (currentAnswer.length > 0) {
                 if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
                     this.setState({
@@ -311,22 +398,21 @@ class ExamPage extends Component {
     selectQuestion = (index) => {
         const currentQuestion = this.state.currentQuestion;
         if (currentQuestion.isListeningQuestion) {
-            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            let found = this.state.answers.filter(el => el.questionId === currentQuestion.id);
             console.log(found);
             if (found[0].isListeningQuestion) {
                 found[0].listened = true;
             }
         }
-        console.log(index);
         this.setState({
             index: index - 1,
             currentQuestion: this.state.questions[index - 1],
-            currentShuffleAnswer: this.state.shuffleAnswers[index-1],
+            currentShuffleAnswer: this.state.shuffleAnswers[index - 1],
             selected: ''
         });
         let stateCurrentQuestion = this.state.questions[index - 1];
         this.shuffleAnswer(stateCurrentQuestion);
-        let currentAnswer = this.state.answers.filter(el => el.id === stateCurrentQuestion.id);
+        let currentAnswer = this.state.answers.filter(el => el.questionId === stateCurrentQuestion.id);
         if (currentAnswer.length > 0) {
             if (currentAnswer[0].listened && currentAnswer[0].isListeningQuestion) {
                 this.setState({
@@ -356,7 +442,7 @@ class ExamPage extends Component {
         }
     }
     flagQuestion = () => {
-        let currentAnswer = this.state.answers.filter(el => el.id === this.state.currentQuestion.id);
+        let currentAnswer = this.state.answers.filter(el => el.questionId === this.state.currentQuestion.id);
         if (currentAnswer.length > 0) {
             currentAnswer[0].flag = currentAnswer[0].flag ? false : true;
         }
@@ -373,7 +459,7 @@ class ExamPage extends Component {
                 checked: false
             });
             const currentQuestion = this.state.questions[this.state.index - 1];
-            let found = this.state.answers.filter(el => el.id === currentQuestion.id);
+            let found = this.state.answers.filter(el => el.questionId === currentQuestion.id);
             console.log(found);
             if (found[0].isListeningQuestion) {
                 found[0].listened = true;
@@ -475,14 +561,14 @@ class ExamPage extends Component {
                                             </div>
                                             <div className="col-8 offset-2">
                                                 Câu {index + 1}
-                                                {currentQuestion.isListeningQuestion === false && currentQuestion.isFillOutQuestion === false && <div className="row"> <div className="col-5"><h2>{currentQuestion.content}</h2>
-                                                    <p className="mb-5">Có nghĩa là?</p></div>
-                                                    <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div></div>}
+                                                {currentQuestion.isListeningQuestion === false && currentQuestion.isFillOutQuestion === false && <div className="row"> <div className="col-5">
+                                                    <p className="mb-5">Chọn đáp án đúng</p></div>
+                                                    {currentQuestion.imageFileName != undefined && <div className="col-7"><img src={`http://localhost:5000/api/v2/streaming/image?image=${currentQuestion.imageFileName}`} alt="" /></div>} </div>}
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened == false &&
                                                     <div className="row">
                                                         <b>Chọn đáp án đúng</b>
                                                         <ReactPlayer url={currentQuestion.audio} playing={!this.state.listened} width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
-                                                        {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /></div>}
+                                                        {currentQuestion.imageFileName != undefined && <div className="col-7"><img src={`http://localhost:5000/api/v2/streaming/image?image=${currentQuestion.imageFileName}`} alt="" /></div>}
                                                     </div>}
                                                 {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
                                                 <p>{currentQuestion.content}</p>
@@ -507,6 +593,7 @@ class ExamPage extends Component {
                                                 pageCount={this.state.questions.length}
                                                 marginPagesDisplayed={2}
                                                 pageRangeDisplayed={5}
+                                                forcePage={this.state.index}
                                                 onPageChange={(e) => this.selectQuestion(e.selected + 1)}
                                                 containerClassName={'justify-content-center pagination pagination-lg'}
                                                 subContainerClassName={'pages pagination'}
@@ -542,12 +629,18 @@ class ExamPage extends Component {
 
     }
     handleUnload(e) {
+
         var message = "\o/";
         (e || window.event).returnValue = message; //Gecko + IE
         return message;
     }
-    componentWillUnmount() {
+    async componentWillUnmount() {
         this.isComponentMounted = false;
+        if (!this.state.submitted) {
+            await examApiv2.pauseExam(this.state.exam.id, this.state.index);
+            await this.pauseExam();
+        }
+        console.log('unmount cmnr');
     }
 }
 const mapStateToProps = (state) => {

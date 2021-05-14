@@ -9,9 +9,9 @@ class ListHistoryExam extends Component {
         const renderHistory = this.props.histories.map((history) =>
             <tr key={history.id}>
                 <td>{history.examTitle}</td>
-                <td>{Moment(history.start_At).format("MMMM Do YYYY")}</td>
-                <td>{Moment(history.end_At).format("MMMM Do YYYY")}</td>
-                <td>{history.totalTime} giây</td>
+                <td>{Moment(history.timestamp_start).format("DD/MM/YYYY hh:mm:ss")}</td>
+                <td>{Moment(history.timestamp_end).format("DD/MM/YYYY hh:mm:ss")}</td>
+                <td>{history.totalTime} phút</td>
                 <td>{history.score}</td>
             </tr>
         );

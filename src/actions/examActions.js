@@ -1,14 +1,15 @@
+import examApiv2 from "../api/2.0/examApi";
 import examApi from "../api/examApi"
 
 export const getAllExam = () => {
     return examApi.getAll();
 }
-export const doExam = id => {
-    return examApi.doExam(id);
+export const doExam = async (id) => {
+    return await examApiv2.doExam(id);
 }
 export const doneExam = (id, body) => {
     return dispatch => {
-        examApi.submitExam(id, body).then((response) => {
+        examApiv2.doneExam(id, body).then((response) => {
             return dispatch({ type: "SUBMIT_EXAM", result: response })
         }).catch((error) => {
             console.log(error);
