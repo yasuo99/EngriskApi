@@ -306,7 +306,7 @@ const routes = [
     {
         path: '/exam/:examId',
         exact: true,
-        main: (match) => <ExamPage match={match} />,
+        main: (location) => <ExamPage location={location}/>,
         guard: true,
         roles: []
     },

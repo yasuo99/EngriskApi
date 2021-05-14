@@ -5,6 +5,7 @@ import SubMenuClient from "../../components/client/SubMenuClient";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import { Link, Redirect } from "react-router-dom";
+import { toast } from "react-toastify";
 class FlashCard extends Component {
     constructor(props) {
         super(props);
@@ -32,15 +33,18 @@ class FlashCard extends Component {
             [e.target.id]: e.target.value
         })
     }
+    inform = (length) => {
+        if(length == 0){toast('Chủ đề này hiện chưa có từ vựng', {type:'info'})}
+    }
     render() {
         const renderCategories = this.state.listCategory.map((category) =>
-            <Link key={category.id} data-id={category.id} to={`/card-detail/${category.id}`}>
+            <Link key={category.id} data-id={category.id} to={category.words.length > 0 ? "/card-detail/" + category.id : "#"} onClick={() => this.inform(category.words.length)}>
                 <div className="boxItem">
                     <img src="/image/family.jpg" alt="giaotiep"></img>
                     <div className="contentItem">
                         <h3 className="title">{category.categoryName}</h3>
                         <h5 className="title">Số từ {category.words.length}</h5>
-                        <Link className="btn post" to={"/card-detail/" + category.id}>Học ngay</Link>
+                        <Link className="btn post" to={category.words.length > 0 ? "/card-detail/" + category.id : "#"}>Học ngay</Link>
                     </div>
                 </div>
             </Link>
@@ -64,7 +68,7 @@ class FlashCard extends Component {
                             <div className="boxCommunicate">
                                 <h5>CHỦ ĐỀ GIAO TIẾP HẰNG NGÀY</h5>
                                 <div className="container">
-                                    <Carousel centerMode={true} centerSlidePercentage={32} infiniteLoop={false} onClickItem={(index,item) => console.log(item)} showThumbs={false} >
+                                    <Carousel swipeable='true' centerMode={false} centerSlidePercentage={32} infiniteLoop={false}  onClickItem={(index,item) => console.log(item)} showThumbs={false} >
                                         {renderCategories}
                                     </Carousel>
 

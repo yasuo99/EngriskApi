@@ -25,7 +25,7 @@ class KetQuaExam extends Component {
         }
     }
     render() {
-        console.log(this.state.result.questions);
+        console.log(this.state.result.answer.questions);
         const renderQuestions = this.state.result.answer.questions.map((question) =>
             <div key={question.id} className="ketquacauhoi">
                 <div className="cauhoi">

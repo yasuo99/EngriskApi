@@ -14,7 +14,8 @@ import { Formik, Field, Form } from "formik";
 import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 const post = {
-    contentPost: '',
+    title: '',
+    content: '',
     fileImg: '',
 }
 
@@ -182,6 +183,22 @@ class ThaoLuanPage extends Component {
         console.log(imagesUrl);
         this.setState({ selectImages: imagesUrl });
     }
+    createPost = async (values) => {
+        var images = Array.from(values.fileImg);
+        var formData = new FormData();
+        formData.set('title',values.title);
+        formData.set('content',values.content);
+        images.forEach((value) => {
+            formData.append('images',value)
+        })
+        var response = await postApi.createPost(formData);
+        console.log(response);
+    }
+    removeImageSelected = () => {
+        this.setState({
+            selectImages: []
+        })
+    }
     render() {
         const renderHighRatePost = this.state.allPosts.map((post) =>
             <Post key={post.id} post={post} />
@@ -229,49 +246,36 @@ class ThaoLuanPage extends Component {
                                             </div>
                                             <div className="tab-pane fade" id="tabfour" role="tabpanel">
                                                 <div className="boxContent">
-                                                    <img src="/image/user.png" className="img-user"></img>
+                                                    <img src={ this.props.photoUrl ||"/image/user.png"} className="img-user"></img>
                                                     <p className="username">{this.state.username}</p>
                                                     <Formik
                                                         initialValues={post}
                                                         onSubmit={async (values, { resetForm }) => {
                                                             await new Promise((r) => setTimeout(r, 500));
-                                                            console.log(values.fileImg)
-                                                            if (values.fileImg === undefined) {
-                                                                alert(JSON.stringify(
-                                                                    {
-                                                                        values: {
-                                                                            contentPost: values.contentPost,
-
-                                                                        }
-                                                                    }, null, 2));
-                                                                resetForm({});
-                                                                console.log(values.fileImg)
-                                                            }
-                                                            else {
-                                                                alert(JSON.stringify(
-                                                                    {
-                                                                        values: {
-                                                                            contentPost: values.contentPost,
-                                                                            fileImg: values.fileImg.name
-
-                                                                        }
-                                                                    }, null, 2));
-                                                                resetForm({});
-                                                                // console.log(values.fileImg)
-                                                            }
-
+                                                            // this.createPost(values);
+                                                            this.createPost(values);
+                                                            resetForm({})
+                                                            this.removeImageSelected();
                                                         }}
                                                     >
                                                         {({ values, setFieldValue }) => (
                                                             <div>
                                                                 <Form className="content" >
+                                                                    <Field
+                                                                        className="ml-3 border-bottom"
+                                                                        placeholder="Tiêu đề?"
+                                                                        type="text"
+                                                                        id="title"
+                                                                        name="title"
+                                                                        component="input"
+                                                                    />
                                                                     <div className="contentPost">
                                                                         <Field
                                                                             className="contentPost"
                                                                             placeholder="Bạn muốn chia sẻ điều gì thế?"
                                                                             type="text"
-                                                                            id="contentPost"
-                                                                            name="contentPost"
+                                                                            id="content"
+                                                                            name="content"
                                                                             component="textarea"
                                                                         />
                                                                     </div>
@@ -348,13 +352,14 @@ class ThaoLuanPage extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const { id, isVerified, username } = state.auth.account;
+    const { id, isVerified, username, photoUrl } = state.auth.account;
     const { isLoggedIn } = state.auth;
     return {
         id: id,
         isVerified: isVerified,
         isLoggedIn: isLoggedIn,
-        username: username
+        username: username,
+        photoUrl: photoUrl
     }
 }
 export default connect(mapStateToProps)(ThaoLuanPage);

@@ -109,14 +109,15 @@ class Exam extends Component {
                         <div className="col-2 text-center">
                             <img src="/image/welcome.jpg" alt="welcome" className="img-hoc" />
                         </div>
-                        <div className="col-8">
-                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge> {this.state.histories.some(el => el.examId == exam.id) && <Badge variant="success">Đã làm</Badge>}
+                        <div className="col-7">
+                            <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge> {this.state.histories.some(el => el.examId == exam.id && el.isDone) && <Badge variant="success">Đã làm</Badge>}{this.state.histories.some(el => el.examId == exam.id && el.isPause) && <Badge variant="success">Tạm dừng</Badge>}
                             <p>Exp: {exam.exp}  </p>
                             <p>Price: {exam.price}</p>
                             <p>Duration: {exam.duration} minutes</p>
                         </div>
-                        <div className="col-2 pr-4">
-                            <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Do <i className="fa fa-pencil"></i></Link>
+                        <div className="col-3 pr-4">
+                            {(this.state.histories.some(h => h.examId == exam.id) == false || this.state.histories.some(h => h.examId == exam.id && h.isPause == false)) && <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Làm ngay<i className="fa fa-pencil"></i></Link>}
+                            {this.state.histories.some(h => h.examId == exam.id && h.isPause) && <Link className="btn btn-primary do-btn" to={`/exam/${exam.id}?resume=true`}>Tiếp tục <i className="fa fa-pencil"></i></Link>}
                         </div>
                     </div>
                 </div>
