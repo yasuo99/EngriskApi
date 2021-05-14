@@ -2800,6 +2800,19 @@ ul[class^="ring"] li {
   font-weight: 400;
   font-size: 16px;
 }
+#quiz .main .functionQuestion .fa-save::before {
+  padding-right: 10px;
+}
+#quiz .main .functionQuestion .f-edit{
+  text-align: center;
+}
+#quiz .main .functionQuestion .f-edit .fa{
+  padding-right: 10px;
+}
+#quiz .main .functionQuestion .btn-success {
+    font-size: 16px;
+    padding: 10px;
+}
 #quiz .main .functionQuestionWord .fa-plus::before {
   padding-right: 10px;
 }
@@ -2970,10 +2983,69 @@ ul[class^="ring"] li {
   color: #fac106;
 }
 #quiz .main .item-question {
-  height: 48%;
+  height: 40%;
   margin-top: 10px;
   padding: 5px;
   overflow-y: scroll;
+}
+#quiz .main .item-questionQuizExam {
+  height: 30%;
+  margin-top: 10px;
+  padding: 5px;
+  overflow-y: scroll;
+}
+#quiz .main .item-questionQuizExam .card {
+  padding: 10px;
+  margin-bottom: 5px;
+}
+#quiz .main .item-questionQuizExam .cardActive {
+  background-color: #ccf1ed;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+#quiz .main .item-questionQuizExam .order {
+  color: #1a535c;
+  font-weight: bold;
+  font-style: italic;
+  display: flex;
+}
+#quiz .main .item-questionQuizExam .order li {
+  margin-left: 20px;
+}
+#quiz .main .item-questionQuizExam .card-body {
+  padding: 5px;
+}
+#quiz .main .item-questionQuizExam .card-body .question {
+  color: #116eee;
+  font-weight: bold;
+}
+#quiz .main .item-questionQuizExam .card-body img {
+  width: 100px;
+}
+#quiz .main .item-questionQuizExam .card-body p {
+  margin-bottom: 10px;
+  padding: 3px;
+}
+#quiz .main .item-questionQuizExam .card-body .answerTrue {
+  background-color: #116eee;
+  color: #fff;
+}
+#quiz .main .item-questionQuizExam .btn-add {
+  margin-top: 10px;
+  margin-left: 65px;
+}
+#quiz .main .item-questionQuizExam .exit {
+  color: #0a428f;
+  font-weight: 400;
+  font-style: italic;
+  display: block;
+  margin-top: 5px;
+  text-align: center;
+}
+#quiz .main .item-questionQuizExam .exit:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0a428f;
 }
 #quiz .main .item-question .card {
   padding: 10px;
@@ -3054,6 +3126,7 @@ ul[class^="ring"] li {
 #quiz .main .item-question .exit:hover {
   text-decoration: underline;
   cursor: pointer;
+  color: #0a428f;
 }
 #quiz .main .kedoc {
   border-right: 2px solid #ccc;
@@ -3094,12 +3167,11 @@ ul[class^="ring"] li {
 #quiz .main .info-question .functionQuestion {
   font-size: 14px;
   position: absolute;
-  bottom: 10px;
+  margin-top: 10px;
   width: 100%;
 }
 #quiz .main .info-question .functionQuestion .f-add{
   text-align: right;
-  padding-right: 40px;
 }
 #quiz .main .info-question .functionQuestion .btn-add:hover {
   background: #0a428f;
@@ -3300,7 +3372,7 @@ ul[class^="ring"] li {
   padding: 10px 5px;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0px 2px 4px #4ecdc4;
+  box-shadow: 0px 1px 2px #116eee;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -3701,19 +3773,55 @@ ul[class^="ring"] li {
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
+#home .boxLesson .collapse .cardCollapse .title{
+  color: #252b2f;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+#home .boxLesson .collapse .cardCollapse .kengang{
+  width: 20px;
+  height: 3px;
+  background: #116eee;
+  position: absolute;
+  margin-top: -25px;
+  margin-left: 50px;
+}
+#home .boxLesson .collapse .cardCollapse .kengang2{
+  width: 20px;
+  height: 3px;
+  background: #116eee;
+  position: absolute;
+  margin-top: -25px;
+  margin-left: 120px;
+}
+#home .boxLesson .collapse .cardCollapse .rounded-circle{
+  height: 50px;
+  width: 50px;
+  background:#116eee;
+  padding: 0;
+  margin-right: 20px;
+  position: relative;
+}
+#home .boxLesson .collapse .cardCollapse .nav-link{
+  border-radius: 50%;
+  padding: 0;
+}
+#home .boxLesson .collapse .cardCollapse .nav-link:hover {
+  background-color: #116eee !important;
+  border-radius: 50%;
+}
 #home .boxLesson .collapse .cardCollapse {
   background-color: #fff;
   padding: 1rem;
   /*  */
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  margin-top: -3px;
-  border-top: 1px solid #f2f7fd;
+  margin-top: -10px;
 }
 #home .boxLesson .collapse .cardCollapse .contentCollapse {
   padding-left: 2.1rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 /*  */
 #danhsachthongbao .title{

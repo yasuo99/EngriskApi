@@ -4,7 +4,9 @@ import SubMenuClient from "../../components/client/SubMenuClient";
 import { ProgressBar } from 'react-bootstrap';
 import { HubConnectionState } from '@microsoft/signalr';
 import sectionApi from '../../api/sectionApi';
-import { connection } from '../../signalR/createSignalRConnection'
+import { connection } from '../../signalR/createSignalRConnection';
+import { Tooltip, OverlayTrigger, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -119,7 +121,99 @@ class Home extends Component {
                             <div className="container">
                                 <div className="col-md-10 offset-1">
                                     <div className="boxLesson">
-                                        {renderSections}
+                                        <a data-toggle="collapse" key="1" data-id="1" href="#aaa" role="button" aria-expanded="false" aria-controls='1'>
+                                            <div className="card-hoc pt-2 mb-3">
+                                                <div className="headerLesson">
+                                                    <div className="col-md-1">
+                                                        <div className="iconLesson">
+                                                            <img src="./image/welcome.jpg" alt="Lesson" width="60" height="60"></img>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-8">
+                                                        <div className="contentLesson">
+                                                            <h2 className="title">What is your name?</h2>
+                                                            <p className="description">Xin chào</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <div className="progressLesson">
+                                                            <ProgressBar now="20"></ProgressBar>
+                                                            <span className="textProgress">20%</span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div className="collapse" id="aaa">
+                                                    <div className="cardCollapse">
+                                                        <div className="col-md-8 offset-1 contentCollapse">
+                                                            <p className="title">Cùng nhau nỗ lực để cải thiện tiếng anh nào!</p>
+                                                            <div className="container">
+                                                            {['bottom'].map((placement) => (
+                                                                        <OverlayTrigger
+                                                                            key={placement}
+                                                                            placement={placement}
+                                                                            overlay={
+                                                                                <Tooltip id={`tooltip-${placement}`}>
+                                                                                    Học từ vựng
+                  </Tooltip>
+                                                                            }
+                                                                        >
+                                                                <button className="rounded-circle ">
+                                                                   
+                                                                            <Link className="nav-link" to="/card">
+                                                                                <img src="./image/flash-card.png" width="24" height="24"></img>
+                                                                            </Link>
+                                                                        
+                                                                </button>
+                                                                   
+                                                                </OverlayTrigger>
+                                                                    ))}
+                                                                <div className="kengang"></div>
+                                                                {['bottom'].map((placement) => (
+                                                                        <OverlayTrigger
+                                                                            key={placement}
+                                                                            placement={placement}
+                                                                            overlay={
+                                                                                <Tooltip id={`tooltip-${placement}`}>
+                                                                                    Làm quiz
+                  </Tooltip>
+                                                                            }
+                                                                        >
+                                                                <button className="rounded-circle ">
+                                                                   
+                                                                            <Link className="nav-link" to="/card">
+                                                                                <img src="./image/test1.png" width="24" height="24"></img>
+                                                                            </Link>
+                                                                        
+                                                                </button>
+                                                                </OverlayTrigger>
+                                                                ))}
+                                                                <div className="kengang2"></div>
+                                                                {['bottom'].map((placement) => (
+                                                                        <OverlayTrigger
+                                                                            key={placement}
+                                                                            placement={placement}
+                                                                            overlay={
+                                                                                <Tooltip id={`tooltip-${placement}`}>
+                                                                                    Luyện nghe
+                  </Tooltip>
+                                                                            }
+                                                                        >
+                                                                <button className="rounded-circle ">
+                                                                   
+                                                                            <Link className="nav-link" to="/card">
+                                                                                <img src="./image/headphones.png" width="24" height="24"></img>
+                                                                            </Link>
+                                                                        
+                                                                </button>
+                                                                </OverlayTrigger>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </div>
 
                                 </div>
