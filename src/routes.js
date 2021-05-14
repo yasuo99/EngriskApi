@@ -75,8 +75,8 @@ const routes = [
         path: '/ranking-exam',
         exact: true,
         main: () => <RankingExam />,
-        guard: false,
-        roles: []
+        // guard: false,
+        // roles: []
     },
     {
         path: '/ranking-word',

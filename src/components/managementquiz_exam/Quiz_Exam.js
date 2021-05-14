@@ -697,7 +697,7 @@ class Quiz_Exam extends Component {
 
                                             </div>
                                             {/* Thông tin quiz/exam: kết thúc */}
-                                            <div className="item-question">
+                                            <div className="item-questionQuizExam">
                                                 <ol type="1">
                                                     {this.state.subject.questions.map((question, index) =>
                                                         <div className={question.question.selected === true ? 'cardActive' : 'card'} key={index} data-index={index} onClick={() => this.selectQuestion(index)}>
@@ -888,7 +888,7 @@ class Quiz_Exam extends Component {
                                                                                                             values.answers.map((answer, index) => (
                                                                                                                 <div className="itemAnswer" key={index}>
                                                                                                                     <div className="row">
-                                                                                                                        <div className="col-1 kedoc">
+                                                                                                                        <div className="col-1 kedoc-2">
                                                                                                                             <p className="textOrder"><li></li></p>
                                                                                                                         </div>
                                                                                                                         <div className="col-9 kedoc-2">
@@ -1308,18 +1308,32 @@ class Quiz_Exam extends Component {
                                                                         </div>}
 
                                                                     </div>
-                                                                    <div className="row functionQuestion">
-                                                                        <div className="col-md-6 ">
-                                                                            <button type="reset" className="btn btn-danger fa fa-trash-o" onClick={() => { this.deleteQuestion(); resetForm() }} >Xóa</button>
+                                                                    {Object.keys(this.state.selectedQuestion).length > 0 ? (
+                                                                        <div className="row functionQuestion">
+                                                                            <div className="col-md-4 ">
+                                                                                <button type="reset" className="btn btn-danger fa fa-trash-o" onClick={() => { this.deleteQuestion(); resetForm() }} >Xóa</button>
+                                                                            </div>
+                                                                            <div className="col-md-4 f-edit">
+                                                                                <button className="btn btn-success fa fa-save" onClick={(e) => this.saveQuestion(e, values)}>Lưu</button>
+                                                                            </div>
+                                                                            <div className="col-md-4 f-add">
+                                                                                <button className="btn btn-add fa fa-plus" type="submit">Thêm</button>
+                                                                            </div>
                                                                         </div>
-                                                                        {Object.keys(this.state.selectedQuestion).length > 0 && <div className="col-md-3">
-                                                                            <button className="btn btn-success btn-lg fa fa-save" onClick={(e) => this.saveQuestion(e, values)}> Lưu</button>
-                                                                        </div>}
-                                                                        <div className="col-md-6">
-                                                                            {/* <p className="btn btn-warning"><img src="/image/duplicate.png" /> Sao chép</p> */}
-                                                                            <button className="btn btn-add fa fa-plus" type="submit">Thêm câu hỏi</button>
+                                                                    ) : (
+                                                                        <div className="row functionQuestion">
+                                                                            <div className="col-md-4 ">
+                                                                                <button type="reset" className="btn btn-danger fa fa-trash-o" onClick={() => { this.deleteQuestion(); resetForm() }} >Xóa</button>
+                                                                            </div>
+                                                                            <div className="col-md-8 f-add">
+                                                                                <button className="btn btn-add fa fa-plus" type="submit">Thêm</button>
+                                                                            </div>
+
                                                                         </div>
-                                                                    </div>
+                                                                    )
+
+                                                                    }
+
                                                                 </div>
                                                             </div>
                                                         </div>
