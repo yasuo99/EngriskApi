@@ -14,13 +14,13 @@ body, html {
 }
 h1, h2, h3, h4, h5, h6 {font-family: 'Quicksand', sans-serif; font-weight: 800; }
 p {font-family: 'Arimo', sans-serif; font-size: 14px; color: #777;}
-.text-primary{color: #77B748!important}
-/* .btn-primary-border{background-color: #77B748!important;border-radius: 20px;color: #fff;padding: 8px}
-.btn-primary{background-color: #77B748!important} */
-a.text-primary:hover{color: #48871B}
+.text-primary{color: #116eee!important}
+/* .btn-primary-border{background-color: #116eee!important;border-radius: 20px;color: #fff;padding: 8px}
+.btn-primary{background-color: #116eee!important} */
+a.text-primary:hover{color: #0a428f}
 /* .btn-primary:hover{background-color:#48871B!important}
 .btn-primary-border:hover{background-color:#48871B!important;color: #fff} */
-/* .bg-primary{background-color: #77B748!important} */
+/* .bg-primary{background-color: #116eee!important} */
 /* ------------------------addtask------------------------ */
 .container-addtask{
   width: 100%; 
@@ -69,7 +69,7 @@ form.example button {
   float: left;
   width: 10%;
   padding: 10px;
-  background: #77B748;
+  background: #116eee;
   color: white;
   font-size: 17px;
   border: 1px solid grey;
@@ -80,7 +80,7 @@ form.example button {
 }
 
 form.example button:hover {
-  background: #77B748;
+  background: #116eee;
 }
 /*---------------------------------------------*/
 a {
@@ -99,7 +99,7 @@ a:focus {
 
 a:hover {
 	text-decoration: none;
-  color: #57b846;
+  color: #0a428f;
 }
 
 /*---------------------------------------------*/

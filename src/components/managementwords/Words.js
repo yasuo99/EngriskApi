@@ -5,11 +5,27 @@ import HeaderAdmin3 from "../admin/HeaderAdmin3";
 import { Formik, Field, Form, ErrorMessage, FieldArray } from 'formik';
 const word = {
     vocabulary: '',
-    typeOfWord: '',
     topic: 'Giao tiếp hàng ngày',
-    synonym: '',
-    mean: '',
+    typeOfWords: [{
+
+    }],
 }
+const typeOfWord = {
+    type: '',
+    defines: [{
+    }]
+}
+const define = {
+    pronounce: '',
+    position: '',
+    mean: '',
+    example: '',
+    synonyms: [{}],
+}
+const synonym = {
+    synonym: '',
+}
+
 const memory = {
     fileMemory: '',
     contentMemory: '',
@@ -25,7 +41,7 @@ class Word extends Component {
                         <div id="content">
                             <HeaderAdmin3></HeaderAdmin3>
                             <div className="container word">
-                                <Link className="fa fa-chevron-left" to="/quanly-tuvung"> <i>Trở về</i></Link>
+                                <Link className="fa fa-chevron-left mt-2" to="/quanly-tuvung"> <i>Trở về</i></Link>
                                 <div className="row p-LeftRight">
                                     <div className="col-md-4 border-wordLeft"></div>
                                     <div className="col-md-4 text-center title">
@@ -33,57 +49,43 @@ class Word extends Component {
                                     </div>
                                     <div className="col-md-4 border-wordRight"></div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-8">
-                                        <Formik
-                                            initialValues={word}
-                                            onSubmit={async (values, { resetForm }) => {
-                                                await new Promise((r) => setTimeout(r, 500));
-                                                alert(JSON.stringify(values, null, 2));
-                                                resetForm({})
-                                            }}
-                                        >
-                                            {({ resetForm }) => (
-                                                <Form className="content" >
+                                <Formik
+                                    initialValues={word}
+                                    onSubmit={async (values, { resetForm }) => {
+                                        await new Promise((r) => setTimeout(r, 500));
+                                        alert(JSON.stringify(values, null, 2));
+                                        resetForm({})
+                                    }}
+                                >
+                                    {({ values, resetForm }) => (
+                                        <Form className="content">
+                                            <div className="row">
+                                                <div className="col-md-10 offset-md-1">
                                                     <div className="vocabulary">
                                                         <div className="row">
-                                                            <div className="col-md-4 text-right pt-2">
-                                                                <label htmlFor="vocabulary">Từ vựng:</label>
+                                                            <div className="col-md-3 text-right pt-2">
+                                                                <label htmlFor="vocabulary">
+                                                                    Từ vựng:
+                                                                </label>
+
                                                             </div>
-                                                            <div className="col-8">
+                                                            <div className="col-md-9">
                                                                 <Field
                                                                     type="text"
                                                                     placeholder="Nhập từ vựng"
                                                                     required
                                                                     id="vocabulary"
-                                                                    name="vocabulary"></Field>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="typeOfWord" >
-                                                        <div className="row">
-                                                            <div className="col-md-4 text-right pt-2">
-                                                                <label htmlFor="typeOfWord">Loại từ:</label>
-                                                            </div>
-                                                            <div className="col-md-8">
-                                                                <Field
-                                                                    as="select"
-                                                                    name="typeOfWord"
-                                                                    id="typeOfWord">
-                                                                    <option value="Danh từ">Danh từ</option>
-                                                                    <option value="Tính từ">Tính từ</option>
-                                                                    <option value="Động từ">Động từ</option>
-                                                                    <option value="Trạng từ">Trạng từ</option>
+                                                                    name="vocabulary">
                                                                 </Field>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="topic">
                                                         <div className="row">
-                                                            <div className="col-md-4 text-right pt-2">
+                                                            <div className="col-md-3 text-right pt-2">
                                                                 <label htmlFor="topic">Chủ đề:</label>
                                                             </div>
-                                                            <div className="col-md-8">
+                                                            <div className="col-md-9">
                                                                 <Field
                                                                     as="select"
                                                                     name="topic"
@@ -94,118 +96,230 @@ class Word extends Component {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="synonym">
-                                                        <div className="row">
-                                                            <div className="col-md-4 text-right pt-2">
-                                                                <label htmlFor="synonym">Từ đồng nghĩa:</label>
-                                                            </div>
-                                                            <div className="col-md-8">
-                                                                <Field
-                                                                    type="text"
-                                                                    placeholder="Nhập từ đồng nghĩa"
-                                                                    name="synonym"
-                                                                    id="synonym"
-                                                                    required></Field>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="mean"><div className="row">
-                                                        <div className="col-md-4 text-right pt-2">
-                                                            <label htmlFor="synonym">Nghĩa từ vựng:</label>
-                                                        </div>
-                                                        <div className="col-md-8">
-                                                            <Field
-                                                                type="text"
-                                                                placeholder="Nhập nghĩa của từ vựng"
-                                                                name="mean"
-                                                                id="mean"
-                                                                required></Field>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                    <div className="row function">
-                                                        <div className="col-md-8 offset-md-4">
-                                                            <button className="save" type="submit" >Lưu lại</button>
-                                                            <button className="reset" onClick={() => resetForm(word)}>Làm mới</button>
-                                                        </div>
-                                                    </div>
-                                                </Form>
-                                            )}
-                                        </Formik>
+                                                    <div className="boxType">
+                                                        <FieldArray name="typeOfWords">
+                                                            {({ remove, push }) => (
+                                                                <div className="typeOfWords">
+                                                                    {values.typeOfWords.length > 0 &&
+                                                                        values.typeOfWords.map((typeOfWords, index) => (
+                                                                            <div>
+                                                                                <div key={index} className="typeOfWord">
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-1">
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                onClick={() => remove(index)}
+                                                                                                className="exit fa fa-lg fa-times-circle pl-3"
+                                                                                            >
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <div className="col-md-2 text-right pt-2">
+                                                                                            <label htmlFor="typeOfWord">
+                                                                                                Loại từ:
+                                                                                        </label>
+                                                                                        </div>
+                                                                                        <div className="col-md-9">
+                                                                                            <Field
+                                                                                                type="text"
+                                                                                                placeholder="Nhập loại từ"
+                                                                                                required
+                                                                                                id={`typeOfWords.${index}.type`}
+                                                                                                name={`typeOfWords.${index}.type`}>
+                                                                                            </Field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
 
-                                    </div>
-                                    <div className="col-md-4 border-left">
-                                        <h5 className="titleMemory text-center pt-3">TẠO THẺ GHI NHỚ</h5>
-                                        <div>
-                                            <Formik
-                                                initialValues={memory}
-                                                onSubmit={async (values, { resetForm }) => {
-                                                    await new Promise((r) => setTimeout(r, 500));
-                                                    alert(JSON.stringify(values, null, 2));
-                                                    resetForm({})
-                                                }}
-                                            >
-                                                {({ }) => (
-                                                    <div>
-                                                        <Form className="content" >
-                                                            <div className="fileMemory">
-                                                                <label htmlFor="fileMemory">Chọn file ảnh
-                                                            <Field
-                                                                        type="file"
-                                                                        id="fileMemory"
-                                                                        name="fileMemory" />
-                                                                </label>
-                                                            </div>
-                                                            <div className="contentMemory">
-                                                                <Field
-                                                                    className="contentMemory"
-                                                                    placeholder="Nhập nội dung thẻ nhớ"
-                                                                    type="text"
-                                                                    id="contentMemory"
-                                                                    name="contentMemory"
-                                                                    component="textarea"
-                                                                    defaultValue={""} />
-                                                            </div>
+                                                                                <Formik
+                                                                                    initialValues={typeOfWord}
+                                                                                    onSubmit={async (values, { resetForm }) => {
+                                                                                        await new Promise((r) => setTimeout(r, 500));
+                                                                                        alert(JSON.stringify(values, null, 2));
+                                                                                        resetForm({})
+                                                                                        }
+                                                                                    }
+                                                                                >
+                                                                                    {({ values, resetForm }) => (
+                                                                                        <Form className="content">
+                                                                                            <FieldArray name="defines">
+                                                                                                {({ remove, push }) => (
+                                                                                                    <div className="row">
+                                                                                                    <div className="col-md-10 offset-md-1">
+                                                                                                    <div className="defines">
+                                                                                                        {values.defines.length > 0 &&
+                                                                                                            values.defines.map((defines, index) => (
+                                                                                                                <div>
+                                                                                                                    <div key={index} className="pronounce">
+                                                                                                                        <div className="row">
+                                                                                                                            <div className="col-md-3 text-right pt-2">
+                                                                                                                                <button
+                                                                                                                                    type="button"
+                                                                                                                                    onClick={() => remove(index)}
+                                                                                                                                    className="exit pr-5 fa fa-lg fa-times-circle"
+                                                                                                                                >
+                                                                                                                                </button>
+                                                                                                                                <label htmlFor="pronounce">
+                                                                                                                                    Phát âm: </label>
+                                                                                                                            </div>
+                                                                                                                            <div className="col-md-9">
+                                                                                                                                <Field
+                                                                                                                                    type="text"
+                                                                                                                                    placeholder="Nhập phát âm"
+                                                                                                                                    required
+                                                                                                                                    id={`defines.${index}.pronounce`}
+                                                                                                                                    name={`defines.${index}.pronounce`}>
+                                                                                                                                </Field>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div key={index} className="position">
+                                                                                                                        <div className="row">
+                                                                                                                            <div className="col-md-3 text-right pt-2">
+                                                                                                                                <label htmlFor="position">
+                                                                                                                                    Vị trí:
+                                                                                                    </label>
+                                                                                                                            </div>
+                                                                                                                            <div className="col-md-9">
+                                                                                                                                <Field
+                                                                                                                                    type="text"
+                                                                                                                                    placeholder="Nhập vị trí trong câu"
+                                                                                                                                    required
+                                                                                                                                    id={`defines.${index}.position`}
+                                                                                                                                    name={`defines.${index}.position`}>
+                                                                                                                                </Field>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div key={index} className="mean">
+                                                                                                                        <div className="row">
+                                                                                                                            <div className="col-md-3 text-right pt-2">
+                                                                                                                                <label htmlFor="mean">
+                                                                                                                                    Nghĩa của từ:
+                                                                                                    </label>
+                                                                                                                            </div>
+                                                                                                                            <div className="col-md-9">
+                                                                                                                                <Field
+                                                                                                                                    type="text"
+                                                                                                                                    placeholder="Nhập nghĩa của từ"
+                                                                                                                                    required
+                                                                                                                                    id={`defines.${index}.mean`}
+                                                                                                                                    name={`defines.${index}.mean`}>
+                                                                                                                                </Field>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div key={index} className="example">
+                                                                                                                        <div className="row">
+                                                                                                                            <div className="col-md-3 text-right pt-2">
+                                                                                                                                <label htmlFor="example">
+                                                                                                                                    Ví dụ:
+                                                                                                    </label>
+                                                                                                                            </div>
+                                                                                                                            <div className="col-md-9">
+                                                                                                                                <Field
+                                                                                                                                    type="text"
+                                                                                                                                    placeholder="Nhập ví dụ"
+                                                                                                                                    required
+                                                                                                                                    id={`defines.${index}.example`}
+                                                                                                                                    name={`defines.${index}.example`}>
+                                                                                                                                </Field>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <Formik
+                                                                                                                        initialValues={define}
+                                                                                                                        onSubmit={async (values, { resetForm }) => {
+                                                                                                                            await new Promise((r) => setTimeout(r, 500));
+                                                                                                                            alert(JSON.stringify(values, null, 2));
+                                                                                                                            resetForm({})
+                                                                                                                        }}
+                                                                                                                    >
+                                                                                                                        {({ values, resetForm }) => (
+                                                                                                                            <Form>
+                                                                                                                                <div className="boxSynonym">
+                                                                                                                                    <div className="row">
+                                                                                                                                        <div className="col-md-3 text-right pt-2">
+                                                                                                                                            <label htmlFor="synonym">Từ đồng nghĩa:</label>
+                                                                                                                                        </div>
+                                                                                                                                        <div className="col-md-9">
+                                                                                                                                            <div className="contentSynonym">
 
-                                                            <div className="row function">
-                                                                <button className="createMemory" type="submit" >TẠO THẺ</button>
-                                                            </div>
-                                                        </Form>
-                                                        <div id="owl-carousel" className="carousel slide" data-ride="carousel">
-                                                            <div className="carousel-inner">
+                                                                                                                                                <FieldArray name="synonyms">
+                                                                                                                                                    {({ remove, push }) => (
+                                                                                                                                                        <div className="synonyms">
+                                                                                                                                                            {values.synonyms.length > 0 &&
+                                                                                                                                                                values.synonyms.map((synonym, index) => (
+                                                                                                                                                                    <div key={index} className="synonym">
+                                                                                                                                                                        <Field type="text" id="synonym" name={`synonyms.${index}.synonym`} placeholder="Nhập từ" onBlur={() => push({ synonym: '', })}>
 
-                                                                <div className="carousel-item active" >
-                                                                    <div className="row">
-                                                                        <div className="col">
-                                                                            <div className="cardMemory">
-                                                                                <img src="/image/english (1).jpg" alt="imageMemory" className="imageMemory"></img>
-                                                                                <p className="contentMemory">To cooperate with that company, he had to abide by the contract's conditions.</p>
+                                                                                                                                                                        </Field>
+                                                                                                                                                                        <button
+                                                                                                                                                                            type="button"
+                                                                                                                                                                            onClick={() => remove(index)}
+                                                                                                                                                                            className="exitThree fa fa-lg fa-times-circle"
+                                                                                                                                                                        >
+                                                                                                                                                                        </button>
+                                                                                                                                                                    </div>
+
+                                                                                                                                                                ))}
+                                                                                                                                                        </div>)}
+                                                                                                                                                </FieldArray>
+
+
+                                                                                                                                            </div>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                    {/* <div className="kengang"></div> */}
+                                                                                                                                </div>
+
+                                                                                                                            </Form>)}
+                                                                                                                    </Formik>
+                                                                                                                   
+                                                                                                                </div>
+                                                                                                            ))}
+                                                                                                        <button
+                                                                                                            type="button"
+                                                                                                            className="btn btn-addDefine fa fa-plus"
+
+                                                                                                            onClick={() => push({
+                                                                                                                pronounce: '',
+                                                                                                                position: '',
+                                                                                                                mean: '',
+                                                                                                                example: '',
+
+                                                                                                            })}> Thêm định nghĩa </button>
+                                                                                                    </div>
+                                                                                                    </div></div>
+                                                                                                )}
+                                                                                            </FieldArray>
+
+                                                                                        </Form>)}
+                                                                                </Formik>
+
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="carousel-item" >
-                                                                    <div className="row">
-                                                                        <div className="col">
-                                                                            <div className="cardMemory">
-                                                                                <img src="/image/english (1).jpg" alt="imageMemory" className="imageMemory"></img>
-                                                                                <p className="contentMemory">To cooperate with that company, he had to abide by the contract's conditions.</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <a className="carousel-control-prev" href="#owl-carousel" data-slide="prev"> <span className="fa fa-chevron-left" aria-hidden="true"></span></a> <a className="carousel-control-next" href="#owl-carousel" data-slide="next"> <span className="fa fa-chevron-right" aria-hidden="true"></span></a>
-                                                            </div>
+                                                                        ))}
 
-                                                        </div>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-addTypeOfWord fa fa-plus"
+                                                                        onClick={() => push({
+                                                                        })}> Thêm loại từ
+                                                                                </button>
+                                                                </div>
+                                                            )}
+                                                        </FieldArray>
                                                     </div>
-                                                )}
-                                            </Formik>
 
-                                        </div>
+                                                </div>
+                                            </div>
+                                            <div className="row justify-content-center function">
+                                                <button className="save" onClick={() => resetForm(word)}>Cài lại</button>
+                                                <button className="reset" type="submit">Lưu lại</button>
+                                            </div>
+                                        </Form>
 
-                                    </div>
-                                </div>
+                                    )}
+                                </Formik>
                             </div>
                         </div>
                     </div>

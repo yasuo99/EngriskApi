@@ -56,6 +56,11 @@ import Word from './components/managementwords/Words';
 import Quiz_Word from './components/managementquiz_exam/Quiz_Word';
 import QuizExam_User from './components/managementquiz_exam/QuizExam_User';
 import QuizExamPage from './pages/QuizExamPage/QuizExamPage';
+import SectionPage from './pages/SectionPage/SectionPage';
+import Section from './components/managementsections/Section';
+import ManagementGroupWord from './pages/Admin/ManagementGroupWord';
+import GroupWord from './components/managementgroup_word/GroupWord';
+import ProgressWord from './pages/ProgressWord/ProgressWord';
 const routes = [
     {
         path: '/home',
@@ -63,6 +68,27 @@ const routes = [
         main: () => <HomePage />,
         guard: false,
         roles: []
+    },
+    {
+        path: '/progressword',
+        exact: true,
+        main: () => <ProgressWord />,
+        // guard: false,
+        // roles: []
+    },
+    {
+        path: '/user/quanly-section',
+        exact: true,
+        main: () => <SectionPage />,
+        // guard: false,
+        // roles: []
+    },
+    {
+        path: '/user/section',
+        exact: true,
+        main: () => <Section />,
+        // guard: false,
+        // roles: []
     },
     {
         path: '/blog',
@@ -363,6 +389,20 @@ const routes = [
         path: '/quanly-tuvung',
         exact: true,
         main: () => <ManagementWord />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
+        path: '/quanly-groupword',
+        exact: true,
+        main: () => <ManagementGroupWord />,
+        // guard: true,
+        // roles: ["superadmin", "manager"]
+    },
+    {
+        path: '/groupword',
+        exact: true,
+        main: () => <GroupWord />,
         // guard: true,
         // roles: ["superadmin", "manager"]
     },
