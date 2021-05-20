@@ -44,7 +44,6 @@ class FlashCard extends Component {
                     <div className="contentItem">
                         <h3 className="title">{category.categoryName}</h3>
                         <h5 className="title">Số từ {category.words.length}</h5>
-                        <Link className="btn post" to={category.words.length > 0 ? "/card-detail/" + category.id : "#"}>Học ngay</Link>
                     </div>
                 </div>
             </Link>

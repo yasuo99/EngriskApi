@@ -7,6 +7,12 @@ const wordCategoryApi = {
     getDetail: async (id) => {
         return await axiosClientv2.get(url + `/${id}`);
     },
+    getUserDetail: async(id) => {
+        const tempUrl = `/wordcategories/${id}/users/${JSON.parse(localStorage.getItem('account')).id}`;
+        console.log(tempUrl);
+        return await axiosClientv2.get(tempUrl);
+    }
+    ,
     createWordCategory: async (body) => {
         return await axiosClientv2.post(url, body);
     },

@@ -6,7 +6,8 @@ import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import wordCategoryApi from "../../api/2.0/wordCategoryApi";
 import ReactPlayer from "react-player";
-import wordApi from "../../api/2.0/wordApi";
+import wordApiV2 from "../../api/2.0/wordApi";
+import { connect } from "react-redux";
 class FlashCardDetail extends Component {
     constructor(props) {
         super(props);
@@ -34,9 +35,10 @@ class FlashCardDetail extends Component {
     }
     async componentDidMount() {
         this.isComponentMounted = true;
+        console.log(this.props.isLoggedIn);
         const { match: { match: { params } } } = this.props;
         console.log(params);
-        var cardDetail = await wordCategoryApi.getDetail(params.cardId);
+        let cardDetail = this.props.isLoggedIn ? await wordCategoryApi.getUserDetail(params.cardId) : await wordCategoryApi.getDetail(params.cardId);
         console.log(cardDetail);
         if (this.isComponentMounted) {
             this.setState({
@@ -77,7 +79,7 @@ class FlashCardDetail extends Component {
         formData.append('WordId', this.state.currentWord.id);
         formData.append('Image', this.state.imageMemory);
         formData.append('Title', this.state.title)
-        await wordApi.createMem(this.state.currentWord.id, formData);
+        await wordApiV2.createMem(this.state.currentWord.id, formData);
         this.closeCreate();
     }
     fileChange(e) {
@@ -121,13 +123,23 @@ class FlashCardDetail extends Component {
             currentWord: shuffled[this.state.wordIndex]
         })
     }
+    selectMemmory = async (e) => {
+        console.log(e.target);
+        await wordApiV2.selectMemory(this.state.currentWord.id, e.target.dataset.id);
+        var currentWord = this.state.currentWord;
+        currentWord.memory = currentWord.memories.find(mem => mem.id == e.target.dataset.id);
+        this.setState({
+            currentWord: currentWord,
+            memory: false
+        })
+    }
     render() {
         var { memory, check } = this.state;
         const renderMemories = this.state.currentWord.memories.map((memory, index) =>
-            <div className="carousel-item" key={index} onChange={this.handleChange} onClick={this.ToToggleMemory} id="check">
+            <div className="carousel-item" key={index} onChange={this.handleChange} id="check">
                 <div className="row">
                     <div className="col">
-                        <div className="cardMemory">
+                        <div className="cardMemory" data-id={memory.id} onClick={(e) => this.selectMemmory(e)}>
                             <img src={`http://localhost:5000/api/v2/streaming/image?image=${memory.memImg}`} alt="imageMemory" className="imageMemory"></img>
                             <p className="contentMemory">{memory.title}</p>
                         </div>
@@ -148,10 +160,10 @@ class FlashCardDetail extends Component {
                                     <div className="col-md-3 kedoc">
                                         <Link to="/card" className="textReturn"><i className="fa fa-chevron-left"></i> Trở về</Link>
                                         <h4 className="title">Thẻ ghi nhớ</h4>
-                                        <ProgressBar className="mt-5 mb-2" variant="success" now={this.state.wordIndex / this.state.wordCategory.words.length * 100} />
+                                        <ProgressBar className="mt-5 mb-2" variant="success" now={(this.state.wordIndex + 1) / this.state.wordCategory.words.length * 100} />
                                         <div className="row">
                                             <div className="col-6 textProgress">TIẾN ĐỘ</div>
-                                            <div className="col-6 textPoint">{this.state.wordIndex}/{this.state.wordCategory.words.length}</div>
+                                            <div className="col-6 textPoint">{this.state.wordIndex + 1}/{this.state.wordCategory.words.length}</div>
                                         </div>
                                         <button className="btn btn-training"><img src="/image/training.png"></img> Luyện tập</button>
                                         <button className="btn btn-test"><img src="/image/test1.png"></img> Test toeic</button>
@@ -163,42 +175,44 @@ class FlashCardDetail extends Component {
                                             <div className="col-10">
                                                 <div className="boxContent">
                                                     <img onClick={this.playAudio} src="/image/sound.png" className="sound"></img>
-                                                    {this.state.currentWord.wordVoice !== null && <ReactPlayer playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={`http://localhost:5000/api/v2/streaming/audio?path=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
+                                                    {this.state.currentWord.wordVoice !== null && <ReactPlayer config={{
+                                                        file: {
+                                                            attributes: {
+                                                                preload: 'none'
+                                                            }
+                                                        }
+                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={`${process.env.REACT_APP_V2_API_URL}/streaming/audio?path=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
                                                     <h1 className="word">{this.state.currentWord.eng}</h1>
-                                                    <p className="synonym">(v) ({this.state.currentWord.vie})</p>
-                                                    <p className="typeWord">v</p>
-
+                                                    <p className="synonym">(n) ({this.state.currentWord.vie})</p>
+                                                    <p className="typeWord">n</p>
+                                                    {this.state.currentWord.memory != null && <div className="row">
+                                                        <div className="row">
+                                                            <div className="col">
+                                                                <div className="cardMemoryDisplay">
+                                                                    <img src={`http://localhost:5000/api/v2/streaming/image?image=${this.state.currentWord.memory.memImg}`} alt="imageMemory" className="imageMemory"></img>
+                                                                    <p className="contentMemory">{this.state.currentWord.memory.title}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>}
                                                     {memory === true ? (
                                                         <div>
                                                             <div className="container">
                                                                 <div id="owl-carousel" className="carousel slide" data-ride="carousel">
-                                                                    {check === true ? (
-                                                                        <div className="row">
-                                                                            <div className="col">
-                                                                                <div className="cardMemory">
-                                                                                    <img src="/image/english (1).jpg" alt="imageMemory" className="imageMemory"></img>
-                                                                                    <p className="contentMemory">To cooperate with that company, he had to abide by the contract's conditions.</p>
+                                                                    <div className="carousel-inner">
+                                                                        <div className="carousel-item active">
+                                                                            <div className="row">
+                                                                                <div className="col">
+                                                                                    <div className="boxMemory">
+                                                                                        <i className="fa fa-plus" onClick={e => this.openCreate(e)}></i>
+                                                                                        <p className="content">Thêm mem mới</p>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    ) :
-                                                                        (
-                                                                            <div className="carousel-inner">
-                                                                                <div className="carousel-item active">
-                                                                                    <div className="row">
-                                                                                        <div className="col">
-                                                                                            <div className="boxMemory">
-                                                                                                <i className="fa fa-plus" onClick={e => this.openCreate(e)}></i>
-                                                                                                <p className="content">Thêm mem mới</p>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                {renderMemories}
-                                                                                <a className="carousel-control-prev" href="#owl-carousel" data-slide="prev"> <span className="fa fa-chevron-left" aria-hidden="true"></span></a> <a className="carousel-control-next" href="#owl-carousel" data-slide="next"> <span className="fa fa-chevron-right" aria-hidden="true"></span></a>
-                                                                            </div>
-
-                                                                        )}
+                                                                        {renderMemories}
+                                                                        <a className="carousel-control-prev" href="#owl-carousel" data-slide="prev"> <span className="fa fa-chevron-left" aria-hidden="true"></span></a> <a className="carousel-control-next" href="#owl-carousel" data-slide="next"> <span className="fa fa-chevron-right" aria-hidden="true"></span></a>
+                                                                    </div>
                                                                     <Modal show={this.state.modalCreate} onHide={this.closeCreate}>
                                                                         <Modal.Header closeButton onClick={() => this.closeCreate()}>
                                                                             <Modal.Title>
@@ -278,4 +292,10 @@ class FlashCardDetail extends Component {
         this.isComponentMounted = false;
     }
 }
-export default FlashCardDetail;
+const mapStateToProps = (state) => {
+    const { isLoggedIn } = state.auth;
+    return {
+        isLoggedIn: isLoggedIn
+    }
+}
+export default connect(mapStateToProps)(FlashCardDetail);

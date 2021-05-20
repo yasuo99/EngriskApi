@@ -133,18 +133,7 @@ class Exam extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div id="trangchu" className="col-10 offset-1">
-                                        {this.isComponentMounted && <InfiniteScroll
-                                            dataLength={this.state.exams.length}
-                                            next={this.fetchMoreExam}
-                                            hasMore={this.state.hasMore}
-                                            loader={<h4>Loading...</h4>}
-                                            endMessage={
-                                                <p style={{ textAlign: "center" }}>
-                                                    <b>Hiện chưa có exam mới !!</b>
-                                                </p>
-                                            }
-                                            height={500}
-                                        >{renderExam}</InfiniteScroll>}
+                                        {renderExam}
                                     </div>
                                 </div>
                             </div>

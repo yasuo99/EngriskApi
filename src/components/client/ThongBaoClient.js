@@ -87,8 +87,8 @@ class ThongBaoClient extends Component {
           </div>
         </div>
         <div>
-          <div className="small text-gray-500">{Moment(notify.publishedDate).format("MMMM Do YYYY")}</div>
-          {notify.content}
+          <div className="small text-black-500 font-weight-bold">{notify.createdBy} {Moment(notify.createdDate).format("MMMM Do YYYY")}</div>
+          {notify.content} {notify.status}
         </div>
       </Link>
     )

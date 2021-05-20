@@ -35,10 +35,9 @@ class KetQuaExam extends Component {
                 <div className="dapan">
                     {question.userAnswer === '' && <p className="text-danger">Không chọn đáp án</p>}
                     <ol type="A" className="ml-4">
-                        <li className={question.a ? (question.a === question.answer ? "text-success" : (question.a === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.a}</li>
-                        <li className={question.b ? (question.b === question.answer ? "text-success" : (question.b === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.b}</li>
-                        <li className={question.c ? (question.c === question.answer ? "text-success" : (question.c === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.c}</li>
-                        <li className={question.d ? (question.d === question.answer ? "text-success" : (question.d === question.userAnswer ? "text-danger" : "")) : "hidden"}>{question.d}</li>
+                        {question.answers.map((answer,index) => 
+                        <li className={answer ? (answer.answer === question.answer ? "text-success" : (answer.answer === question.userAnswer ? "text-danger" : "")) : "hidden"}>{answer.answer}</li>
+                        )}
                     </ol>
                 </div>
                 <div className="ketqua">

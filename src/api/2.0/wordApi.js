@@ -1,6 +1,6 @@
 import axiosClientv2 from "../../config/axiosClientv2";
 
-const wordApi = {
+const wordApiV2 = {
     getAll: async () => {
         const url = "/words";
         return axiosClientv2.get(url).catch(err => {
@@ -15,6 +15,15 @@ const wordApi = {
         return axiosClientv2.post(url, body, {headers}).catch(err => {
             console.log(err);
         })
+    },
+    selectMemory: async (id, memId) => {
+        const url = `/words/${id}/memories/${memId}`;
+        const headers = {
+            Authorization: `bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.put(url, null, {headers}).catch(err => {
+            console.log(err);
+        })
     }
 }
-export default wordApi;
+export default wordApiV2;

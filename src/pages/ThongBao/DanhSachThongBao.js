@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import notificationApiV2 from '../../api/2.0/notificationApi';
 import notificationApi from '../../api/notificationApi';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
@@ -11,7 +13,7 @@ class DanhSachThongBao extends Component {
         super(props);
         this.isComponentMounted = false;
         this.state = {
-            notification: [],
+            notifications: [],
             params: { pageSize: 100 }
         }
     }
@@ -20,19 +22,19 @@ class DanhSachThongBao extends Component {
         var result = await this.fetchNotification(this.state.params);
         if (this.isComponentMounted) {
             this.setState({
-                notification: result
+                notifications: result.items
             })
         }
     }
     fetchNotification = async (params) => {
-        return await notificationApi.getPublishing(params);
+        return await notificationApiV2.get(this.props.account.id,params);
     }
     render() {
-        // const renderNotification = this.state.notification.map((notify) =>
-        //     <div key={notify.id} className="col-lg-4 col-md-4 pb-3">
-        //         <ThongBao notify={notify}></ThongBao>
-        //     </div>
-        // );
+        const renderNotifications = this.state.notifications.map((notify,index) =>
+            <div key={notify.id}>
+                <ThongBao notify={notify} index={index}></ThongBao>
+            </div>
+        );
         return (
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
@@ -43,7 +45,7 @@ class DanhSachThongBao extends Component {
                         <div className="container">
                                 <div className="col-md-10 offset-1">
                                 <h4 className="title">Danh sách thông báo</h4>
-                                    <ThongBao ></ThongBao>
+                                    {this.isComponentMounted && renderNotifications}
                                 </div>
                                 </div>
                         </section>
@@ -57,4 +59,10 @@ class DanhSachThongBao extends Component {
         this.isComponentMounted = false;
     }
 }
-export default DanhSachThongBao;
+const mapStateToProps = (state) => {
+    const {account} = state.auth;
+    return{
+        account: account
+    }
+}
+export default connect(mapStateToProps)(DanhSachThongBao);

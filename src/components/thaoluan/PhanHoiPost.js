@@ -64,6 +64,7 @@ class PhanHoiPost extends Component {
         });
     }
     replyComment = async () => {
+        console.log(this.state.content);
         if (this.state.content == null || this.state.content == "") {
             toast("Không được để trống bình luận");
         } else {
@@ -95,8 +96,9 @@ class PhanHoiPost extends Component {
         }
     }
     render() {
-        const renderComments = this.props.comments.map((comment) =>
-            <div key={comment.id} className="row kechan d-block">
+        console.log(this.props.comments);
+        const renderComments = this.props.comments.map((comment,index) =>
+            <div key={comment.id} className="row kechan d-block" key={index}>
                 <div className="row mt-3 ">
                     <div className="col-md-1 nd-img"><img className="img-fluid mb-4 img-chitietthaoluan" src={comment.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                     <div className="col-md-11 pt-3">

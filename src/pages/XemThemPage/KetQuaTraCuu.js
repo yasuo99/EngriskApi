@@ -10,6 +10,7 @@ import groupApi from '../../api/groupApi';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
+import groupApiv2 from '../../api/2.0/groupApi';
 
 class KetQuaTraCuu extends Component {
     constructor(props) {
@@ -58,12 +59,12 @@ class KetQuaTraCuu extends Component {
     fetchGroup = async (id) => {
         return await groupApi.getGroupsOfAccount(id);
     }
-    addWordToGroup = async (groupId, wordId) => {
-        return await groupApi.addWordToGroup(groupId, wordId);
+    addWordToGroup = async (accountId, groupId, wordId) => {
+        return await groupApiv2.wordGroupAction(accountId, groupId, wordId);
     }
     selectGroup = async (e) => {
         const groupId = e.target.id;
-        var result = await this.addWordToGroup(groupId, this.state.result.word.id);
+        var result = await this.addWordToGroup(this.props.account.id,groupId, this.state.result.word.id);
         if (result.status === 200) {
             toast("Thành công");
             const groups = await this.fetchGroup(this.props.account.id);
@@ -105,19 +106,18 @@ class KetQuaTraCuu extends Component {
 
     }
     modalGroup = (e) => {
-        console.log('dm');
         this.state.modalGroup ? this.setState({ modalGroup: false }) : this.setState({ modalGroup: true });
     }
     render() {
         const { result } = this.state;
-        const renderExamples = this.state.result.word.examples.map((example) =>
-            <div key={example.id} className="row">
-                <div className="col-12 offset-1">
-                    <h5 className="text-primary"><img src="/image/united-states.png" /> {example.eng}</h5>
-                    <h5 className="gachchan"><img src="/image/vietnam.png" /> {example.vie}</h5>
-                </div>
-            </div>
-        );
+        // const renderExamples = this.state.result.word.examples.map((example) =>
+        //     <div key={example.id} className="row">
+        //         <div className="col-12 offset-1">
+        //             <h5 className="text-primary"><img src="/image/united-states.png" /> {example.eng}</h5>
+        //             <h5 className="gachchan"><img src="/image/vietnam.png" /> {example.vie}</h5>
+        //         </div>
+        //     </div>
+        // );
         const renderGroups = this.state.groups.map((group) =>
             <a key={group.id} id={group.id} onClick={(e) => this.selectGroup(e)} className="dropdown-item" href="#">{group.groupName} {group.words.some(el => el.eng === result.word.eng) && <img src="/image/remove.png" />}</a>
         );
@@ -152,7 +152,6 @@ class KetQuaTraCuu extends Component {
                                         <h5 className="text2 mt-2">BẢN DỊCH</h5>
                                         <h3 className="mt-3"><img src={result.direction === 'en' ? "/image/vietnamxl.png" : "/image/english-language.png"} className="mr-2" />{result.direction === 'en' ? result.word.vie : result.word.eng}</h3>
                                         <h5 className="text2 mt-4">VÍ DỤ</h5>
-                                        {renderExamples}
                                     </div>
                                 </div>
                             </div>

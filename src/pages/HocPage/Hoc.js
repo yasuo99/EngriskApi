@@ -27,7 +27,7 @@ class Hoc extends PureComponent {
             questions: [],
             currentQuestion: {},
             remainQuestion: [],
-            quiz: {},
+            quiz: { questions: [] },
             index: 0,
             rightAnswer: 0,
             loading: true,
@@ -46,7 +46,7 @@ class Hoc extends PureComponent {
     }
     async componentDidMount() {
         window.addEventListener('beforeunload', this.handleUnload);
-       
+
         const { match: { match: { params, path } } } = this.props;
         this.isComponentMounted = true;
         //Kiểm tra có phải là bài quiz practice hay không
@@ -55,28 +55,36 @@ class Hoc extends PureComponent {
             const result = await this.fetchQuestions(params.sectionId);
             try {
                 if (this.isComponentMounted) {
-                    if (result.questions.length > 0) {
-                        this.setState({
-                            sectionId: params.sectionId,
-                            questions: result.questions,
-                            currentQuestion: result.questions[this.state.index],
-                            id: this.state.index,
-                            quiz: result,
-                            loading: false
-                        })
-                        if (!this.props.isLoggedIn) {
-                            this.calculateSpent = setInterval(() => {
-                                this.time += 1
-                            }, 1000)
+                    console.log(result);
+                    if (result.status != 204) {
+
+                        if (result.questions.length > 0) {
+                            this.setState({
+                                sectionId: params.sectionId,
+                                questions: result.questions,
+                                currentQuestion: result.questions[this.state.index],
+                                id: this.state.index,
+                                quiz: result,
+                                loading: false
+                            })
+                            if (!this.props.isLoggedIn) {
+                                this.calculateSpent = setInterval(() => {
+                                    this.time += 1
+                                }, 1000)
+                            }
                         }
-                    }
-                    else {
+                        else {
+                            toast("Hiện chưa có câu hỏi cho bài quiz này");
+                            this.setState({
+                                loading: true
+                            })
+                        }
+                    } else {
                         toast("Hiện chưa có câu hỏi cho bài quiz này");
                         this.setState({
                             loading: true
                         })
                     }
-
                 }
             }
             catch (error) {
@@ -87,21 +95,25 @@ class Hoc extends PureComponent {
             const questions = await wordApi.practice(this.props.words);
             console.log(questions);
             if (this.isComponentMounted) {
-                if (questions.length > 0) {
-                    this.setState({
-                        questions: questions,
-                        currentQuestion: questions[this.state.index],
-                        quiz: { ...this.state.quiz, questions: questions },
-                        id: this.state.index,
-                        loading: false
-                    })
-                    this.calculateSpent = setInterval(() => {
+                if (questions) {
+                    if (questions.length > 0) {
+                        this.setState({
+                            questions: questions,
+                            currentQuestion: questions[this.state.index],
+                            quiz: { ...this.state.quiz, questions: questions },
+                            id: this.state.index,
+                            loading: false
+                        })
                         this.calculateSpent = setInterval(() => {
-                            this.time += 1
+                            this.calculateSpent = setInterval(() => {
+                                this.time += 1
+                            }, 1000)
                         }, 1000)
-                    }, 1000)
-                }
-                else {
+                    }
+                    else {
+                        this.setState({ loading: true })
+                    }
+                } else {
                     this.setState({ loading: true })
                 }
             }
@@ -145,13 +157,13 @@ class Hoc extends PureComponent {
             const answer = {
                 id: this.state.currentQuestion.id,
                 answer: this.state.answer,
-                isRightAnswer: false
+                isQuestionAnswer: false
             }
             const result = await submitQuestion(this.state.currentQuestion.id, answer);
             this.setState({
-                isRight: result.isRightAnswer
+                isRight: result.isQuestionAnswer
             })
-            if (result.isRightAnswer) {
+            if (result.isQuestionAnswer) {
                 this.setState({
                     rightAnswer: this.state.rightAnswer + 1,
                 })
@@ -322,36 +334,22 @@ class Hoc extends PureComponent {
                                             <div className="col-8 offset-2">
                                                 {currentQuestion.isListeningQuestion === false && <div className="row"> <div className="col-9"><h2>{currentQuestion.content}</h2>
                                                     {currentQuestion.isFillOutQuestion ? <p>Điền vào chỗ trống</p> : <p className="mb-5">Có nghĩa là?</p>}</div>
-                                                    {currentQuestion.photoUrl &&<div className="col-3"><img src={currentQuestion.photoUrl} alt="" /><br/>Chọn đáp án đúng</div>}</div>}
+                                                    {currentQuestion.photoUrl && <div className="col-3"><img src={currentQuestion.photoUrl} alt="" /><br />Chọn đáp án đúng</div>}</div>}
                                                 {currentQuestion.isListeningQuestion === true &&
                                                     <div className="row">
                                                         <b>{currentQuestion.content}</b>
                                                         <ReactPlayer url={currentQuestion.audio} controls width="500px" height="30px" playing={true} />
-                                                        {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /><br/>Chọn đáp án đúng</div>}
+                                                        {currentQuestion.photoUrl && <div className="col-7"><img src={currentQuestion.photoUrl} alt="" /><br />Chọn đáp án đúng</div>}
                                                     </div>}
                                                 <div className="row mt-2">
-                                                    <div className="col-6">
-                                                        <div className={currentQuestion.a ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(1) }} onClick={(e) => this.selectedAnswer(e, 1)}>
-                                                            <p>{currentQuestion.a}</p>
+                                                    {currentQuestion.answers.map((answer, index) =>
+                                                        <div className="col-6">
+                                                            <div className={answer ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(index + 1) }} onClick={(e) => this.selectedAnswer(e, index + 1)}>
+                                                                <p>{answer.answer}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <div className={currentQuestion.b ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(2) }} onClick={(e) => this.selectedAnswer(e, 2)}>
-                                                            <p>{currentQuestion.b}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-6">
-                                                        <div className={currentQuestion.c ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(3) }} onClick={(e) => this.selectedAnswer(e, 3)}>
-                                                            <p>{currentQuestion.c}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <div className={currentQuestion.d ? "dapan" : "dapan hidden"} style={{ backgroundColor: this.setColor(4) }} onClick={(e) => this.selectedAnswer(e, 4)}>
-                                                            <p>{currentQuestion.d}</p>
-                                                        </div>
-                                                    </div>
+                                                    )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -375,7 +373,7 @@ class Hoc extends PureComponent {
                                     <Modal.Body> Thời gian hoàn thành của bạn là: {path !== '/practice' ? (this.props.isLoggedIn ? this.state.authResult.timeSpent : this.time) : this.time} giây
                                    </Modal.Body>
                                     <Modal.Footer>
-                                       {path !== '/practice' ? <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/home">Học tiếp</Link> : <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/flashcard">Học tiếp</Link>} 
+                                        {path !== '/practice' ? <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/home">Học tiếp</Link> : <Link className="btn btn-primary" onClick={() => this.modalClose()} to="/flashcard">Học tiếp</Link>}
                                     </Modal.Footer>
                                 </Modal>
                                 <Footer></Footer>
@@ -390,6 +388,7 @@ class Hoc extends PureComponent {
     componentWillUnmount() {
         this.isComponentMounted = false;
         window.removeEventListener('beforeunload', this.handleUnload);
+        clearInterval(this.calculateSpent)
     }
     handleUnload(e) {
         var message = "\o/";

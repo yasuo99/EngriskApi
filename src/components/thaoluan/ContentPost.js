@@ -75,7 +75,7 @@ class ContentPost extends Component {
                         <div className="row">
                             {this.props.post.postImages?.map((value, index) =>
                                 <div className="col img-fluid w-75" key={index}>
-                                    <img src={`http://localhost:5000/api/v2/streaming/image?image=${value.imageUrl}`}></img>
+                                    <img className="w-75 h-75" loading="lazy" src={`http://localhost:5000/api/v2/streaming/image?image=${value.imageUrl}`}></img>
                                 </div>
                             )}
                         </div>
