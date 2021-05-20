@@ -47,6 +47,65 @@ p {
 .text3 {
   color: #828282;
 } */
+
+/* BUTTON */
+.btnBorder {
+  width: 160px;
+  height: 60px;
+  outline: none;
+  cursor: pointer;
+  background: none;
+  transition: 0.5s;
+  font-size: 21px;
+  border-radius: 10px;
+  font-family: "Arimo", sans-serif;
+}
+.btnBorder:hover {
+  border: none;
+  color: white;
+  font-size: 24px;
+  transform: scale(1.1);
+}
+/* Buttons */
+.purple {
+  border: 2px solid #512DA8;
+  color: #512DA8;
+}
+.purple:hover {
+  background-color: #512DA8;
+  transition: all 0.3s ease-in-out;
+}
+
+.blue {
+  border: 2px solid #1976D2;
+  color: #1976D2;
+}
+.blue:hover {
+  background-color: #1976D2;
+  transition: all 0.3s ease-in-out;
+}
+
+.lorange {
+  border: 2px solid #FBC02D;
+  color: #FBC02D;
+}
+.lorange:hover {
+  background-color: #FBC02D;
+  transition: all 0.3s ease-in-out;
+}
+
+.brick {
+  border: 2px solid #FF5722;
+  color: #FF5722;
+}
+.brick:hover {
+  background-color: #FF5722;
+  transition: all 0.3s ease-in-out;
+}
+
+/* BUTTON 2 */
+
+/*  */
 .img-100 {
   width: 100%;
   height: 90%;
@@ -244,7 +303,7 @@ p {
   border: 3px solid #ccc;
   border-radius: 10px;
   height: 300px;
-  margin-top: 40px;
+  margin-top: 35px;
 }
 .banbe .row {
   border-bottom: 2px solid #ccc;
@@ -1329,7 +1388,7 @@ ul[class^="ring"] li {
   height: 35px;
   font-size: 14px;
   border: none;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   outline: none;
   border-radius: 10px;
   position: relative;
@@ -2935,10 +2994,10 @@ ul[class^="ring"] li {
   color: #252b2f;
   padding-left: 15px;
   width: 100%;
-  height: 30px;
+  height: 35px;
   font-size: 14px;
   border: none;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   outline: none;
   border-radius: 5px;
   margin-top: 5px;
@@ -2956,15 +3015,16 @@ ul[class^="ring"] li {
 #quiz .main .content .description {
   margin-top: 5px;
 }
+
 #quiz .main .content input {
   background-color: #fff;
   color: #252b2f;
   padding-left: 15px;
   width: 100%;
-  height: 30px;
+  height: 35px;
   font-size: 14px;
   border: none;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   outline: none;
   border-radius: 5px;
   margin-top: 5px;
@@ -3535,7 +3595,6 @@ ul[class^="ring"] li {
 #quiz .main .question .answerSort .textareaSort {
   width: 100%;
   height: 150px;
-  outline: none;
   border: 2px solid #ccc;
   border-radius: 20px;
   padding: 10px 20px;
@@ -3578,11 +3637,40 @@ ul[class^="ring"] li {
   height: 40px;
   font-size: 16px;
   border: none;
-  /* box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2); */
+  /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); */
   outline: none;
   border-radius: 5px;
   position: relative;
   margin-bottom: 10px;
+}
+
+#wrapper .word .content .btn-addDefine {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  background-color: #116eee;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  margin-bottom: 20px;
+  margin-left: 40%;
+}
+#wrapper .word .content .btn-addTypeOfWord {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  background-color: #116eee;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  margin-left: 43%;
+}
+
+/* #wrapper .word .content .boxType{
+  background: #ccc;
+} */
+#wrapper .word .content .fa-times-circle{
+  color: #444
 }
 #wrapper .word .content .vocabulary {
   margin: 2rem 0 1rem 0;
@@ -3591,17 +3679,81 @@ ul[class^="ring"] li {
   margin-bottom: 1rem;
 }
 #wrapper .word .content .topic {
+  margin: 1rem 0 1rem 0;
+}
+#wrapper .word .content .pronounce {
   margin-bottom: 1rem;
 }
-#wrapper .word .content .synonym {
+#wrapper .word .content .position {
   margin-bottom: 1rem;
 }
 #wrapper .word .content .mean {
   margin-bottom: 1rem;
 }
+#wrapper .word .content .example {
+  margin-bottom: 1rem;
+}
+#wrapper .word .content .boxSynonym{
+  margin-bottom: 1rem;
+  
+}
+#wrapper .word .content .boxSynonym .kengang{
+  border-bottom: 2px solid #fff;
+  margin: 20px 40px;
+}
+#wrapper .word .content .typeOfWords{
+  background: #f2f7fd;
+  border-radius: 10px;
+  padding-top: 20px;
+  margin-bottom: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0px 3px 6px #ccc;
+  padding-bottom: 20px;
+}
+#wrapper .word .content .defines{
+  background: #f2f7fd;
+  border-radius: 10px;
+  padding-top: 20px;
+  margin-bottom: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 2px solid #fff;
+}
+#wrapper .word .content .boxSynonym input{
+  height: 25px;
+  margin-top: 5px;
+}
+#wrapper .word .content .boxSynonym .contentSynonym{
+  padding: 10px;
+  width: 80%;
+  height: 80px;
+  background-color: #fff;
+  border-radius: 5px;
+  position: relative;
+  overflow: auto;
+}
+#wrapper .word .content .boxSynonym .contentSynonym .synonym{
+  display: inline-flex;
+  padding: 2px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px #116eee;
+  border-radius: 20px;
+  margin-right: 10px;
+  font-size: 14px;
+  outline: none;
+  margin-top: 10px;
+  width: 45%;
+}
+/* #wrapper .word .content .mean {
+  margin-bottom: 1rem;
+} */
 #wrapper .word .content .function {
   margin-left: 0px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 #wrapper .word .content .function .save {
   padding: 8px 15px;
@@ -3617,7 +3769,7 @@ ul[class^="ring"] li {
 }
 #wrapper .word .content .function .reset {
   padding: 8px 15px;
-  background: #116eee;
+  background: #ee6911;
   color: #fff;
   font-size: 16px;
   border-radius: 5px;
@@ -3957,4 +4109,687 @@ ul[class^="ring"] li {
 }
 .form-group .boxAccount p{
   font-size: 16px;
+}
+
+/* SECTION */
+#section .boxLesson {
+  margin-top: 1.25rem;
+  border-radius:8px;
+  box-shadow: 0 0.125rem 0.5625rem -0.3125rem #d6dee6;
+}
+#section .boxLesson .headerLesson {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  pointer-events: none;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 100%;
+  z-index: 1;
+}
+#section .boxLesson .collapse {
+  z-index: 2;
+}
+#section .boxLesson .headerLesson .iconLesson {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 0 0 auto;
+}
+#section .boxLesson .headerLesson .iconLesson img {
+  border-radius: 50%;
+}
+#section .boxLesson .contentLesson {
+  padding: 0 1.25rem;
+  flex: 1;
+}
+#section .boxLesson .contentLesson .title {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #252b2f;
+  font-weight: 600;
+}
+#section .boxLesson .contentLesson .description {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #252b2f;
+}
+#section .boxLesson .progressLesson {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+#section .boxLesson .progressLesson .textProgress {
+  display: block;
+  flex: 0 0 auto;
+  width: 2.8125rem;
+  padding-left: 0.3125rem;
+  text-align: right;
+  color: #666e7e;
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+#section .row {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+#section .boxLesson .collapse .cardCollapse .title{
+  color: #252b2f;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+#section .boxLesson .collapse .cardCollapse .kengang{
+  width: 20px;
+  height: 3px;
+  background: #116eee;
+  position: absolute;
+  margin-top: -25px;
+  margin-left: 50px;
+}
+#section .boxLesson .collapse .cardCollapse .kengang2{
+  width: 20px;
+  height: 3px;
+  background: #116eee;
+  position: absolute;
+  margin-top: -25px;
+  margin-left: 120px;
+}
+#section .boxLesson .collapse .cardCollapse .rounded-circle{
+  height: 50px;
+  width: 50px;
+  background:#116eee;
+  padding: 0;
+  margin-right: 20px;
+  position: relative;
+}
+#section .boxLesson .collapse .cardCollapse .nav-link{
+  border-radius: 50%;
+  padding: 0;
+}
+#section .boxLesson .collapse .cardCollapse .nav-link:hover {
+  background-color: #116eee !important;
+  border-radius: 50%;
+}
+#section .boxLesson .collapse .cardCollapse {
+  background-color: #fff;
+  padding: 1rem;
+  /*  */
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-top: -10px;
+}
+#section .boxLesson .collapse .cardCollapse .contentCollapse {
+  padding-left: 2.1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+#section .selectWord_Quiz {
+  display:flex;
+  flex-direction: column;
+  position:relative;
+  width:250px;
+  height:35px;
+  z-index: 1000;
+  margin-top: 20px;
+}
+
+#section .selectWord_Quiz .option {
+  padding:0 30px 0 10px;
+  min-height:35px;
+  display:flex;
+  align-items:center;
+  background:#fff;
+  border-top:#116eee solid 1px;
+  position:absolute;
+  top:0;
+  width: 100%;
+  pointer-events:none;
+  order:2;
+  z-index:1;
+  transition:background .4s ease-in-out;
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  color: #252b2f;
+  /* border-radius: 5px; */
+}
+
+#section .selectWord_Quiz .option:hover {
+  background:#116eee;
+  color: #fff;
+  /* border-radius: 5px; */
+}
+
+#section .selectWord_Quiz:focus .option {
+  position:relative;
+  pointer-events:all;
+}
+
+#section .selectWord_Quiz input {
+  opacity:0;
+  position:absolute;
+  left:-99999px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+#section .selectWord_Quiz input:checked + label {
+  order: 1;
+  z-index:2;
+  background:#fff;
+  border-top:none;
+  position:relative;
+ 
+}
+
+#section .selectWord_Quiz input:checked + label:after {
+  content:'';
+  width: 0; 
+	height: 0; 
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid white;
+  position:absolute;
+  right:12px;
+  top:calc(50% - 2.5px);
+  pointer-events:none;
+  z-index:3;
+}
+
+#section .selectWord_Quiz  input:checked + label:before {
+  position:absolute;
+  right:0;
+  height: 35px;
+  width: 35px;
+  content: '';
+  background:#116eee;
+  margin-left: -10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+#section .type {
+  display:flex;
+  flex-direction: column;
+  position:relative;
+  width:100%;
+  height:35px;
+  z-index: 1000;
+  margin-top: 20px;
+}
+
+#section .type .option {
+  padding:0 30px 0 10px;
+  min-height:35px;
+  display:flex;
+  align-items:center;
+  background:#fff;
+  border-top:#116eee solid 1px;
+  position:absolute;
+  top:0;
+  width: 100%;
+  pointer-events:none;
+  order:2;
+  z-index:1;
+  transition:background .4s ease-in-out;
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  color: #252b2f;
+}
+
+#section .type .option:hover {
+  background:#116eee;
+  color: #fff;
+}
+
+#section .type:focus .option {
+  position:relative;
+  pointer-events:all;
+}
+
+#section .type input {
+  opacity:0;
+  position:absolute;
+  left:-99999px;
+}
+
+#section .type input:checked + label {
+  order: 1;
+  z-index:2;
+  background:#fff;
+  border-top:none;
+  position:relative;
+}
+
+#section .type input:checked + label:after {
+  content:'';
+  width: 0; 
+	height: 0; 
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid white;
+  position:absolute;
+  right:12px;
+  top:calc(50% - 2.5px);
+  pointer-events:none;
+  z-index:3;
+}
+
+#section .type  input:checked + label:before {
+  position:absolute;
+  right:0;
+  height: 35px;
+  width: 35px;
+  content: '';
+  background:#116eee;
+  margin-left: -10px;
+  color: #666;
+}
+
+/* SECTION */
+#section .main .content input {
+  background-color: #fff;
+  color: #252b2f;
+  padding-left: 15px;
+  width: 80%;
+  height: 40px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+#section .main .content select {
+  background-color: #fff;
+  color: #252b2f;
+  padding-left: 10px;
+  width: 80%;
+  height: 40px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  margin-top: 5px;
+  position: relative;
+  margin-bottom: 1rem;
+}
+#section .main .content .title{
+  margin-bottom: 1rem;
+}
+#section .main .content .description{
+  margin-bottom: 1rem;
+}
+#section .main .content .listQuiz{
+  margin-bottom: 1rem;
+}
+#section .main .content .listWord{
+  margin-bottom: 1rem;
+}
+#section .main .titleSection{
+  color: #116eee;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+#section .main .content .kengang {
+ border-top: 1px solid #ccc;
+margin: 20px 0 10px 0;
+}
+#section .main .content .title{
+  margin-bottom: 10px;
+}
+#section .main .content .description{
+  margin-bottom: 10px;
+}
+#section .main .content label{
+  color: #252b2f;
+}
+#section .main .function {
+  margin-top: 20px;
+}
+#section .main .function p {
+  font-size: 16px;
+}
+#section .main .function .f1 {
+  background: #116eee;
+  cursor: pointer;
+  color: #fff;
+}
+#section .main .function .f1:hover {
+  background: #0a428f;
+}
+#section .main .function .f2 {
+  background: #f6820e;
+  cursor: pointer;
+  color: #fff;
+}
+#section .main .function .f2:hover {
+  background: #fac106;
+}
+#section .main .boxQuiz{
+  background-color: #fff;
+  padding: 20px;
+  width: 80%;
+  max-height: 180px;
+  overflow-y: auto;
+  border-radius: 5px;
+}
+#section .main .cardQuiz .fa-times-circle{
+  color: #444;
+}
+#section .main .cardQuiz{
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  background: #fff;
+  width: 100%;
+  margin-bottom: 15px;
+}
+#section .main .cardQuiz:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+#section .main .cardQuiz .titleQuiz{
+  font-size: 18px;
+  padding-top: 10px;
+}
+#section .main .cardQuiz .descriptionQuiz{
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#section .main .boxWord{
+  background-color: #fff;
+  padding: 20px;
+  width: 80%;
+  max-height: 180px;
+  overflow-y: auto;
+  border-radius: 5px;
+}
+#section .main .cardWord .fa-times-circle{
+  color: #444;
+}
+#section .main .cardWord{
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  background: #fff;
+  width: 100%;
+  margin-bottom: 15px;
+}
+#section .main .cardWord:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+#section .main .cardWord .titleWord{
+  font-size: 18px;
+  padding-top: 10px;
+}
+#section .main .cardWord .descriptionWord{
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* Group word */
+#groupWord .main .titleGroupWord{
+  color: #116eee;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+#groupWord .main .content .kengang {
+ border-top: 1px solid #ccc;
+margin: 20px 0 10px 0;
+}
+#groupWord .main .content .title{
+  margin-bottom: 1rem;
+}
+#groupWord .main .content .description{
+  margin-bottom: 1rem;
+}
+#groupWord .main .content label{
+  color: #252b2f;
+}
+#groupWord .main .function {
+  margin-top: 20px;
+}
+#groupWord .main .function p {
+  font-size: 16px;
+}
+#groupWord .main .function .f1 {
+  background: #116eee;
+  cursor: pointer;
+  color: #fff;
+}
+#groupWord .main .function .f1:hover {
+  background: #0a428f;
+}
+#groupWord .main .function .f2 {
+  background: #f6820e;
+  cursor: pointer;
+  color: #fff;
+}
+#groupWord .main .function .f2:hover {
+  background: #fac106;
+}
+#groupWord .main .content .title input {
+  background-color: #fff;
+  color: #252b2f;
+  padding-left: 15px;
+  width: 80%;
+  height: 35px;
+  font-size: 14px;
+  border: none;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+#groupWord .main .content .description input {
+  background-color: #fff;
+  color: #252b2f;
+  padding-left: 15px;
+  width: 80%;
+  height: 35px;
+  font-size: 14px;
+  border: none;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+#groupWord .main .card{
+  padding: 10px!important;
+  box-shadow: 0px 1px 2px #116eee;
+}
+#groupWord .main .card h6{
+  color: #252b2f;
+}
+#groupWord .main .topicWord{
+  text-align: right;
+  margin-bottom: 20px;
+}
+#groupWord .main select {
+  background-color: #fff;
+  color: #252b2f;
+  padding-left: 10px;
+  width: 30%;
+  height: 35px;
+  font-size: 14px;
+  border: none;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+  border-radius: 5px;
+  margin-top: 5px;
+  position: relative;
+}
+#groupWord .main .boxWord{
+  border: 1px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px #ddd;
+  margin-top: 20px;
+}
+#groupWord .main .contentBox{
+  padding: 15px;
+}
+#groupWord .main .headerBox{
+  height: 60px;
+  background-color: #fff;
+  width: 100%;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+#progressWord .boxProgressWord{
+  box-shadow: 0px 4px 8px #ccc;
+  margin-bottom: 40px;
+}
+#progressWord .boxProgressWord .head{
+  margin-top: 3rem;
+  background-color: #0a428f;
+  height: 5rem;
+  color: #fff;
+  font-size: 21px;
+  font-weight: bold;
+  padding: 20px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+#progressWord .contentProgress {
+  padding: 1.5rem 2rem 3.125rem;
+  background: linear-gradient(180deg,#fff,#f2f7fd);
+}
+#progressWord .contentProgress .graphOne{
+  background-color: #e2222e;
+  min-height: 7.75rem;
+  border-radius: 5px;
+  position: relative;
+}
+#progressWord .contentProgress .title{
+  margin-bottom: 1.5rem;
+}
+#progressWord .contentProgress .content{
+  position: absolute;
+  bottom: 0;
+}
+#progressWord .contentProgress .content span{
+  font-size: 28px;
+  font-weight: bold;
+}
+#progressWord .contentProgress .content p{
+  color: #252b2f;
+  font-size: 18px;
+}
+#progressWord .contentProgress .graphTwo{
+  border: 1px solid #ccc;
+  min-height: 7.75rem;
+  border-radius: 5px;
+  position: relative;
+
+}
+#progressWord .contentProgress .graphThree{
+  min-height: 7.75rem;
+  border-radius: 5px;
+  position: relative;
+ border: 1px solid #ccc;
+}
+#progressWord .contentProgress .graphThree .contentGraphThree{
+  position: absolute;
+  bottom: 0;
+  min-height: 1rem;
+  background: repeating-linear-gradient(-45deg,rgba(0,138,34,.2),rgba(0,138,34,.2) .25rem,rgba(0,138,34,.4) 0,rgba(0,138,34,.4) .3125rem);
+}
+#progressWord .contentProgress .graphTwo .contentGraphTwo{
+  position: absolute;
+  bottom: 0;
+  min-height: 1rem;
+  background: repeating-linear-gradient(-45deg,rgba(248,136,0,.2),rgba(248,136,0,.2) .25rem,rgba(248,136,0,.4) 0,rgba(248,136,0,.4) .3125rem);
+}
+#progressWord .contentWord{
+  background-color: #fff;
+  min-height: 400px;
+  padding: 30px;
+}
+#progressWord .contentWord select{
+  padding: 5px;
+  width: 40%;
+  margin-left: 10px;
+  border-radius: 10px;
+  outline: none;
+}
+#progressWord .contentWord span{
+  color: #252b2f;
+  font-size: 18px;
+  font-weight: 400;
+}
+#progressWord .contentWord .box .img-contentWord{
+  height: 40px;
+  width: 60px;
+  margin-right: 10px;
+}
+#progressWord .contentWord .box{
+  display: flex;
+  padding-left: 10px;
+}
+#progressWord .contentWord .box .content{
+  color: #252b2f;
+  font-size: 18px;
+  padding-top: 8px;
+}
+#progressWord .contentWord .box .audio{
+  width: 24px;
+  height: 34px;
+  padding-top: 10px;
+  margin-right: 10px;
+}
+#progressWord .contentWord .box .img-progress{
+  width: 24px;
+  height: 34px;
+  padding-top: 5px;
+  margin-right: 10px;
+}
+#progressWord .contentWord .box .text-progress{
+  font-size: 18px;
+  color: #252b2f;
+  padding-top: 10px;
+}
+#progressWord .contentWord .boxMore{
+  text-align: right;
+}
+#progressWord .contentWord span svg {
+  fill: inherit;
+}
+#progressWord .contentWord span{
+  fill: #fff;
+  color: #fff;
+}
+/* #progressWord .table-hover > span{
+  fill: #666;
+  opacity: 1;
+} */
+#progressWord .table-hover tbody tr span svg{
+  fill: inherit;
+}
+#progressWord .table-hover tbody tr:hover span{
+  fill: #999;
+  color: #999;
+}
+#progressWord .table-hover tbody tr:hover {
+  background-color: #f2f7fd;
+}
+#progressWord .contentTooltip:hover{
+  color: #116eee;
 }

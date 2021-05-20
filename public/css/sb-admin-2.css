@@ -10182,7 +10182,7 @@ a:focus {
 }
 
 .topbar .nav-item .nav-link {
-  height: 3rem;
+  height: 6vh;
   display: flex;
   align-items: center;
   padding: 0 0.75rem;
