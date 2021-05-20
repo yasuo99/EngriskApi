@@ -9,12 +9,14 @@ import Footer from '../Footer/Footer';
 import postApi from '../../api/postApi';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
+import { connection } from '../../signalR/createSignalRConnection';
+import { HubConnectionState } from '@microsoft/signalr';
 
 class ThaoLuanChiTietPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            post: { comments: [] },
+            post: { comments: [ {replies: []}] },
             comment: null,
             filter: "",
             redirect: false
@@ -28,6 +30,50 @@ class ThaoLuanChiTietPage extends Component {
         const { match: { match: { params } } } = this.props;
         const post = await this.fetchPostDetail(params.postId);
         if (this.isComponentMounted) {
+            if(connection.state == HubConnectionState.Disconnected){
+                connection.start();
+            }
+            connection.on('NewComment', (data) => {
+                console.log(data);
+                var comment = JSON.parse(data);
+                if(comment.postId == params.postId){
+                    this.setState({
+                        post:{
+                            ...this.state.post,
+                            comments: [comment, ...this.state.post.comments]
+                        }
+                    })
+                }
+            })
+            connection.on('DeleteComment', (data) => {
+                var comments = this.state.post.comments.filter(c => c.id != data);
+                this.setState({
+                    post:{
+                        ...this.state.post,
+                        comments: comments
+                    }
+                })
+            })
+            connection.on('UpdateComment', (data) => {
+                var comment = JSON.parse(data);
+                var existComment = this.state.post.comments.find(c => c.id == comment.id);
+                var indexOfComment = this.state.post.comments.indexOf(existComment);
+                var comments = this.state.post.comments;
+                comments[indexOfComment] = comment;
+                this.setState({
+                    post: {
+                        ...this.state.post,
+                        comments: comments
+                    }
+                })
+            })
+            connection.on('NewReplyComment', (data) => {
+                var reply = JSON.parse(data);
+                console.log(reply);
+                var existComment = this.state.post.comments.find(c => c.id == reply.replyId);
+                existComment.replies.push(reply)
+                console.log(this.state.post.comments);
+            })
             if (post) {
                 this.setState({
                     post: post
@@ -58,7 +104,6 @@ class ThaoLuanChiTietPage extends Component {
             }
             let result = (await postApi.commentToPost(this.state.post.id, comment)).status;
             if (result === 200) {
-                this.refreshPost();
                 this.setState({
                     comment: ''
                 })
@@ -77,7 +122,6 @@ class ThaoLuanChiTietPage extends Component {
         }
         let result = await postApi.replyComment(params.postId, commentId, body);
         if (result.status === 200) {
-            await this.refreshPost();
         }
         else {
             toast("Bình luận không được để trống")
@@ -124,14 +168,6 @@ class ThaoLuanChiTietPage extends Component {
         const result = await postApi.updateComment(postId, commentId, body);
         if (result.status === 200) {
             toast("Thành công");
-            const { match: { match: { params } } } = this.props;
-            const post = await this.fetchPostDetail(params.postId);
-            console.log(post);
-            if (this.isComponentMounted) {
-                this.setState({
-                    post: post
-                });
-            }
         }
         else {
             toast("Thất bại")
@@ -141,14 +177,6 @@ class ThaoLuanChiTietPage extends Component {
         const result = await postApi.deleteComment(postId, commentId);
         if (result.status === 200) {
             toast("Thành công");
-            const { match: { match: { params } } } = this.props;
-            const post = await this.fetchPostDetail(params.postId);
-            console.log(post);
-            if (this.isComponentMounted) {
-                this.setState({
-                    post: post
-                });
-            }
         }
         else {
             toast("Thất bại")

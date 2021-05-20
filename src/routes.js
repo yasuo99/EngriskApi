@@ -214,7 +214,7 @@ const routes = [
     {
         path: '/card-detail/:cardId',
         exact: true,
-        main: (match) => <FlashCardDetail match={match}/>,
+        main: (match) => <FlashCardDetail match={match} />,
         // guard: false,
         // roles: []
     },
@@ -270,7 +270,7 @@ const routes = [
     {
         path: '/progress',
         exact: true,
-        main: () => <Progress/>,
+        main: () => <Progress />,
         guard: true,
         roles: []
     },
@@ -306,7 +306,7 @@ const routes = [
     {
         path: '/exam/:examId',
         exact: true,
-        main: (location) => <ExamPage location={location}/>,
+        main: (location) => <ExamPage location={location} />,
         guard: true,
         roles: []
     },
@@ -325,11 +325,11 @@ const routes = [
         roles: []
     },
     {
-        path: '/user/quanly-quiz_exam',
+        path: '/user/quanly-quiz_exam/:accountId',
         exact: true,
-        main: () => <QuizExamPage />,
-        // guard: true,
-        // roles: ["superadmin", "manager"]
+        main: (match) => <QuizExamPage match={match}/>,
+        guard: true,
+        roles: ["learner"]
     },
     {
         path: '/user/quiz_exam',
@@ -350,7 +350,7 @@ const routes = [
         exact: true,
         main: () => <Admin />,
         guard: true,
-        roles: ["superadmin","manager"]
+        roles: ["superadmin", "manager"]
     },
     {
         path: '/tuvung',

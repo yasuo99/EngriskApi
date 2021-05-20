@@ -18,7 +18,9 @@ const initState = {
     exp: '',
     point: '',
     learned: [],
-    roles: []
+    roles: [],
+    follower: [],
+    following: []
   },
   token: '',
   refreshToken: ''
@@ -100,6 +102,32 @@ const authReducer = (state = initialState(), action) => {
         account: initState.account,
         token: ''
       });
+    }
+    case "FOLLOW_USER":{
+      console.log(action.following);
+      if(state.account.following.some(fl => fl.accountId == action.following.id)){
+        return {
+          ...state,
+          account: {
+            ...state.account,
+            following: state.account.following.filter(fl => fl.accountId != action.following.id)
+          }
+        }
+      }
+      else{
+        var following = {
+          accountId: action.following.id,
+          userName: action.following.username,
+          photoUrl: action.following.photoUrl
+        }
+        return{
+          ...state,
+          account: {
+            ...state.account,
+            following: [following,...state.account.following]
+          }
+        }
+      }
     }
     default:
       return state;

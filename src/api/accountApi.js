@@ -9,13 +9,13 @@ const accountApi = {
         }
         return axiosClient.get(url, { headers });
     },
-    getDetail: (id) => {
+    getDetail: async (id) => {
         const url = `/accounts/detail/${id}`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: "Bearer " + token
         }
-        return axiosClient.get(url, { headers });
+        return await axiosClient.get(url, { headers });
     },
     getExamProgress: (id) => {
         const url = `/accounts/${id}/exam-progress`;

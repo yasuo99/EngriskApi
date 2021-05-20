@@ -19,7 +19,9 @@ class QLListThongBao extends Component {
             type: null,
             side: null,
             notifications: [],
-            selectNotify: 0
+            selectNotify: 0,
+            users: [],
+            selectedUsers: []
         };
         this.isComponentMounted = false;
         this.handleChange = this.handleChange.bind(this);
@@ -34,6 +36,15 @@ class QLListThongBao extends Component {
             });
             $(function () {
                 $("#dataTable").DataTable();
+            });
+            await this.fetchUsers();
+        }
+    }
+    fetchUsers = async () => {
+        var users = await notificationApiV2.getUsers();
+        if (this.isComponentMounted) {
+            this.setState({
+                users: users
             });
         }
     }
@@ -63,10 +74,9 @@ class QLListThongBao extends Component {
             content: this.state.content,
             url: this.state.url,
             type: this.state.type,
-            accountId: 1
         }
         try {
-            const result = await notificationApiV2.create(notify);
+            const result = await notificationApiV2.create(notify, this.state.selectedUsers);
             if (result) {
                 toast("Thêm thành công");
                 this.setState({
@@ -182,6 +192,13 @@ class QLListThongBao extends Component {
             console.log(error);
         }
     }
+    seletecUser = (e) => {
+        const users = this.state.selectedUsers;
+        users.push(e.target.dataset.id);
+        this.setState({
+            selectedUsers: users
+        })
+    }
     render() {
         const renderNotification = this.state.notifications.map((notification) =>
             <tr key={notification.id}>
@@ -195,6 +212,20 @@ class QLListThongBao extends Component {
 
                 </td>
             </tr>
+        );
+        const renderUsers = this.state.users.map((user,index) =>
+            <div className="card-input mt-3" key={index}>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-10">
+                            <p data-id={user.accountId}>{user.username}</p>
+                        </div>
+                        <div className="col-2">
+                            <input data-id={user.accountId} type="checkbox" class="form-check-input" id="exampleCheck1" onChange={(e) => this.seletecUser(e)}/>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
         return (
             <div>
@@ -261,127 +292,7 @@ class QLListThongBao extends Component {
                                         </div>
                                         <p className="titleAccount">Danh sách tài khoản</p>
                                         <div className="boxAccount">
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
+                                            {renderUsers}
                                         </div>
                                     </div>
                                 </div>
@@ -454,18 +365,7 @@ class QLListThongBao extends Component {
                                         </div>
                                         <p className="titleAccount">Danh sách tài khoản</p>
                                         <div className="boxAccount">
-                                            <div className="card-input mt-3">
-                                                <div className="container">
-                                                    <div className="row">
-                                                        <div className="col-10">
-                                                            <p>Nguyễn Lập</p>
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div className="card-input mt-3">
                                                 <div className="container">
                                                     <div className="row">

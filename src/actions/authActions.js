@@ -1,5 +1,6 @@
 // import * as Types from '../constants/ActionTypes';
 import { toast } from 'react-toastify';
+import accountApiV2 from '../api/2.0/accountApi';
 import axiosClient from '../config/axiosClient';
 
 export const googleSignIn = (token) => {
@@ -57,11 +58,11 @@ export const signIn = (user) => {
                 // console.log("a");
                 // return(dispatch({ type: "SIGN_IN_ERR_EMAIL" }))
             }).catch((error) => {
-                if(error.response.status == 401){
-                    toast(error.response.data.error, {type: 'error'});
+                if (error.response.status == 401) {
+                    toast(error.response.data.error, { type: 'error' });
                 }
-                if(error.response.status == 400){
-                    return(dispatch({ type: "SIGN_IN_ERR"}))
+                if (error.response.status == 400) {
+                    return (dispatch({ type: "SIGN_IN_ERR" }))
                 }
             });
     };
@@ -80,6 +81,18 @@ export const signUp = (user) => {
             })
 
 
+    }
+}
+export const follow = (followerId, followingId, following) => {
+    return dispatch => {
+        accountApiV2.followUser(followerId, followingId).then(result => {
+            if (result.status === 200) {
+                return dispatch({ type: "FOLLOW_USER", following: following })
+            }
+            else{
+                toast("Theo dõi thất bại", {type: 'error'})
+            }
+        });
     }
 }
 export const logout = () => {
