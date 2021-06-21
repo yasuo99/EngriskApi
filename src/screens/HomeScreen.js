@@ -10,8 +10,10 @@ import {
   Alert,
   Image,
   ScrollView,
-  Button
+  Button,
+  useWindowDimensions
 } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import MenuDrawer from 'react-native-side-drawer'
@@ -21,7 +23,89 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import HomeActions from '../redux/actions/home';
 import { BaseApiUrl } from '../constants/api';
 const HomeScreen = ({ navigation }) => {
+  const FirstRoute = () => (
+    <ScrollView>
+      <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
+      <View style={styles.boxRouteQuiz}>
+        <Text style={styles.title}>Lộ trình học tiếng anh căn bản</Text>
+        <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
+        <Text style={styles.result}>Hoàn thành 1/3</Text>
+      </View>
+      <View style={styles.boxRouteWord}>
+        <Text style={styles.title}>Lộ trình học từ vựng toeic</Text>
+        <View style={{flexDirection:"row"}}>
+          <View style={{flexDirection:"column",width:220}}>
+            <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
+          </View>
+          <View style={{flexDirection:"column",width:180}}>
+            <Image source={require('../assets/abideby.jpeg')} style={{ width:200,height:80}}></Image>
+          </View>
+        </View>
+        <Text style={styles.result}>Hoàn thành 1/3</Text>
+      </View>
+    </ScrollView>
+  );
+  
+  const SecondRoute = () => (
+    <ScrollView>
+      <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
+      <View style={styles.boxRouteQuiz}>
+        <Text style={styles.title}>Lộ trình học tiếng anh căn bản</Text>
+        <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
+        <Text style={styles.result}>Hoàn thành 1/3</Text>
+      </View>
+      <View style={styles.boxRouteWord}>
+        <Text style={styles.title}>Lộ trình học từ vựng toeic</Text>
+        <View style={{flexDirection:"row"}}>
+          <View style={{flexDirection:"column",width:220}}>
+            <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
+          </View>
+          <View style={{flexDirection:"column",width:180}}>
+            <Image source={require('../assets/abideby.jpeg')} style={{ width:200,height:80}}></Image>
+          </View>
+        </View>
+        <Text style={styles.result}>Hoàn thành 1/3</Text>
+      </View>
+    </ScrollView>
+  );
+  const ThirdRoute = () => (
+    <ScrollView>
+      <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
+      <View style={styles.boxRouteQuiz}>
+        <Text style={styles.title}>Lộ trình học tiếng anh căn bản</Text>
+        <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
+        <Text style={styles.result}>Hoàn thành 1/3</Text>
+      </View>
+      <View style={styles.boxRouteWord}>
+        <Text style={styles.title}>Lộ trình học từ vựng toeic</Text>
+        <View style={{flexDirection:"row"}}>
+          <View style={{flexDirection:"column",width:220}}>
+            <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
+          </View>
+          <View style={{flexDirection:"column",width:180}}>
+            <Image source={require('../assets/abideby.jpeg')} style={{ width:200,height:80}}></Image>
+          </View>
+        </View>
+        <Text style={styles.result}>Hoàn thành 1/3</Text>
+      </View>
+    </ScrollView>
+  );
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'first', title: 'Engrisk' },
+    { key: 'second', title: 'Mọi người' },
+    { key: 'third', title: 'Của bạn' },
+  ]);
+
+  const renderScene = SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+    third: ThirdRoute,
+  });
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalTwoVisible, setModalTwoVisible] = useState(false);
   const [active, setActive] = useState(false)
   const [open, setOpen] = useState(false)
   const [homeData, setHomeData] = useState({
@@ -31,6 +115,9 @@ const HomeScreen = ({ navigation }) => {
   })
   const [isBusy, setIsBusy] = useState(true);
   const [selectUser, setSelectUser] = useState({})
+  const toggleModalTwo = () => {
+    setModalTwoVisible(!isModalTwoVisible);
+  };
   const toggleModal = (user) => {
     setModalVisible(!isModalVisible);
     setSelectUser(user)
@@ -154,7 +241,10 @@ const HomeScreen = ({ navigation }) => {
         <View >
           <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISH</Text>
         </View>
+        <TouchableOpacity onPress={() => toggleModalTwo()}>
         <Image source={require('../assets/icon.png')} style={{ marginTop: 20, marginLeft: 60 }}></Image>
+        </TouchableOpacity>
+        
       </View>
       {isBusy && <Spinner
         visible={isBusy}
@@ -163,7 +253,7 @@ const HomeScreen = ({ navigation }) => {
       />}
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxQuiz}>
-          <View style={{ flexDirection: "row", marginBottom: 20 }} >
+          <View style={{ flexDirection: "row", marginBottom: 20, width:"100%" }} >
             <View>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Gợi ý luyện tập</Text>
             </View>
@@ -191,7 +281,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxWord}>
-          <View style={{ flexDirection: "row", marginBottom: 20 }} >
+          <View style={{ flexDirection: "row", marginBottom: 20, width:"100%" }} >
             <View>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Từ vựng hôm nay</Text>
             </View>
@@ -206,10 +296,12 @@ const HomeScreen = ({ navigation }) => {
             {!isBusy && homeData.words.map((word, index) =>
               <View style={styles.box} key={index}>
                 <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('FlashCard')}>
-                  <Text style={styles.word} >{word.eng}</Text>
+                  <ScrollView style={{ height: 36 }}>
+                    <Text style={styles.word} >{word.eng}</Text>
+                  </ScrollView>
                 </TouchableOpacity>
                 <Text style={styles.spelling}>{word.spelling}</Text>
-                <Image source={word.wordImg ? `${BaseApiUrl}/streaming/image?image=${word.wordImg}` : require('../assets/abideby.jpeg')} style={{ width: 170, height: 100 }}></Image>
+                <Image source={word.wordImg ? `${BaseApiUrl}/streaming/image?image=${word.wordImg}` : require('../assets/abideby.jpeg')} style={{ width: 170, height: 100, justifyContent: "flex-end" }}></Image>
               </View>
             )}
           </ScrollView>
@@ -218,7 +310,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxUser}>
-          <View style={{ flexDirection: "row", marginBottom: 5 }} >
+          <View style={{ flexDirection: "row", marginBottom: 5, width:"100%" }} >
             <View>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Top users</Text>
             </View>
@@ -233,22 +325,22 @@ const HomeScreen = ({ navigation }) => {
             {!isBusy && homeData.users.map((user, index) =>
               <TouchableOpacity style={styles.user} key={index} onPress={() => toggleModal(user)}>
                 <Image source={user.photoUrl ? { uri: `${user.photoUrl}` } : require('../assets/avatar.png')} style={styles.image}></Image>
-                <Text style={styles.name}  >{user.username}</Text>
+                <Text style={styles.name}>{user.username}</Text>
               </TouchableOpacity>
             )}
           </ScrollView>
-          <Modal onBackdropPress={() => setModalVisible(!isModalVisible)} isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} style={styles.view}>
+          <Modal onBackdropPress={() => setModalVisible(false)} isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} 
+           style={styles.view}>
             <View style={styles.modal}>
               <Image source={selectUser.photoUrl ? { uri: `${selectUser.photoUrl}` } : require('../assets/avatar.png')} style={styles.image}></Image>
+
               <TouchableOpacity onPress={() => { setActive(!active) }}>
                 {active === false ?
                   <Text style={styles.buttonModal}>Theo dõi</Text> :
                   <Text style={styles.buttonModalActive}>Đang theo dõi</Text>
                 }
               </TouchableOpacity>
-
-
-              <Text style={{ color: "#fff", fontSize: 21, fontWeight: "400", marginTop: 5 }} onPress={toggleModal}>{selectUser.username}</Text>
+              <Text style={{ color: "#fff", fontSize: 21, fontWeight: "400", marginTop: 5 }}>{selectUser.username}</Text>
               <Text style={{ color: "#fff", fontSize: 21, fontWeight: "400", marginTop: 5 }}>Kinh nghiệm: 100k</Text>
               <Text style={{ color: "#fff", fontSize: 21, fontWeight: "400", marginTop: 5 }}>Trình độ: Medium</Text>
               <Text style={{ color: "#fff", fontSize: 21, fontWeight: "400", marginTop: 5 }}>Tham gia từ: 2018</Text>
@@ -256,6 +348,17 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ color: "#fff", fontSize: 21, fontWeight: "400", marginTop: 5 }}>Số từ vựng đã học: 200</Text>
 
             </View>
+          </Modal>
+
+          <Modal onBackdropPress={() => setModalTwoVisible(false)} isVisible={isModalTwoVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} 
+           style={styles.view}>
+             <View style={styles.modalTwo}>
+            <TabView
+              navigationState={{ index, routes }}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              initialLayout={{ width: layout.width }}
+            /></View>
           </Modal>
         </View>
       </View>
@@ -273,23 +376,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#15202B'
   },
   boxQuiz: {
-    marginTop: 30,
+    marginTop: 20,
     marginLeft: 10,
-    marginRight: 10,
     height: 330,
+    width:"100%",
     paddingBottom: 20,
+    justifyContent:"center",
+    paddingHorizontal:10,
+    alignItems:'center'
   },
   boxWord: {
     marginTop: 70,
     marginLeft: 10,
     paddingBottom: 20,
     height: 330,
+    width:"100%",
+    justifyContent:"center",
+    paddingHorizontal:10,
+    alignItems:'center'
   },
   boxUser: {
     marginTop: 110,
     marginLeft: 10,
     paddingBottom: 20,
     height: 200,
+    width:"100%",
+    justifyContent:"center",
+    paddingHorizontal:10,
+    alignItems:'center'
   },
   box: {
     flex: 1,
@@ -310,7 +424,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     width: 70,
     height: 70,
-    marginBottom: 5
+    marginBottom: 5,
+    borderRadius: 50
   },
   titleQuiz: {
     color: '#ffffff',
@@ -343,7 +458,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     paddingBottom: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    // height:40
   },
   spelling: {
     textAlign: 'center',
@@ -352,10 +468,25 @@ const styles = StyleSheet.create({
     paddingBottom: 16
   },
   kengang: {
-    marginLeft: 20,
-    width: '80%',
+    width: '90%',
     borderWidth: 1,
     borderColor: '#f4f4f4',
+  },
+  modalTwo: {
+    height:400,
+    marginBottom: 65,
+    // alignItems: "center",
+    color: "#fff",
+    backgroundColor: "#192734",
+    borderRadius: 20,
+    opacity: 0.95,
+    padding: 20,
+    shadowColor: "#1DA1F2",
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
   },
   modal: {
     marginBottom: 65,
@@ -409,4 +540,31 @@ const styles = StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'
   },
+  boxRouteQuiz : {
+    backgroundColor:"#fff",
+    borderRadius:10,
+    padding:16
+  },
+  boxRouteWord : {
+    marginTop:20,
+    backgroundColor:"#fff",
+    borderRadius:10,
+    padding:16
+  },
+  title : {
+    color:'#1DA1F2',
+    fontSize:21,
+    fontWeight:'bold'
+  },
+  content : {
+    color:'#666',
+    fontSize:18,
+    paddingTop:8,
+    paddingBottom:8
+  },
+  result : {
+    color:'#1DA1F2',
+    fontSize:21,
+    fontWeight:'bold'
+  }
 });

@@ -5,15 +5,19 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import NotificationActions from '../redux/actions/notifications';
+import Moment from 'react-moment';
 const NotificationItem = ({item}) => (
   <View style={styles.itemContainer}>
     <View style={styles.itemTopContainer}>
       <View>
         <Image source={require('../assets/avatar.png')} style={{width:60,height:60}}></Image>
       </View>
+      {/* <View><Moment format="YYYY/MM/DD"></Moment></View> */}
+
       <View style={styles.itemTopTextContainer}>
         <Text style={styles.itemName}>{item.content}</Text>
-        <Text style={styles.itemDate}>{item.createdDate}</Text>
+        <Moment element={Text} format="YYYY/MM/DD" style={{color:"#fff",marginTop:5}}>{item.createdDate}</Moment>
+        {/* <View style={styles.itemDate}>{item.createdDate}</View> */}
       </View>
     </View>
     <View>

@@ -34,7 +34,84 @@ import {
   Image
 } from 'react-native';
 const logo = require('./src/assets/avatar.png');
+function TabScreen(){
+  // getTabBarVisibility = route => {
+  //   const routeName = route.state
+  //     ? route.state.routes[route.state.index].name
+  //     : '';
 
+  //   if (routeName === 'SignIn' || routeName === 'SignUp') {
+  //     return false;
+  //   }
+  //   return true;
+  // };
+  return(
+    <Tab.Navigator
+    tabBarOptions={{
+      inactiveBackgroundColor: '#15202B',
+      activeTintColor: '#1DA1F2',
+      inactiveTintColor: '#B0B3B8',
+      activeBackgroundColor: '#15202B',
+      showLabel: false,
+    }}>
+
+    <Tab.Screen
+      name="Home"
+      component={HomeStackScreen}
+      options={() => ({
+        tabBarLabel: 'Trang chủ',
+        tabBarIcon: ({ color }) => (
+          <MaterialIcons name="home" size={32} color={color} />
+        ),
+      })}
+    >
+
+    </Tab.Screen>
+    <Tab.Screen
+      name="Calender"
+      component={CalenderScreen}
+      options={{
+        tabBarLabel: 'Lịch',
+        tabBarIcon: ({ color }) => (
+          <MaterialIcons name="today" size={32} color={color} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Profile"
+      component={ProfileScreen}
+      options={{
+        tabBarLabel: 'Cá nhân',
+        tabBarIcon: ({ color }) => (
+          <Image
+            style={{ marginTop: -20 }}
+            source={logo} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Notification"
+      component={NotificationScreen}
+      options={{
+        tabBarLabel: 'Thông báo',
+        tabBarIcon: ({ color }) => (
+          <MaterialIcons name="notifications" size={32} color={color} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Message"
+      component={MessageScreen}
+      options={{
+        // tabBarLabel: 'Tin nhắn',
+        tabBarIcon: ({ color }) => (
+          <MaterialIcons name="chat" size={32} color={color} />
+        ),
+      }}
+    />
+  </Tab.Navigator>
+  )
+}
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator
@@ -48,11 +125,9 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Chat" component={ChatScreen} />
       <HomeStack.Screen name="Message" component={MessageScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
-      <HomeStack.Screen name="SignUp" component={SignUpPage} />
-      <HomeStack.Screen name="SignIn" component={SignInPage} />
-      <HomeStack.Screen name="Splash" component={SplashPage} />
-      <HomeStack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
-      <HomeStack.Screen name="ChangePassword" component={ChangePasswordPage} />
+      {/* <HomeStack.Screen name="SignUp" component={SignUpPage} />
+      <HomeStack.Screen name="SignIn" component={SignInPage} /> */}
+      {/* <HomeStack.Screen name="Splash" component={SplashPage} />   */}
       <HomeStack.Screen name="FlashCard" component={FlashCardScreen} />
       <HomeStack.Screen name="CreateReminder" component={CreateReminderScreen} />
       <HomeStack.Screen name="Quiz" component={QuizScreen} />
@@ -65,70 +140,17 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Tab.Navigator
-          tabBarOptions={{
-            inactiveBackgroundColor: '#15202B',
-            activeTintColor: '#1DA1F2',
-            inactiveTintColor: '#B0B3B8',
-            activeBackgroundColor: '#15202B',
-            showLabel: false,
-          }}>
-
-          <Tab.Screen
-            name="Home"
-            component={HomeStackScreen}
-            options={() => ({
-              tabBarLabel: 'Trang chủ',
-              tabBarIcon: ({ color }) => (
-                <MaterialIcons name="home" size={32} color={color} />
-              ),
-            })}
-          >
-
-          </Tab.Screen>
-          <Tab.Screen
-            name="Calender"
-            component={CalenderScreen}
-            options={{
-              tabBarLabel: 'Lịch',
-              tabBarIcon: ({ color }) => (
-                <MaterialIcons name="today" size={32} color={color} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              tabBarLabel: 'Cá nhân',
-              tabBarIcon: ({ color }) => (
-                <Image
-                  style={{ marginTop: -20 }}
-                  source={logo} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Notification"
-            component={NotificationScreen}
-            options={{
-              tabBarLabel: 'Thông báo',
-              tabBarIcon: ({ color }) => (
-                <MaterialIcons name="notifications" size={32} color={color} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Message"
-            component={MessageScreen}
-            options={{
-              // tabBarLabel: 'Tin nhắn',
-              tabBarIcon: ({ color }) => (
-                <MaterialIcons name="chat" size={32} color={color} />
-              ),
-            }}
-          />
-        </Tab.Navigator>
+        <HomeStack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
+               <HomeStack.Screen name="Splash" component={SplashPage} />
+              <HomeStack.Screen name="SignIn" component={SignInPage} />
+              <HomeStack.Screen name="SignUp" component={SignUpPage} />
+              <HomeStack.Screen name="ForgotPassword" component={ForgotPasswordPage} />
+              <HomeStack.Screen name="ChangePassword" component={ChangePasswordPage} />
+              <HomeStack.Screen name="Tab" component={TabScreen} />
+            </HomeStack.Navigator>
       </NavigationContainer>
     </Provider>
 

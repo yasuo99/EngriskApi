@@ -159,6 +159,13 @@ const ChatScreen = ({ route, navigation }) => {
             <Text style={styles.itemName}>{boxchat.title}</Text>
             <Text style={styles.itemStatus}>Đang hoạt động</Text>
           </View>
+          <TouchableOpacity>
+          <MaterialIcons
+            name="group-add"
+            size={32}
+            color="#ffffff"
+            style={{marginLeft:16,marginTop:16}}></MaterialIcons>
+          </TouchableOpacity>
         </View>
         <View style={styles.kengang}></View>
         <View style={styles.boxContent}>
@@ -168,7 +175,7 @@ const ChatScreen = ({ route, navigation }) => {
               <View>
                {message.sender.name !==  username && <Image source={message.sender.avatar ? {uri: `${message.sender.avatar}`} : require('../assets/avatar.png')} style={{ width: 50, height: 50 }}></Image>} 
               </View>
-              <View>
+              <View style={message.sender.name == username ? styles.textRight : styles.textLeft} key={index}>
                 <Text style={{color:"#fff", fontSize:16, marginTop:16,marginLeft:16}}>{message.text}</Text>
               </View>
             </View>
@@ -233,12 +240,31 @@ const styles = StyleSheet.create({
     marginTop:5,
     marginBottom:5,
     flexDirection:"row",
-    justifyContent:"flex-end"
+    justifyContent:"flex-end",
+  },
+  textRight : {
+    backgroundColor:"#1DA1F2",
+    paddingTop:0,
+    paddingLeft:10,
+    paddingRight:10,
+    paddingBottom:5,
+    borderRadius:10,
+    marginRight:8
+  },
+  textLeft : {
+    backgroundColor:"#192734",
+    paddingTop:0,
+    // paddingLeft:10,
+    paddingRight:10,
+    paddingBottom:5,
+    borderRadius:10,
+    marginLeft:8
   },
   itemText: {
     marginRight: 40,
     marginLeft: 8,
-    marginTop: 5
+    marginTop: 5,
+    width:260
   },
   boxAnswer : {
     flexDirection: 'row',

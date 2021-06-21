@@ -178,7 +178,7 @@ const ListExamScreen = ({ navigation }) => {
                                 <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Số câu hỏi: {exam.questions.length}</Text>
                                 <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Độ khó: {exam.difficultLevel}</Text>
                             </View>
-                            <View style={{ marginLeft: 120 }}>
+                            <View style={{ marginLeft: 90 }}>
                                 <TouchableOpacity>
                                     <FontAwesome
                                         name="share-alt"

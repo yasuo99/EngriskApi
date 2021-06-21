@@ -42,6 +42,7 @@ const SignInScreen = ({ navigation }) => {
             password: data.password
         }
         dispatch(AuthorizationActions.onLogout())
+        navigation.navigate("Tab")
     }
     const textInputChange = (val) => {
         if (val.trim().length >= 4) {
@@ -210,7 +211,7 @@ const SignInScreen = ({ navigation }) => {
                     <TouchableOpacity
                         style={styles.signIn}
                         disabled={!data.isValidUser || !data.isValidPassword || data.username == '' || data.password == ''}
-                        onPress={() => signIn()}
+                        onPress={() => {signIn()}}
                     >
                         <LinearGradient
                             colors={['#1DA1F2', '#1DA1F2']}
