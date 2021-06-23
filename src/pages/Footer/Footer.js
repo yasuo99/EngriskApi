@@ -1,4 +1,5 @@
 import React from "react"
+import Chatbox from "../../components/chatbot/Chatbox"
 
 const Footer = () => {
     return (
@@ -43,6 +44,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+            <Chatbox></Chatbox>
         </footer>
     )
 }

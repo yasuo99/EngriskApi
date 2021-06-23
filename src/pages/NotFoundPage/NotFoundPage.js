@@ -7,10 +7,8 @@ class NotFoundPage extends Component {
     render() {
         return (
             <div id="wrapper">
-                <SubMenuClient></SubMenuClient>
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
-                        <HeaderClient></HeaderClient>
                         <div className="container mb-5 pb-5">
                             <div className="text-center">
                                 <div className="error mx-auto" data-text={404}>404</div>
@@ -19,7 +17,6 @@ class NotFoundPage extends Component {
                                 <Link to="/home">← Trở về trang chủ</Link>
                             </div>
                         </div>
-                        <Footer></Footer>
                     </div>
                 </div>
 

@@ -19,6 +19,10 @@ class Exam extends Component {
                 currentPage: 1,
                 pageSize: 5
             },
+            pagination: {
+                currentPage: 1,
+                pageSize: 5
+            },
             hasMore: true,
             histories: []
         }
@@ -27,23 +31,29 @@ class Exam extends Component {
     componentDidMount = async () => {
         this.isComponentMounted = true;
         var exams = await this.fetchExam();
+        console.log(exams);
         if (this.isComponentMounted) {
-            if(connection.state == HubConnectionState.Disconnected){
-                connection.start();
-            }
-            connection.on("NewExam", (data) => {
-                var exam = JSON.parse(data);
-                this.setState({
-                    exams: [exam,...this.state.exams]
+            if (this.props.isLoggedIn) {
+                if (connection.state == HubConnectionState.Disconnected) {
+                    connection.start();
+                }
+                connection.on("NewExam", (data) => {
+                    var exam = JSON.parse(data);
+                    this.setState({
+                        exams: [exam, ...this.state.exams.splice(4, 1)]
+                    })
                 })
-            })
+            }
             this.setState({
                 exams: exams
             })
-            if(this.props.isLoggedIn){
+            if (this.props.isLoggedIn) {
                 const histories = await this.fetchHistories(this.props.account.id);
                 this.setState({
-                    histories: histories
+                    histories: histories,
+                    pagination: {
+                        ...this.state.pagination,
+                    }
                 })
                 console.log(histories);
             }
@@ -85,8 +95,8 @@ class Exam extends Component {
                 <Popover.Title as="h3">Popover right</Popover.Title>
                 <Popover.Content>
                     And here's some <strong>amazing</strong> content. It's very engaging.
-                right?
-              </Popover.Content>
+                    right?
+                </Popover.Content>
             </Popover>
         );
         const popovers = [];
@@ -101,7 +111,7 @@ class Exam extends Component {
                     <p>Số câu hỏi nghe: {exam.totalListening}</p>
                     <p>Số câu hỏi đọc: {exam.totalReading}</p>
                     <p>Tổng điểm bài thi: {exam.totalScore}</p>
-                    {this.props.isLoggedIn && this.state.histories.some(el => el.examId === exam.id) && <p>Kết quả thi tốt nhất: Điểm: {this.state.histories.find((history) => history.examId === exam.id) && this.state.histories.find((history) => history.examId === exam.id).score }</p>}
+                    {this.props.isLoggedIn && this.state.histories.some(el => el.examId === exam.id) && <p>Kết quả thi tốt nhất: Điểm: {this.state.histories.find((history) => history.examId === exam.id) && this.state.histories.find((history) => history.examId === exam.id).score}</p>}
                 </Popover.Content>
             </Popover>}>
                 <div className="card-hoc pt-2 mb-3">
@@ -111,13 +121,13 @@ class Exam extends Component {
                         </div>
                         <div className="col-7">
                             <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge> {this.state.histories.some(el => el.examId == exam.id && el.isDone) && <Badge variant="success">Đã làm</Badge>}{this.state.histories.some(el => el.examId == exam.id && el.isPause) && <Badge variant="success">Tạm dừng</Badge>}
-                            <p>Exp: {exam.exp}  </p>
-                            <p>Price: {exam.price}</p>
-                            <p>Duration: {exam.duration} minutes</p>
+                            {this.props.isLoggedIn && <p>Kinh nghiệm đạt được: {exam.expGain}  </p>}
+                            <p>Thời gian làm bài: {exam.duration} phút</p>
                         </div>
                         <div className="col-3 pr-4">
-                            {(this.state.histories.some(h => h.examId == exam.id) == false || this.state.histories.some(h => h.examId == exam.id && h.isPause == false)) && <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Làm ngay<i className="fa fa-pencil"></i></Link>}
-                            {this.state.histories.some(h => h.examId == exam.id && h.isPause) && <Link className="btn btn-primary do-btn" to={`/exam/${exam.id}?resume=true`}>Tiếp tục <i className="fa fa-pencil"></i></Link>}
+                            {exam.isPrivate ? (this.props.isLoggedIn ? ((this.state.histories.some(h => h.examId == exam.id && h.isPause == false) ?
+                                <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Làm ngay <i className="fa fa-pencil"></i></Link> :
+                                <Link className="btn btn-primary do-btn" to={`/exam/${exam.id}?resume=true`}>Tiếp tục <i className="fa fa-pencil"></i></Link>)) : <Link className='btn btn-primary do-btn disabled text-warning'>Yêu cầu đăng nhập</Link>) : <Link className='btn btn-primary do-btn' to={"/exam/" + exam.id}>Làm ngay <i className='fa fa-pencil'></i></Link>}
                         </div>
                     </div>
                 </div>
@@ -127,13 +137,29 @@ class Exam extends Component {
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
                 <div id="content-wrapper" className="d-flex flex-column">
-                    <div id="content" style={{overflow: 'auto', height:'100vh'}}>
+                    <div id="content" style={{ overflow: 'auto', height: '100vh' }}>
                         <HeaderClient></HeaderClient>
-                        <main id="scroll">
+                        <main id='trangchu'>
                             <div className="container">
                                 <div className="row">
-                                    <div id="trangchu" className="col-10 offset-1">
+                                    <div className="col-md-10 offset-1">
+                                        <div id="homeSearch" className="mb-2">
+                                            <div className="d-flex justify-content-start">
+                                                <p className="text-white mr-1 mt-2">Tìm kiếm</p>
+                                                <input type="search" className="rounded mr-1" />
+                                                <button className="btn btn-primary"><i className="fa fa-search"></i></button>
+                                            </div>
+                                            <div className="col-md-5 offset-md-3 d-flex justify-content-end">
+                                                <select className='form-select' name="filter" id="">
+                                                    <option value="newest">Mới nhất</option>
+                                                    <option value="hotest">Hot nhất</option>
+                                                    <option value="easiest">Dễ nhất</option>
+                                                    {this.props.isLoggedIn && <option value="shared">Chia sẻ với bạn</option>}
+                                                </select>
+                                            </div>
+                                        </div>
                                         {renderExam}
+                                        { }
                                     </div>
                                 </div>
                             </div>
@@ -150,8 +176,8 @@ class Exam extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const {isLoggedIn, account} = state.auth;
-    return{
+    const { isLoggedIn, account } = state.auth;
+    return {
         isLoggedIn: isLoggedIn,
         account: account
     }

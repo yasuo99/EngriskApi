@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
 import Footer from "../Footer/Footer"
 
 
 class LandingPage extends Component {
-    render() {
-        return (
-            <div >
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    if (this.props.isLoggedIn) {
+      return <Redirect to='/home' />
+    }
+    return (
+      <div >
         <header id="duolingo">
           <div className="container-fluid">
             <div className="row">
@@ -21,7 +28,7 @@ class LandingPage extends Component {
                       </li>
                       <li>
                         <ul className="ring-1">
-                        <li></li>
+                          <li></li>
                           <li>
                             <a href="https://www.facebook.com/howkteam/" className="orbit-icon">
                               <img className="img-fluid" src="image/hoidap.png" />
@@ -32,7 +39,7 @@ class LandingPage extends Component {
                               <img className="img-fluid" src="image/taitro.png" />
                             </a>
                           </li>
-                          
+
                         </ul>
                       </li>
                       <li>
@@ -61,19 +68,19 @@ class LandingPage extends Component {
               </div>
               <div className="col-6 nd ">
                 <div className="row">
-                <h3 className="title">The limits of my language mean the limits of my world.</h3>
+                  <h3 className="title">The limits of my language mean the limits of my world.</h3>
                 </div>
                 <div className="row">
                   <div className="col-md-6 offset-3">
-                  <Link type="button" className="btn btn-home mt-4" to="/home">Bắt Đầu</Link>
+                    <Link type="button" className="btn btn-home mt-4" to="/home">Bắt Đầu</Link>
                   </div>
-                
+
                 </div>
                 <div className="row">
-                <div className="col-md-6 offset-3">
-                <Link type="button" className="btn btn-signin mt-4" to="/signin">Tôi Đã Có Tài Khoản</Link>
-                </div>
-                
+                  <div className="col-md-6 offset-3">
+                    <Link type="button" className="btn btn-signin mt-4" to="/signin">Tôi Đã Có Tài Khoản</Link>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -86,7 +93,7 @@ class LandingPage extends Component {
               <div className="col-8">
                 <h3 className="title">Cách tốt nhất để học một ngôn ngữ</h3>
                 <p className="content">Học tập cùng THANHLAP sẽ vô cùng vui nhộn và gây nghiện. Kiếm điểm khi trả lời các câu hỏi đúng,
-                  chạy đua cùng thời gian, hay nâng lên cấp độ. Những bài học nhỏ gọn thực sự hiệu quả giúp người
+                chạy đua cùng thời gian, hay nâng lên cấp độ. Những bài học nhỏ gọn thực sự hiệu quả giúp người
                   học nâng cao trình độ tiếng anh.</p>
               </div>
             </div>
@@ -179,13 +186,19 @@ class LandingPage extends Component {
               </div>
             </div>
             <Footer></Footer>
-           </div>
+          </div>
         </footer>
       </div>
-       );
+    );
 
-    }
+  }
 }
-export default LandingPage;
+const mapStateToProps = (state) => {
+  const { isLoggedIn } = state.auth
+  return {
+    isLoggedIn: isLoggedIn
+  }
+}
+export default connect(mapStateToProps)(LandingPage);
 
 

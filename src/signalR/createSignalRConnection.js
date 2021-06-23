@@ -6,6 +6,6 @@ export const connection = new signalR.HubConnectionBuilder()
 .withUrl(`${process.env.REACT_APP_HUB_URL}/notification`, {
     skipNegotiation: true,
     transport: HttpTransportType.WebSockets,
-    accessTokenFactory: () => localStorage.getItem("token") || null
+    accessTokenFactory: () => localStorage.getItem("token")
 })
 .build();

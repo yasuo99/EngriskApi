@@ -7,7 +7,7 @@ class Post extends Component {
     }
     render() {
         return (
-            <div className="row">
+            <div className="row p-2">
                 <div className="col-md-2"><img className="img-fluid d-block mb-4 img-thaoluan" src={this.props.post.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                 <div className="col-md-8 pt-3">
         <h5><Link to={"/thao-luan-chi-tiet/" + this.props.post.id}>{this.props.post.title}</Link></h5>

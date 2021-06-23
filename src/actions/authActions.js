@@ -2,7 +2,7 @@
 import { toast } from 'react-toastify';
 import accountApiV2 from '../api/2.0/accountApi';
 import axiosClient from '../config/axiosClient';
-
+import { connection } from '../signalR/createSignalRConnection';
 export const googleSignIn = (token) => {
     return dispatch => {
         const url = "/accounts/login/google";
@@ -95,17 +95,49 @@ export const follow = (followerId, followingId, following) => {
         });
     }
 }
+export const newFollower = (follower) => {
+    return dispatch => {
+        return dispatch({type: "NEW_FOLLOWER", follower: follower})
+    }
+}
+export const newOnline = (online) => {
+    return dispatch => {
+        return dispatch({type: 'NEW_ONLINE', online: online})
+    }
+}
+export const currentOnline = (users) => {
+    return dispatch => {
+        return dispatch({type: 'CURRENT_ONLINE', users:users})
+    }
+}
+export const newOffline = (online) => {
+    return dispatch => {
+        return dispatch({type: 'NEW_OFFLINE', online: online})
+    }
+}
+export const unseenMessage = (message) => {
+    return dispatch => {
+        return dispatch({type: 'UNSEEN_MESSAGE', message: message})
+    }
+}
+export const seenMessages = (boxchatId) => {
+    return dispatch => {
+        return dispatch({type: 'SEEN_MESSAGES', boxchatId: boxchatId})
+    }
+}
 export const logout = () => {
     return dispatch => {
         return dispatch({ type: "SIGN_OUT" });
     }
 }
 export const logOut = () => {
+    connection.stop();
     return ({
         type: "SIGN_OUT"
     })
 }
 export const timeOut = () => {
+    connection.stop();
     return ({
         type: "TIME_OUT"
     })

@@ -4,12 +4,27 @@ import SubMenuClient from "../../components/client/SubMenuClient";
 import ReactAudioPlayer from 'react-audio-player';
 import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import quizApi from "../../api/2.0/quizApi";
+import ReactPlayer from "react-player";
+import { timers } from "jquery";
 
+const selectedOptionInit = {
+    questionId: '',
+    index: 0,
+    id: '',
+    checked: false,
+    result: false
+}
 class Learn extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedOption: "",
+            selectedOption: {
+                index: 0,
+                id: '',
+                checked: false,
+                result: false
+            },
             modalDisplay: false,
             useKeyBoard: false,
             typeQuestion: "ToeicReading",
@@ -18,11 +33,46 @@ class Learn extends Component {
             chooseImg: false,
             answerSort: "",
             checkSort: "",
+            quiz: {
+                questions: []
+            },
+            currentQuestion: {
+                answers: []
+            },
+            currentQuestionIndex: 0,
+            answers: [
+            ],
+            audioPlay: false,
         }
+        this.isComponentMounted = false;
+    }
+    async componentDidMount() {
+        this.isComponentMounted = true;
+        const { match: { match: { params } } } = this.props;
+        var quiz = await quizApi.doQuiz(params.sectionId);
+        if (this.isComponentMounted) {
+            this.setState({
+                quiz: quiz,
+                currentQuestion: quiz.questions[this.state.currentQuestionIndex],
+                selectedOption: {
+                    ...this.state.selectedOption,
+                    id: quiz.questions[this.state.currentQuestionIndex]?.answers[0]?.id
+                }
+            })
+        }
+        console.log(quiz);
+    }
+    fetchQuiz = (id) => {
+
     }
     handleSelectOption = (e) => {
+        console.log(e.target.value);
         this.setState({
-            selectedOption: e.target.value,
+            selectedOption: {
+                ...this.state.selectedOption,
+                index: e.target.name,
+                id: e.target.value
+            },
             chooseImg: true
         })
     }
@@ -54,20 +104,22 @@ class Learn extends Component {
         }
 
     }
-    checkAnswer = () => {
-        if (this.state.selectedOption === "answerC") {
-            this.setState({
-                check: true
-            })
-        }
-        else {
-            this.setState({
-                check: false
-            })
+    checkAnswer = (e) => {
+        const currentQuestion = this.state.currentQuestion;
+        const answer = currentQuestion.answers.find(ans => ans.id == this.state.selectedOption.id);
+        const selectedOption = {
+            ...this.state.selectedOption,
+            result: answer.isQuestionAnswer,
+            checked: true
         }
         this.setState({
-            next: true
+            selectedOption: selectedOption
         })
+        const answers = [...this.state.answers, selectedOption]
+        console.log(answers);
+        this.setState({
+            answers: answers,
+        });
     }
     checkAnswerSort = (answerSort) => {
         if (this.state.answerSort === answerSort.target.value) {
@@ -96,8 +148,62 @@ class Learn extends Component {
             })
         }
     }
+    playAudio = () => {
+        this.setState({
+            audioPlay: true
+        })
+    }
+    selectQuestion = (index) => {
+        this.setState({
+            currentQuestion: this.state.quiz.questions[index],
+            currentQuestionIndex: index,
+            selectedOption: this.state.answers[index] == undefined ? ({ ...selectedOptionInit, questionId: this.state.quiz.questions[index]?.id, id: this.state.quiz.questions[index]?.answers[0]?.id }) : this.state.answers[index],
+            modalDisplay: false
+        })
+    }
+    nextQuestion = () => {
+        if (this.state.currentQuestionIndex < this.state.quiz.questions.length) {
+            const nextQuestion = this.state.quiz.questions[this.state.currentQuestionIndex + 1]
+            const nextQuestionSelectedOption = this.state.answers.find(ans => ans.questionId == nextQuestion.id);
+            const selectedOption = {
+                ...(nextQuestionSelectedOption != undefined ? nextQuestionSelectedOption : selectedOptionInit),
+                questionId: nextQuestion.id,
+                id: nextQuestion.answers[0]?.id
+            }
+            this.setState({
+                selectedOption: selectedOption,
+                currentQuestion: nextQuestion,
+                currentQuestionIndex: this.state.currentQuestionIndex + 1,
+            })
+        }
+    }
     render() {
-        var { useKeyBoard, typeQuestion, check, checkSort, next, chooseImg } = this.state
+        var { useKeyBoard, typeQuestion, check, checkSort, next, chooseImg, currentQuestion, answers } = this.state
+        const renderListQuestions = this.state.quiz.questions.map((question, index) =>
+            <tr key={index} onClick={() => this.selectQuestion(index)} style={{ cursor: "pointer" }}>
+                <td className="question">{question.content}</td>
+                <td className="achieved">{question.score}</td>
+                <td className="point">{question.score}</td>
+                <td className="result"><img src={answers.some(ans => ans.questionId == question.id) ? (answers.find(ans => ans.questionId == question.id).checked && answers.find(ans => ans.questionId == question.id).result == true ? "/image/tick.png" : "/image/cross.png") : ""}></img></td>
+            </tr>
+        )
+        const renderAnswers = currentQuestion.answers.map((ans, index) =>
+            <div className="row" key={index}>
+                <div className="col-1 text-right">
+                    <input type="radio"
+                        className="radioAnswer"
+                        value={ans.id}
+                        name={index}
+                        checked={this.state.selectedOption.index == index}
+                        onChange={this.handleSelectOption} />
+                </div>
+                <div className="col-11">
+                    <p className="answer">{ans.answer}</p>
+                </div>
+
+            </div>
+        )
+        console.log(currentQuestion);
         return (
             <div id="wrapper">
                 <SubMenuClient></SubMenuClient>
@@ -108,554 +214,54 @@ class Learn extends Component {
                             <div className="container">
                                 <p className="btn btn-listQuestion" onClick={e => this.openModal(e)}>Danh sách câu hỏi</p>
                                 <div className="boxContent">
-                                    {typeQuestion === 'Quiz' ?
-                                        (
-                                            <div>
-                                                <div className="titleQuestion">
-                                                    <img src="/image/question.png" alt="question"></img>
-                                                    <p className="title">What is your name?</p>
+                                    <div>
+                                        <div className="titleQuestion">
+                                            <img src="/image/question.png" alt="question"></img>
+                                            <h5>{currentQuestion.preQuestion}</h5>
+                                            <br />
+                                        </div>
+                                        <div className="titleQuestion">
+                                            <p className="title">{currentQuestion.content}</p>
+                                        </div>
 
-                                                </div>
+                                        <div className="answerQuestion">
 
-                                                <div className="answerQuestion">
-                                                    <ReactAudioPlayer
-                                                        src="my_audio_file.ogg"
-                                                        autoPlay
-                                                        controls
-                                                        style={{ height: '30px' }}
-                                                    />
-                                                    <div className="itemAnswer">
-                                                        <div className="row">
-                                                            <div className="col-1 text-right">
-                                                                <input type="radio"
-                                                                    className="radioAnswer"
-                                                                    value="answerA"
-                                                                    checked={this.state.selectedOption === 'answerA'}
-                                                                    onChange={this.handleSelectOption} />
-                                                            </div>
-                                                            <div className="col-11">
-                                                                <p className="answer">Hello</p>
-                                                            </div>
+                                            {currentQuestion.isListeningQuestion && <div><img onClick={this.playAudio} src="/image/sound.png" className="sound"></img> <ReactPlayer
+                                                config={{
+                                                    file: {
+                                                        attributes: {
+                                                            preload: 'none'
+                                                        }
+                                                    }
+                                                }}
+                                                src="my_audio_file.ogg"
+                                                playing={this.state.audioPlay}
+                                                style={{ height: '30px' }}
+                                            /></div>}
 
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-1 text-right">
-                                                                {/* <img src="/image/check2.png" className="check"></img> */}
-                                                                <input type="radio" className="radioAnswer"
-                                                                    value="answerB"
-                                                                    checked={this.state.selectedOption === 'answerB'}
-                                                                    onChange={this.handleSelectOption} />
-                                                            </div>
-                                                            <div className="col-11">
-                                                                <p className="answer">Hi</p>
-                                                            </div>
-
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-1 text-right">
-                                                                <input type="radio" className="radioAnswer"
-                                                                    value="answerC"
-                                                                    id="answerC"
-                                                                    name="answerC"
-                                                                    checked={this.state.selectedOption === 'answerC'}
-                                                                    onChange={this.handleSelectOption} />
-                                                            </div>
-                                                            <div className="col-11">
-                                                                <p className="answer">How old are you?</p>
-                                                            </div>
-
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-1 text-right">
-                                                                <input type="radio" className="radioAnswer"
-                                                                    value="answerD"
-                                                                    checked={this.state.selectedOption === 'answerD'}
-                                                                    onChange={this.handleSelectOption} />
-                                                            </div>
-                                                            <div className="col-11">
-                                                                <p className="answer">My name is Mr.Thanh</p>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    {check === "" ? "" : (check === true ? (
-                                                        <div className="boxNotifyCorrect">
-                                                            <p className="title">Correct</p>
-                                                            <p className="content">Well done !</p>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="boxNotifyIncorrect">
-                                                            <p className="title">Incorrect</p>
-                                                            <p className="content">Sorry, sorry. Incorrect</p>
-                                                        </div>
-                                                    ))}
-
-
-
-                                                </div>
-
+                                            <div className="itemAnswer">
+                                                {renderAnswers}
                                             </div>
-                                        )
-                                        :
-                                        (typeQuestion === 'QuizHinhAnh' ?
-                                            (
-                                                <div>
-                                                    <div className="titleQuestion">
-                                                        <img src="/image/question.png" alt="question"></img>
-                                                        <p className="title">Đâu là nước Anh?</p>
+                                            {this.state.selectedOption.checked && (
+                                                this.state.selectedOption.result === true ? (
+                                                    <div className="boxNotifyCorrect">
+                                                        <p className="title">Correct</p>
+                                                        <p className="content">Well done !</p>
                                                     </div>
-                                                    <div className="answerQuestionImage">
-                                                        <div className="itemQuestion">
-                                                            <div className="row mt-4">
-                                                                {chooseImg === true && this.state.selectedOption === "answerA" ? (
-                                                                    <div className="col-md-3 offset-1">
-                                                                        <div className="itemAnswer backgroundChoose">
-                                                                            <img src="/image/english (1).jpg"></img>
-                                                                            <div className="row mt-3">
-                                                                                <div className="col-10">
-                                                                                    <p className="answer">next</p>
-                                                                                </div>
-                                                                                <div className="col-2">
-                                                                                    <input type="checkbox"
-                                                                                        className="radioAnswer"
-                                                                                        value="answerA"
-                                                                                        checked={this.state.selectedOption === 'answerA'}
-                                                                                        onChange={this.handleSelectOption}
-                                                                                    />
-
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="col-md-3 offset-1">
-                                                                        <div className="itemAnswer">
-                                                                            <img src="/image/english (1).jpg"></img>
-                                                                            <div className="row mt-3">
-                                                                                <div className="col-10">
-                                                                                    <p className="answer">next</p>
-                                                                                </div>
-                                                                                <div className="col-2">
-                                                                                    <input type="checkbox"
-                                                                                        className="radioAnswer"
-                                                                                        value="answerA"
-                                                                                        checked={this.state.selectedOption === 'answerA'}
-                                                                                        onChange={this.handleSelectOption} />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {chooseImg === true && this.state.selectedOption === "answerB" ? (
-                                                                    <div className="col-md-3">
-                                                                        <div className="itemAnswer backgroundChoose">
-                                                                            <img src="/image/english (1).jpg"></img>
-                                                                            <div className="row mt-3">
-                                                                                <div className="col-10">
-                                                                                    <p className="answer">next</p>
-                                                                                </div>
-                                                                                <div className="col-2">
-                                                                                    <input type="checkbox"
-                                                                                        className="radioAnswer"
-                                                                                        value="answerB"
-                                                                                        checked={this.state.selectedOption === 'answerB'}
-                                                                                        onChange={this.handleSelectOption}
-                                                                                    />
-
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="col-md-3">
-                                                                        <div className="itemAnswer">
-                                                                            <img src="/image/english (1).jpg"></img>
-                                                                            <div className="row mt-3">
-                                                                                <div className="col-10">
-                                                                                    <p className="answer">next</p>
-                                                                                </div>
-                                                                                <div className="col-2">
-                                                                                    <input type="checkbox"
-                                                                                        className="radioAnswer"
-                                                                                        value="answerB"
-                                                                                        checked={this.state.selectedOption === 'answerB'}
-                                                                                        onChange={this.handleSelectOption} />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                {chooseImg === true && this.state.selectedOption === "answerC" ? (
-                                                                    <div className="col-md-3">
-                                                                        <div className="itemAnswer backgroundChoose">
-                                                                            <img src="/image/english (1).jpg"></img>
-                                                                            <div className="row mt-3">
-                                                                                <div className="col-10">
-                                                                                    <p className="answer">next</p>
-                                                                                </div>
-                                                                                <div className="col-2">
-                                                                                    <input type="checkbox"
-                                                                                        className="radioAnswer"
-                                                                                        value="answerC"
-                                                                                        checked={this.state.selectedOption === 'answerC'}
-                                                                                        onChange={this.handleSelectOption}
-                                                                                    />
-
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="col-md-3">
-                                                                        <div className="itemAnswer">
-                                                                            <img src="/image/english (1).jpg"></img>
-                                                                            <div className="row mt-3">
-                                                                                <div className="col-10">
-                                                                                    <p className="answer">next</p>
-                                                                                </div>
-                                                                                <div className="col-2">
-                                                                                    <input type="checkbox"
-                                                                                        className="radioAnswer"
-                                                                                        value="answerC"
-                                                                                        checked={this.state.selectedOption === 'answerC'}
-                                                                                        onChange={this.handleSelectOption} />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                            </div>
-
-                                                        </div>
-                                                        {check === "" ? "" : (check === true ? (
-                                                            <div className="boxNotifyCorrect">
-                                                                <p className="title">Correct</p>
-                                                                <p className="content">Well done !</p>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="boxNotifyIncorrect">
-                                                                <p className="title">Incorrect</p>
-                                                                <p className="content">Sorry, sorry. Incorrect</p>
-                                                            </div>
-                                                        ))}
+                                                ) : (
+                                                    <div className="boxNotifyIncorrect">
+                                                        <p className="title">Incorrect</p>
+                                                        <p className="content">Sorry, sorry. Incorrect</p>
                                                     </div>
+                                                ))
+                                            }
 
-                                                </div>
-                                            )
-                                            :
-                                            (typeQuestion === 'QuizSapXep' ?
-                                                (
-                                                    <div>
-                                                        <div className="titleQuestionSort">
-                                                            <img src="/image/problem.png" alt="question"></img>
-                                                            <p className="title"><img src="/image/sound.png"></img> WHAT IS YOUR NAME ?</p>
-                                                        </div>
-                                                        {useKeyBoard === true ? (
-                                                            <div className="boxKeyBoard">
-                                                                <textarea type="text" id="answerSort" name="answerSort" className="useKeyBoard" onChange={this.handleChange} placeholder="Nhập bằng tiếng việt"></textarea>
-                                                                {checkSort === "" ? "" : (checkSort === true ? (
-                                                                    <div className="boxNotifyCorrect">
-                                                                        <p className="title">Correct</p>
-                                                                        <p className="content">Well done !</p>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="boxNotifyIncorrect">
-                                                                        <p className="title">Incorrect</p>
-                                                                        <p className="content">Sorry, sorry. Incorrect</p>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        ) : (
-                                                            <div className="answerQuestionSort">
-                                                                <div className="box"></div>
-                                                                <div className="boxAnswer">
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Em</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
-                                                                    <p className="itemAnswer">Tôi</p>
+                                        </div>
 
-                                                                </div>
-                                                                {checkSort === "" ? "" : (checkSort === true ? (
-                                                                    <div className="boxNotifyCorrect">
-                                                                        <p className="title">Correct</p>
-                                                                        <p className="content">Well done !</p>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="boxNotifyIncorrect">
-                                                                        <p className="title">Incorrect</p>
-                                                                        <p className="content">Sorry, sorry. Incorrect</p>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        )}
+                                    </div>
 
-
-                                                    </div>
-                                                )
-                                                : (typeQuestion === 'QuizNoiTu' ?
-                                                    (
-                                                        <div>
-                                                            <div className="titleQuestion">
-                                                                <img src="/image/question.png" alt="question"></img>
-                                                                <p className="title">Nối các từ vựng thành một cụm từ có nghĩa</p>
-                                                            </div>
-                                                            <div className="answerQuestionMatchWord">
-                                                                <div className="row mt-4">
-                                                                    <div className="col-md-6">
-                                                                        <div className="row">
-                                                                            <div className="col-md-6 offset-md-3">
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        <div className="col-sm-4"><input className="answer"></input></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                
-                                                                            </div>
-
-                                                                        </div>
-                                                                    
-                                                                    </div>
-                                                                    <div className="col-md-6">
-                                                                    <div className="row">
-                                                                            <div className="col-md-6">
-                                                                                <ol type="A">
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        
-                                                                                    </div>
-                                                                                </div> 
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        
-                                                                                    </div>
-                                                                                </div> 
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        
-                                                                                    </div>
-                                                                                </div> 
-                                                                                <div className="boxWord">
-                                                                                    <div className="row">
-                                                                                        <div className="col-sm-4"><p className="titleAnswer"><li></li></p></div>
-                                                                                        <div className="col-sm-8"><p className="word">Hello</p></div>
-                                                                                        
-                                                                                    </div>
-                                                                                </div> 
-                                                                                </ol>
-                                                                            </div>
-
-                                                                        </div>
-                                                                    
-                                                                    </div>
-                                                                </div>
-                                                                {check === "" ? "" : (check === true ? (
-                                                                    <div className="boxNotifyCorrect">
-                                                                        <p className="title">Correct</p>
-                                                                        <p className="content">Well done !</p>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="boxNotifyIncorrect">
-                                                                        <p className="title">Incorrect</p>
-                                                                        <p className="content">Sorry, sorry. Incorrect</p>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-
-                                                        </div>
-                                                    )
-                                                    : (typeQuestion === 'ToeicReading' ?
-                                                        (
-                                                            <div>
-                                                                <div className="titleQuestion">
-                                                                    <img src="/image/question.png" alt="question"></img>
-                                                                    <p className="title">Departmental restructuring will be discussed at the _____ monthly meeting</p>
-                                                                </div>
-                                                                <div className="answerQuestion">
-                                                                    <div className="itemAnswer">
-                                                                        <div className="row">
-                                                                            <div className="col-1 text-right">
-                                                                                <input type="radio"
-                                                                                    className="radioAnswer"
-                                                                                    value="answerA"
-                                                                                    checked={this.state.selectedOption === 'answerA'}
-                                                                                    onChange={this.handleSelectOption} />
-                                                                            </div>
-                                                                            <div className="col-11">
-                                                                                <p className="answer">next</p>
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div className="row">
-                                                                            <div className="col-1 text-right">
-                                                                                {/* <img src="/image/check2.png" className="check"></img> */}
-                                                                                <input type="radio" className="radioAnswer"
-                                                                                    value="answerB"
-                                                                                    checked={this.state.selectedOption === 'answerB'}
-                                                                                    onChange={this.handleSelectOption} />
-                                                                            </div>
-                                                                            <div className="col-11">
-                                                                                <p className="answer">next</p>
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div className="row">
-                                                                            <div className="col-1 text-right">
-                                                                                <input type="radio" className="radioAnswer"
-                                                                                    value="answerC"
-                                                                                    id="answerC"
-                                                                                    name="answerC"
-                                                                                    checked={this.state.selectedOption === 'answerC'}
-                                                                                    onChange={this.handleSelectOption} />
-                                                                            </div>
-                                                                            <div className="col-11">
-                                                                                <p className="answer">next</p>
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div className="row">
-                                                                            <div className="col-1 text-right">
-                                                                                <input type="radio" className="radioAnswer"
-                                                                                    value="answerD"
-                                                                                    checked={this.state.selectedOption === 'answerD'}
-                                                                                    onChange={this.handleSelectOption} />
-                                                                            </div>
-                                                                            <div className="col-11">
-                                                                                <p className="answer">next</p>
-                                                                            </div>
-
-                                                                        </div>
-                                                                    </div>
-                                                                    {check === "" ? "" : (check === true ? (
-                                                                        <div className="boxNotifyCorrect">
-                                                                            <p className="title">Correct</p>
-                                                                            <p className="content">Well done !</p>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div className="boxNotifyIncorrect">
-                                                                            <p className="title">Incorrect</p>
-                                                                            <p className="content">Sorry, sorry. Incorrect</p>
-                                                                        </div>
-                                                                    ))}
-
-
-
-                                                                </div>
-
-                                                            </div>
-                                                        ) : ''))))}
-
-                                    {typeQuestion === "QuizSapXep" ? (
-                                        (next === false ? (
-                                            <div className="row mt-7">
-                                                <div className="col-6">
-                                                    <p className="keyboard"
-                                                        id="keyboard"
-                                                        onChange={this.handleChange}
-                                                        onClick={this.ToToggleKeyBoard}
-                                                    ><img src="/image/keyboard.png"></img> SỬ DỤNG BÀN PHÍM</p>
-                                                </div>
-                                                <div className="col-6">
-                                                    <button className="btn btn-check" onClick={this.checkAnswerSort}><img src="/image/checked (1).png"></img> Kiểm tra</button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <button className="btn btn-continue mt-7"><img src="/image/next (3).png"></img> Tiếp theo</button>
-                                        ))
-
-                                    ) : (next === false ? (<button className="btn btn-check" onClick={this.checkAnswer}><img src="/image/checked (1).png"></img> Kiểm tra</button>) : (<button className="btn btn-continue"><img src="/image/next (3).png"></img> Tiếp theo</button>))}
-
+                                    {this.state.selectedOption.checked === false ? <button className="btn btn-check" onClick={this.checkAnswer}><img src="/image/checked (1).png"></img> Kiểm tra</button> : <button onClick={this.nextQuestion} className="btn btn-continue"><img src="/image/next (3).png"></img> Tiếp theo</button>}
+                                    {this.state.quiz.questions.length === this.state.answers.length && <button className="btn btn-continue"><img src="/image/next (3).png"></img> Kết thúc</button>}
                                 </div>
 
                             </div>
@@ -663,7 +269,7 @@ class Learn extends Component {
                                 <table>
                                     <Modal.Header closeButton onClick={() => this.closeModal()}>
                                         <thead>
-                                            <tr className="active text-center">
+                                            <tr className="active">
                                                 <th className="question">Câu hỏi</th>
                                                 <th className="achieved">Điểm đạt được</th>
                                                 <th className="point">Số điểm</th>
@@ -672,18 +278,10 @@ class Learn extends Component {
                                         </thead>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        <tr>
-                                            <td className="question">Departmental restructuring will be discussed at the _____ monthly meeting</td>
-                                            <td className="achieved">10</td>
-                                            <td className="point">10</td>
-                                            <td className="result"><img src="/image/tick.png"></img></td>
-                                        </tr>
-                                        <tr>
-                                            <td className="question">Departmental restructuring will be discussed at the _____ monthly meeting</td>
-                                            <td className="achieved">0</td>
-                                            <td className="point">10</td>
-                                            <td className="result"><img src="/image/cross.png"></img></td>
-                                        </tr>
+                                        <tbody style={{ width: "898px" }}>
+                                            {renderListQuestions}
+                                        </tbody>
+
                                     </Modal.Body>
                                 </table>
                             </Modal>
@@ -691,8 +289,10 @@ class Learn extends Component {
                         </main>
                     </div>
                 </div>
-            </div >
-        )
+            </div >)
+    }
+    componentWillUnmount() {
+        this.isComponentMounted = false;
     }
 }
 export default Learn;

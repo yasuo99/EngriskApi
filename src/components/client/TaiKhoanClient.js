@@ -17,7 +17,7 @@ const TaiKhoanClient = ({ status, account }) => {
                     <div className="dropdown-item">Exp: {account.exp} | Point: {account.point}</div>
                     <Link className="dropdown-item" to="/caidatchung">Hồ sơ của bạn</Link>
                     <Link className="dropdown-item" to="/lichsu-exam">Lịch sử exam</Link>
-                    <Link className="dropdown-item" to={`/user/quanly-quiz_exam/${account.id}`}>Quiz/exam của bạn</Link>
+                    <Link className="dropdown-item" to={`/nguoi-dung/${account.id}/quan-ly-quiz-exam/`}>Quiz/exam của bạn</Link>
                     <Link className="dropdown-item" to="/ranking-exam">Bảng xếp hạng exam</Link>
                     <Link className="dropdown-item" to="/ranking-word">Bảng xếp hạng từ vựng</Link>
                     <Link className="dropdown-item" to="#">Hỗ trợ</Link>

@@ -67,6 +67,7 @@ class ExamPage extends Component {
         this.pauseExam = this.pauseExam.bind(this);
     }
     async componentDidMount() {
+        this.isComponentMounted = true;
         window.addEventListener('beforeunload', this.handleUnload);
         window.addEventListener('unload', this.pauseExam);
         const { location: { match: { params } } } = this.props;
@@ -93,10 +94,7 @@ class ExamPage extends Component {
                 answer: currentExam.answers[currentExam.currentQuestion].answer
             })
         } else {
-            const saveExam = Array.from(JSON.parse(localStorage.getItem('saveExam')));
-            const exam = saveExam.filter(e => e.id == params.examId);
-            console.log('đang lưu', exam);
-            this.isComponentMounted = true;
+
             try {
                 if (this.isComponentMounted) {
                     this.fetchQuestions(params.examId);
@@ -636,7 +634,7 @@ class ExamPage extends Component {
     }
     async componentWillUnmount() {
         this.isComponentMounted = false;
-        if (!this.state.submitted) {
+        if (!this.state.submitted && !this.state.loading) {
             await examApiv2.pauseExam(this.state.exam.id, this.state.index);
             await this.pauseExam();
         }

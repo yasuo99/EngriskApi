@@ -5,9 +5,9 @@ import * as signalR from '@microsoft/signalr';
 import { connect } from 'react-redux';
 import { connection } from '../../signalR/createSignalRConnection';
 import notificationApiV2 from '../../api/2.0/notificationApi';
-const hubConnection = new signalR.HubConnectionBuilder().configureLogging(signalR.LogLevel.Debug).withUrl("http://localhost:5000/notification", {
-  accessTokenFactory: () => localStorage.getItem("token") || null
-}).build();
+import { currentOnline, newFollower, newOffline, newOnline, unseenMessage } from '../../actions/authActions';
+import { Button, Form, Modal } from 'react-bootstrap'
+import accountApiV2 from '../../api/2.0/accountApi';
 class ThongBaoClient extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +16,9 @@ class ThongBaoClient extends Component {
       params: {
         currentPage: 1,
         pageSize: 5
-      }
+      },
+      selectNotification: {},
+      yesnoModal: false
     }
     this.isComponentMounted = false;
 
@@ -30,21 +32,52 @@ class ThongBaoClient extends Component {
           connection.start();
           connection.on('NewNotification', (data) => {
             var notification = JSON.parse(data);
-            console.log(notification);
+            var filteredNotifications = this.state.notifications.filter(notify => notify.id != notification.id);
+            filteredNotifications.pop();
             if (this.isComponentMounted) {
               this.setState({
-                notifications: [notification, ...this.state.notifications]
+                notifications: [notification, ...filteredNotifications]
               })
             }
+          });
+          connection.on('NewFollower', (data) => {
+            console.log("dkm");
+            var notification = JSON.parse(data);
+            var filteredNotifications = this.state.notifications.filter(notify => notify.id != notification.id);
+            filteredNotifications.pop();
+            if (this.isComponentMounted) {
+              this.setState({
+                notifications: [notification, ...filteredNotifications]
+              })
+            }
+            this.props.newFollower(notification.from);
+          });
+          connection.on('UnFollow', (data) => {
+            var follower = JSON.parse(data);
+            this.props.newFollower(follower);
+          });
+          connection.on('NewOnline', (data) => {
+            console.log(data);
+            this.props.newOnline(data);
           })
-        }catch{
+          connection.on('CurrentOnline', (data) => {
+            const result = JSON.parse(data);
+            this.props.currentOnline(result);
+          })
+          connection.on('NewOffline', (data) => {
+            this.props.newOffline(data);
+          })
+          connection.on('NewMessage',(data) => {
+            const result = JSON.parse(data);
+            this.props.unseenMessage(result);
+          })
+        } catch {
           console.log('loi');
         }
       }
 
     }
     const result = await this.fetchNotifications(this.props.account.id, this.state.params);
-    console.log(result);
     if (this.isComponentMounted) {
       if (result) {
         this.setState({
@@ -52,6 +85,9 @@ class ThongBaoClient extends Component {
         });
       }
     }
+  }
+  toggleYesnoModal = () => {
+    this.setState({yesnoModal: this.state.yesnoModal ? false : true})
   }
   fetchNotifications = async (id, params) => {
     try {
@@ -69,18 +105,38 @@ class ThongBaoClient extends Component {
         return "success"
       case 2:
         return "danger"
+      case 3:
+        return "primary"
       default:
         break;
     }
   }
   seenNotification = async (id) => {
-    return await notificationApiV2.seenNotification(this.props.account.id, id);
+    const selectedNotification = this.state.notifications.find(notify => notify.id == id);
+    this.setState({selectNotification: selectedNotification});
+    if(selectedNotification.type === 3 && selectedNotification.status != 'Seen'){
+      this.toggleYesnoModal();
+    }
+    if (selectedNotification.status === 'Unseen') {
+      selectedNotification.status = 'Seen'
+      await notificationApiV2.seenNotification(this.props.account.id, id);
+      this.setState({
+        notifications: [...this.state.notifications.filter(notify => notify.id != id),selectedNotification]
+      })
+    }
+  }
+  refuseInvite = async () => {
+    await accountApiV2.reponseInviteBoxchatRequest(this.props.account.id, this.state.selectNotification.id, "refuse");
+    this.toggleYesnoModal();
+  }
+  acceptInvite = async () => {
+    await accountApiV2.reponseInviteBoxchatRequest(this.props.account.id, this.state.selectNotification.id, "accept");
+    this.toggleYesnoModal();
   }
   render() {
     const { notifications } = this.state;
-    console.log(notifications);
     const renderNotifications = this.state.notifications.map((notify) =>
-      <Link key={notify.id} data-id={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url || "#"} onClick={(e) => this.seenNotification(e.target.dataset.id)}>
+      <Link key={notify.id} data-id={notify.id} className="dropdown-item d-flex align-items-center" to={notify.url || "#"} onClick={() => this.seenNotification(notify.id)}>
         <div className="mr-3">
           <div className={"icon-circle" + " bg-" + this.displayNotificationType(notify.type)}>
             <i className="fa fa-donate text-white" />
@@ -113,6 +169,18 @@ class ThongBaoClient extends Component {
             </div></div>}
           <Link className="dropdown-item text-center small text-gray-500" to="/thongbao">Show All Alerts</Link>
         </div>
+        <Modal animation={true} show={this.state.yesnoModal} onHide={this.toggleYesnoModal}>
+          <Modal.Header closeButton onClick={this.toggleYesnoModal}>
+            <Modal.Title>Xác nhận tham gia</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Bạn có xác nhận với nội dung thông báo này
+                                </Modal.Body>
+          <Modal.Footer className='align-content-center'>
+            <Button variant="secondary" onClick={() => this.refuseInvite()}>Không đồng ý</Button>
+            <Button variant="primary" onClick={() => this.acceptInvite()}>Đồng ý</Button>
+          </Modal.Footer>
+        </Modal>
       </li>
     )
   }
@@ -127,4 +195,13 @@ const mapStateToProps = (state) => {
     account: account
   })
 }
-export default connect(mapStateToProps)(ThongBaoClient);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    newFollower: (follower) => dispatch(newFollower(follower)),
+    newOnline: (online) => dispatch(newOnline(online)),
+    newOffline: (offline) => dispatch(newOffline(offline)),
+    currentOnline: (users) => dispatch(currentOnline(users)),
+    unseenMessage: (message) => dispatch(unseenMessage(message))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ThongBaoClient);

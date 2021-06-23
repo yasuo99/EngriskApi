@@ -18,7 +18,6 @@ class Admin extends Component {
             <footer className="sticky-footer bg-white">
               <div className="container my-auto">
                 <div className="copyright text-center my-auto">
-                  <span>Thanh Lập</span>
                 </div>
               </div>
             </footer>
