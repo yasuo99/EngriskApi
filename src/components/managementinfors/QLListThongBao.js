@@ -14,10 +14,10 @@ class QLListThongBao extends Component {
             modalCreate: false,
             modalDelete: false,
             modalEdit: false,
-            url: null,
-            content: null,
-            type: null,
-            side: null,
+            url: '',
+            content: '',
+            type: '',
+            side: '',
             notifications: [],
             selectNotify: 0,
             users: [],
@@ -80,7 +80,12 @@ class QLListThongBao extends Component {
             if (result) {
                 toast("Thêm thành công");
                 this.setState({
-                    notifications: [...this.state.notifications, result]
+                    notifications: [...this.state.notifications, result],
+                    url: '',
+                    content: '',
+                    type: '',
+                    side: '',
+                    selectedUsers: []
                 })
                 this.closeCreate();
             }
@@ -192,7 +197,7 @@ class QLListThongBao extends Component {
             console.log(error);
         }
     }
-    seletecUser = (e) => {
+    selectedUser = (e) => {
         const users = this.state.selectedUsers;
         users.push(e.target.dataset.id);
         this.setState({
@@ -213,7 +218,7 @@ class QLListThongBao extends Component {
                 </td>
             </tr>
         );
-        const renderUsers = this.state.users.map((user,index) =>
+        const renderUsers = this.state.users.map((user, index) =>
             <div className="card-input mt-3" key={index}>
                 <div className="container">
                     <div className="row">
@@ -221,7 +226,7 @@ class QLListThongBao extends Component {
                             <p data-id={user.accountId}>{user.username}</p>
                         </div>
                         <div className="col-2">
-                            <input data-id={user.accountId} type="checkbox" class="form-check-input" id="exampleCheck1" onChange={(e) => this.seletecUser(e)}/>
+                            <input data-id={user.accountId} type="checkbox" class="form-check-input" id="exampleCheck1" onChange={(e) => this.selectedUser(e)} />
                         </div>
                     </div>
                 </div>

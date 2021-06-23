@@ -3,8 +3,6 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 import { Link, Redirect } from 'react-router-dom';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
-import Paypal from "../../components/paypal/Paypal";
-import Stripe from "../../components/stripe/Stripe";
 import Footer from '../Footer/Footer';
 
 

@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { Formik, Field, Form } from "formik";
 import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
+import postApiV2 from '../../api/2.0/postApi';
 
 const post = {
     title: '',
@@ -126,9 +127,8 @@ class ThaoLuanPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            allPosts: [],
+            hotPosts: [],
             newPosts: [],
-            highRatePosts: [],
             followingPosts: [],
             selectImages: []
         };
@@ -136,17 +136,18 @@ class ThaoLuanPage extends Component {
     }
     componentDidMount = async () => {
         this.isComponentMounted = true;
-        var posts = await this.fetchAllPosts();
-        var newPosts = await this.fetchNewPosts();
+        var hotPosts = await postApiV2.getAll("Hot");
+        var newPosts = await postApiV2.getAll("New");
+
         if (this.isComponentMounted) {
             if (this.props.isLoggedIn) {
-                var followingPosts = await this.fetchFollowingPosts();
+                var followingPosts = await postApiV2.getAll("Following")
                 this.setState({
                     followingPosts: followingPosts
                 });
             }
             this.setState({
-                allPosts: posts,
+                hotPosts: hotPosts,
                 newPosts: newPosts,
             });
         }
@@ -186,10 +187,10 @@ class ThaoLuanPage extends Component {
     createPost = async (values) => {
         var images = Array.from(values.fileImg);
         var formData = new FormData();
-        formData.set('title',values.title);
-        formData.set('content',values.content);
+        formData.set('title', values.title);
+        formData.set('content', values.content);
         images.forEach((value) => {
-            formData.append('images',value)
+            formData.append('images', value)
         })
         var response = await postApi.createPost(formData);
         console.log(response);
@@ -200,9 +201,9 @@ class ThaoLuanPage extends Component {
         })
     }
     render() {
-        const renderHighRatePost = this.state.allPosts.map((post) =>
-            <Post key={post.id} post={post} />
-        )
+        const renderHotPosts = this.state.hotPosts.map((post) =>
+        <Post key={post.id} post={post} />
+    )
         const renderNewPost = this.state.newPosts.map((post) =>
             <Post key={post.id} post={post} />
         )
@@ -230,23 +231,19 @@ class ThaoLuanPage extends Component {
                                         <ul className="nav nav-tabs">
                                             <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#tabone"><i className="fa fa-book" /> ĐANG ĐƯỢC YÊU THÍCH</a> </li>
                                             <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwo"><i className="fa fa-star" /> MỚI </a> </li>
-                                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabthree"><i className="fa fa-bolt" /> ĐÃ THEO DÕI</a> </li>
                                             <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabfour"><i className="fa fa-share-alt" /> CHIA SẺ</a> </li>
                                         </ul>
                                         <div className="tab-content">
                                             <div className="tab-pane fade show active" id="tabone" role="tabpanel">
-                                                {this.isComponentMounted && renderHighRatePost}
+                                                {this.isComponentMounted && renderHotPosts}
                                             </div>
 
                                             <div className="tab-pane fade" id="tabtwo" role="tabpanel">
                                                 {this.isComponentMounted && renderNewPost}
                                             </div>
-                                            <div className="tab-pane fade" id="tabthree" role="tabpanel">
-
-                                            </div>
                                             <div className="tab-pane fade" id="tabfour" role="tabpanel">
                                                 <div className="boxContent">
-                                                    <img src={ this.props.photoUrl ||"/image/user.png"} className="img-user"></img>
+                                                    <img src={this.props.photoUrl || "/image/user.png"} className="img-user"></img>
                                                     <p className="username">{this.state.username}</p>
                                                     <Formik
                                                         initialValues={post}

@@ -13,6 +13,7 @@ const info = {
     title: '',
     description: '',
     difficult: 'easy',
+    unlockPoint: 0,
     sectionId: '',
     questions: [{
 
@@ -144,7 +145,7 @@ class Thumb_Answer extends React.Component {
         );
     }
 }
-class QuizExam_User extends Component {
+class Quiz_Exam extends Component {
 
     constructor(props) {
         super(props);
@@ -506,40 +507,40 @@ class QuizExam_User extends Component {
                 break;
             case 'Exam':
                 console.log(values);
-                var formData = new FormData();
-                formData.set('title', values.title);
-                formData.set('detail', values.description);
-                formData.set('difficultLevel', values.difficult);
-                formData.set('isPrivate', this.state.side ? false : true);
-                formData.set('duration', 100);
-                formData.set('pass', 10);
-                tempQuestions.forEach((value) => {
-                    if (value.image != null) {
-                        formData.append('QuestionImages', value.image);
-                    }
-                })
-                formData.set('stringifyQuestions', JSON.stringify(tempQuestions));
-                // let exam = {
-                //     title: values.title,
-                //     detail: values.description,
-                //     difficultLevel: values.difficult,
-                //     isPrivate: true,
-                //     pass: 10,
-                //     examQuestions: tempQuestions,
-                //     duration: 100
+                // var formData = new FormData();
+                // formData.set('title', values.title);
+                // formData.set('detail', values.description);
+                // formData.set('difficultLevel', values.difficult);
+                // formData.set('isPrivate', this.state.side ? false : true);
+                // formData.set('duration', 100);
+                // formData.set('pass', 10);
+                // tempQuestions.forEach((value) => {
+                //     if (value.image != null) {
+                //         formData.append('QuestionImages', value.image);
+                //     }
+                // })
+                // formData.set('stringifyQuestions', JSON.stringify(tempQuestions));
+                // // let exam = {
+                // //     title: values.title,
+                // //     detail: values.description,
+                // //     difficultLevel: values.difficult,
+                // //     isPrivate: true,
+                // //     pass: 10,
+                // //     examQuestions: tempQuestions,
+                // //     duration: 100
+                // // }
+                // // console.log(exam);
+                // var result = await examApiv2.create(formData, this.state.side)
+                // if (result != null) {
+                //     toast('Thêm exam thành công', { type: 'success' })
+                //     this.setState({
+                //         subject: {
+                //             questions: []
+                //         },
+                //     })
+                // } else {
+                //     toast('Thêm exam thất bại', { type: 'info' })
                 // }
-                // console.log(exam);
-                var result = await examApiv2.create(formData, this.state.side)
-                if (result != null) {
-                    toast('Thêm exam thành công', { type: 'success' })
-                    this.setState({
-                        subject: {
-                            questions: []
-                        },
-                    })
-                } else {
-                    toast('Thêm exam thất bại', { type: 'info' })
-                }
                 break;
             default:
                 break;
@@ -602,7 +603,6 @@ class QuizExam_User extends Component {
 
         return (
             <div id="wrapper">
-                <SubMenuClient></SubMenuClient>
                 <div id="content-wrapper" className="d-flex flex-column">
                     {/* <SubMenuClient></SubMenuClient> */}
                     <div id="quiz">
@@ -684,11 +684,23 @@ class QuizExam_User extends Component {
                                                                     <option value="hard">Khó</option>
                                                                 </Field>
                                                             </div>
+                                                            {this.state.subject.type === "Exam" && this.props.account.roles.some(role => role == "superadmin") &&
+                                                                <div className="unlockPoint">
+                                                                    <label htmlFor="level">Điểm mở khóa <i className="fa fa-info"></i></label>
+                                                                    <Field
+                                                                        type="number"
+                                                                        placeholder="Điểm mở khóa"
+                                                                        name="unlockPoint"
+                                                                        id="unlockPoint"
+                                                                    ></Field>
+                                                                </div>
+
+                                                            }
                                                             <div className="row justify-content-end function">
-                                                                <div className="col-md-4">
+                                                                <div className="col-md-3">
                                                                     <button className="f1" onClick={() => resetForm(info)}>Cài lại</button>
                                                                 </div>
-                                                                <div className="col-md-4">
+                                                                <div className="col-md-3">
                                                                     <button className="f2" type="submit">Lưu lại</button>
                                                                 </div>
                                                             </div>
@@ -1369,4 +1381,4 @@ const mapStateToProps = state => {
         account: account
     }
 }
-export default connect(mapStateToProps)(QuizExam_User);
+export default connect(mapStateToProps)(Quiz_Exam);

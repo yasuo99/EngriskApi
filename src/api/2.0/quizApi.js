@@ -15,6 +15,24 @@ const quizApi = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.post(url, quiz, {headers});
-    }
+    },
+    doQuiz: async (id) => {
+        const url = `/sections/${id}/learn`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, {headers});
+    },
+    checkAnswer: async (id, answer) => {
+        const url = `/quizzes/${id}/do`
+        return await axiosClientv2.post(url);
+    },
+    getUserQuizzes: async (id) => {
+        const url = `/quizzes/users/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, {headers});
+    },
 }
 export default quizApi;

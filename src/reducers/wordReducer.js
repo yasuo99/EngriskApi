@@ -6,10 +6,8 @@ var initialState = {
 const wordReducer = (state = initialState, action) => {
     switch (action.type) {
         case "FETCH_WORDS":
-            toast("Test");
             return state;
         case "PRACTICE":
-            toast("Practice");
             return {
                 ...initialState,
                 words: action.words

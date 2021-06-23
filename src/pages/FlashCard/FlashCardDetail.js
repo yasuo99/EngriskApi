@@ -8,6 +8,9 @@ import wordCategoryApi from "../../api/2.0/wordCategoryApi";
 import ReactPlayer from "react-player";
 import wordApiV2 from "../../api/2.0/wordApi";
 import { connect } from "react-redux";
+import { wordPractice } from "../../actions/wordActions";
+import { connection } from "../../signalR/createSignalRConnection";
+import { HubConnectionState } from "@microsoft/signalr";
 class FlashCardDetail extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +20,7 @@ class FlashCardDetail extends Component {
             imageMemory: null,
             check: false,
             wordCategory: {
-                words: [
+                vocabulary: [
                     {
                         memories: []
                     }
@@ -43,8 +46,13 @@ class FlashCardDetail extends Component {
         if (this.isComponentMounted) {
             this.setState({
                 wordCategory: cardDetail,
-                currentWord: cardDetail.words[0]
+                currentWord: cardDetail.vocabulary[0]
             })
+            if(this.props.isLoggedIn){
+                if(connection.state == HubConnectionState.Disconnected){
+                    connection.start();
+                }
+            }
         }
     }
     handleChange = (e) => {
@@ -75,12 +83,26 @@ class FlashCardDetail extends Component {
         })
     }
     submitCreate = async () => {
-        let formData = new FormData();
-        formData.append('WordId', this.state.currentWord.id);
-        formData.append('Image', this.state.imageMemory);
-        formData.append('Title', this.state.title)
-        await wordApiV2.createMem(this.state.currentWord.id, formData);
-        this.closeCreate();
+        if(this.state.imageMemory != null){
+            let formData = new FormData();
+            console.log(this.state.imageMemory);
+            formData.append('WordId', this.state.currentWord.id);
+            formData.append('Image', this.state.imageMemory);
+            if(this.state.title){
+                formData.append('Title', this.state.title)
+            }
+            const result = await wordApiV2.createMem(this.state.currentWord.id, formData);
+
+            this.setState({
+                selectedImg: {},
+                imageMemory: null,
+                currentWord: {
+                    ...this.state.currentWord,
+                    memories: [result,...this.state.currentWord.memories]
+                }
+            })
+            this.closeCreate();
+        }
     }
     fileChange(e) {
         this.setState({
@@ -92,10 +114,10 @@ class FlashCardDetail extends Component {
     nextWord = (e) => {
         console.log("dm");
         var nextWordIndex = this.state.wordIndex + 1;
-        if (nextWordIndex < this.state.wordCategory.words.length) {
+        if (nextWordIndex < this.state.wordCategory.vocabulary.length) {
             this.setState({
                 wordIndex: nextWordIndex,
-                currentWord: this.state.wordCategory.words[nextWordIndex],
+                currentWord: this.state.wordCategory.vocabulary[nextWordIndex],
                 audioPlay: false
             })
         }
@@ -106,7 +128,7 @@ class FlashCardDetail extends Component {
         if (prevWordIndex >= 0) {
             this.setState({
                 wordIndex: prevWordIndex,
-                currentWord: this.state.wordCategory.words[prevWordIndex],
+                currentWord: this.state.wordCategory.vocabulary[prevWordIndex],
                 audioPlay: false
             })
         }
@@ -116,22 +138,25 @@ class FlashCardDetail extends Component {
     }
     shuffleCard = (e) => {
         localStorage.setItem(this.state.wordCategory.id, "shuffle");
-        var shuffled = this.state.wordCategory.words.sort(() => Math.random() - 0.5)
+        var shuffled = this.state.wordCategory.vocabulary.sort(() => Math.random() - 0.5)
         console.log(shuffled);
         this.setState({
-            wordCategory: { words: shuffled },
+            wordCategory: { vocabulary: shuffled },
             currentWord: shuffled[this.state.wordIndex]
         })
     }
-    selectMemmory = async (e) => {
-        console.log(e.target);
-        await wordApiV2.selectMemory(this.state.currentWord.id, e.target.dataset.id);
+    selectMemmory = async (id) => {
+        await wordApiV2.selectMemory(this.state.currentWord.id, id);
         var currentWord = this.state.currentWord;
-        currentWord.memory = currentWord.memories.find(mem => mem.id == e.target.dataset.id);
+        currentWord.memory = currentWord.memories.find(mem => mem.id == id);
         this.setState({
             currentWord: currentWord,
             memory: false
         })
+    }
+    vocabularyPractice(){
+        const words = this.state.wordCategory.vocabulary.map((vocabulary) => vocabulary.id);
+        this.props.wordPractice(words);
     }
     render() {
         var { memory, check } = this.state;
@@ -139,9 +164,9 @@ class FlashCardDetail extends Component {
             <div className="carousel-item" key={index} onChange={this.handleChange} id="check">
                 <div className="row">
                     <div className="col">
-                        <div className="cardMemory" data-id={memory.id} onClick={(e) => this.selectMemmory(e)}>
-                            <img src={`http://localhost:5000/api/v2/streaming/image?image=${memory.memImg}`} alt="imageMemory" className="imageMemory"></img>
-                            <p className="contentMemory">{memory.title}</p>
+                        <div className="cardMemory" data-id={memory.id} onClick={() => this.selectMemmory(memory.id)}>
+                            <img src={memory.memImg} alt="imageMemory" className="imageMemory"></img>
+                            {memory.title && <p className="contentMemory">{memory.title}</p>}
                         </div>
                     </div>
                 </div>
@@ -154,23 +179,23 @@ class FlashCardDetail extends Component {
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
                         <HeaderClient></HeaderClient>
-                        <main id="flashcard-detail">
+                        <main id="flashcard-detail" className='mt-4'>
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-3 kedoc">
                                         <Link to="/card" className="textReturn"><i className="fa fa-chevron-left"></i> Trở về</Link>
                                         <h4 className="title">Thẻ ghi nhớ</h4>
-                                        <ProgressBar className="mt-5 mb-2" variant="success" now={(this.state.wordIndex + 1) / this.state.wordCategory.words.length * 100} />
+                                        <ProgressBar className="mt-5 mb-2" variant="success" now={(this.state.wordIndex + 1) / this.state.wordCategory.vocabulary.length * 100} />
                                         <div className="row">
                                             <div className="col-6 textProgress">TIẾN ĐỘ</div>
-                                            <div className="col-6 textPoint">{this.state.wordIndex + 1}/{this.state.wordCategory.words.length}</div>
+                                            <div className="col-6 textPoint">{this.state.wordIndex + 1}/{this.state.wordCategory.vocabulary.length}</div>
                                         </div>
-                                        <button className="btn btn-training"><img src="/image/training.png"></img> Luyện tập</button>
+                                        <Link to={`/vocabulary/review/flashcard`} className="btn btn-training" onClick={() => this.vocabularyPractice()}><img src="/image/training.png"></img> Luyện tập</Link>
                                         <button className="btn btn-test"><img src="/image/test1.png"></img> Test toeic</button>
                                         <button className="btn btn-mix" onClick={this.shuffleCard}><img src="/image/rgb.png"></img> Trộn thẻ</button>
                                         <button className="btn btn-add"><img src="/image/plus2.png"></img> Thêm từ vựng</button>
                                     </div>
-                                    {this.state.wordCategory.words.length > 0 && <div className="col-md-9">
+                                    {this.state.wordCategory.vocabulary.length > 0 && <div className="col-md-9">
                                         <div className="row">
                                             <div className="col-10">
                                                 <div className="boxContent">
@@ -181,7 +206,7 @@ class FlashCardDetail extends Component {
                                                                 preload: 'none'
                                                             }
                                                         }
-                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={`${process.env.REACT_APP_V2_API_URL}/streaming/audio?path=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
+                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={`${process.env.REACT_APP_V2_API_URL}/streaming/audio?audio=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
                                                     <h1 className="word">{this.state.currentWord.eng}</h1>
                                                     <p className="synonym">(n) ({this.state.currentWord.vie})</p>
                                                     <p className="typeWord">n</p>
@@ -189,16 +214,16 @@ class FlashCardDetail extends Component {
                                                         <div className="row">
                                                             <div className="col">
                                                                 <div className="cardMemoryDisplay">
-                                                                    <img src={`http://localhost:5000/api/v2/streaming/image?image=${this.state.currentWord.memory.memImg}`} alt="imageMemory" className="imageMemory"></img>
-                                                                    <p className="contentMemory">{this.state.currentWord.memory.title}</p>
+                                                                    <img src={this.state.currentWord.memory.memImg} alt="imageMemory" className="imageMemory"></img>
+                                                                   {this.state.currentWord.memory.title !=undefined && <p className="contentMemory">{this.state.currentWord.memory.title}</p>} 
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>}
                                                     {memory === true ? (
                                                         <div>
-                                                            <div className="container">
-                                                                <div id="owl-carousel" className="carousel slide" data-ride="carousel">
+                                                            <div className="container mt-4">
+                                                                <div id="owl-carousel" className="carousel slide" data-ride="carousel" data-interval="false">
                                                                     <div className="carousel-inner">
                                                                         <div className="carousel-item active">
                                                                             <div className="row">
@@ -271,7 +296,7 @@ class FlashCardDetail extends Component {
                                                     <i className="fa fa-chevron-left"></i>
                                                     <h5>Lui</h5>
                                                 </button>}
-                                                {this.state.wordIndex < this.state.wordCategory.words.length - 1 && <button className="btn btn-next" onClick={this.nextWord}>
+                                                {this.state.wordIndex < this.state.wordCategory.vocabulary.length - 1 && <button className="btn btn-next" onClick={this.nextWord}>
                                                     <i className="fa fa-chevron-right"></i>
                                                     <h5>Tới</h5>
                                                 </button>}
@@ -279,7 +304,7 @@ class FlashCardDetail extends Component {
                                         </div>
 
                                     </div>}
-                                    {this.state.wordCategory.words.length == 0 && <div>Chưa có từ vựng</div>}
+                                    {this.state.wordCategory.vocabulary.length == 0 && <div>Chưa có từ vựng</div>}
                                 </div>
                             </div>
                         </main>
@@ -298,4 +323,9 @@ const mapStateToProps = (state) => {
         isLoggedIn: isLoggedIn
     }
 }
-export default connect(mapStateToProps)(FlashCardDetail);
+const mapDispatchToProps = (dispatch) => {
+    return{
+        wordPractice: (words) => dispatch(wordPractice(words))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(FlashCardDetail);

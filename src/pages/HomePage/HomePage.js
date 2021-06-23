@@ -27,15 +27,17 @@ class HomePage extends PureComponent {
     this.isComponentMounted = true;
     const result = await this.fetchSections(this.state.params, this.props.isLoggedIn);
     if (this.isComponentMounted) {
-      if (connection.state == HubConnectionState.Disconnected) {
-        connection.start();
-      }
-      connection.on('AddSection', (data) => {
-        var section = JSON.parse(data);
-        this.setState({
-          sections: [...this.state.sections, section]
+      if (this.props.isLoggedIn) {
+        if (connection.state == HubConnectionState.Disconnected) {
+          connection.start();
+        }
+        connection.on('AddSection', (data) => {
+          var section = JSON.parse(data);
+          this.setState({
+            sections: [...this.state.sections, section]
+          })
         })
-      })
+      }
       this.setState({
         sections: result
       });

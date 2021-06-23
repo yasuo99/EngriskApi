@@ -1,9 +1,9 @@
 import axiosClientv2 from "../../config/axiosClientv2";
 
 const wordApiV2 = {
-    getAll: async () => {
+    getAll: async (params) => {
         const url = "/words";
-        return axiosClientv2.get(url).catch(err => {
+        return axiosClientv2.get(url, {params}).catch(err => {
             console.log(err);
         })
     },
@@ -24,6 +24,10 @@ const wordApiV2 = {
         return axiosClientv2.put(url, null, {headers}).catch(err => {
             console.log(err);
         })
+    },
+    vocabularyReview: async (words) => {
+        const url = `/words/review`;
+        return await axiosClientv2.post(url, words);
     }
 }
 export default wordApiV2;
