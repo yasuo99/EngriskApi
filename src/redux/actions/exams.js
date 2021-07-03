@@ -17,7 +17,8 @@ const getAll = async () => {
         data: data
     }
 }
+
 const ExamsActions = {
-    getAll: getAll
+    getAll: getAll,
 }
 export default ExamsActions

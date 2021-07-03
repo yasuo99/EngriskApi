@@ -8,11 +8,14 @@ import Section from '../components/SectionPage/Section'
 import QuestionSection from '../components/SectionPage/QuestionSection'
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-const SectionScreen = ({ navigation }) => {
+import { useSelector } from 'react-redux';
+const SectionScreen = ({  navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
+    const {lastRoute} = useSelector(state => state.route);
+    console.log(lastRoute);
     const [open, setOpen] = useState(false)
     const toggleOpen = () => {
         setOpen(!open);

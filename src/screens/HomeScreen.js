@@ -22,7 +22,63 @@ import AxiosService from '../utils/AxiosService';
 import Spinner from 'react-native-loading-spinner-overlay';
 import HomeActions from '../redux/actions/home';
 import { BaseApiUrl } from '../constants/api';
+import RouteActions from '../redux/actions/routes';
+import { useDispatch, useSelector } from 'react-redux';
 const HomeScreen = ({ navigation }) => {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalTwoVisible, setModalTwoVisible] = useState(false);
+  const [active, setActive] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [homeData, setHomeData] = useState({
+    quizzes: [],
+    users: [],
+    words: [],
+    routes: {
+      engrisk: [],
+      private: []
+    }
+  })
+  const [isBusy, setIsBusy] = useState(true);
+  const [selectUser, setSelectUser] = useState({})
+  const {lastRoute} = useSelector(state => state.route);
+  const {account} = useSelector(state => state.auth);
+  const dispatch = useDispatch()
+  const toggleModalTwo = () => {
+    setModalTwoVisible(!isModalTwoVisible);
+  };
+  const toggleModal = (user) => {
+    setModalVisible(!isModalVisible);
+    setSelectUser(user)
+  };
+  useEffect(() => {
+    async function fetchData(){
+      try {
+        const data = await HomeActions.getData(account.id);
+        const routes = await RouteActions.getAll(account.id);
+        console.log(routes);
+        dispatch(RouteActions.saveAll(routes.routes))
+        setHomeData({
+          ...homeData,
+          quizzes: data.data.quizzes,
+          users: data.data.users,
+          words: data.data.words,
+          routes: routes.routes
+        });
+        setIsBusy(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if(Object.keys(account).length > 0){
+      fetchData();
+    }
+  }, [account])
+  const toggleOpen = () => {
+    setOpen(!open);
+  };
+  const selectRoute = (route) =>{
+    dispatch(RouteActions.select(route))
+  }
   const renderTabBar = props =>(
     <TabBar 
     renderLabel={({ route}) => (
@@ -37,68 +93,40 @@ const HomeScreen = ({ navigation }) => {
   const FirstRoute = () => (
     <ScrollView>
       <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
-      <View style={styles.boxRouteQuiz}>
-        <Text style={styles.title}>Lộ trình học tiếng anh căn bản</Text>
-        <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
-        <Text style={styles.result}>Hoàn thành 1/3</Text>
-      </View>
-      <View style={styles.boxRouteWord}>
-        <Text style={styles.title}>Lộ trình học từ vựng toeic</Text>
-        <View style={{flexDirection:"row"}}>
-          <View style={{flexDirection:"column",width:220}}>
-            <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
-          </View>
-          <View style={{flexDirection:"column",width:180}}>
-            <Image source={require('../assets/abideby.jpeg')} style={{ width:200,height:80}}></Image>
-          </View>
+      {homeData.routes?.engrisk?.map((route,index) => 
+      <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
+      <Text style={styles.title}>{route.title}</Text>
+      <View style={{flexDirection:"row"}}>
+        <View style={{flexDirection:"column",width:220}}>
+          <Text style={styles.content}>{route.description}</Text>
         </View>
-        <Text style={styles.result}>Hoàn thành 1/3</Text>
+        <View style={{flexDirection:"column",width:180}}>
+          <Image source={route.routeImage ? {uri: `${route.routeImage}`} : {require: ('../assets/abideby.jpeg')} } style={{ width:200,height:80}}></Image>
+        </View>
       </View>
+      <Text style={styles.result}>Hoàn thành {route.done}/{route.sections.length}</Text>
+    </View>
+      )}
     </ScrollView>
   );
   
   const SecondRoute = () => (
     <ScrollView>
       <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
-      <View style={styles.boxRouteQuiz}>
-        <Text style={styles.title}>Lộ trình học tiếng anh căn bản</Text>
-        <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
-        <Text style={styles.result}>Hoàn thành 1/3</Text>
-      </View>
-      <View style={styles.boxRouteWord}>
-        <Text style={styles.title}>Lộ trình học từ vựng toeic</Text>
-        <View style={{flexDirection:"row"}}>
-          <View style={{flexDirection:"column",width:220}}>
-            <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
-          </View>
-          <View style={{flexDirection:"column",width:180}}>
-            <Image source={require('../assets/abideby.jpeg')} style={{ width:200,height:80}}></Image>
-          </View>
+      {homeData.routes?.private?.map((route,index) => 
+      <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
+      <Text style={styles.title}>{route.title}</Text>
+      <View style={{flexDirection:"row"}}>
+        <View style={{flexDirection:"column",width:220}}>
+          <Text style={styles.content}>{route.description}</Text>
         </View>
-        <Text style={styles.result}>Hoàn thành 1/3</Text>
-      </View>
-    </ScrollView>
-  );
-  const ThirdRoute = () => (
-    <ScrollView>
-      <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
-      <View style={styles.boxRouteQuiz}>
-        <Text style={styles.title}>Lộ trình học tiếng anh căn bản</Text>
-        <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
-        <Text style={styles.result}>Hoàn thành 1/3</Text>
-      </View>
-      <View style={styles.boxRouteWord}>
-        <Text style={styles.title}>Lộ trình học từ vựng toeic</Text>
-        <View style={{flexDirection:"row"}}>
-          <View style={{flexDirection:"column",width:220}}>
-            <Text style={styles.content}>Gồm các bài học đơn giản với các từ vựng đơn giản</Text>
-          </View>
-          <View style={{flexDirection:"column",width:180}}>
-            <Image source={require('../assets/abideby.jpeg')} style={{ width:200,height:80}}></Image>
-          </View>
+        <View style={{flexDirection:"column",width:180}}>
+          <Image source={route.routeImage ? {uri: `${route.routeImage}`} : {require: ('../assets/abideby.jpeg')} } style={{ width:200,height:80}}></Image>
         </View>
-        <Text style={styles.result}>Hoàn thành 1/3</Text>
       </View>
+      <Text style={styles.result}>Hoàn thành {route.done}/{route.sections.length}</Text>
+    </View>
+      )}
     </ScrollView>
   );
   const layout = useWindowDimensions();
@@ -106,51 +134,14 @@ const HomeScreen = ({ navigation }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Engrisk' },
-    { key: 'second', title: 'Mọi người' },
-    { key: 'third', title: 'Của bạn' },
+    { key: 'second', title: 'Của bạn' },
   ]);
 
   const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
-    third: ThirdRoute,
   });
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [isModalTwoVisible, setModalTwoVisible] = useState(false);
-  const [active, setActive] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [homeData, setHomeData] = useState({
-    quizzes: [],
-    users: [],
-    words: []
-  })
-  const [isBusy, setIsBusy] = useState(true);
-  const [selectUser, setSelectUser] = useState({})
-  const toggleModalTwo = () => {
-    setModalTwoVisible(!isModalTwoVisible);
-  };
-  const toggleModal = (user) => {
-    setModalVisible(!isModalVisible);
-    setSelectUser(user)
-  };
-  useEffect(async () => {
-    try {
-      const data = await HomeActions.getData(1);
-      setHomeData({
-        ...homeData,
-        quizzes: data.data.quizzes,
-        users: data.data.users,
-        words: data.data.words
-      });
-      setIsBusy(false);
-    } catch (error) {
-      console.log(error);
-    }
-
-  }, [setHomeData])
-  const toggleOpen = () => {
-    setOpen(!open);
-  };
+  
   const drawerContent = () => {
     return (
       <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
@@ -278,7 +269,7 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}>
             {!isBusy && homeData.quizzes.map((quiz, index) =>
               <View style={styles.box} key={index}>
-                <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('Quiz')}>
+                <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('Quiz', {quizId: quiz.id})}>
                   <Text style={styles.titleQuiz}>{quiz.quizName}</Text>
                 </TouchableOpacity>
                 <Text style={styles.question}>Số câu hỏi: {quiz.questions.length}</Text>

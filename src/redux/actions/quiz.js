@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 // import {AsyncStorage} from 'react-native';
 import axiosClient from "../../utils/axiosClient"
+import axiosClientV1 from "../../utils/axiosClientV1"
 
 export const QuizActionTypes = {
     GET_ALL: 'GET_ALL',
@@ -12,7 +13,7 @@ Object.keys(QuizActionTypes).forEach((key) => {
 })
 const getAllQuiz = async () => {
     const quizzes = await axiosClient.get('/quizzes')
-    return({
+    return ({
 
     })
 }
@@ -21,9 +22,10 @@ const doQuiz = async (id) => {
     const headers = {
         Authorization: `Bearer ${token}`
     }
-    const quiz = await axiosClient.get(`/quizzes/${id}/do`, {headers})
-    return({
-
+    const quiz = await axiosClientV1.get(`/quizzes/${id}`, { headers })
+    return ({
+        type: QuizActionTypes.DO,
+        quiz: quiz
     })
 }
 const doneQuiz = async (id) => {
@@ -31,8 +33,12 @@ const doneQuiz = async (id) => {
     const headers = {
         Authorization: `Bearer ${token}`
     }
-    const quiz = await axiosClient.get(`/quizzes/${id}/done`, {headers})
-    return({
+    const quiz = await axiosClient.get(`/quizzes/${id}/done`, { headers })
+    return ({
 
     })
 }
+const QuizActions = {
+    doQuiz: doQuiz
+}
+export default QuizActions

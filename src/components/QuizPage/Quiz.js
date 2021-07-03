@@ -1,68 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-const Quiz = () => {
+import Spinner from 'react-native-loading-spinner-overlay';
+const Quiz = ({ quiz }) => {
     const [bgColor, setBgColor] = useState(false)
+    const [answers, setAnswers] = useState([]);
+    const [questions, setQuestions] = useState([]);
+    const [index, setIndex] = useState(0);
+    const [currentQuestion, setCurrentQuestion] = useState({
+        answers: []
+    })
+    const [isBusy, setIsBusy] = useState(true);
+    console.log('dit con me',quiz);
+    useEffect(() => {
+        if(Object.keys(quiz).length > 0){
+            setQuestions(quiz?.questions);
+            setCurrentQuestion(quiz.questions[index])
+            setIsBusy(false)
+        }
+    }, [quiz])
+    useEffect(() => {
+        setCurrentQuestion(questions[index]);
+    }, [index])
+    const selectIndex = (index) => {
+        setIndex(index);
+    }
+    const selectAnswer = (answer,index) => {
+        var result = currentQuestion.answers.find(ans => ans == answer);
+        const answerData = {
+            question: currentQuestion,
+            answer: answer,
+            result: result.isQuestionAnswer,
+            index: index
+        }
+        console.log(answerData);
+        setAnswers([...answers, answerData])
+    }
     return (
+        
         <ScrollView style={styles.screenContainer}>
-            <View style={styles.boxQuestion} >
-                <Text style={styles.titleQuestion}>Quiz về động vật</Text>
-                <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
-                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
-                <Text style={styles.question}>What id the meaning of "dog" ?</Text>
-                
-            </View>
+            {!isBusy &&  <View style={styles.boxQuestion} >
+                <Text style={styles.titleQuestion}>{quiz.quizName}</Text>
+                {/* <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text> */}
+                <Text style={styles.numberQuestion}>Số câu đã chọn : 1/{questions.length}</Text>
+                <Text style={styles.question}>{currentQuestion.preQuestion}: {currentQuestion.content}</Text>
+
+            </View>}
+           
             <View style={styles.kengang}></View>
             <View style={styles.boxAnswer} >
-                <ScrollView>
-                <TouchableOpacity onPress={() => {setBgColor(!bgColor)}} style={bgColor === false ? styles.answer : styles.active}>
-   
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>A</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Mèo</Text>
-                        </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.answerCorrect}>
-                        <FontAwesome
-                            name="check"
-                            color="#ffffff"
-                            size={32}
-                            style={{ paddingTop: 8 }}
-                        />
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>B</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Chó</Text>
-                        </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.answerWrong}>
-                        <FontAwesome
-                            name="close"
-                            color="#ffffff"
-                            size={32}
-                            style={{ paddingRight:5, paddingTop: 8 }}
-                        />
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>C</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Vịt</Text>
-                        </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.answer}>
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>D</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Bò</Text>
-                        </View>
-                </TouchableOpacity>
+                {!isBusy && <ScrollView>
+                    {currentQuestion.answers.map((answer, index) =>
+                        <TouchableOpacity disabled={answers.some(ans => ans.question == currentQuestion)} key={index} onPress={() => selectAnswer(answer,index)} style={answers.find(ans => ans.answer == answer) != undefined ? answers.find(ans => ans.answer == answer).result && answers.find(ans => ans.answer == answer).index == index ? styles.answerCorrect : styles.answerWrong : styles.answer}>
+                            {answers.find(ans => ans.answer == answer) != undefined && <FontAwesome
+                                name={answers.find(ans => ans.answer == answer).result ? 'check' : 'remove'}
+                                color="#ffffff"
+                                size={32}
+                                style={{ paddingTop: 8 }}
+                            />
+                            }
+                            <View style={styles.boxNumber}>
+                                <Text style={styles.titleNumber}>{index}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.contentAnswer}>{answer.answer}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                </ScrollView>}
                 
-                </ScrollView>
             </View>
         </ScrollView>
     );
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
         marginRight: 50,
         marginTop: 30,
         marginBottom: 10,
-        padding:8,
+        padding: 8,
     },
     active: {
         flexDirection: "row",
@@ -87,18 +94,18 @@ const styles = StyleSheet.create({
         marginRight: 50,
         marginTop: 30,
         marginBottom: 10,
-        backgroundColor:"#1DA1F2",
-        padding:5,
-        borderRadius:5
+        backgroundColor: "#1DA1F2",
+        padding: 5,
+        borderRadius: 5
     },
     // Đáp án đúng
     answerCorrect: {
         flexDirection: "row",
         marginLeft: 20,
         marginRight: 50,
-        backgroundColor:"#1DA1F2",
-        padding:5,
-        borderRadius:5,
+        backgroundColor: "#1DA1F2",
+        padding: 5,
+        borderRadius: 5,
         marginTop: 30,
         marginBottom: 10,
     },
@@ -107,15 +114,15 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         marginLeft: 20,
         marginRight: 50,
-        backgroundColor:"#E63946",
-        padding:5,
-        borderRadius:5,
+        backgroundColor: "#E63946",
+        padding: 5,
+        borderRadius: 5,
         marginTop: 30,
         marginBottom: 10,
 
     },
     boxAnswer: {
-        flex:1
+        flex: 1
     },
     boxNumber: {
         backgroundColor: "#fff",
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         width: 50,
         height: 50,
-        marginLeft:8
+        marginLeft: 8
     },
     titleNumber: {
         color: "#15202B",

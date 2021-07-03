@@ -8,47 +8,25 @@ import Section from '../components/SectionPage/Section';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Accordion from 'react-native-collapsible/Accordion';
+import { useSelector } from 'react-redux';
 const ListSectionScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
+    const { lastRoute } = useSelector(state => state.route);
+    console.log('route: ', lastRoute);
     const [activeSections, setActiveSections] = useState([])
     const toggleOpen = () => {
         setOpen(!open);
     };
-    const SECTIONS = [
-        {
-            lesson: 'Bài 1',
-            title: 'Xin chào mừng bạn!',
-            imageLesson: require('../assets/avatar2.png'),
-            expand: "Bắt đầu với trình độ tiếng Anh A1!",
-            imageExpand: require('../assets/english.jpg'),
-            time: '1 phút'
-        },
-        {
-            lesson: 'Bài 2',
-            title: 'Tôi là Thanh Lập',
-            imageLesson: require('../assets/avatar.png'),
-            expand: "Tên bạn là gì",
-            imageExpand: require('../assets/banner1.jpg'),
-            time: '2 phút'
-        },
-        {
-            lesson: 'Bài 3',
-            title: 'Các bạn có khỏe không?',
-            imageLesson: require('../assets/avatar2.png'),
-            expand: "Tôi đang cảm thấy rất tuyệt vời, cảm ơn!",
-            imageExpand: require('../assets/background4.jpeg'),
-            time: '3 phút'
-        },
-        {
-            lesson: 'Bài 4',
-            title: 'Hội thoại',
-            imageLesson: require('../assets/avatar.png'),
-            expand: "Giới thiệu bản thân",
-            imageExpand: require('../assets/background4.jpeg'),
-            time: '3 phút'
-        },
+    const SECTIONS = lastRoute.sections.map((section, index) =>
+    ({
+        lesson: `Bài ${index + 1}`,
+        title: `${section.sectionName}`,
+        imageLesson: require('../assets/avatar2.png'),
+        expand: `${section.description}`,
+        imageExpand: require('../assets/english.jpg'),
+        time: '1 phút'
+    }));
 
-    ];
     //   const _renderSectionTitle = (section) => {
     //     return (
     //       <View style={styles.content}>
@@ -77,30 +55,30 @@ const ListSectionScreen = ({ navigation }) => {
                 colors={['rgba(2,33,64,0.4)', 'rgba(30,66,88,0.4)', 'rgba(30,66,88,0.4)']}
                 style={styles.linearGradient}>
                 <Image source={section.imageExpand} style={styles.image} ></Image>
-                <View style={{zIndex:9999, marginTop:-120}}>
-                <TouchableOpacity onPress={()=>{navigation.navigate('Lesson')}}><Text style={{ marginLeft: 16, fontSize: 21, color: "#fff", fontWeight: "bold" }}>{section.expand}</Text></TouchableOpacity>
-                <Text style={{ marginLeft: 16, fontSize: 21, color: "#fff" }}>{section.time}</Text>
-                <View style={{ flexDirection: "row", marginLeft:10, marginTop:8 }}>
-                    <MaterialIcons
-                        name="check-circle"
-                        size={32}
-                        color="#1DA1F2">
-                    </MaterialIcons>
-                    <View style={{borderBottomWidth:4,borderColor:"#1DA1F2",width:20, marginBottom:14}}></View>
-                    <MaterialIcons
-                        name="check-circle"
-                        size={32}
-                        color="#1DA1F2">    
-                    </MaterialIcons>
-                    <View style={{borderBottomWidth:4,borderColor:"#1DA1F2",width:20, marginBottom:14}}></View>
-                    <MaterialIcons
-                        name="check-circle"
-                        size={32}
-                        color="#1DA1F2">    
-                    </MaterialIcons>
+                <View style={{ zIndex: 9999, marginTop: -120 }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate('Lesson') }}><Text style={{ marginLeft: 16, fontSize: 21, color: "#fff", fontWeight: "bold" }}>{section.expand}</Text></TouchableOpacity>
+                    <Text style={{ marginLeft: 16, fontSize: 21, color: "#fff" }}>{section.time}</Text>
+                    <View style={{ flexDirection: "row", marginLeft: 10, marginTop: 8 }}>
+                        <MaterialIcons
+                            name="check-circle"
+                            size={32}
+                            color="#1DA1F2">
+                        </MaterialIcons>
+                        <View style={{ borderBottomWidth: 4, borderColor: "#1DA1F2", width: 20, marginBottom: 14 }}></View>
+                        <MaterialIcons
+                            name="check-circle"
+                            size={32}
+                            color="#1DA1F2">
+                        </MaterialIcons>
+                        <View style={{ borderBottomWidth: 4, borderColor: "#1DA1F2", width: 20, marginBottom: 14 }}></View>
+                        <MaterialIcons
+                            name="check-circle"
+                            size={32}
+                            color="#1DA1F2">
+                        </MaterialIcons>
+                    </View>
                 </View>
-                </View>
-                
+
             </LinearGradient>
 
         );
@@ -280,10 +258,10 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: 140,
-        zIndex:-1
+        zIndex: -1
     },
-    linearGradient : {
-        zIndex:99,
+    linearGradient: {
+        zIndex: 99,
         width: "90%",
         marginLeft: 20,
         height: 140,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -14,12 +14,28 @@ import Section from '../components/SectionPage/Section'
 import QuestionSection from '../components/SectionPage/QuestionSection'
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-const QuizScreen = ({ navigation }) => {
+import QuizActions from '../redux/actions/quiz';
+const QuizScreen = ({route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
     const [open, setOpen] = useState(false)
+    const [quiz,setQuiz] = useState({})
+    const {quizId} = route.params
+    useEffect(() => {
+        async function fetchQuizData(){
+            try {
+                const quizData = await QuizActions.doQuiz(quizId);
+                setQuiz(quizData.quiz)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if(quizId){
+            fetchQuizData();
+        }
+    },[quizId])
     const toggleOpen = () => {
         setOpen(!open);
     };
@@ -147,7 +163,7 @@ const QuizScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <Quiz></Quiz>
+           <Quiz quiz={quiz}></Quiz>
             <View style={styles.changeQuestion}>
                 <TouchableOpacity>
                     <FontAwesome

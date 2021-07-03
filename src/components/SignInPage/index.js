@@ -29,20 +29,26 @@ const SignInScreen = ({ navigation }) => {
         isValidUser: true,
         isValidPassword: true,
     });
-    // const {loggedIn} = useSelector(state => state.auth);
-    // useEffect(() => {
-    //     if(loggedIn){
-    //         navigation.navigate('Home')
-    //     }
-    // },[loggedIn])
+    const {loggedIn} = useSelector(state => state.auth);
+    useEffect(() => {
+        if(loggedIn){
+            navigation.navigate("Tab")
+        }
+    },[loggedIn])
     const dispatch = useDispatch();
-    function signIn(){
+    async function signIn(){
         const payload = {
             loginMethod: data.username,
             password: data.password
         }
-        dispatch(AuthorizationActions.onLogout())
-        navigation.navigate("Tab")
+        try {
+            const result = await AuthorizationActions.onLogin(payload);
+            dispatch(result)
+            navigation.navigate("Tab")
+        } catch (error) {
+            console.log(error);
+        }
+       
     }
     const textInputChange = (val) => {
         if (val.trim().length >= 4) {

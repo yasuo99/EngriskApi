@@ -3,11 +3,13 @@ import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const INITIAL_STATE = {
   account: {},
+  token: '',
   loading: true,
   loggedIn: false,
 };
 
-export default function(state = INITIAL_STATE, action) {
+const auth = (state = INITIAL_STATE, action) => {
+  console.log('type:' ,action);
   switch (action.type) {
     case AuthorizationActionTypes.REGISTER:
       return {...state};
@@ -27,9 +29,10 @@ export default function(state = INITIAL_STATE, action) {
       var { message } = action.payload;
       return {...state};
     case AuthorizationActionTypes.LOGIN:
-      Async
+      console.log('login');
       return {
         ...state,
+        token: action.token,
         loggedIn: true,
         account: action.account
       };
@@ -79,6 +82,7 @@ export default function(state = INITIAL_STATE, action) {
     case AuthorizationActionTypes.LOGOUT:
       return {
         ...state,
+        token: '',
         loggedIn: false,
         account: {},
       };
@@ -104,3 +108,4 @@ export default function(state = INITIAL_STATE, action) {
       return state;
   }
 }
+export default auth
