@@ -77,7 +77,7 @@ const QuizAudio = () => {
                             name="check"
                             color="#ffffff"
                             size={32}
-                            style={{ paddingTop: 8,paddingLeft:5 }}
+                            style={{ paddingTop: 8 }}
                         />
                         <View style={styles.boxNumber}>
                             <Text style={styles.titleNumber}>B</Text>
@@ -91,7 +91,7 @@ const QuizAudio = () => {
                             name="close"
                             color="#ffffff"
                             size={32}
-                            style={{ paddingRight:8, paddingTop: 8,paddingLeft:5 }}
+                            style={{paddingTop: 8, paddingRight:5}}
                         />
                         <View style={styles.boxNumber}>
                             <Text style={styles.titleNumber}>C</Text>
@@ -125,15 +125,15 @@ const styles = StyleSheet.create({
         marginLeft: 50,
         marginRight: 50,
         marginTop: 30,
-        marginBottom: 30,
-
+        marginBottom: 10,
+        padding:8,
     },
     active: {
         flexDirection: "row",
         marginLeft: 50,
         marginRight: 50,
         marginTop: 30,
-        marginBottom: 30,
+        marginBottom: 10,
         backgroundColor:"#1DA1F2",
         padding:5,
         borderRadius:5
@@ -141,28 +141,24 @@ const styles = StyleSheet.create({
     // Đáp án đúng
     answerCorrect: {
         flexDirection: "row",
-        marginTop: 30,
-        marginBottom: 30,
         marginLeft: 20,
         marginRight: 50,
         backgroundColor:"#1DA1F2",
         padding:5,
         borderRadius:5,
         marginTop: 30,
-        marginBottom: 30,
+        marginBottom: 10,
     },
     // Đáp án sai
     answerWrong: {
         flexDirection: "row",
-        marginTop: 30,
-        marginBottom: 30,
         marginLeft: 20,
         marginRight: 50,
         backgroundColor:"#E63946",
         padding:5,
         borderRadius:5,
         marginTop: 30,
-        marginBottom: 30,
+        marginBottom: 10,
 
     },
     boxAnswer: {

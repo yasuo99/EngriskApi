@@ -10,6 +10,8 @@ import QuizImage from '../components/QuizPage/QuizImage'
 import QuizMatchWord from '../components/QuizPage/QuizMatchWord'
 import QuizSort from '../components/QuizPage/QuizSort'
 import QuizConversation from '../components/QuizPage/QuizConversation'
+import Section from '../components/SectionPage/Section'
+import QuestionSection from '../components/SectionPage/QuestionSection'
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const QuizScreen = ({ navigation }) => {
@@ -38,13 +40,13 @@ const QuizScreen = ({ navigation }) => {
                         style={{ marginLeft: 16 }}></MaterialIcons>
                     <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
                     <MaterialIcons
                         name="ballot"
                         size={32}
                         color="#ffffff"
                         style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
                     <MaterialIcons
@@ -120,7 +122,7 @@ const QuizScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </MenuDrawer>
                 <View >
-                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISH</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
                 </View>
                 <View style={styles.buttonExit}>
                     <TouchableOpacity
@@ -145,7 +147,7 @@ const QuizScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <QuizMatchWord></QuizMatchWord>
+            <Quiz></Quiz>
             <View style={styles.changeQuestion}>
                 <TouchableOpacity>
                     <FontAwesome

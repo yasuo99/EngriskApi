@@ -1,11 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, StatusBar, FlatList, Text, Image,TouchableOpacity} from 'react-native';
+import {StyleSheet, View, StatusBar, FlatList, Text, Image,TouchableOpacity, Button} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import NotificationActions from '../redux/actions/notifications';
 import Moment from 'react-moment';
+import {notification} from '../components/NotificationPage/Notification'
+const sendMessage=()=>{
+  notification.configure();
+  notification.buatChannel("1");
+  notification.kirimNotifikasiJadwal("1","Thông báo","Bạn đã có bài học mới về gia đình");
+}
 const NotificationItem = ({item}) => (
   <View style={styles.itemContainer}>
     <View style={styles.itemTopContainer}>
@@ -17,6 +23,7 @@ const NotificationItem = ({item}) => (
       <View style={styles.itemTopTextContainer}>
         <Text style={styles.itemName}>{item.content}</Text>
         <Moment element={Text} format="YYYY/MM/DD" style={{color:"#fff",marginTop:5}}>{item.createdDate}</Moment>
+        <Button onPress={sendMessage} title="Nhận thông báo"></Button>
         {/* <View style={styles.itemDate}>{item.createdDate}</View> */}
       </View>
     </View>
@@ -61,13 +68,13 @@ const NotificationScreen = ({navigation}) => {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Trang chủ</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListSection')}>
           <MaterialIcons
             name="ballot"
             size={32}
             color="#ffffff"
             style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Quiz</Text>
+            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Section</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
           <MaterialIcons
@@ -143,7 +150,7 @@ const NotificationScreen = ({navigation}) => {
         </TouchableOpacity>
         </MenuDrawer>
           <View >
-            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISH</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
           </View>
           <View style={styles.buttonExit}>
             <TouchableOpacity

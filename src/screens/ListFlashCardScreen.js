@@ -1,40 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    TextInput,
-    Platform,
-    StyleSheet,
-    StatusBar,
-    Alert,
-    Image,
-    ScrollView,
-} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, ImageBackground, Platform } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { SearchBar } from 'react-native-elements';
-import ModalDropdown from 'react-native-modal-dropdown';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ExamsActions from '../redux/actions/exams';
-const ListExamScreen = ({ navigation }) => {
-    const [search, setSearch] = useState('')
-    const updateSearch = (search) => {
-        setSearch({ search });
-    };
+import Accordion from 'react-native-collapsible/Accordion';
+const ListFlashCardScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
-    const [exams, setExams] = useState([])
-    useEffect(async () => {
-        try {
-            const data = await ExamsActions.getAll();
-            setExams(data.data)
-        } catch (error) {
-            console.log(error);
-        }
-    }, [setExams])
+    const [activeSections, setActiveSections] = useState([])
     const toggleOpen = () => {
         setOpen(!open);
     };
+
     const drawerContent = () => {
         return (
             <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
@@ -42,7 +20,6 @@ const ListExamScreen = ({ navigation }) => {
                     name="bars"
                     color="#ffffff"
                     size={32}
-                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
                 />
                 <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
                     <MaterialIcons
@@ -112,8 +89,9 @@ const ListExamScreen = ({ navigation }) => {
         );
     };
     return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='#15202B' barStyle="light-content" />
+        <View style={styles.screenContainer}>
+            <StatusBar barStyle="light-content" />
+
             <View style={{ flexDirection: "row" }}>
                 <MenuDrawer
                     open={open}
@@ -135,96 +113,94 @@ const ListExamScreen = ({ navigation }) => {
                 <View >
                     <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
                 </View>
-                <Image source={require('../assets/icon.png')} style={{ marginTop: 20, marginLeft: 60 }}></Image>
-            </View>
-            <Text style={{ fontSize: 32, color: "#fff", marginLeft: 10, fontWeight: "bold", marginTop: 20 }}>Danh sách bài luyện tập</Text>
-            <View style={{ flexDirection: "row" }}>
-                <View style={styles.boxSearch}>
-                    <SearchBar
-                        placeholder="Type Here..."
-                        onChangeText={updateSearch}
-                        value={search}
-                        fontColor="#fff"
-                        iconColor="#fff"
-                        shadowColor="#fff"
-                        cancelIconColor="#c6c6c6"
-                        searchIcon="#fff"
-                    />
-                </View>
-                <ModalDropdown options={['option 1', 'option 2']}
-                    dropdownStyle={{ backgroundColor: '#15202B', height: 80, width: 120, marginTop: 20, marginRight: -10 }}
-                    dropdownTextStyle={{ backgroundColor: '#15202B', fontSize: 16, paddingLeft: 10, color: '#fff' }}
-                    dropdownTextHighlightStyle={{ color: '#fff' }}
-                    style={{ marginLeft: 20, marginTop: 20, backgroundColor: "#192734", width: 120, height: 58, alignItems: "center" }}>
-                    <View style={{ flexDirection: "row" }}>
-                        <Text style={{ color: "#fff", fontSize: 18, marginRight: 35, marginTop: 15 }}>Bộ lọc</Text>
-                        <FontAwesome
-                            name="sort-down"
-                            color="#ffffff"
-                            size={28}
-                            style={{ marginTop: 8 }}
-                        />
-                    </View>
-                </ModalDropdown>
+                <View style={styles.buttonExit}>
+                    <TouchableOpacity
+                        style={styles.exit}
+                        onPress={() => navigation.navigate('Home')}
+                    >
+                        <LinearGradient
+                            colors={['#1DA1F2', '#1DA1F2']}
+                            style={styles.exit}
+                        >
+                            <Text style={[styles.textExit, {
+                                color: '#fff'
+                            }]}>Thoát</Text>
+                            <FontAwesome
+                                name="sign-out"
+                                color="#ffffff"
+                                size={32}
+                                style={{ marginLeft: 5, }}
+                            />
+                        </LinearGradient>
 
+                    </TouchableOpacity>
+                </View>
             </View>
             <ScrollView>
-                {exams.map((exam, index) =>
-                    <View style={styles.card} key={index}>
-                        <View style={{ flexDirection: "row" }}>
-                            <Image source={require('../assets/avatar2.png')} style={{ width: 48, height: 48, marginRight: 20 }}></Image>
-                            <View>
-                                <Text style={{ fontSize: 24, color: "#fff", fontWeight: "400" }}>{exam.title}</Text>
-                                <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Số câu hỏi: {exam.questions.length}</Text>
-                                <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Độ khó: {exam.difficultLevel}</Text>
-                            </View>
-                            <View style={{ marginLeft: 90 }}>
-                                <TouchableOpacity>
-                                    <FontAwesome
-                                        name="share-alt"
-                                        color="#ffffff"
-                                        size={28}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-
-                        </View>
-                        <Image source={require('../assets/background.png')} style={{ width: "100%", marginTop: 10, height: 120 }}></Image>
-                        <Text style={{ fontSize: 18, marginTop: 10, color: "#ccc" }}>{exam.description}</Text>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, color: "#1DA1F2" }}>Làm ngay</Text>
-                        </TouchableOpacity>
+                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
+                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
+                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
+                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
                     </View>
-                )}
+                </View>
+                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
+                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
+                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
+                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
+                    </View>
+                </View>
+                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
+                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
+                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
+                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
+                    </View>
+                </View>
+                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
+                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
+                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
+                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
+                    </View>
+                </View>
             </ScrollView>
         </View>
     );
 };
 
-export default ListExamScreen;
-
 const styles = StyleSheet.create({
-    container: {
+    screenContainer: {
         flex: 1,
         backgroundColor: '#15202B'
     },
-    boxSearch: {
-        marginLeft: 10,
-        marginTop: 16,
-        marginBottom: 16,
-        width: "65%",
+    buttonExit: {
+        marginTop: 8,
+        marginLeft: 10
     },
-    card: {
-        padding: 20,
-        marginLeft: 10,
-        width: "95%",
-        backgroundColor: "#192734",
+    exit: {
+        flexDirection: "row",
         borderRadius: 10,
-        marginBottom: 30
+        width: 80,
+        height: 40,
+        paddingTop: 5,
+        paddingLeft: 5,
+    },
+    textExit: {
+        paddingTop: 5,
+        fontSize: 16
+    },
+    view: {
+        justifyContent: 'flex-end',
+        margin: 0,
     },
     animatedBox: {
         flex: 1,
         backgroundColor: "#192734",
         padding: 10
     },
+
 });
+
+export default ListFlashCardScreen;

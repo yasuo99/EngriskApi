@@ -35,13 +35,13 @@ const ResultScreen = ({ navigation }) => {
                         style={{ marginLeft: 16 }}></MaterialIcons>
                     <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
                     <MaterialIcons
                         name="ballot"
                         size={32}
                         color="#ffffff"
                         style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
                     <MaterialIcons
@@ -150,7 +150,7 @@ const ResultScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </MenuDrawer>
                 <View >
-                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISH</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
                 </View>
                 <View style={styles.buttonExit}>
                     <TouchableOpacity

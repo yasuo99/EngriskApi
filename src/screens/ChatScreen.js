@@ -43,13 +43,13 @@ const ChatScreen = ({ route, navigation }) => {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Trang chủ</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListSection')}>
           <MaterialIcons
             name="ballot"
             size={32}
             color="#ffffff"
             style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Quiz</Text>
+            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Section</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
           <MaterialIcons
@@ -125,12 +125,12 @@ const ChatScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         </MenuDrawer>
         <View >
-          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISH</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
         </View>
         <View style={styles.buttonExit}>
           <TouchableOpacity
             style={styles.exit}
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate('Message')}
           >
             <LinearGradient
               colors={['#1DA1F2', '#1DA1F2']}
@@ -159,7 +159,7 @@ const ChatScreen = ({ route, navigation }) => {
             <Text style={styles.itemName}>{boxchat.title}</Text>
             <Text style={styles.itemStatus}>Đang hoạt động</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('CreateMember')}>
           <MaterialIcons
             name="group-add"
             size={32}

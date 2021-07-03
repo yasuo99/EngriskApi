@@ -23,6 +23,17 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import HomeActions from '../redux/actions/home';
 import { BaseApiUrl } from '../constants/api';
 const HomeScreen = ({ navigation }) => {
+  const renderTabBar = props =>(
+    <TabBar 
+    renderLabel={({ route}) => (
+      <Text style={{ color:'#fff',fontSize:21, fontWeight:'bold'}}>
+        {route.title}
+      </Text>
+    )}
+    {...props}
+    style={{backgroundColor:"#1DA1F2", borderTopLeftRadius:10,borderTopRightRadius:10}}
+    scrollEnabled={false}/>
+  )
   const FirstRoute = () => (
     <ScrollView>
       <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
@@ -157,13 +168,13 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
           <MaterialIcons
             name="ballot"
             size={32}
             color="#ffffff"
             style={{ marginLeft: 16 }}></MaterialIcons>
-          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
           <MaterialIcons
@@ -285,9 +296,9 @@ const HomeScreen = ({ navigation }) => {
             <View>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Từ vựng hôm nay</Text>
             </View>
-            <View >
+            <TouchableOpacity onPress={()=>{navigation.navigate('ListFlashCard')}}>
               <Text style={{ fontSize: 16, marginLeft: '51%', color: '#fff', paddingTop: 20 }}>Tất cả</Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <ScrollView
             horizontal={true}
@@ -358,6 +369,7 @@ const HomeScreen = ({ navigation }) => {
               renderScene={renderScene}
               onIndexChange={setIndex}
               initialLayout={{ width: layout.width }}
+              renderTabBar={renderTabBar}
             /></View>
           </Modal>
         </View>
@@ -557,7 +569,7 @@ const styles = StyleSheet.create({
     fontWeight:'bold'
   },
   content : {
-    color:'#666',
+    color:'#15202B',
     fontSize:18,
     paddingTop:8,
     paddingBottom:8

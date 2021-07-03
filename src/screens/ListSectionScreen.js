@@ -1,67 +1,113 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    Button,
-    TouchableOpacity,
-    Dimensions,
-    TextInput,
-    Platform,
-    StyleSheet,
-    ScrollView,
-    StatusBar,
-    Image
-} from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, ImageBackground, Platform } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import DatePicker from 'react-native-date-picker'
+import Modal from 'react-native-modal';
+import Section from '../components/SectionPage/Section';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-const logo = require('../../assets/world.png');
-import { notification } from '../components/NotificationPage/Notification'
-const sendMessage = () => {
-    notification.configure();
-    notification.buatChannel("2");
-    notification.kirimNotifikasiJadwal("2", "Thông báo nhắc nhở", "Làm bài kiểm tra vào lúc 9A.M");
-}
-const CreateReminderScreen = ({ navigation }) => {
-    const [date, setDate] = React.useState(new Date());
+import Accordion from 'react-native-collapsible/Accordion';
+const ListSectionScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
-    const [data, setData] = React.useState({
-        title: '',
-        content: '',
-        time: '',
-        beforeTime: '',
-    });
-
-    const handleTitle = (val) => {
-        setData({
-            ...data,
-            title: val,
-        });
-    }
-    const handleContent = (val) => {
-        setData({
-            ...data,
-            content: val,
-        });
-    }
-    const handleTime = (val) => {
-        setData({
-            ...data,
-            time: val,
-        });
-    }
-    const handleBeforeTime = (val) => {
-        setData({
-            ...data,
-            beforeTime: val,
-        });
-    }
+    const [activeSections, setActiveSections] = useState([])
     const toggleOpen = () => {
         setOpen(!open);
+    };
+    const SECTIONS = [
+        {
+            lesson: 'Bài 1',
+            title: 'Xin chào mừng bạn!',
+            imageLesson: require('../assets/avatar2.png'),
+            expand: "Bắt đầu với trình độ tiếng Anh A1!",
+            imageExpand: require('../assets/english.jpg'),
+            time: '1 phút'
+        },
+        {
+            lesson: 'Bài 2',
+            title: 'Tôi là Thanh Lập',
+            imageLesson: require('../assets/avatar.png'),
+            expand: "Tên bạn là gì",
+            imageExpand: require('../assets/banner1.jpg'),
+            time: '2 phút'
+        },
+        {
+            lesson: 'Bài 3',
+            title: 'Các bạn có khỏe không?',
+            imageLesson: require('../assets/avatar2.png'),
+            expand: "Tôi đang cảm thấy rất tuyệt vời, cảm ơn!",
+            imageExpand: require('../assets/background4.jpeg'),
+            time: '3 phút'
+        },
+        {
+            lesson: 'Bài 4',
+            title: 'Hội thoại',
+            imageLesson: require('../assets/avatar.png'),
+            expand: "Giới thiệu bản thân",
+            imageExpand: require('../assets/background4.jpeg'),
+            time: '3 phút'
+        },
+
+    ];
+    //   const _renderSectionTitle = (section) => {
+    //     return (
+    //       <View style={styles.content}>
+    //         <Text>{section.content}</Text>
+    //       </View>
+    //     );
+    //   };
+
+    const _renderHeader = (section) => {
+        return (
+            <View style={{ flexDirection: "row", width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
+                <View style={{ flexDirection: "column" }}>
+                    <Image source={section.imageLesson} style={{ width: 70, height: 70, borderRadius: 50 }}></Image>
+                </View>
+                <View style={{ flexDirection: "column", marginTop: 5, marginLeft: 16, width: "70%" }}>
+                    <Text style={{ color: "#ccc", fontSize: 21 }}>{section.lesson}</Text>
+                    <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>{section.title}</Text>
+                </View>
+            </View>
+        );
+    };
+
+    const _renderContent = (section) => {
+        return (
+            <LinearGradient
+                colors={['rgba(2,33,64,0.4)', 'rgba(30,66,88,0.4)', 'rgba(30,66,88,0.4)']}
+                style={styles.linearGradient}>
+                <Image source={section.imageExpand} style={styles.image} ></Image>
+                <View style={{zIndex:9999, marginTop:-120}}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('Lesson')}}><Text style={{ marginLeft: 16, fontSize: 21, color: "#fff", fontWeight: "bold" }}>{section.expand}</Text></TouchableOpacity>
+                <Text style={{ marginLeft: 16, fontSize: 21, color: "#fff" }}>{section.time}</Text>
+                <View style={{ flexDirection: "row", marginLeft:10, marginTop:8 }}>
+                    <MaterialIcons
+                        name="check-circle"
+                        size={32}
+                        color="#1DA1F2">
+                    </MaterialIcons>
+                    <View style={{borderBottomWidth:4,borderColor:"#1DA1F2",width:20, marginBottom:14}}></View>
+                    <MaterialIcons
+                        name="check-circle"
+                        size={32}
+                        color="#1DA1F2">    
+                    </MaterialIcons>
+                    <View style={{borderBottomWidth:4,borderColor:"#1DA1F2",width:20, marginBottom:14}}></View>
+                    <MaterialIcons
+                        name="check-circle"
+                        size={32}
+                        color="#1DA1F2">    
+                    </MaterialIcons>
+                </View>
+                </View>
+                
+            </LinearGradient>
+
+        );
+    };
+
+    const _updateSections = (activeSections) => {
+        setActiveSections(activeSections)
     };
     const drawerContent = () => {
         return (
@@ -70,7 +116,6 @@ const CreateReminderScreen = ({ navigation }) => {
                     name="bars"
                     color="#ffffff"
                     size={32}
-                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
                 />
                 <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
                     <MaterialIcons
@@ -140,8 +185,9 @@ const CreateReminderScreen = ({ navigation }) => {
         );
     };
     return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='#15202B' barStyle="light-content" />
+        <View style={styles.screenContainer}>
+            <StatusBar barStyle="light-content" />
+
             <View style={{ flexDirection: "row" }}>
                 <MenuDrawer
                     open={open}
@@ -166,7 +212,7 @@ const CreateReminderScreen = ({ navigation }) => {
                 <View style={styles.buttonExit}>
                     <TouchableOpacity
                         style={styles.exit}
-                        onPress={() => navigation.navigate('Calender')}
+                        onPress={() => navigation.navigate('Home')}
                     >
                         <LinearGradient
                             colors={['#1DA1F2', '#1DA1F2']}
@@ -186,176 +232,25 @@ const CreateReminderScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View
-                style={styles.content}
-            >
-                <Text style={styles.text_titleScreen}>Thêm nhắc nhở</Text>
-                <Text style={styles.text_title}>Tiêu đề <Text style={{ color: '#FF0000', fontSize: 18 }}>*</Text>
-                </Text>
-                <View style={styles.action}>
-                    <TextInput
-                        placeholder="Tiêu đề"
-                        placeholderTextColor="#1DA1F2"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handleTitle(val)}
-                    />
-                </View>
-                <Text style={styles.text_content}>Nội dung <Text style={{ color: '#FF0000', fontSize: 18 }}>*</Text>
-                </Text>
-                <View style={styles.action}>
-                    <TextInput
-                        placeholder="Nội dung"
-                        placeholderTextColor="#1DA1F2"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handleContent(val)}
-                    />
-                </View>
-                <Text style={styles.text_time}>Thời gian <Text style={{ color: '#FF0000', fontSize: 18 }}>*</Text>
-                </Text>
-
-                <View style={styles.boxDate}>
-                    <DatePicker
-                        date={date}
-                        onDateChange={setDate}
-                        mode="time"
-                        style={{ width: 400, marginTop: 10, height: 120, backgroundColor: "#fff" }}
-                        androidVariant="nativeAndroid"
-                    />
-                </View>
-                <View style={styles.button}>
-                    <TouchableOpacity
-                        style={styles.create}
-                        onPress={sendMessage}
-                    >
-                        <LinearGradient
-                            colors={['#1DA1F2', '#1DA1F2']}
-                            style={styles.create}
-                        >
-                            <Text style={[styles.textCreate, {
-                                color: '#fff'
-                            }]}>Thêm nhắc nhở</Text>
-                        </LinearGradient>
-
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <ScrollView>
+                <Accordion
+                    sections={SECTIONS}
+                    activeSections={activeSections}
+                    // renderSectionTitle={_renderSectionTitle}
+                    renderHeader={_renderHeader}
+                    renderContent={_renderContent}
+                    onChange={_updateSections}
+                    underlayColor={""}
+                />
+            </ScrollView>
         </View>
     );
 };
 
-export default CreateReminderScreen;
-
 const styles = StyleSheet.create({
-    logo: {
-        marginTop: '8%',
-        marginLeft: '32%',
-    },
-    container: {
+    screenContainer: {
         flex: 1,
         backgroundColor: '#15202B'
-    },
-    header: {
-        // flex: 1,
-        paddingHorizontal: 20,
-        marginTop: 10,
-        height: 100,
-        borderBottomWidth: 1,
-        borderColor: '#ccc',
-        marginBottom: 180,
-        marginLeft: 20,
-        marginRight: 20,
-    },
-    content: {
-        flex: 1,
-        paddingLeft: 40,
-        paddingRight: 40,
-        paddingTop: 10,
-    },
-    footer: {
-        flex: 2,
-        backgroundColor: '#15202B',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingVertical: 30
-    },
-    text_header: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 48,
-        marginLeft: '28%',
-        marginTop: 10,
-    },
-    text_titleScreen: {
-        color: '#1DA1F2',
-        fontSize: 38,
-        fontWeight: 'bold',
-        paddingBottom: 20,
-        marginTop: 30
-    },
-    text_content: {
-        color: '#f2f2f2',
-        fontSize: 16,
-    },
-    text_title: {
-        color: '#f2f2f2',
-        fontSize: 16,
-    },
-    text_time: {
-        color: '#f2f2f2',
-        fontSize: 16,
-    },
-    action: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderWidth: 1,
-        borderColor: '#f2f2f2',
-        paddingTop: 12,
-        paddingLeft: 10,
-        paddingRight: 10,
-        marginBottom: 10,
-        borderRadius: 5,
-        fontSize: 14
-
-    },
-    actionError: {
-        flexDirection: 'row',
-        marginTop: 5,
-        borderBottomWidth: 1,
-        borderBottomColor: '#FF0000',
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: '#f2f2f2',
-    },
-    errorMsg: {
-        color: '#FF0000',
-        fontSize: 14,
-        paddingBottom: 5,
-    },
-    button: {
-        alignItems: 'center',
-        marginTop: 20
-    },
-    create: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
-    },
-    textCreate: {
-        fontSize: 18,
-        fontWeight: 'bold'
-    },
-    animatedBox: {
-        flex: 1,
-        backgroundColor: "#192734",
-        padding: 10
     },
     buttonExit: {
         marginTop: 8,
@@ -373,4 +268,26 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         fontSize: 16
     },
+    view: {
+        justifyContent: 'flex-end',
+        margin: 0,
+    },
+    animatedBox: {
+        flex: 1,
+        backgroundColor: "#192734",
+        padding: 10
+    },
+    image: {
+        width: "100%",
+        height: 140,
+        zIndex:-1
+    },
+    linearGradient : {
+        zIndex:99,
+        width: "90%",
+        marginLeft: 20,
+        height: 140,
+    }
 });
+
+export default ListSectionScreen;

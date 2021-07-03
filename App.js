@@ -17,10 +17,17 @@ import ForgotPasswordPage from './src/components/ForgotPasswordPage';
 import ChangePasswordPage from './src/components/ChangePasswordPage';
 import FlashCardScreen from './src/screens/FlashCardScreen';
 import QuizScreen from './src/screens/QuizScreen';
+import SectionScreen from './src/screens/SectionScreen';
+import QuestionSection from './src/components/SectionPage/QuestionSection';
 import ListExamScreen from './src/screens/ListExamScreen';
 import ResultScreen from './src/screens/ResultScreen';
 import CreateReminderScreen from './src/screens/CreateReminderScreen';
-
+import CreateGroupScreen from './src/screens/CreateGroupScreen';
+import CreateGroupScreenTwo from './src/screens/CreateGroupScreenTwo';
+import CreateMemberScreen from './src/screens/CreateMemberScreen';
+import ListSectionScreen from './src/screens/ListSectionScreen';
+import ListFlashCardScreen from './src/screens/ListFlashCardScreen';
+import Lesson from './src/components/SectionPage/Lesson';
 //Redux
 import 'localstorage-polyfill';
 import { Provider, useSelector } from 'react-redux';
@@ -130,7 +137,15 @@ function HomeStackScreen() {
       {/* <HomeStack.Screen name="Splash" component={SplashPage} />   */}
       <HomeStack.Screen name="FlashCard" component={FlashCardScreen} />
       <HomeStack.Screen name="CreateReminder" component={CreateReminderScreen} />
+      <HomeStack.Screen name="CreateGroup" component={CreateGroupScreen} />
+      <HomeStack.Screen name="CreateGroupTwo" component={CreateGroupScreenTwo} />
+      <HomeStack.Screen name="CreateMember" component={CreateMemberScreen} />
       <HomeStack.Screen name="Quiz" component={QuizScreen} />
+      <HomeStack.Screen name="Lesson" component={Lesson} />
+      <HomeStack.Screen name="Section" component={SectionScreen} />
+      <HomeStack.Screen name="ListSection" component={ListSectionScreen} />
+      <HomeStack.Screen name="QuestionSection" component={QuestionSection} />
+      <HomeStack.Screen name="ListFlashCard" component={ListFlashCardScreen} />
       <HomeStack.Screen name="ListExam" component={ListExamScreen} />
       <HomeStack.Screen name="Result" component={ResultScreen} />
     </HomeStack.Navigator>

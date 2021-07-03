@@ -5,14 +5,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const Quiz = () => {
     const [bgColor, setBgColor] = useState(false)
     return (
-        <View style={styles.screenContainer}>
+        <ScrollView style={styles.screenContainer}>
             <View style={styles.boxQuestion} >
                 <Text style={styles.titleQuestion}>Quiz về động vật</Text>
                 <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
                 <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
-                <ScrollView>
                 <Text style={styles.question}>What id the meaning of "dog" ?</Text>
-                </ScrollView>
                 
             </View>
             <View style={styles.kengang}></View>
@@ -32,7 +30,7 @@ const Quiz = () => {
                             name="check"
                             color="#ffffff"
                             size={32}
-                            style={{ paddingTop: 8,paddingLeft:5 }}
+                            style={{ paddingTop: 8 }}
                         />
                         <View style={styles.boxNumber}>
                             <Text style={styles.titleNumber}>B</Text>
@@ -46,7 +44,7 @@ const Quiz = () => {
                             name="close"
                             color="#ffffff"
                             size={32}
-                            style={{ paddingRight:8, paddingTop: 8,paddingLeft:5 }}
+                            style={{ paddingRight:5, paddingTop: 8 }}
                         />
                         <View style={styles.boxNumber}>
                             <Text style={styles.titleNumber}>C</Text>
@@ -66,7 +64,7 @@ const Quiz = () => {
                 
                 </ScrollView>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -80,46 +78,41 @@ const styles = StyleSheet.create({
         marginLeft: 50,
         marginRight: 50,
         marginTop: 30,
-        marginBottom: 30,
-
+        marginBottom: 10,
+        padding:8,
+    },
+    active: {
+        flexDirection: "row",
+        marginLeft: 50,
+        marginRight: 50,
+        marginTop: 30,
+        marginBottom: 10,
+        backgroundColor:"#1DA1F2",
+        padding:5,
+        borderRadius:5
     },
     // Đáp án đúng
     answerCorrect: {
         flexDirection: "row",
-        marginTop: 30,
-        marginBottom: 30,
         marginLeft: 20,
         marginRight: 50,
         backgroundColor:"#1DA1F2",
         padding:5,
         borderRadius:5,
         marginTop: 30,
-        marginBottom: 30,
+        marginBottom: 10,
     },
     // Đáp án sai
     answerWrong: {
         flexDirection: "row",
-        marginTop: 30,
-        marginBottom: 30,
         marginLeft: 20,
         marginRight: 50,
         backgroundColor:"#E63946",
         padding:5,
         borderRadius:5,
         marginTop: 30,
-        marginBottom: 30,
+        marginBottom: 10,
 
-    },
-    // Đáp án được chọn
-    active: {
-        flexDirection: "row",
-        marginLeft: 50,
-        marginRight: 50,
-        marginTop: 30,
-        marginBottom: 30,
-        backgroundColor:"#1DA1F2",
-        padding:5,
-        borderRadius:5
     },
     boxAnswer: {
         flex:1
@@ -150,7 +143,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40,
-        height:250
     },
     titleQuestion: {
         fontSize: 38,
