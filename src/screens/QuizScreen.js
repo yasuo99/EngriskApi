@@ -15,106 +15,144 @@ import QuestionSection from '../components/SectionPage/QuestionSection'
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QuizActions from '../redux/actions/quiz';
-const QuizScreen = ({route, navigation }) => {
+import { set } from 'lodash';
+const QuizScreen = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [index, setIndex] = useState(1)
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
     const [open, setOpen] = useState(false)
-    const [quiz,setQuiz] = useState({})
-    const {quizId} = route.params
+    const [quiz, setQuiz] = useState({
+        questions: [],
+    })
+    const [checkAudio, setCheckAudio] = useState(null)
+    const [checkImage, setCheckImage] = useState(null)
+    const { quizId } = route.params
+
     useEffect(() => {
-        async function fetchQuizData(){
+        async function fetchQuizData() {
             try {
                 const quizData = await QuizActions.doQuiz(quizId);
                 setQuiz(quizData.quiz)
+                setCheckAudio(quizData.quiz.questions[currentQuestionIndex].audio)
+                setCheckImage(quizData.quiz.questions[currentQuestionIndex].photoUrl)
             } catch (error) {
                 console.log(error);
             }
         }
-        if(quizId){
+        if (quizId) {
             fetchQuizData();
         }
-    },[quizId])
+    }, [quizId])
     const toggleOpen = () => {
         setOpen(!open);
     };
     const drawerContent = () => {
         return (
-            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-                <FontAwesome
-                    name="bars"
-                    color="#ffffff"
-                    size={32}
-                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                />
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
-                    <MaterialIcons
-                        name="home"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
-                    <MaterialIcons
-                        name="ballot"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
-                    <MaterialIcons
-                        name="rule"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('FlashCard')}>
-                    <MaterialIcons
-                        name="book"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Message')}>
-                    <MaterialIcons
-                        name="chat"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Calender')}>
-                    <MaterialIcons
-                        name="today"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Notification')}>
-                    <MaterialIcons
-                        name="notifications"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
-                    <MaterialIcons
-                        name="logout"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
-                </TouchableOpacity>
+          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+            <FontAwesome
+              name="bars"
+              color="#ffffff"
+              size={32}
+            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+            />
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
+              <MaterialIcons
+                name="home"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
+              <MaterialIcons
+                name="ballot"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
+              <MaterialIcons
+                name="rule"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
+              <MaterialIcons
+                name="book"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
+              <MaterialIcons
+                name="chat"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
+              <MaterialIcons
+                name="today"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
+              <MaterialIcons
+                name="notifications"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+              <MaterialIcons
+                name="logout"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
         );
-    };
+      };
+    const nextQuestion = () => {
+        if (currentQuestionIndex < quiz.questions.length - 1) {
+            const nextQuestion = quiz.questions[currentQuestionIndex + 1]
+            // console.log(nextQuestion)
+            setCurrentQuestionIndex(currentQuestionIndex + 1)
+            setIndex(index + 1)
+            setCheckAudio(quiz.questions[currentQuestionIndex + 1].audio)
+            setCheckImage(quiz.questions[currentQuestionIndex + 1].photoUrl)
+        }
+    }
+    const skipQuestion = () => {
+        if (currentQuestionIndex > 0) {
+            const nextQuestion = quiz.questions[currentQuestionIndex - 1]
+            // console.log(nextQuestion)
+            setCurrentQuestionIndex(currentQuestionIndex - 1)
+            setIndex(index - 1)
+            setCheckAudio(quiz.questions[currentQuestionIndex - 1].audio)
+            setCheckImage(quiz.questions[currentQuestionIndex - 1].photoUrl)
+        }
+       
+    }
+    const selectQuestion = (number) => {
+        setIndex(number)
+        setCheckAudio(quiz.questions[number - 1].audio)
+        setCheckImage(quiz.questions[number - 1].photoUrl)
+        setCurrentQuestionIndex(number = number - 1)
+    }
+
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
@@ -128,17 +166,17 @@ const QuizScreen = ({route, navigation }) => {
                     overlay={true}
                     opacity={0.4}
                 >
-                    <TouchableOpacity onPress={toggleOpen}>
-                        <FontAwesome
-                            name="bars"
-                            color="#ffffff"
-                            size={32}
-                            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                        />
-                    </TouchableOpacity>
                 </MenuDrawer>
+                <TouchableOpacity onPress={toggleOpen}>
+                    <FontAwesome
+                        name="bars"
+                        color="#ffffff"
+                        size={32}
+                        style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                    />
+                </TouchableOpacity>
                 <View >
-                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
                 </View>
                 <View style={styles.buttonExit}>
                     <TouchableOpacity
@@ -163,9 +201,22 @@ const QuizScreen = ({route, navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-           <Quiz quiz={quiz}></Quiz>
+
+            <View style={{ justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+                <Text style={styles.titleQuestion}>{quiz.quizName}</Text>
+                <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
+                <Text style={styles.numberQuestion}>Số câu đã chọn : {index} /{quiz.questions.length}</Text>
+            </View>
+            {
+                checkAudio !== null ?
+                <QuizAudio quiz={quiz.questions[currentQuestionIndex]}></QuizAudio> :
+                (checkImage !== null ?
+                <QuizImage quiz={quiz.questions[currentQuestionIndex]}></QuizImage> :
+                <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz>)
+            }
+            {/* <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz> */}
             <View style={styles.changeQuestion}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => { skipQuestion() }}>
                     <FontAwesome
                         name="chevron-left"
                         color="#ffffff"
@@ -174,9 +225,9 @@ const QuizScreen = ({route, navigation }) => {
                     />
                 </TouchableOpacity>
                 <View style={{ width: 420, alignItems: "center" }}>
-                    <Text style={{ fontSize: 18, color: "#fff", fontWeight: "bold", marginTop: 8 }} onPress={toggleModal}>Câu 1/10</Text>
+                    <Text style={{ fontSize: 18, color: "#fff", fontWeight: "bold", marginTop: 8 }} onPress={toggleModal}>Câu {index} /{quiz.questions.length}</Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('Result')}>
+                <TouchableOpacity onPress={() => { nextQuestion() }}>
                     <FontAwesome
                         name="chevron-right"
                         color="#ffffff"
@@ -188,7 +239,7 @@ const QuizScreen = ({route, navigation }) => {
             <Modal isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} style={styles.view}>
                 <View style={styles.modal}>
                     <View style={styles.headerModal}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => { skipQuestion() }}>
                             <FontAwesome
                                 name="chevron-left"
                                 color="#ffffff"
@@ -197,9 +248,10 @@ const QuizScreen = ({route, navigation }) => {
                             />
                         </TouchableOpacity>
                         <View style={{ width: 420, alignItems: "center" }}>
-                            <Text style={{ fontSize: 18, color: "#fff", fontWeight: "bold", marginTop: 8 }} onPress={toggleModal}>Câu 1/10</Text>
+                            <Text style={{ fontSize: 18, color: "#fff", fontWeight: "bold", marginTop: 8 }} onPress={toggleModal}>Câu {index} /{quiz.questions.length}</Text>
                         </View>
-                        <TouchableOpacity onPress={() => navigation.navigate('Result')}>
+
+                        <TouchableOpacity onPress={() => { nextQuestion() }}>
                             <FontAwesome
                                 name="chevron-right"
                                 color="#ffffff"
@@ -208,60 +260,19 @@ const QuizScreen = ({route, navigation }) => {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View style={{ flexDirection: "row", marginTop: 20 }}>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumberActive}>
-                                <Text style={styles.titleNumberActive}>1</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumberActive}>
-                                <Text style={styles.titleNumberActive}>2</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>3</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>4</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>5</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ flexDirection: "row", marginTop: 20 }}>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>6</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>7</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>8</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>9</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.box}>
-                            <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>10</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                    <FlatList
+                        data={quiz.questions}
+                        numColumns={5}
+                        renderItem={({ item, index }) => (
+                            <TouchableOpacity style={styles.box} onPress={() => { selectQuestion(index)}}>
+                                <View style={quiz.result? styles.boxNumberActive:styles.boxNumber}>
+                                    <Text style={styles.titleNumber}>{index = index + 1}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}>
+
+                    </FlatList>
+
 
                 </View>
             </Modal>
@@ -323,7 +334,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         paddingTop: 10,
         width: 60,
-        height: 60
+        height: 60,
+        marginTop:10
     },
     boxNumberActive: {
         backgroundColor: "#1DA1F2",
@@ -356,7 +368,22 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#192734",
         padding: 10
-      },
+    },
+    titleQuestion: {
+        fontSize: 38,
+        color: "#fff",
+        fontWeight: 'bold'
+    },
+    timeQuestion: {
+        fontSize: 18,
+        color: "#fff",
+        marginTop: 5
+    },
+    numberQuestion: {
+        fontSize: 18,
+        color: "#fff",
+        marginTop: 5
+    },
 });
 
 export default QuizScreen;

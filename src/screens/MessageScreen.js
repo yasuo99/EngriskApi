@@ -13,6 +13,7 @@ const MessageScreen = ({ navigation }) => {
     try {
       const boxchats = await BoxChatActions.getAll(1);
       setBoxchats(boxchats.data);
+      console.log(boxchats)
     } catch (error) {
       console.log(error);
     }
@@ -34,7 +35,7 @@ const MessageScreen = ({ navigation }) => {
           size={32}
         // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
         />
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
           <MaterialIcons
             name="home"
             size={32}
@@ -42,7 +43,7 @@ const MessageScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
           <MaterialIcons
             name="ballot"
             size={32}
@@ -50,7 +51,7 @@ const MessageScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
           <MaterialIcons
             name="rule"
             size={32}
@@ -58,7 +59,7 @@ const MessageScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('FlashCard')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
           <MaterialIcons
             name="book"
             size={32}
@@ -66,7 +67,7 @@ const MessageScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Message')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
           <MaterialIcons
             name="chat"
             size={32}
@@ -74,7 +75,7 @@ const MessageScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Calender')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
           <MaterialIcons
             name="today"
             size={32}
@@ -82,7 +83,7 @@ const MessageScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Notification')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
           <MaterialIcons
             name="notifications"
             size={32}
@@ -114,17 +115,18 @@ const MessageScreen = ({ navigation }) => {
           overlay={true}
           opacity={0.4}
         >
-          <TouchableOpacity onPress={toggleOpen}>
-            <FontAwesome
-              name="bars"
-              color="#ffffff"
-              size={32}
-              style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-            />
-          </TouchableOpacity>
+
         </MenuDrawer>
+        <TouchableOpacity onPress={toggleOpen}>
+          <FontAwesome
+            name="bars"
+            color="#ffffff"
+            size={32}
+            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+          />
+        </TouchableOpacity>
         <View >
-          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
         </View>
         <View style={styles.buttonExit}>
           <TouchableOpacity
@@ -152,7 +154,7 @@ const MessageScreen = ({ navigation }) => {
       <View style={{ flexDirection: "row" }}>
         <View style={{ width: 400, marginLeft: 10, marginTop: 10, flexDirection: "row" }}>
           <Image source={require('../assets/avatar.png')} style={{ width: 50, height: 50 }}></Image>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: "#fff", marginLeft:16, marginTop:8 }}>Chat</Text>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: "#fff", marginLeft: 16, marginTop: 8 }}>Chat</Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('CreateGroup')}>
           <MaterialIcons

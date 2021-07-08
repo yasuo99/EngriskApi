@@ -32,7 +32,7 @@ const SplashScreen = ({ navigation }) => {
                 if (!loggedIn) {
                     navigation.navigate('SignIn')
                 } else {
-                    navigation.navigate('Home')
+                    navigation.navigate('Tab')
                 }
             }
         } catch (error) {

@@ -14,7 +14,7 @@ const route = (state = initial, action) => {
                 ...state,
                 engrisk: action.engrisk,
                 private: action.private,
-                lastRoute: action.lastRoute
+                lastRoute: action.lastRoute || action.engrisk[0]
             }
         case RouteActionTypes.LEARN:
             return{

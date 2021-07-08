@@ -18,15 +18,16 @@ class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open:false,
+      open: false,
     };
   }
   toggleOpen = () => {
     this.setState({
-      open:!this.state.open
+      open: !this.state.open
     })
   };
   drawerContent = () => {
+    const {navigation} = this.props;
     return (
       <TouchableOpacity onPress={this.toggleOpen} style={styles.animatedBox}>
         <FontAwesome
@@ -35,7 +36,7 @@ class ProfileScreen extends Component {
             size={32}
             // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
           />
-          <TouchableOpacity style={{flexDirection:"row",marginTop:"40%"}} onPress={()=>navigation.navigate('Home')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:"40%"}} onPress={()=>{navigation.navigate('Home'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="home"
             size={32}
@@ -43,7 +44,7 @@ class ProfileScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Trang chủ</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListSection')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('ListSection'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="ballot"
             size={32}
@@ -51,7 +52,7 @@ class ProfileScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Section</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('ListExam'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="rule"
             size={32}
@@ -59,7 +60,7 @@ class ProfileScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Exam</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('FlashCard')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('ListFlashCard'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="book"
             size={32}
@@ -67,7 +68,7 @@ class ProfileScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Flash card</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Message')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('Message'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="chat"
             size={32}
@@ -75,7 +76,7 @@ class ProfileScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Tin nhắn</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Calender')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('Calender'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="today"
             size={32}
@@ -83,7 +84,7 @@ class ProfileScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Lịch</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Notification')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('Notification'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="notifications"
             size={32}
@@ -103,30 +104,31 @@ class ProfileScreen extends Component {
     );
   };
   render() {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor='#15202B' barStyle="light-content" />
         <View style={{ flexDirection: "row" }}>
-        <MenuDrawer 
-          open={this.state.open} 
-          drawerContent={this.drawerContent()}
-          drawerPercentage={45}
-          animationTime={250}
-          overlay={true}
-          opacity={0.4}
-        >
+          <MenuDrawer
+            open={this.state.open}
+            drawerContent={this.drawerContent()}
+            drawerPercentage={45}
+            animationTime={250}
+            overlay={true}
+            opacity={0.4}
+          >
+
+          </MenuDrawer>
           <TouchableOpacity onPress={this.toggleOpen}>
-          <FontAwesome
-            name="bars"
-            color="#ffffff"
-            size={32}
-            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-          />
-        </TouchableOpacity>
-        </MenuDrawer>
+            <FontAwesome
+              name="bars"
+              color="#ffffff"
+              size={32}
+              style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+            />
+          </TouchableOpacity>
           <View >
-            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
           </View>
           <View style={styles.buttonExit}>
             <TouchableOpacity
@@ -201,7 +203,7 @@ class ProfileScreen extends Component {
           <View style={styles.buttonUpdate}>
             <TouchableOpacity
               style={styles.update}
-              // onPress={() => navigation.navigate('Home')}
+            // onPress={() => navigation.navigate('Home')}
             >
               <LinearGradient
                 colors={['#1DA1F2', '#1DA1F2']}
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#15202B'
   },
- 
+
   textButton: {
     color: '#fff',
     fontSize: 16,
@@ -300,21 +302,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
-  buttonExit : {
-    marginTop:8,
-    marginLeft:10
+  buttonExit: {
+    marginTop: 8,
+    marginLeft: 10
   },
   exit: {
     flexDirection: "row",
     borderRadius: 10,
     width: 80,
     height: 40,
-    paddingTop:5,
-    paddingLeft:5,
+    paddingTop: 5,
+    paddingLeft: 5,
   },
-  textExit : {
-    paddingTop:5,
-    fontSize:16
+  textExit: {
+    paddingTop: 5,
+    fontSize: 16
   },
   animatedBox: {
     flex: 1,

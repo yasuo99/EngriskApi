@@ -22,6 +22,7 @@ const Lesson = ({ navigation }) => {
   }
   const slides = [
     {
+      id:1,
       lesson: 'Bài 1',
       title: 'Xin chào mừng bạn!',
       expand: 'Bắt đầu với trình độ tiếng Anh A1!',
@@ -30,6 +31,7 @@ const Lesson = ({ navigation }) => {
       description: 'Học các từ và cụm từ mới'
     },
     {
+      id:2,
       lesson: 'Bài 1',
       title: 'Xin chào mừng bạn!',
       expand: 'Bắt đầu với trình độ tiếng Anh A1!',
@@ -48,15 +50,15 @@ const Lesson = ({ navigation }) => {
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={() => { navigation.navigate('ListSection') }}>
               <MaterialIcons
-                name="arrow-back"
+                name= {item.id===1?"arrow-back":""}
                 size={32}
                 color="#333"
                 style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}>
               </MaterialIcons>
             </TouchableOpacity>
-            <Text style={styles.title}>{item.lesson} - {item.title}</Text>
+            <Text style={styles.title}> {item.id === 1 ? `${item.lesson} - ${item.title}`: ""} </Text>
           </View>
-          <Text style={styles.expand}>{item.expand}</Text>
+          <Text style={styles.expand}>{item.id === 1 ? item.expand : ""}</Text>
           <View style={{ marginTop: "50%", alignItems: "center", justifyContent: "center" }}>
             <Text style={styles.content}>{item.content}</Text>
             <Text style={styles.description}>{item.description}</Text>
@@ -71,7 +73,7 @@ const Lesson = ({ navigation }) => {
     setShowRealApp(true)
   }
   return (
-    <AppIntroSlider renderItem={_renderItem} data={slides} onDone={_onDone} />
+    <AppIntroSlider renderItem={_renderItem} data={slides} onDone={_onDone}></AppIntroSlider>
   );
 };
 

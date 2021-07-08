@@ -1,93 +1,113 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, ImageBackground, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, ToastAndroid, Platform, Alert  } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Accordion from 'react-native-collapsible/Accordion';
+import WordCategoriesActions from '../redux/actions/wordCategory';
+import Toast from 'react-native-simple-toast';
+import { BaseApiUrl } from '../constants/api';
 const ListFlashCardScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
     const [activeSections, setActiveSections] = useState([])
+    const [wordCategories, setWordCategories] = useState([])
     const toggleOpen = () => {
         setOpen(!open);
     };
-
+    useEffect(async () => {
+        try {
+            const wordcategories = await WordCategoriesActions.getAll();
+            setWordCategories(wordcategories.data.items);
+            console.log(wordcategories.data.items)
+        } catch (error) {
+            console.log(error);
+        }
+    },[setWordCategories])
     const drawerContent = () => {
         return (
-            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-                <FontAwesome
-                    name="bars"
-                    color="#ffffff"
-                    size={32}
-                />
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
-                    <MaterialIcons
-                        name="home"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
-                    <MaterialIcons
-                        name="ballot"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
-                    <MaterialIcons
-                        name="rule"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('FlashCard')}>
-                    <MaterialIcons
-                        name="book"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Message')}>
-                    <MaterialIcons
-                        name="chat"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Calender')}>
-                    <MaterialIcons
-                        name="today"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Notification')}>
-                    <MaterialIcons
-                        name="notifications"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
-                    <MaterialIcons
-                        name="logout"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
-                </TouchableOpacity>
+          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+            <FontAwesome
+              name="bars"
+              color="#ffffff"
+              size={32}
+            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+            />
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
+              <MaterialIcons
+                name="home"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
+              <MaterialIcons
+                name="ballot"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
+              <MaterialIcons
+                name="rule"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
+              <MaterialIcons
+                name="book"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
+              <MaterialIcons
+                name="chat"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
+              <MaterialIcons
+                name="today"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
+              <MaterialIcons
+                name="notifications"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+              <MaterialIcons
+                name="logout"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
         );
-    };
+      };
+    const inform = () => {
+        ToastAndroid.showWithGravity(
+            "Chủ đề này hiện chưa có từ vựng",
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          );
+      };
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
@@ -101,17 +121,18 @@ const ListFlashCardScreen = ({ navigation }) => {
                     overlay={true}
                     opacity={0.4}
                 >
-                    <TouchableOpacity onPress={toggleOpen}>
-                        <FontAwesome
-                            name="bars"
-                            color="#ffffff"
-                            size={32}
-                            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                        />
-                    </TouchableOpacity>
+
                 </MenuDrawer>
+                <TouchableOpacity onPress={toggleOpen}>
+                    <FontAwesome
+                        name="bars"
+                        color="#ffffff"
+                        size={32}
+                        style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                    />
+                </TouchableOpacity>
                 <View >
-                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
                 </View>
                 <View style={styles.buttonExit}>
                     <TouchableOpacity
@@ -136,36 +157,18 @@ const ListFlashCardScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <ScrollView>
-                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
-                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
-                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
-                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
-                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
-                    </View>
-                </View>
-                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
-                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
-                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
-                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
-                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
-                    </View>
-                </View>
-                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
-                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
-                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
-                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
-                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
-                    </View>
-                </View>
-                <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
-                    <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
-                        <Image source={require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
-                        <TouchableOpacity onPress={()=>{navigation.navigate('FlashCard')}}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: Gia đình</Text></TouchableOpacity>
-                        <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>10 từ vựng</Text>
-                    </View>
-                </View>
-            </ScrollView>
+            <FlatList
+                data={wordCategories}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
+                        <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
+                            <Image source={item.categoryImage ? `${BaseApiUrl}/streaming/image?image=${item.categoryImage}` : require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                            <TouchableOpacity onPress={item.words.length == 0 ?  () => {inform()} : () => { navigation.navigate('FlashCard', { WordCategoryId: item.id }) }}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: {item.categoryName}</Text></TouchableOpacity>
+                            <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>{item.words.length} từ vựng</Text>
+                        </View>
+                    </View>)}
+            />
         </View>
     );
 };
@@ -200,7 +203,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#192734",
         padding: 10
     },
-
+    test : {
+        fontSize:18,
+        color:"#111"
+    }
 });
 
 export default ListFlashCardScreen;

@@ -26,116 +26,86 @@ const CreateMemberScreen = ({ navigation }) => {
     const checkActive = () => {
         setActive(!active)
     }
-    
+
     const updateSearch = search => {
         setSearch({ search });
     };
     const drawerContent = () => {
         return (
-            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-                <FontAwesome
-                    name="bars"
-                    color="#ffffff"
-                    size={32}
-                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                />
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: '40%' }}
-                    onPress={() => navigation.navigate('Home')}>
-                    <MaterialIcons
-                        name="home"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Trang chủ
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 36 }}
-                    onPress={() => navigation.navigate('ListSection')}>
-                    <MaterialIcons
-                        name="ballot"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Section
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 36 }}
-                    onPress={() => navigation.navigate('ListExam')}>
-                    <MaterialIcons
-                        name="rule"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Exam
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 36 }}
-                    onPress={() => navigation.navigate('FlashCard')}>
-                    <MaterialIcons
-                        name="book"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Flash card
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 36 }}
-                    onPress={() => navigation.navigate('Message')}>
-                    <MaterialIcons
-                        name="chat"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Tin nhắn
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 36 }}
-                    onPress={() => navigation.navigate('Calender')}>
-                    <MaterialIcons
-                        name="today"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Lịch
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 36 }}
-                    onPress={() => navigation.navigate('Notification')}>
-                    <MaterialIcons
-                        name="notifications"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Thông báo
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'row', marginTop: '100%' }}>
-                    <MaterialIcons
-                        name="logout"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: '#fff', paddingLeft: 16 }}>
-                        Đăng xuất
-                    </Text>
-                </TouchableOpacity>
+          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+            <FontAwesome
+              name="bars"
+              color="#ffffff"
+              size={32}
+            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+            />
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
+              <MaterialIcons
+                name="home"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
+              <MaterialIcons
+                name="ballot"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
+              <MaterialIcons
+                name="rule"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
+              <MaterialIcons
+                name="book"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
+              <MaterialIcons
+                name="chat"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
+              <MaterialIcons
+                name="today"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
+              <MaterialIcons
+                name="notifications"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+              <MaterialIcons
+                name="logout"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
         );
-    };
+      };
 
     return (
         <View style={styles.screenContainer}>
@@ -148,22 +118,23 @@ const CreateMemberScreen = ({ navigation }) => {
                     animationTime={250}
                     overlay={true}
                     opacity={0.4}>
-                    <TouchableOpacity onPress={toggleOpen}>
-                        <FontAwesome
-                            name="bars"
-                            color="#ffffff"
-                            size={32}
-                            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                        />
-                    </TouchableOpacity>
+
                 </MenuDrawer>
+                <TouchableOpacity onPress={toggleOpen}>
+                    <FontAwesome
+                        name="bars"
+                        color="#ffffff"
+                        size={32}
+                        style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                    />
+                </TouchableOpacity>
                 <View>
                     <Text
                         style={{
                             fontWeight: 'bold',
                             fontSize: 42,
                             color: '#ffffff',
-                            marginLeft: '40%',
+                            marginLeft: '35%',
                         }}>
                         ENGRISK
                     </Text>
@@ -231,26 +202,26 @@ const CreateMemberScreen = ({ navigation }) => {
             </View>
             <View>
                 <ScrollView style={{ flexDirection: "row" }} horizontal={true}>
-                {active === true ? (
+                    {active === true ? (
                         <View style={{ margin: 16, alignItems: 'center' }}>
                             <View style={{ flexDirection: "row" }}>
                                 <Image
                                     source={require('../assets/avatar.png')}
-                                    style={{ width: 70, height: 70, zIndex:-1 }}>
+                                    style={{ width: 70, height: 70, zIndex: -1 }}>
                                 </Image>
                                 <TouchableOpacity onPress={checkActive}>
                                     <MaterialIcons
                                         name="cancel"
                                         size={32}
                                         color="#ffffff"
-                                        style={{ marginLeft: -20, zIndex:1 }}></MaterialIcons>
+                                        style={{ marginLeft: -20, zIndex: 1 }}></MaterialIcons>
                                 </TouchableOpacity>
                             </View>
                             <Text style={{ color: '#fff', fontSize: 18, marginTop: 4 }}>
                                 Thanh Lap
                             </Text>
                         </View>
-                    ) : <View></View>}    
+                    ) : <View></View>}
                 </ScrollView>
             </View>
             <Text style={{ fontSize: 24, fontWeight: "bold", margin: 16, color: "#fff" }}>Gợi ý</Text>
@@ -336,7 +307,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#192734",
         padding: 10
-      },
+    },
 });
 
 export default CreateMemberScreen;

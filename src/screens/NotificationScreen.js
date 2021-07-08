@@ -1,28 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, StatusBar, FlatList, Text, Image,TouchableOpacity, Button} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, Button } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import NotificationActions from '../redux/actions/notifications';
 import Moment from 'react-moment';
-import {notification} from '../components/NotificationPage/Notification'
-const sendMessage=()=>{
+import { notification } from '../components/NotificationPage/Notification'
+const sendMessage = () => {
   notification.configure();
   notification.buatChannel("1");
-  notification.kirimNotifikasiJadwal("1","Thông báo","Bạn đã có bài học mới về gia đình");
+  notification.kirimNotifikasiJadwal("1", "Thông báo", "Bạn đã có bài học mới về gia đình");
 }
-const NotificationItem = ({item}) => (
+const NotificationItem = ({ item }) => (
   <View style={styles.itemContainer}>
     <View style={styles.itemTopContainer}>
       <View>
-        <Image source={require('../assets/avatar.png')} style={{width:60,height:60}}></Image>
+        <Image source={require('../assets/avatar.png')} style={{ width: 60, height: 60 }}></Image>
       </View>
       {/* <View><Moment format="YYYY/MM/DD"></Moment></View> */}
 
       <View style={styles.itemTopTextContainer}>
         <Text style={styles.itemName}>{item.content}</Text>
-        <Moment element={Text} format="YYYY/MM/DD" style={{color:"#fff",marginTop:5}}>{item.createdDate}</Moment>
+        <Moment element={Text} format="YYYY/MM/DD" style={{ color: "#fff", marginTop: 5 }}>{item.createdDate}</Moment>
         <Button onPress={sendMessage} title="Nhận thông báo"></Button>
         {/* <View style={styles.itemDate}>{item.createdDate}</View> */}
       </View>
@@ -34,20 +34,20 @@ const NotificationItem = ({item}) => (
   </View>
 );
 
-const NotificationScreen = ({navigation}) => {
+const NotificationScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false)
-  const [notifications,setNotifications] = useState([])
-  const [isBusy,setIsBusy] = useState(true);
+  const [notifications, setNotifications] = useState([])
+  const [isBusy, setIsBusy] = useState(true);
   useEffect(async () => {
     try {
       const data = await NotificationActions.getData(1)
-    console.log(data);
-    setNotifications(data.data);
+      console.log(data);
+      setNotifications(data.data);
     } catch (error) {
       console.log(error);
     }
-    
-  },[setNotifications])
+
+  }, [setNotifications])
   const toggleOpen = () => {
     setOpen(!open);
   };
@@ -55,92 +55,94 @@ const NotificationScreen = ({navigation}) => {
     return (
       <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
         <FontAwesome
-            name="bars"
-            color="#ffffff"
-            size={32}
-            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-          />
-          <TouchableOpacity style={{flexDirection:"row",marginTop:"40%"}} onPress={()=>navigation.navigate('Home')}>
+          name="bars"
+          color="#ffffff"
+          size={32}
+        // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+        />
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
           <MaterialIcons
             name="home"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Trang chủ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListSection')}>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
           <MaterialIcons
             name="ballot"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Section</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
           <MaterialIcons
             name="rule"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Exam</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('FlashCard')}>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
           <MaterialIcons
             name="book"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Flash card</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Message')}>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
           <MaterialIcons
             name="chat"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Tin nhắn</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Calender')}>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
           <MaterialIcons
             name="today"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Lịch</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Notification')}>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
           <MaterialIcons
             name="notifications"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Thông báo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:"100%"}}>
-            <MaterialIcons
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+          <MaterialIcons
             name="logout"
             size={32}
             color="#ffffff"
-            style={{marginLeft:16}}></MaterialIcons>
-            <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Đăng xuất</Text>
-          </TouchableOpacity>
+            style={{ marginLeft: 16 }}></MaterialIcons>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+        </TouchableOpacity>
       </TouchableOpacity>
     );
   };
   return (
     <View style={styles.screenContainer}>
       <StatusBar barStyle="light-content" />
-      
+
       <View style={{ flexDirection: "row" }}>
-      <MenuDrawer 
-          open={open} 
+        <MenuDrawer
+          open={open}
           drawerContent={drawerContent()}
           drawerPercentage={45}
           animationTime={250}
           overlay={true}
           opacity={0.4}
         >
-          <TouchableOpacity onPress={toggleOpen}>
+
+        </MenuDrawer>
+        <TouchableOpacity onPress={toggleOpen}>
           <FontAwesome
             name="bars"
             color="#ffffff"
@@ -148,40 +150,39 @@ const NotificationScreen = ({navigation}) => {
             style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
           />
         </TouchableOpacity>
-        </MenuDrawer>
-          <View >
-            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
-          </View>
-          <View style={styles.buttonExit}>
-            <TouchableOpacity
-              style={styles.exit}
-              onPress={() => navigation.navigate('Home')}
-            >
-              <LinearGradient
-                colors={['#1DA1F2', '#1DA1F2']}
-                style={styles.exit}
-              >
-                <Text style={[styles.textExit, {
-                  color: '#fff'
-                }]}>Thoát</Text>
-                <FontAwesome
-                  name="sign-out"
-                  color="#ffffff"
-                  size={32}
-                  style={{ marginLeft: 5, }}
-                />
-              </LinearGradient>
-
-            </TouchableOpacity>
-          </View>
+        <View >
+          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
         </View>
-        <Text style={{marginTop:20,marginBottom:20, color:'#fff', fontSize:36, fontWeight:'bold', marginLeft:10}}>THÔNG BÁO</Text>
+        <View style={styles.buttonExit}>
+          <TouchableOpacity
+            style={styles.exit}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <LinearGradient
+              colors={['#1DA1F2', '#1DA1F2']}
+              style={styles.exit}
+            >
+              <Text style={[styles.textExit, {
+                color: '#fff'
+              }]}>Thoát</Text>
+              <FontAwesome
+                name="sign-out"
+                color="#ffffff"
+                size={32}
+                style={{ marginLeft: 5, }}
+              />
+            </LinearGradient>
+
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Text style={{ marginTop: 20, marginBottom: 20, color: '#fff', fontSize: 36, fontWeight: 'bold', marginLeft: 10 }}>THÔNG BÁO</Text>
       <View style={styles.bodyContainer}>
         <View style={styles.listContainer}>
           <FlatList
             data={notifications}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({item}) => <NotificationItem item={item} />}
+            renderItem={({ item }) => <NotificationItem item={item} />}
           />
         </View>
       </View>
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
   },
-  itemContainer: {  
+  itemContainer: {
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
   itemName: {
     color: '#fff',
     fontWeight: '400',
-    fontSize:18,
+    fontSize: 18,
   },
   itemDate: {
     color: '#ccc',
@@ -234,27 +235,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 12,
   },
-  buttonExit : {
-    marginTop:8,
-    marginLeft:10
+  buttonExit: {
+    marginTop: 8,
+    marginLeft: 10
   },
   exit: {
     flexDirection: "row",
     borderRadius: 10,
     width: 80,
     height: 40,
-    paddingTop:5,
-    paddingLeft:5,
+    paddingTop: 5,
+    paddingLeft: 5,
   },
-  textExit : {
-    paddingTop:5,
-    fontSize:16
+  textExit: {
+    paddingTop: 5,
+    fontSize: 16
   },
-  kengang : {
-    width:'100%',
+  kengang: {
+    width: '100%',
     borderBottomColor: '#ededed',
     borderBottomWidth: 1,
-    marginTop:20
+    marginTop: 20
   },
   animatedBox: {
     flex: 1,

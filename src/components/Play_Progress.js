@@ -29,7 +29,7 @@ function ProgressBar() {
     </View>
   );
 }
-function ControlButton({ title, onPress }) {
+function ControlButton({title, onPress }) {
   return (
     <TouchableOpacity style={styles.controlButtonContainer} onPress={onPress}>
       <Text style={styles.controlButtonText}>{title}</Text>
@@ -44,15 +44,15 @@ ControlButton.propTypes = {
 
 export default function Player(props) {
   const playbackState = usePlaybackState();
-  useTrackPlayerEvents(["playback-track-changed"], async event => {
-    if (event.type === TrackPlayer.TrackPlayerEvents.PLAYBACK_TRACK_CHANGED) {
-      const track = await TrackPlayer.getTrack(event.nextTrack);
-      const { title, artist, artwork } = track || {};
-      setTrackTitle(title);
-      setTrackArtist(artist);
-      setTrackArtwork(artwork);
-    }
-  });
+  // useTrackPlayerEvents(["playback-track-changed"], async event => {
+  //   if (event.type === TrackPlayer.TrackPlayerEvents.PLAYBACK_TRACK_CHANGED) {
+  //     const track = await TrackPlayer.getTrack(event.nextTrack);
+  //     const { title, artist, artwork } = track || {};
+  //     setTrackTitle(title);
+  //     setTrackArtist(artist);
+  //     setTrackArtwork(artwork);
+  //   }
+  // });
 
   const { onTogglePlayback } = props;
 

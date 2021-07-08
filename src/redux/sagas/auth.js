@@ -38,7 +38,7 @@ function* handleLogin({ payload }) {
     yield call (storeToken, result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
   } catch (error) {
-    yield put(AuthorizationActions.onLoginError(error));
+    // yield put(AuthorizationActions.onLoginError(error));
   }
 }
 

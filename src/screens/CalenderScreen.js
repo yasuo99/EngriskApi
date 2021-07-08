@@ -26,6 +26,7 @@ export default class CalenderScreen extends Component {
     })
   };
   drawerContent = () => {
+    const {navigation} = this.props;
     return (
       <TouchableOpacity onPress={this.toggleOpen} style={styles.animatedBox}>
         <FontAwesome
@@ -34,7 +35,7 @@ export default class CalenderScreen extends Component {
             size={32}
             // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
           />
-          <TouchableOpacity style={{flexDirection:"row",marginTop:"40%"}} onPress={()=>navigation.navigate('Home')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:"40%"}} onPress={()=>{navigation.navigate('Home'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="home"
             size={32}
@@ -42,7 +43,7 @@ export default class CalenderScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Trang chủ</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListSection')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('ListSection'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="ballot"
             size={32}
@@ -50,7 +51,7 @@ export default class CalenderScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Section</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('ListExam')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('ListExam'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="rule"
             size={32}
@@ -58,7 +59,7 @@ export default class CalenderScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Exam</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('FlashCard')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('ListFlashCard'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="book"
             size={32}
@@ -66,7 +67,7 @@ export default class CalenderScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Flash card</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Message')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('Message'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="chat"
             size={32}
@@ -74,7 +75,7 @@ export default class CalenderScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Tin nhắn</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Calender')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('Calender'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="today"
             size={32}
@@ -82,7 +83,7 @@ export default class CalenderScreen extends Component {
             style={{marginLeft:16}}></MaterialIcons>
             <Text style={{fontSize:21,color:"#fff",paddingLeft:16}}>Lịch</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>navigation.navigate('Notification')}>
+          <TouchableOpacity style={{flexDirection:"row",marginTop:36}} onPress={()=>{navigation.navigate('Notification'),this.setState({open:!this.state.open})}}>
           <MaterialIcons
             name="notifications"
             size={32}
@@ -110,15 +111,16 @@ export default class CalenderScreen extends Component {
       <View style={styles.container}>
         <StatusBar backgroundColor='#15202B' barStyle="light-content" />
         <View style={{ flexDirection: "row" }}>
-        <MenuDrawer 
-          open={this.state.open} 
+        <MenuDrawer
+          open={this.state.open}
           drawerContent={this.drawerContent()}
           drawerPercentage={45}
           animationTime={250}
           overlay={true}
           opacity={0.4}
         >
-          <TouchableOpacity onPress={this.toggleOpen}>
+        </MenuDrawer>
+        <TouchableOpacity onPress={this.toggleOpen}>
           <FontAwesome
             name="bars"
             color="#ffffff"
@@ -126,9 +128,8 @@ export default class CalenderScreen extends Component {
             style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
           />
         </TouchableOpacity>
-        </MenuDrawer>
           <View >
-            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '34%' }}>ENGRISK</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
           </View>
           <View style={styles.buttonExit}>
             <TouchableOpacity
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
   },
   buttonExit : {
     marginTop:8,
-    marginLeft:40
+    marginLeft:10
   },
   exit: {
     flexDirection: "row",

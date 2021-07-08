@@ -42,16 +42,7 @@ import {
 } from 'react-native';
 const logo = require('./src/assets/avatar.png');
 function TabScreen(){
-  // getTabBarVisibility = route => {
-  //   const routeName = route.state
-  //     ? route.state.routes[route.state.index].name
-  //     : '';
 
-  //   if (routeName === 'SignIn' || routeName === 'SignUp') {
-  //     return false;
-  //   }
-  //   return true;
-  // };
   return(
     <Tab.Navigator
     tabBarOptions={{
@@ -61,7 +52,6 @@ function TabScreen(){
       activeBackgroundColor: '#15202B',
       showLabel: false,
     }}>
-
     <Tab.Screen
       name="Home"
       component={HomeStackScreen}
@@ -72,7 +62,6 @@ function TabScreen(){
         ),
       })}
     >
-
     </Tab.Screen>
     <Tab.Screen
       name="Calender"
@@ -132,9 +121,6 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Chat" component={ChatScreen} />
       <HomeStack.Screen name="Message" component={MessageScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
-      {/* <HomeStack.Screen name="SignUp" component={SignUpPage} />
-      <HomeStack.Screen name="SignIn" component={SignInPage} /> */}
-      {/* <HomeStack.Screen name="Splash" component={SplashPage} />   */}
       <HomeStack.Screen name="FlashCard" component={FlashCardScreen} />
       <HomeStack.Screen name="CreateReminder" component={CreateReminderScreen} />
       <HomeStack.Screen name="CreateGroup" component={CreateGroupScreen} />
@@ -159,7 +145,7 @@ const App = () => {
             screenOptions={{
               headerShown: false,
             }}>
-               <HomeStack.Screen name="Splash" component={SplashPage} />
+              <HomeStack.Screen name="Splash" component={SplashPage} />
               <HomeStack.Screen name="SignIn" component={SignInPage} />
               <HomeStack.Screen name="SignUp" component={SignUpPage} />
               <HomeStack.Screen name="ForgotPassword" component={ForgotPasswordPage} />

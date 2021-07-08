@@ -1,43 +1,55 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-const QuizImage = () => {
+import { BaseApiUrl } from '../../constants/api';
+const QuizImage = ({quiz}) => {
     const [bgColor, setBgColor] = useState(false)
+    const [answers, setAnswers] = useState([]);
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState({
+        answers: []
+    })
+    const [isBusy, setIsBusy] = useState(true);
+    useEffect(() => {
+        setQuestions(quiz)
+        setCurrentQuestion(quiz)
+        setIsBusy(false)
+    }, [quiz])
+    const selectAnswer = (answer,index) => {
+        var result = currentQuestion?.answers.find(ans => ans == answer);
+        const answerData = {
+            question: currentQuestion,
+            answer: answer,
+            result: result.isQuestionAnswer,
+            index: index
+        }
+        console.log(answerData);
+        setAnswers([...answers, answerData])
+    }
     return (
         <View style={styles.screenContainer}>
-            <View style={styles.boxQuestion} >
-                <Text style={styles.titleQuestion}>Quiz về động vật</Text>
-                <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
-                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
-                <ScrollView>
-                <Text style={styles.question}>What id the meaning of "dog" ?</Text>
-                </ScrollView>
-            </View>
+             {!isBusy &&  <View style={styles.boxQuestion} >
+                <Text style={styles.question}>{currentQuestion?.preQuestion}: {currentQuestion?.content}</Text>
+
+            </View>}
             <View style={styles.kengang}></View>
             <View style={styles.boxAnswer} >
+            {!isBusy && 
+            <FlatList
+            data={currentQuestion?.answers}
+            numColumns={2}
+            renderItem={({item, index})=>(
+                <TouchableOpacity disabled={answers.some(ans => ans.question == currentQuestion)} key={index} onPress={() => selectAnswer(item,index)} style={answers.find(ans => ans.answer == item) != undefined ? answers.find(ans => ans.answer == item).result && answers.find(ans => ans.answer == item).index == index ? styles.answerCorrect : styles.answerWrong : styles.answer}>
+                <Image source={`${BaseApiUrl}/streaming/image?image=${item.photoUrl}`} style={{width:70,height:70}}></Image>
                 <ScrollView>
-                <View style={{flexDirection:'row'}}>
-                    <TouchableOpacity onPress={() => { setBgColor(!bgColor) }} style={bgColor === false ? styles.answer : styles.active}>
-                        <Image source={require('../../assets/Image2.png')} style={{width:70,height:70}}></Image>
-                        <Text style={styles.contentAnswer}>Mèo</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.answer}>
-                        <Image source={require('../../assets/Image2.png')} style={{width:70,height:70}}></Image>
-                        <Text style={styles.contentAnswer}>Mèo</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <TouchableOpacity style={styles.answer}>
-                        <Image source={require('../../assets/Image2.png')} style={{width:70,height:70}}></Image>
-                        <Text style={styles.contentAnswer}>Mèo</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.answer}>
-                        <Image source={require('../../assets/Image2.png')} style={{width:70,height:70}}></Image>
-                        <Text style={styles.contentAnswer}>Mèo</Text>
-                    </TouchableOpacity>
-                </View>
+                    <Text style={styles.contentAnswer}>{item.answer}</Text>
                 </ScrollView>
-            </View>
+            </TouchableOpacity>
+            )}>
+
+            </FlatList>
+        }
+              </View>
         </View>
     );
 };
@@ -110,8 +122,7 @@ const styles = StyleSheet.create({
     boxQuestion: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40,
-        height:250
+        marginTop: 10,
     },
     titleQuestion: {
         fontSize: 38,

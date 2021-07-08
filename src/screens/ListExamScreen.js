@@ -17,6 +17,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ExamsActions from '../redux/actions/exams';
+import LinearGradient from 'react-native-linear-gradient';
 const ListExamScreen = ({ navigation }) => {
     const [search, setSearch] = useState('')
     const updateSearch = (search) => {
@@ -37,80 +38,80 @@ const ListExamScreen = ({ navigation }) => {
     };
     const drawerContent = () => {
         return (
-            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-                <FontAwesome
-                    name="bars"
-                    color="#ffffff"
-                    size={32}
-                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                />
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
-                    <MaterialIcons
-                        name="home"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
-                    <MaterialIcons
-                        name="ballot"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
-                    <MaterialIcons
-                        name="rule"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('FlashCard')}>
-                    <MaterialIcons
-                        name="book"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Message')}>
-                    <MaterialIcons
-                        name="chat"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Calender')}>
-                    <MaterialIcons
-                        name="today"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Notification')}>
-                    <MaterialIcons
-                        name="notifications"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
-                    <MaterialIcons
-                        name="logout"
-                        size={32}
-                        color="#ffffff"
-                        style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
-                </TouchableOpacity>
+          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+            <FontAwesome
+              name="bars"
+              color="#ffffff"
+              size={32}
+            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+            />
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
+              <MaterialIcons
+                name="home"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
+              <MaterialIcons
+                name="ballot"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
+              <MaterialIcons
+                name="rule"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
+              <MaterialIcons
+                name="book"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
+              <MaterialIcons
+                name="chat"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
+              <MaterialIcons
+                name="today"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
+              <MaterialIcons
+                name="notifications"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+              <MaterialIcons
+                name="logout"
+                size={32}
+                color="#ffffff"
+                style={{ marginLeft: 16 }}></MaterialIcons>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
         );
-    };
+      };
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#15202B' barStyle="light-content" />
@@ -123,21 +124,43 @@ const ListExamScreen = ({ navigation }) => {
                     overlay={true}
                     opacity={0.4}
                 >
-                    <TouchableOpacity onPress={toggleOpen}>
-                        <FontAwesome
-                            name="bars"
-                            color="#ffffff"
-                            size={32}
-                            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-                        />
-                    </TouchableOpacity>
+
                 </MenuDrawer>
+                <TouchableOpacity onPress={toggleOpen}>
+                    <FontAwesome
+                        name="bars"
+                        color="#ffffff"
+                        size={32}
+                        style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                    />
+                </TouchableOpacity>
                 <View >
-                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISK</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISK</Text>
                 </View>
-                <Image source={require('../assets/icon.png')} style={{ marginTop: 20, marginLeft: 60 }}></Image>
+                <View style={styles.buttonExit}>
+                    <TouchableOpacity
+                        style={styles.exit}
+                        onPress={() => navigation.navigate('Home')}
+                    >
+                        <LinearGradient
+                            colors={['#1DA1F2', '#1DA1F2']}
+                            style={styles.exit}
+                        >
+                            <Text style={[styles.textExit, {
+                                color: '#fff'
+                            }]}>Thoát</Text>
+                            <FontAwesome
+                                name="sign-out"
+                                color="#ffffff"
+                                size={32}
+                                style={{ marginLeft: 5, }}
+                            />
+                        </LinearGradient>
+
+                    </TouchableOpacity>
+                </View>
             </View>
-            <Text style={{ fontSize: 32, color: "#fff", marginLeft: 10, fontWeight: "bold", marginTop: 20 }}>Danh sách bài luyện tập</Text>
+           <Text style={{ fontSize: 32, color: "#fff", marginLeft: 10, fontWeight: "bold", marginTop: 20 }}>Danh sách bài luyện tập</Text>
             <View style={{ flexDirection: "row" }}>
                 <View style={styles.boxSearch}>
                     <SearchBar
@@ -173,12 +196,12 @@ const ListExamScreen = ({ navigation }) => {
                     <View style={styles.card} key={index}>
                         <View style={{ flexDirection: "row" }}>
                             <Image source={require('../assets/avatar2.png')} style={{ width: 48, height: 48, marginRight: 20 }}></Image>
-                            <View>
+                            <View style={{width:"78%"}}>
                                 <Text style={{ fontSize: 24, color: "#fff", fontWeight: "400" }}>{exam.title}</Text>
                                 <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Số câu hỏi: {exam.questions.length}</Text>
                                 <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Độ khó: {exam.difficultLevel}</Text>
                             </View>
-                            <View style={{ marginLeft: 90 }}>
+                            <View>
                                 <TouchableOpacity>
                                     <FontAwesome
                                         name="share-alt"
@@ -191,7 +214,7 @@ const ListExamScreen = ({ navigation }) => {
                         </View>
                         <Image source={require('../assets/background.png')} style={{ width: "100%", marginTop: 10, height: 120 }}></Image>
                         <Text style={{ fontSize: 18, marginTop: 10, color: "#ccc" }}>{exam.description}</Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Quiz', { quizId: exams.id })}>
                             <Text style={{ fontSize: 21, color: "#1DA1F2" }}>Làm ngay</Text>
                         </TouchableOpacity>
                     </View>
@@ -227,4 +250,20 @@ const styles = StyleSheet.create({
         backgroundColor: "#192734",
         padding: 10
     },
+    buttonExit: {
+      marginTop: 8,
+      marginLeft: 10
+  },
+  exit: {
+      flexDirection: "row",
+      borderRadius: 10,
+      width: 80,
+      height: 40,
+      paddingTop: 5,
+      paddingLeft: 5,
+  },
+  textExit: {
+      paddingTop: 5,
+      fontSize: 16
+  },
 });

@@ -11,7 +11,8 @@ import {
   Image,
   ScrollView,
   Button,
-  useWindowDimensions
+  useWindowDimensions,
+  ToastAndroid
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -24,6 +25,7 @@ import HomeActions from '../redux/actions/home';
 import { BaseApiUrl } from '../constants/api';
 import RouteActions from '../redux/actions/routes';
 import { useDispatch, useSelector } from 'react-redux';
+import AuthorizationActions from '../redux/actions/auth';
 const HomeScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalTwoVisible, setModalTwoVisible] = useState(false);
@@ -40,8 +42,8 @@ const HomeScreen = ({ navigation }) => {
   })
   const [isBusy, setIsBusy] = useState(true);
   const [selectUser, setSelectUser] = useState({})
-  const {lastRoute} = useSelector(state => state.route);
-  const {account} = useSelector(state => state.auth);
+  const { lastRoute } = useSelector(state => state.route);
+  const { account } = useSelector(state => state.auth);
   const dispatch = useDispatch()
   const toggleModalTwo = () => {
     setModalTwoVisible(!isModalTwoVisible);
@@ -51,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
     setSelectUser(user)
   };
   useEffect(() => {
-    async function fetchData(){
+    async function fetchData() {
       try {
         const data = await HomeActions.getData(account.id);
         const routes = await RouteActions.getAll(account.id);
@@ -69,63 +71,72 @@ const HomeScreen = ({ navigation }) => {
         console.log(error);
       }
     }
-    if(Object.keys(account).length > 0){
+    if (Object.keys(account).length > 0) {
       fetchData();
     }
   }, [account])
+  async function LogOut(){
+    try {
+        const result = await AuthorizationActions.onLogout();
+        dispatch(result)
+    } catch (error) {
+        console.log(error);
+    }
+   
+}
   const toggleOpen = () => {
     setOpen(!open);
   };
-  const selectRoute = (route) =>{
+  const selectRoute = (route) => {
     dispatch(RouteActions.select(route))
   }
-  const renderTabBar = props =>(
-    <TabBar 
-    renderLabel={({ route}) => (
-      <Text style={{ color:'#fff',fontSize:21, fontWeight:'bold'}}>
-        {route.title}
-      </Text>
-    )}
-    {...props}
-    style={{backgroundColor:"#1DA1F2", borderTopLeftRadius:10,borderTopRightRadius:10}}
-    scrollEnabled={false}/>
+  const renderTabBar = props => (
+    <TabBar
+      renderLabel={({ route }) => (
+        <Text style={{ color: '#fff', fontSize: 21, fontWeight: 'bold' }}>
+          {route.title}
+        </Text>
+      )}
+      {...props}
+      style={{ backgroundColor: "#1DA1F2", borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
+      scrollEnabled={false} />
   )
   const FirstRoute = () => (
     <ScrollView>
-      <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
-      {homeData.routes?.engrisk?.map((route,index) => 
-      <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
-      <Text style={styles.title}>{route.title}</Text>
-      <View style={{flexDirection:"row"}}>
-        <View style={{flexDirection:"column",width:220}}>
-          <Text style={styles.content}>{route.description}</Text>
+      <Text style={{ fontSize: 28, color: '#1DA1F2', fontWeight: 'bold', margin: 10 }}>Bạn đang học</Text>
+      {homeData.routes?.engrisk?.map((route, index) =>
+        <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
+          <Text style={styles.title}>{route.title}</Text>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "column", width: 220 }}>
+              <Text style={styles.content}>{route.description}</Text>
+            </View>
+            <View style={{ flexDirection: "column", width: 180 }}>
+              <Image source={route.routeImage ? { uri: `${route.routeImage}` } : { require: ('../assets/abideby.jpeg') }} style={{ width: 200, height: 80 }}></Image>
+            </View>
+          </View>
+          <Text style={styles.result}>Hoàn thành {route.done}/{route.sections.length}</Text>
         </View>
-        <View style={{flexDirection:"column",width:180}}>
-          <Image source={route.routeImage ? {uri: `${route.routeImage}`} : {require: ('../assets/abideby.jpeg')} } style={{ width:200,height:80}}></Image>
-        </View>
-      </View>
-      <Text style={styles.result}>Hoàn thành {route.done}/{route.sections.length}</Text>
-    </View>
       )}
     </ScrollView>
   );
-  
+
   const SecondRoute = () => (
     <ScrollView>
-      <Text style={{fontSize:28,color:'#1DA1F2',fontWeight:'bold',margin:10}}>Bạn đang học</Text>
-      {homeData.routes?.private?.map((route,index) => 
-      <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
-      <Text style={styles.title}>{route.title}</Text>
-      <View style={{flexDirection:"row"}}>
-        <View style={{flexDirection:"column",width:220}}>
-          <Text style={styles.content}>{route.description}</Text>
+      <Text style={{ fontSize: 28, color: '#1DA1F2', fontWeight: 'bold', margin: 10 }}>Bạn đang học</Text>
+      {homeData.routes?.private?.map((route, index) =>
+        <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
+          <Text style={styles.title}>{route.title}</Text>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "column", width: 220 }}>
+              <Text style={styles.content}>{route.description}</Text>
+            </View>
+            <View style={{ flexDirection: "column", width: 180 }}>
+              <Image source={route.routeImage ? { uri: `${route.routeImage}` } : { require: ('../assets/abideby.jpeg') }} style={{ width: 200, height: 80 }}></Image>
+            </View>
+          </View>
+          <Text style={styles.result}>Hoàn thành {route.done}/{route.sections.length}</Text>
         </View>
-        <View style={{flexDirection:"column",width:180}}>
-          <Image source={route.routeImage ? {uri: `${route.routeImage}`} : {require: ('../assets/abideby.jpeg')} } style={{ width:200,height:80}}></Image>
-        </View>
-      </View>
-      <Text style={styles.result}>Hoàn thành {route.done}/{route.sections.length}</Text>
-    </View>
       )}
     </ScrollView>
   );
@@ -141,7 +152,13 @@ const HomeScreen = ({ navigation }) => {
     first: FirstRoute,
     second: SecondRoute,
   });
-  
+  const inform = () => {
+    ToastAndroid.showWithGravity(
+        "Bài luyện tập này hiện chưa có câu hỏi",
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+      );
+  };
   const drawerContent = () => {
     return (
       <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
@@ -151,7 +168,7 @@ const HomeScreen = ({ navigation }) => {
           size={32}
         // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
         />
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
           <MaterialIcons
             name="home"
             size={32}
@@ -159,7 +176,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListSection')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
           <MaterialIcons
             name="ballot"
             size={32}
@@ -167,7 +184,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('ListExam')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
           <MaterialIcons
             name="rule"
             size={32}
@@ -175,7 +192,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('FlashCard')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
           <MaterialIcons
             name="book"
             size={32}
@@ -183,7 +200,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Message')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
           <MaterialIcons
             name="chat"
             size={32}
@@ -191,7 +208,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Calender')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
           <MaterialIcons
             name="today"
             size={32}
@@ -199,7 +216,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => navigation.navigate('Notification')}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
           <MaterialIcons
             name="notifications"
             size={32}
@@ -207,7 +224,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }} onPress={()=>{LogOut(),setOpen(!open)}}>
           <MaterialIcons
             name="logout"
             size={32}
@@ -230,23 +247,24 @@ const HomeScreen = ({ navigation }) => {
           overlay={true}
           opacity={0.4}
         >
-          <TouchableOpacity onPress={toggleOpen}>
-            <FontAwesome
-              name="bars"
-              color="#ffffff"
-              size={32}
-              style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-            />
-          </TouchableOpacity>
         </MenuDrawer>
+        <TouchableOpacity onPress={toggleOpen}>
+          <FontAwesome
+            name="bars"
+            color="#ffffff"
+            size={32}
+            style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+          />
+        </TouchableOpacity>
+
 
         <View >
-          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '40%' }}>ENGRISH</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISH</Text>
         </View>
-        <TouchableOpacity onPress={() => toggleModalTwo()}>
-        <Image source={require('../assets/icon.png')} style={{ marginTop: 20, marginLeft: 60 }}></Image>
+        <TouchableOpacity onPress={() => {toggleModalTwo(),setOpen(false)}}>
+          <Image source={require('../assets/icon.png')} style={{ marginTop: 20, marginLeft: 60 }}></Image>
         </TouchableOpacity>
-        
+
       </View>
       {isBusy && <Spinner
         visible={isBusy}
@@ -255,12 +273,12 @@ const HomeScreen = ({ navigation }) => {
       />}
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxQuiz}>
-          <View style={{ flexDirection: "row", marginBottom: 20, width:"100%" }} >
-            <View>
+          <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }} >
+            <View style={{width:"85%"}}>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Gợi ý luyện tập</Text>
             </View>
             <TouchableOpacity onPress={() => { navigation.navigate("ListExam") }}>
-              <Text style={{ fontSize: 16, marginLeft: '58%', color: '#fff', paddingTop: 20 }}>Tất cả</Text>
+              <Text style={{ fontSize: 16, color: '#fff', paddingTop: 20 }}>Tất cả</Text>
             </TouchableOpacity>
           </View>
           <ScrollView
@@ -269,7 +287,7 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}>
             {!isBusy && homeData.quizzes.map((quiz, index) =>
               <View style={styles.box} key={index}>
-                <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('Quiz', {quizId: quiz.id})}>
+                <TouchableOpacity animation="fadeInLeft" onPress={quiz.questions.length == 0?()=>{inform()}:() => navigation.navigate('Quiz', { quizId: quiz.id })}>
                   <Text style={styles.titleQuiz}>{quiz.quizName}</Text>
                 </TouchableOpacity>
                 <Text style={styles.question}>Số câu hỏi: {quiz.questions.length}</Text>
@@ -283,12 +301,12 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxWord}>
-          <View style={{ flexDirection: "row", marginBottom: 20, width:"100%" }} >
-            <View>
+          <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }} >
+            <View style={{width:"85%"}}>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Từ vựng hôm nay</Text>
             </View>
-            <TouchableOpacity onPress={()=>{navigation.navigate('ListFlashCard')}}>
-              <Text style={{ fontSize: 16, marginLeft: '51%', color: '#fff', paddingTop: 20 }}>Tất cả</Text>
+            <TouchableOpacity onPress={() => { navigation.navigate('ListFlashCard') }}>
+              <Text style={{ fontSize: 16, color: '#fff', paddingTop: 20 }}>Tất cả</Text>
             </TouchableOpacity>
           </View>
           <ScrollView
@@ -297,11 +315,11 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}>
             {!isBusy && homeData.words.map((word, index) =>
               <View style={styles.box} key={index}>
-                <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('FlashCard')}>
+                {/* <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('ListFlashCard')}> */}
                   <ScrollView style={{ height: 36 }}>
                     <Text style={styles.word} >{word.eng}</Text>
                   </ScrollView>
-                </TouchableOpacity>
+                {/* </TouchableOpacity> */}
                 <Text style={styles.spelling}>{word.spelling}</Text>
                 <Image source={word.wordImg ? `${BaseApiUrl}/streaming/image?image=${word.wordImg}` : require('../assets/abideby.jpeg')} style={{ width: 170, height: 100, justifyContent: "flex-end" }}></Image>
               </View>
@@ -312,12 +330,12 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxUser}>
-          <View style={{ flexDirection: "row", marginBottom: 5, width:"100%" }} >
-            <View>
+          <View style={{ flexDirection: "row", marginBottom: 5, width: "100%" }} >
+            <View style={{width:"85%"}}>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Top users</Text>
             </View>
             <View >
-              <Text style={{ fontSize: 16, marginLeft: '69%', color: '#fff', paddingTop: 20 }}>Tất cả</Text>
+              <Text style={{ fontSize: 16, color: '#fff', paddingTop: 20 }}>Tất cả</Text>
             </View>
           </View>
           <ScrollView
@@ -331,8 +349,8 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             )}
           </ScrollView>
-          <Modal onBackdropPress={() => setModalVisible(false)} isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} 
-           style={styles.view}>
+          <Modal onBackdropPress={() => setModalVisible(false)} isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'}
+            style={styles.view}>
             <View style={styles.modal}>
               <Image source={selectUser.photoUrl ? { uri: `${selectUser.photoUrl}` } : require('../assets/avatar.png')} style={styles.image}></Image>
 
@@ -352,16 +370,16 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </Modal>
 
-          <Modal onBackdropPress={() => setModalTwoVisible(false)} isVisible={isModalTwoVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} 
-           style={styles.view}>
-             <View style={styles.modalTwo}>
-            <TabView
-              navigationState={{ index, routes }}
-              renderScene={renderScene}
-              onIndexChange={setIndex}
-              initialLayout={{ width: layout.width }}
-              renderTabBar={renderTabBar}
-            /></View>
+          <Modal onBackdropPress={() => setModalTwoVisible(false)} isVisible={isModalTwoVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'}
+            style={styles.view}>
+            <View style={styles.modalTwo}>
+              <TabView
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }}
+                renderTabBar={renderTabBar}
+              /></View>
           </Modal>
         </View>
       </View>
@@ -382,31 +400,31 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 10,
     height: 330,
-    width:"100%",
+    width: "100%",
     paddingBottom: 20,
-    justifyContent:"center",
-    paddingHorizontal:10,
-    alignItems:'center'
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    alignItems: 'center'
   },
   boxWord: {
     marginTop: 70,
     marginLeft: 10,
     paddingBottom: 20,
     height: 330,
-    width:"100%",
-    justifyContent:"center",
-    paddingHorizontal:10,
-    alignItems:'center'
+    width: "100%",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    alignItems: 'center'
   },
   boxUser: {
     marginTop: 110,
     marginLeft: 10,
     paddingBottom: 20,
     height: 200,
-    width:"100%",
-    justifyContent:"center",
-    paddingHorizontal:10,
-    alignItems:'center'
+    width: "100%",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    alignItems: 'center'
   },
   box: {
     flex: 1,
@@ -418,10 +436,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   user: {
+    marginTop:-30,
     textAlign: 'center',
     flex: 1,
-    width: 120,
-    backgroundColor: 'transparent'
+    width: 115,
+    backgroundColor: 'transparent',
+    justifyContent:"center",
+    alignItems:"center"
   },
   image: {
     marginTop: 5,
@@ -476,7 +497,7 @@ const styles = StyleSheet.create({
     borderColor: '#f4f4f4',
   },
   modalTwo: {
-    height:400,
+    height: 400,
     marginBottom: 65,
     // alignItems: "center",
     color: "#fff",
@@ -543,31 +564,31 @@ const styles = StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'
   },
-  boxRouteQuiz : {
-    backgroundColor:"#fff",
-    borderRadius:10,
-    padding:16
+  boxRouteQuiz: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 16
   },
-  boxRouteWord : {
-    marginTop:20,
-    backgroundColor:"#fff",
-    borderRadius:10,
-    padding:16
+  boxRouteWord: {
+    marginTop: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 16
   },
-  title : {
-    color:'#1DA1F2',
-    fontSize:21,
-    fontWeight:'bold'
+  title: {
+    color: '#1DA1F2',
+    fontSize: 21,
+    fontWeight: 'bold'
   },
-  content : {
-    color:'#15202B',
-    fontSize:18,
-    paddingTop:8,
-    paddingBottom:8
+  content: {
+    color: '#15202B',
+    fontSize: 18,
+    paddingTop: 8,
+    paddingBottom: 8
   },
-  result : {
-    color:'#1DA1F2',
-    fontSize:21,
-    fontWeight:'bold'
+  result: {
+    color: '#1DA1F2',
+    fontSize: 21,
+    fontWeight: 'bold'
   }
 });

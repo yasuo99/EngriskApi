@@ -5,13 +5,32 @@ import Player from "../Play_Progress";
 import localTrack from "../../assets/pure.m4a";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { ScrollView } from 'react-native';
-const QuizAudio = () => {
+const QuizAudio = ({quiz}) => {
     const [bgColor, setBgColor] = useState(false)
     const playbackState = usePlaybackState();
-
+    const [answers, setAnswers] = useState([]);
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState({
+        answers: []
+    })
+    const [isBusy, setIsBusy] = useState(true);
     useEffect(() => {
-        setup();
-    }, []);
+        setQuestions(quiz)
+        setCurrentQuestion(quiz)
+        setIsBusy(false)
+        setup()
+    }, [quiz])
+    const selectAnswer = (answer,index) => {
+        var result = currentQuestion?.answers.find(ans => ans == answer);
+        const answerData = {
+            question: currentQuestion,
+            answer: answer,
+            result: result.isQuestionAnswer,
+            index: index
+        }
+        console.log(answerData);
+        setAnswers([...answers, answerData])
+    }
 
     async function setup() {
         await TrackPlayer.setupPlayer({});
@@ -49,11 +68,8 @@ const QuizAudio = () => {
     return (
         <View style={styles.screenContainer}>
             <View style={styles.boxQuestion} >
-                <Text style={styles.titleQuestion}>Quiz về động vật</Text>
-                <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
-                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
-                <View style={{ marginLeft: 50, marginRight: 30,flexDirection:"row",height:60 }}>
-                    <Text style={styles.question}>Câu 2:</Text>
+                <View style={{ marginLeft: 50, marginRight: 30,flexDirection:"row",height:20 }}>
+                    {/* <Text style={styles.question}>{currentQuestion?.preQuestion}: </Text> */}
                     <Player
                         style={styles.player}
                         onTogglePlayback={togglePlayback}
@@ -62,55 +78,28 @@ const QuizAudio = () => {
             </View>
             <View style={styles.kengang}></View>
             <View style={styles.boxAnswer} >
-            <ScrollView>
-                <TouchableOpacity onPress={() => {setBgColor(!bgColor)}} style={bgColor === false ? styles.answer : styles.active}>
-   
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>A</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Mèo</Text>
-                        </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.answerCorrect}>
-                        <FontAwesome
-                            name="check"
-                            color="#ffffff"
-                            size={32}
-                            style={{ paddingTop: 8 }}
-                        />
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>B</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Chó</Text>
-                        </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.answerWrong}>
-                        <FontAwesome
-                            name="close"
-                            color="#ffffff"
-                            size={32}
-                            style={{paddingTop: 8, paddingRight:5}}
-                        />
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>C</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Vịt</Text>
-                        </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.answer}>
-                        <View style={styles.boxNumber}>
-                            <Text style={styles.titleNumber}>D</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.contentAnswer}>Bò</Text>
-                        </View>
-                </TouchableOpacity>
+                {!isBusy && <ScrollView>
+                    {currentQuestion?.answers.map((answer, index) =>
+                        <TouchableOpacity disabled={answers.some(ans => ans.question == currentQuestion)} key={index} onPress={() => selectAnswer(answer,index)} style={answers.find(ans => ans.answer == answer) != undefined ? answers.find(ans => ans.answer == answer).result && answers.find(ans => ans.answer == answer).index == index ? styles.answerCorrect : styles.answerWrong : styles.answer}>
+                            {answers.find(ans => ans.answer == answer) != undefined && <FontAwesome
+                                name={answers.find(ans => ans.answer == answer).result ? 'check' : 'remove'}
+                                color="#ffffff"
+                                size={32}
+                                style={answers.find(ans => ans.answer == answer).result ? styles.check : styles.remove}
+                            />
+                            }
+                            <View style={styles.boxNumber}>
+                                <Text style={styles.titleNumber}>{index}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.contentAnswer}>{answer.answer}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                </ScrollView>}
                 
-                </ScrollView>
-             </View>
+            </View>
+            
         </View>
     );
 };
@@ -189,7 +178,7 @@ const styles = StyleSheet.create({
     boxQuestion: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40
+        marginTop: 10
     },
     question: {
         fontSize: 28,
@@ -220,6 +209,13 @@ const styles = StyleSheet.create({
         marginTop: 80,
         marginLeft: 30,
     },
+    check : {
+        paddingTop:8,
+    },
+    remove : {
+        paddingTop:8,
+        paddingRight:8
+    }
 });
 
 export default QuizAudio;
