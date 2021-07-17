@@ -302,7 +302,7 @@ export class QLListSection extends Component {
                     onChange={(e) => this.handleChange(e)}
                     required
                   />
-                  {this.state.formValidation.sectionName == 0 && <div class="invalid-feedback">
+                  {this.state.formValidation.sectionName == 0 && <div className="invalid-feedback">
                     {this.state.formValidation.sectionNameError}
                   </div>
                   }
@@ -326,7 +326,7 @@ export class QLListSection extends Component {
                     onChange={(e) => this.handleChange(e)}
                     required
                   />
-                  {this.state.formValidation.description ? <div class="valid-feedback">
+                  {this.state.formValidation.description ? <div className="valid-feedback">
                     Looks good!
                   </div> :
                     <div class="invalid-feedback">

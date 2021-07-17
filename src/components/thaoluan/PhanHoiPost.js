@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactTimeAgo from 'react-time-ago/commonjs/ReactTimeAgo';
-import { Button, Modal } from 'react-bootstrap'
+import { Badge, Button, Modal } from 'react-bootstrap'
 import postApi from '../../api/postApi';
 import { toast } from 'react-toastify';
 import accountApi from '../../api/accountApi';
@@ -102,7 +102,7 @@ class PhanHoiPost extends Component {
                 <div className="row mt-3 ">
                     <div className="col-md-1 nd-img"><img className="img-fluid mb-4 img-chitietthaoluan" src={comment.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                     <div className="col-md-11 pt-3">
-                        <a href={"/blog?id="+comment.accountId}>{comment.accountUsername} {comment.isVerified && <img src="/image/check.png" alt="check-img"/>}</a>   {this.props.isLoggedIn && (this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("manager") || this.props.account.roles.includes("superadmin")) && this.props.account.id != comment.accountId && <span className="dropdown">
+                        <a href={"/blog?id="+comment.accountId}>{comment.accountUsername} {comment.verifiedStatus == 'Pending' && <Badge variant='secondary'>Chờ phê duyệt</Badge>} {comment.isVerified && <img src="/image/check.png" alt="check-img"/>}</a>   {this.props.isLoggedIn && (this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("manager") || this.props.account.roles.includes("superadmin")) && this.props.account.id != comment.accountId && <span className="dropdown">
                             <a className="ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img src="/image/morel.png"></img>
                             </a>
@@ -146,7 +146,7 @@ class PhanHoiPost extends Component {
                         <div className="col-md-1"></div>
                         <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-2 img-chitietthaoluan" src={reply.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                         <div className="col-md-10">
-                            <a href={"/blog?id="+reply.accountId}>{reply.accountUsername} {reply.accountVerified && <img src="/image/check.png" alt="check-img"/>}</a>{this.props.isLoggedIn && (this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("manager") || this.props.account.roles.includes("superadmin")) && <span className="dropdown">
+                            <a href={"/blog?id="+reply.accountId}> {reply.accountUsername} {reply.verifiedStatus == 'Pending' && <Badge variant='secondary'>Chờ phê duyệt</Badge>} {reply.accountVerified && <img src="/image/check.png" alt="check-img"/>}</a>{this.props.isLoggedIn && (this.props.account.roles.includes("forumadmin") || this.props.account.roles.includes("manager") || this.props.account.roles.includes("superadmin")) && <span className="dropdown">
                                 <a className="ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img src="/image/morel.png"></img>
                                 </a>

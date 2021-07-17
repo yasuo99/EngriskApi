@@ -9,7 +9,7 @@ import RouteSideNav from "./RouteSideNav";
 import routeApi from "../../api/2.0/routeApi";
 import { selectRoute } from "../../actions/routeActions";
 import { useLocation } from 'react-router-dom'
-const HeaderClient = () => {
+const HeaderClient = ({openRoute}) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const account = useSelector(state => state.auth.account)
@@ -38,11 +38,11 @@ const HeaderClient = () => {
     dispatch(selectRoute(route))
   }
   return (
-    <nav id="nav" className="navbar navbar-expand navbar-light bg-white topbar static-top shadow fixed-top">
+    <nav id="nav" className="navbar navbar-expand navbar-light bg-white topbar static-top shadow sticky-top">
       {location.pathname === '/home' && <span>
         <div className="cst" data-qa-xl-flag="en">
-          <div onClick={() => setRouteSideNav(!routeSideNav)} className="cst__course-title text-dark"><img className='path' src='./image/route.png'></img><span className='path-title'><h5>Lộ trình</h5></span></div><i className="fa fa-chevron-right text-dark"></i></div>
-        {routeSideNav && <RouteSideNav typeRoute={typeRoute} selectRoute={routeSelect} />
+          <div onClick={() => setRouteSideNav(!routeSideNav)} className="cst__course-title text-dark"><img className='path' src='./image/route-vip.png'></img><span className='path-title'><h5 className='route-nav-header'>Lộ trình</h5></span></div><i className="fa fa-chevron-right text-dark"></i></div>
+        {(routeSideNav) && <RouteSideNav typeRoute={typeRoute} selectRoute={routeSelect} />
         }</span>}
       <ul className="navbar-nav ml-auto">
         <ThongBaoClient></ThongBaoClient>

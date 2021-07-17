@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { wordPractice } from "../../actions/wordActions";
 import { connection } from "../../signalR/createSignalRConnection";
 import { HubConnectionState } from "@microsoft/signalr";
+import {FaChevronLeft,FaChevronRight} from 'react-icons/fa'
 class FlashCardDetail extends Component {
     constructor(props) {
         super(props);
@@ -48,8 +49,8 @@ class FlashCardDetail extends Component {
                 wordCategory: cardDetail,
                 currentWord: cardDetail.vocabulary[0]
             })
-            if(this.props.isLoggedIn){
-                if(connection.state == HubConnectionState.Disconnected){
+            if (this.props.isLoggedIn) {
+                if (connection.state == HubConnectionState.Disconnected) {
                     connection.start();
                 }
             }
@@ -83,12 +84,12 @@ class FlashCardDetail extends Component {
         })
     }
     submitCreate = async () => {
-        if(this.state.imageMemory != null){
+        if (this.state.imageMemory != null) {
             let formData = new FormData();
             console.log(this.state.imageMemory);
             formData.append('WordId', this.state.currentWord.id);
             formData.append('Image', this.state.imageMemory);
-            if(this.state.title){
+            if (this.state.title) {
                 formData.append('Title', this.state.title)
             }
             const result = await wordApiV2.createMem(this.state.currentWord.id, formData);
@@ -98,7 +99,7 @@ class FlashCardDetail extends Component {
                 imageMemory: null,
                 currentWord: {
                     ...this.state.currentWord,
-                    memories: [result,...this.state.currentWord.memories]
+                    memories: [result, ...this.state.currentWord.memories]
                 }
             })
             this.closeCreate();
@@ -154,7 +155,7 @@ class FlashCardDetail extends Component {
             memory: false
         })
     }
-    vocabularyPractice(){
+    vocabularyPractice() {
         const words = this.state.wordCategory.vocabulary.map((vocabulary) => vocabulary.id);
         this.props.wordPractice(words);
     }
@@ -199,6 +200,7 @@ class FlashCardDetail extends Component {
                                         <div className="row">
                                             <div className="col-10">
                                                 <div className="boxContent">
+                                                    {this.state.currentWord.wordImg && <img src={this.state.currentWord.wordImg} className='img-fluid'></img>}
                                                     <img onClick={this.playAudio} src="/image/sound.png" className="sound"></img>
                                                     {this.state.currentWord.wordVoice !== null && <ReactPlayer config={{
                                                         file: {
@@ -206,7 +208,7 @@ class FlashCardDetail extends Component {
                                                                 preload: 'none'
                                                             }
                                                         }
-                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={`${process.env.REACT_APP_V2_API_URL}/streaming/audio?audio=${this.state.currentWord.wordVoice}`}></ReactPlayer>}
+                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={this.state.currentWord.wordVoice}></ReactPlayer>}
                                                     <h1 className="word">{this.state.currentWord.eng}</h1>
                                                     <p className="synonym">(n) ({this.state.currentWord.vie})</p>
                                                     <p className="typeWord">n</p>
@@ -215,7 +217,7 @@ class FlashCardDetail extends Component {
                                                             <div className="col">
                                                                 <div className="cardMemoryDisplay">
                                                                     <img src={this.state.currentWord.memory.memImg} alt="imageMemory" className="imageMemory"></img>
-                                                                   {this.state.currentWord.memory.title !=undefined && <p className="contentMemory">{this.state.currentWord.memory.title}</p>} 
+                                                                    <p className="contentMemory">{this.state.currentWord.memory.title || this.state.currentWord.vie}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -292,12 +294,12 @@ class FlashCardDetail extends Component {
                                                 </div>
                                             </div>
                                             <div className="col-2">
-                                                {this.state.wordIndex > 0 && <button className="btn btn-next" onClick={this.prevWord}>
-                                                    <i className="fa fa-chevron-left"></i>
+                                                {this.state.wordIndex > 0 && <button className="btn btn-next mr-1" onClick={this.prevWord}>
+                                                   <FaChevronLeft></FaChevronLeft>
                                                     <h5>Lui</h5>
                                                 </button>}
                                                 {this.state.wordIndex < this.state.wordCategory.vocabulary.length - 1 && <button className="btn btn-next" onClick={this.nextWord}>
-                                                    <i className="fa fa-chevron-right"></i>
+                                                   <FaChevronRight></FaChevronRight>
                                                     <h5>Tới</h5>
                                                 </button>}
                                             </div>
@@ -324,8 +326,8 @@ const mapStateToProps = (state) => {
     }
 }
 const mapDispatchToProps = (dispatch) => {
-    return{
+    return {
         wordPractice: (words) => dispatch(wordPractice(words))
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(FlashCardDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(FlashCardDetail);

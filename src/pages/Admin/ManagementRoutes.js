@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Sections from "../../components/sections/Sections";
 import { Link } from "react-router-dom";
 import Search from "../../components/search/Search";
+
 const ManagementRoutes = () => {
     const defaultData = {
         title: '',
@@ -26,8 +27,9 @@ const ManagementRoutes = () => {
         pageSize: 5,
         totalPages: 1
     });
+    const [isRefresh, setIsRefresh] = useState(false);
     const tempRoutes = useRef(null);
-    
+
     useEffect(async () => {
         const params = {
             currentPage: pagination.currentPage,
@@ -37,6 +39,18 @@ const ManagementRoutes = () => {
         setRoutes(result.items);
         tempRoutes.current = result.items;
     }, [pagination])
+    useEffect(async () => {
+        if (isRefresh) {
+            const params = {
+                currentPage: pagination.currentPage,
+                pageSize: pagination.pageSize
+            }
+            const result = await routeApi.adminGetAll(params);
+            setRoutes(result.items);
+            tempRoutes.current = result.items;
+            setIsRefresh(false);
+        }
+    }, [isRefresh])
     function toggleModalCreate() {
         setData(defaultData)
         setModalCreate(!modalCreate)
@@ -71,10 +85,21 @@ const ManagementRoutes = () => {
         }
     }
     async function submitEdit() {
-        setModalCreate(!modalEdit)
+        setModalEdit(!modalEdit)
+        var formData = new FormData();
+        formData.set('title', data.title);
+        formData.set('description', data.description);
+        formData.set('image', data.image);
+        const result = await routeApi.updateRoute(route.id, formData);
+        if (result.status == 200) {
+            toast('Cập nhật thành công', { type: 'success' })
+            toggleModalEdit({})
+        } else {
+            toast('Cập nhật thất bại', { type: 'error' })
+        }
     }
     async function submitDelete() {
-        setModalCreate(!modalDelete)
+        setModalDelete(!modalDelete)
     }
     async function pageChange(currentPage, pageSize) {
         const params = {
@@ -142,12 +167,12 @@ const ManagementRoutes = () => {
                                                     <th>{route.description}</th>
                                                     <th>{route.sections.length}</th>
                                                     <th>
-                                                        <Link
+                                                        <button
                                                             className="btn btn-info ml-1 btn-delete"
-                                                            to={`/admin/quan-ly-lo-trinh/${route.id}/bai-hoc`}
+                                                            onClick={() => toggleModalSections(route)}
                                                         >
                                                             <i className="fa fa-table"></i>
-                                                        </Link>
+                                                        </button>
                                                         <button
                                                             className="btn btn-success ml-1"
                                                             onClick={() => toggleModalEdit(route)}
@@ -219,21 +244,10 @@ const ManagementRoutes = () => {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={modalSections} onHide={() => toggleModalSections()} dialogClassName="modal-90w" contentClassName="modal-90w-content" scrollable={true}>
-                    <Modal.Header closeButton onClick={() => toggleModalSections()}>
-                        <Modal.Title>Quản lý bài học</Modal.Title>
-                    </Modal.Header>
+                <Modal show={modalSections} onHide={() => toggleModalSections({})} animation dialogClassName="modal-90w" contentClassName="modal-90w-content" scrollable={true}>
                     <Modal.Body>
-                        <Sections data={route.sections} />
+                        <Sections sourceRoute={route} closeEdit={toggleModalSections} />
                     </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => toggleModalSections()}>
-                            Trở lại
-                        </Button>
-                        <Button variant="primary" onClick={(e) => submitCreate()}>
-                            Lưu lại
-                        </Button>
-                    </Modal.Footer>
                 </Modal>
                 <Modal show={modalEdit} onHide={() => toggleModalEdit({})} contentClassName="modal-basic-content">
                     <Modal.Header closeButton onClick={() => toggleModalEdit({})}>

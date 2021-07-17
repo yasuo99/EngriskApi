@@ -77,7 +77,7 @@ export class Dictionary extends Component {
                                 }
                             }
                         }}
-                        url={`${process.env.REACT_APP_V2_API_URL}/streaming/audio?audio=${word.wordVoice}`}
+                        url={word.wordVoice}
                         playing={this.state.audioPlay}
                         style={{ height: '30px', width: '30px' }}
                         width={30}

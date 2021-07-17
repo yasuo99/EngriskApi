@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import adminApi from "../../../api/2.0/adminApi";
 import Paginate from "../../../components/pagination/Paginate";
 import SectionPreview from "./SectionPreview";
+import { toast } from "react-toastify";
 const RouteManagement = () => {
     const [routeInspectModal, setRouteInspectModal] = useState(false);
     const [sectionPreviewModal, setSectionPreviewModal] = useState(false);
@@ -16,14 +17,17 @@ const RouteManagement = () => {
         items: [],
         totalPages: 1
     })
-    useEffect(async () => {
-        const params = {
-            currentPage: routes.currentPage,
-            pageSize: routes.pageSize
+    useEffect(() => {
+        async function fetchData() {
+            const params = {
+                currentPage: routes.currentPage,
+                pageSize: routes.pageSize
+            }
+            const result = await adminApi.getWaitingCensorRoutes(params);
+            setRoutes(result);
         }
-        const result = await adminApi.getWaitingCensorRoutes(params);
-        setRoutes(result);
-    }, [routes.currentPage, routes.pageSize])
+        fetchData();
+    }, [routes.currentPage, routes.pageSize, setRoutes])
     function toggleRouteInspectModal(route) {
         setRouteInspectModal(!routeInspectModal)
         setSelectedRoute(route)
@@ -40,8 +44,38 @@ const RouteManagement = () => {
         setSelectedSection(section);
         setRouteInspectModal(!routeInspectModal);
     }
-    function closePreview(){
+    function closePreview() {
         setSectionPreviewModal(!sectionPreviewModal)
+        setRouteInspectModal(!routeInspectModal);
+    }
+    async function submitApprove() {
+        const result = await adminApi.submitCensored(selectedRoute.id, "Route", "Approved", "Easy");
+        if (result.status === 200) {
+            toast('Thành công', { type: 'success' })
+            setRoutes({
+                ...routes,
+                items: routes.items.filter(item => item !== selectedRoute)
+            })
+            toggleRouteInspectModal({});
+        }
+        else {
+            toast('Thất bại', { type: 'error' })
+        }
+    }
+    async function submitDecline() {
+        const result = await adminApi.submitCensored(selectedRoute.id, "Route", "Declined", "Easy");
+        if (result.status === 200) {
+            toast('Thành công', { type: 'success' })
+            setRoutes({
+                ...routes,
+                items: routes.items.filter(item => item !== selectedRoute)
+            })
+            setSelectedRoute({});
+            toggleRouteInspectModal({});
+        }
+        else {
+            toast('Thất bại', { type: 'error' })
+        }
     }
     return (
         <div>
@@ -142,17 +176,17 @@ const RouteManagement = () => {
                                             </main>
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant="secondary" onClick={() => toggleRouteInspectModal({})}>
+                                            <Button variant="secondary" onClick={() => submitDecline()}>
                                                 Từ chối
                                             </Button>
-                                            <Button variant="primary" onClick={(e) => toggleRouteInspectModal({})}>
+                                            <Button variant="primary" onClick={(e) => submitApprove()}>
                                                 Phê duyệt
                                             </Button>
                                         </Modal.Footer>
                                     </Modal>
                                     <Modal show={sectionPreviewModal} onHide={() => toggleSectionPreviewModal()} dialogClassName="modal-90w" size="lg">
                                         <Modal.Body>
-                                           <SectionPreview section={selectedSection}></SectionPreview>
+                                            <SectionPreview section={selectedSection} closeReview={closePreview}></SectionPreview>
                                         </Modal.Body>
                                         <Modal.Footer>
                                             <Button variant="secondary" onClick={() => toggleSectionPreviewModal()}>

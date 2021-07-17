@@ -186,12 +186,18 @@ class ThaoLuanPage extends Component {
     }
     createPost = async (values) => {
         var images = Array.from(values.fileImg);
+        console.log(images);
         var formData = new FormData();
         formData.set('title', values.title);
         formData.set('content', values.content);
-        images.forEach((value) => {
-            formData.append('images', value)
-        })
+        if (images.length > 0) {
+            images.forEach((value) => {
+                formData.append('images', value)
+            })
+        }
+        else {
+            formData.append('images', new Array());
+        }
         var response = await postApi.createPost(formData);
         console.log(response);
     }
@@ -202,8 +208,8 @@ class ThaoLuanPage extends Component {
     }
     render() {
         const renderHotPosts = this.state.hotPosts.map((post) =>
-        <Post key={post.id} post={post} />
-    )
+            <Post key={post.id} post={post} />
+        )
         const renderNewPost = this.state.newPosts.map((post) =>
             <Post key={post.id} post={post} />
         )

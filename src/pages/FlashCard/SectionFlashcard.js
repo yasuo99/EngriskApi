@@ -1,22 +1,23 @@
-import { FlashcardComponent } from "react-flashcard";
-import { Prompt, Redirect, useParams } from "react-router";
-import HeaderClient from "../../components/client/HeaderClient";
-import SubMenuClient from "../../components/client/SubMenuClient";
-import { Modal, ProgressBar } from "react-bootstrap";
+import { useParams } from "react-router";
+import { ProgressBar } from "react-bootstrap";
 import WrongAnswer from "../../components/questionresult/WrongAnswer";
 import RightAnswer from "../../components/questionresult/RightAnswer";
-import LearningNav from "../../components/nav/LearningNav";
 import { useEffect, useState } from "react";
-import sectionApiV2 from "../../api/2.0/sectionApi";
-import { Fragment } from "react";
-import { NavPrompt, useNavPrompt } from "react-router-nav-prompt";
 import NormalQuestion from "../../components/typequestion/NormalQuestion";
 import { connection } from "../../signalR/createSignalRConnection";
 import { HubConnectionState } from "@microsoft/signalr";
 import { useDispatch, useSelector } from "react-redux";
 import { FinishUp } from "../../actions/sectionActions";
 import Loader from 'react-loader-spinner';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { ScriptTypes } from "../../constants/ScriptTypes";
+import routeApi from "../../api/2.0/routeApi";
+import TheoryScreen from "./TheoryScreen";
+import StartPhaseScreen from "./StartPhaseScreen";
+import ReactPlayer from "react-player";
+import { AudioPlayer } from "../../components/utils/AudioPlayer";
+import { Button, Modal} from "react-bootstrap";
+import sectionApiV2 from '../../api/2.0/sectionApi';
 const cardData = [
   {
     front: {
@@ -29,7 +30,7 @@ const cardData = [
   },
 ];
 const SectionFlashcard = () => {
-  const { account } = useSelector(state => state.auth)
+  const { account, isLoggedIn } = useSelector(state => state.auth)
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [currentScript, setCurrentScript] = useState({
@@ -49,29 +50,79 @@ const SectionFlashcard = () => {
   const [currentQuestion, setCurrentQuestion] = useState({
     answers: [],
   });
-  const [isQuestionScreen, setIsQuestionScreen] = useState(false)
+
   const [isLastQuestion, setIsLastQuestion] = useState(true);
-  let { sectionId } = useParams();
+  const { route } = useSelector(state => state.route);
+  const { type } = useParams();
+  let { sectionId, scriptId, routeId } = useParams();
+  const [theory, setTheory] = useState('');
+  const [questions, setQuestions] = useState([
+
+  ])
+  const history = useHistory();
+  const [words, setWords] = useState([])
+  const [isStartPhaseScreen, setIsStartPhaseScreen] = useState(false); //Screen check
+  const [isTheoryScreen, setIsTheoryScreen] = useState(false); //Screen check
+  const [isVocabularyScreen, setIsVocabularyScreen] = useState(false); //Screen check
+  const [isQuestionScreen, setIsQuestionScreen] = useState(false) //Screen check
+  const [isQuestionLoop, setIsQuestionLoop] = useState(false);
+  const [modalExit,setModalExit] = useState(false);
   useEffect(async () => {
-    const result = await sectionApiV2.start(sectionId);
-    console.log(result);
-    if (result.scripts.length > 0) {
+    async function fetchData() {
+      const result = await routeApi.routeLearn(routeId, sectionId, scriptId);
       setBusy(false);
-      setData(result.scripts);
+      console.log(result);
+      setIsStartPhaseScreen(true);
+      setCurrentScript(result);
+      // if (result.scripts.length > 0) {
+      //   setBusy(false);
+      //   setData(result.scripts);
 
-      setCurrentWord(result.scripts[scriptIndex].words[wordIndex]);
-      setCurrentQuestion(result.scripts[scriptIndex].questions[questionIndex]);
-      setCurrentScript(result.scripts[scriptIndex]);
+      setCurrentWord(result.words[wordIndex]);
+      setCurrentQuestion(result.questions[questionIndex]);
     }
-  }, [setData]);
+    fetchData();
+    if (isLoggedIn) {
+      if (connection.state == HubConnectionState.Disconnected) {
+        connection.start();
+      }
+    }
 
+    //   setCurrentScript(result.scripts[scriptIndex]);
+    // }
+  }, [setData]);
+  function start() {
+    setIsStartPhaseScreen(false);
+    setWords(currentScript.words);
+    setQuestions(currentScript.questions);
+    if (currentScript.theory) {
+      setIsTheoryScreen(true);
+      setTheory(currentScript.theory)
+    } else {
+      if (currentScript.words.length > 0) {
+        setIsVocabularyScreen(true);
+
+      } else {
+        if (currentScript.questions.length > 0) {
+          setIsQuestionScreen(true);
+
+        } else {
+          finishScript();
+        }
+
+      }
+    }
+  }
   useEffect(() => {
     if (!isBusy) {
-      console.log("cái con cặc gì vậy ?");
-      console.log(data);
-      setCurrentScript(data[scriptIndex]);
+      if (remainQuestions.length = 0) {
+        setIsStartPhaseScreen(true);
+        setIsQuestionScreen(false);
+        setIsVocabularyScreen(false);
+        setIsTheoryScreen(false);
+      }
     }
-  }, [scriptIndex]);
+  }, [currentScript]);
   useEffect(() => {
     if (!isBusy) {
       console.log("?", currentScript);
@@ -91,6 +142,38 @@ const SectionFlashcard = () => {
       connection.start();
     }
   }, [connection])
+  function vocabularyIndexChange() {
+    if (wordIndex < currentScript.words.length - 1) {
+      setWordIndex(wordIndex + 1);
+    } else {
+      if (currentScript.questions.length > 0) {
+        console.log('cc');
+        setIsQuestionScreen(true)
+        setIsVocabularyScreen(false);
+      }
+      else {
+        console.log('clm');
+        finishScript()
+      }
+    }
+  }
+  function questionIndexChange() {
+    if (questionIndex < currentScript.questions.length - 1) {
+      setQuestionIndex(questionIndex + 1)
+    } else {
+      if (remainQuestions.length > 0) {
+        setCurrentScript({
+          ...currentScript,
+          questions: [...remainQuestions]
+        })
+        setIsQuestionLoop(true);
+        setQuestionIndex(0);
+        setIsLastQuestion(true);
+      } else {
+        finishScript();
+      }
+    }
+  }
   function indexChange() {
     const currentStep = step;
     setStep(currentStep + 1);
@@ -100,6 +183,7 @@ const SectionFlashcard = () => {
     } else {
       if (currentScript.questions.length > 0) {
         setVocabularyScreen(false);
+        setIsQuestionScreen(true);
       } else {
         console.log('dkm');
       }
@@ -110,43 +194,16 @@ const SectionFlashcard = () => {
     }
     console.log(currentStep);
     if (currentStep == currentScript.words.length + currentScript.questions.length - 1) {
-      console.log("cl");
-      if (data[scriptIndex + 1] != undefined) {
-        setQuestionIndex(0);
-        setWordIndex(0);
+      if (remainQuestions.length > 0) {
         setStep(0);
-        setScriptIndex(scriptIndex + 1);
-        if (data[scriptIndex + 1]?.words.length > 0) {
-          setVocabularyScreen(true);
-        }
+        setQuestionIndex(0);
+        setQuestions([...data, {
+          words: [],
+          questions: remainQuestions
+        }])
       } else {
-        console.log('test');
-        if (remainQuestions.length > 0) {
-          setStep(0);
-          setQuestionIndex(0);
-          setData([...data, {
-            words: [],
-            questions: remainQuestions
-          }])
-          setScriptIndex(scriptIndex + 1);
-        } else {
-          if (connection.state == HubConnectionState.Connected) {
-            connection.on("SectionProgress", (data) => {
-              const result = JSON.parse(data);
-              dispatch(FinishUp(result))
-            })
-            const data = {
-              sectionId: sectionId,
-              accountId: account.id
-            }
-            connection.send("SectionDone", data);
-          }
-          setIsFinish(true);
-        }
-
+        finishScript();
       }
-    } else {
-      console.log('?');
     }
   }
   function Check(bool) {
@@ -169,6 +226,57 @@ const SectionFlashcard = () => {
     console.log(...remainQuestions.filter(q => q !== question));
     setRemainQuestions([...remainQuestions.filter(q => q !== question)])
   }
+  function finishScript() {
+    if (isLoggedIn) {
+      if (connection.state == HubConnectionState.Connected) {
+
+        connection.on("SectionProgress", (data) => {
+          const result = JSON.parse(data);
+          dispatch(FinishUp(result))
+          setIsFinish(true);
+        })
+        connection.on("NextScript", (data) => {
+          const result = JSON.parse(data);
+          console.log(result);
+          setCurrentScript(result);
+          setWordIndex(0);
+          setQuestionIndex(0);
+          history.push(`/routes/${routeId}/sections/${sectionId}/scripts/${result.id}`)
+        })
+        const data = {
+          sectionId: sectionId,
+          accountId: account.id,
+          scriptId: scriptId
+        }
+        console.log(data);
+        connection.send("ScriptDone", data);
+      }
+    }
+    else {
+      console.log('finish');
+      setIsFinish(true);
+    }
+  }
+
+  function next() {
+    setIsTheoryScreen(false);
+    if (currentScript.words.length > 0) {
+      setCurrentWord(currentScript.words[wordIndex])
+      setIsVocabularyScreen(true);
+    } else {
+      if (currentScript.questions.length > 0) {
+        setIsQuestionScreen(true);
+        setQuestions(currentScript.questions);
+      }
+      else {
+        console.log('cc');
+        finishScript();
+      }
+    }
+  }
+
+  console.log(currentWord);
+  console.log(currentQuestion);
   return (
     <div>
       {!isBusy ? (
@@ -176,56 +284,36 @@ const SectionFlashcard = () => {
           <div id="content-wrapper" className="d-flex flex-column">
             <div id="content" style={{ overflow: "auto", height: "100vh" }}>
               <main id="scroll">
-                <div className="mt-2">
-                  <div className="row">
-                    <div className="offset-md-11 col-1">
-                      <Link className="btn btn-light rounded-circle" to="/home">
-                        <i className="fa fa-remove"></i>
-                      </Link>
-                    </div>
+                <div className="mt-2 container">
+                  <div className='d-flex justify-content-start'>
+                    {!isStartPhaseScreen && <ProgressBar
+                      variant={isQuestionLoop ? 'danger' : 'primary'}
+                      className="mt-3 w-75"
+                      now={wordIndex + questionIndex}
+                      max={
+                        currentScript.words.length + currentScript.questions.length - 1
+                      }
+                    ></ProgressBar>}
+
+
+                  </div>
+                  <div className='d-flex justify-content-end'>
+                    <Link className="btn btn-light rounded-circle" to={`${isFinish ? `/home` : '#'}`} onClick={() => setModalExit(!modalExit)}>
+                      <i className="fa fa-remove"></i>
+                    </Link>
                   </div>
                 </div>
                 <div className="container learning-layout">
-                  <ProgressBar
-                    variant="primary"
-                    className="mt-3 w-75"
-                    now={scriptIndex}
-                    max={
-                      data.length
-                    }
-                  ></ProgressBar>
-                  {vocabularyScreen ? (
-                    <div>
-                      <div className="mt-4">
-                        <h5>{currentWord.flashcardTitle}</h5>
-                        <img
-                          className="img-fluid rounded mx-auto d-block ex-img fluid-content-item"
-                          src="https://cdn.busuu.com/media/resized/entity/1440/company_1528111874_1440.jpg"
-                        ></img>
-                        <h4 className="">
-                          {currentWord.eng}
-                          <img src="/image/sound.png" className="sound"></img>
-                        </h4>
-                        <h4 className="">{currentWord.vie}</h4>
-                        <hr className="d-flex justify-content-center w-75"></hr>
-                        <div className="mt-2 example">
-                          <h5>Ví dụ</h5>
-                          Vd1: We are going to Camping
-                          <img src="/image/sound.png" className="sound"></img>
-                          <br></br>
-                          Vd2: We should camping here
-                        </div>
-                      </div>
 
-                    </div>
+                  {/* {
                   ) : (
                     <NormalQuestion question={currentQuestion} addRemainQuestion={AddRemainQuestion} removeRemainQuestion={RemoveRemainQuestion} check={Check} answerCheck={SelectAnswer} isLastQuestion={isLastQuestion} />
-                  )}
+                  )} */}
                   {/* 
                   {data[0].questions.length > 0 && (
                     <NormalQuestion question={data[0].questions[index]} />
                   )} */}
-                  {!isQuestionScreen && <div className="container">
+                  {/* {!isQuestionScreen && <div className="container">
                     <div className="drawer-content">
                       <div className="page-wrap">
                         {!isFinish ? <button
@@ -245,9 +333,62 @@ const SectionFlashcard = () => {
                         </Link>}
 
                       </div></div>
-                  </div>}
-                  {answerCheck === 1 && <RightAnswer indexChange={indexChange} isFinish={isFinish} sectionId={sectionId} />}
-                  {answerCheck === 0 && <WrongAnswer indexChange={indexChange} />}
+                  </div>} */}
+
+                  {isStartPhaseScreen && <StartPhaseScreen type={currentScript.type} start={start}></StartPhaseScreen>}
+                  {isTheoryScreen && <TheoryScreen theory={theory} next={next} isFinish={isFinish} sectionId={sectionId} scriptId={scriptId}></TheoryScreen>}
+                  {isVocabularyScreen &&
+                    <div>
+                      <div className="mt-4">
+                        <h5>{currentWord.flashcardTitle}</h5>
+                        <img
+                          className="vocabulary-box-img img-fluid rounded mx-auto d-block ex-img fluid-content-item w-75"
+                          src={currentWord.wordImg || 'https://cdn.busuu.com/media/resized/entity/1440/company_1528111874_1440.jpg'}
+                        ></img>
+                        <h4 className="">
+                          {currentWord.eng}
+                          <span>{currentWord.wordVoice && <div className='d-flex justify-content-center'><AudioPlayer src={currentWord.wordVoice}></AudioPlayer></div>}</span>
+                        </h4>
+                        <h4 className="">{currentWord.vie}</h4>
+                        <hr className="d-flex justify-content-center w-75"></hr>
+                        <div className="mt-2 example">
+                          <h5>Ví dụ</h5>
+                          Vd1: ............................
+                          <img src="/image/sound.png" className="sound"></img>
+                          <br></br>
+                          Vd2: ............................
+                        </div>
+                      </div>
+                      <div className="container">
+                        <div className="drawer-content">
+                          <div className="page-wrap">
+                            {!isFinish ? <button
+                              className="feedback-bar-btn"
+                              onClick={() => {
+                                {
+                                  vocabularyIndexChange();
+                                }
+                              }}
+                            >
+                              Kế tiếp
+                            </button> : isLoggedIn ? <Link
+                              className="btn feedback-bar-btn"
+                              to={`/sections/${sectionId}/finish`}
+                            >
+                              Kết thúc
+                            </Link> : <Link
+                              className="btn feedback-bar-btn"
+                              to='/home'
+                            >
+                              Kết thúc
+                            </Link>}
+
+                          </div></div>
+                      </div>
+                    </div>}
+                  {isQuestionScreen && <NormalQuestion question={currentQuestion} addRemainQuestion={AddRemainQuestion} removeRemainQuestion={RemoveRemainQuestion} check={Check} answerCheck={SelectAnswer} isLastQuestion={isLastQuestion} />}
+                  {answerCheck === 1 && <RightAnswer indexChange={questionIndexChange} isFinish={isFinish} sectionId={sectionId} />}
+                  {answerCheck === 0 && <WrongAnswer indexChange={questionIndexChange} />}
                 </div>
               </main>
             </div>
@@ -278,6 +419,20 @@ const SectionFlashcard = () => {
         </div>
       </div>
       }
+      <Modal show={modalExit} animation onHide={() => setModalExit(!modalExit)} centered size="lg">
+        <Modal.Body>
+          <p>
+            Bạn có chắc muốn thoát
+            <br />
+            Quá trình có thể sẽ không được lưu lại
+          </p>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setModalExit(!modalExit)}>Hủy</Button>
+          <Link className='btn btn-primary' to={'/home'}>Xác nhận</Link>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -111,6 +111,13 @@ const accountApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url, { headers })
+    },
+    getLearningHistory: async (id, params) => {
+        const url = `/accounts/${id}/learning/history`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url,{params})
     }
 }
 export default accountApiV2;

@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const RightAnswer = ({ indexChange, isFinish, sectionId }) => {
+  const {isLoggedIn} = useSelector(state => state.auth);
   return (
     <div className="container">
       <div className="drawer-content checked">
@@ -19,12 +21,13 @@ const RightAnswer = ({ indexChange, isFinish, sectionId }) => {
             }
           }}>
             Kế tiếp
-          </button> : (sectionId ? <Link
+          </button> : (sectionId ? isLoggedIn ?  <Link
             className="btn feedback-bar-btn"
             to={`/sections/${sectionId}/finish`}
           >
             Kết thúc
-          </Link> : <Link
+          </Link> : <Link className="btn feedback-bar-btn"
+            to={`/home`}>Kết thúc</Link> : <Link
             className="btn feedback-bar-btn"
             to={`/vocabulary/progress`}
           >

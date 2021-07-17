@@ -29,7 +29,6 @@ class ThaoLuanChiTietPage extends Component {
         this.isComponentMounted = true;
         const { match: { match: { params } } } = this.props;
         const post = await this.fetchPostDetail(params.postId);
-
         if (this.isComponentMounted) {
             if (this.props.isLoggedIn) {
                 if (connection.state == HubConnectionState.Disconnected) {

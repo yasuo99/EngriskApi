@@ -1,4 +1,5 @@
-import React, { Component } from "react"
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FormSearchAdmin from "./FormSearchAdmin";
 import TaiKhoanAdmin from "./TaiKhoanAdmin";
 import ThongBaoAdmin from "./ThongBaoAdmin";
@@ -6,46 +7,50 @@ import { connect } from "react-redux";
 import { connection } from "../../signalR/createSignalRConnection";
 import { HubConnectionState } from "@microsoft/signalr";
 import { appendScript } from "../../config/appendScript";
+import { useJwt } from "react-jwt";
+const HeaderAdmin = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const account = useSelector(state => state.auth.account)
+  const token = localStorage.getItem('token');
+  const [routeSideNav, setRouteSideNav] = useState(false);
+  const { isExpired } = useJwt(token);
 
-class HeaderAdmin extends Component {
-  constructor(props) {
-    super(props)
-    this.mounted = false
-  }
-  componentDidMount() {
-    this.mounted = true;
-    if (this.mounted) {
-      if (this.props.isLoggedIn) {
-        if (connection.state == HubConnectionState.Disconnected) {
-          connection.start();
-        }
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (connection.state == HubConnectionState.Disconnected) {
+        connection.start();
       }
     }
-  }
-  render() {
-    return (
-      <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-        <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
-          <i className="fa fa-bars" />
-        </button>
-        {/* <FormSearchAdmin></FormSearchAdmin> */}
-        <ul className="navbar-nav ml-auto">
-          <ThongBaoAdmin></ThongBaoAdmin>
-          <div className="topbar-divider d-none d-sm-block" />
-          <TaiKhoanAdmin account={this.props.account}></TaiKhoanAdmin>
-        </ul>
-      </nav>
-    )
-  }
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+
+  }, [connection])
+  useEffect(() => {
+    if (isExpired) {
+      localStorage.removeItem('account');
+      localStorage.removeItem('token');
+      dispatch({ type: "TOKEN_EXPIRED" });
+    }
+  }, [isExpired]);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      localStorage.removeItem('account');
+      localStorage.removeItem('token');
+      dispatch({ type: "TIME_OUT" });
+    }
+  }, [isLoggedIn])
+  return (
+    <nav id="nav" className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow sticky-top">
+      <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
+        <i className="fa fa-bars" />
+      </button>
+      {/* <FormSearchAdmin></FormSearchAdmin> */}
+      <ul className="navbar-nav ml-auto">
+        <ThongBaoAdmin></ThongBaoAdmin>
+        <div className="topbar-divider d-none d-sm-block" />
+        <TaiKhoanAdmin account={account}></TaiKhoanAdmin>
+      </ul>
+    </nav>
+  )
+
 }
-const mapStateToProps = (state) => {
-  const { isLoggedIn, account } = state.auth;
-  return {
-    account: account,
-    isLoggedIn: isLoggedIn
-  }
-}
-export default connect(mapStateToProps)(HeaderAdmin);
+export default HeaderAdmin;

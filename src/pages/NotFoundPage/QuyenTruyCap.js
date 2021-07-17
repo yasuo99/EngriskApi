@@ -40,7 +40,6 @@ class QuyenTruyCap extends Component {
                                 </div>
                             </div>
                         </main>
-                        <Footer></Footer>
                     </div>
                 </div>
 

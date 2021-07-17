@@ -6,6 +6,9 @@ import ConnectionQuestion from "../question/ConnectionQuestion";
 import ConversationQuestion from "../question/ConversationQuestion";
 import FilloutQuestion from "../question/FilloutQuestion";
 import BasicQuestion from "../question/BasicQuestion"
+import { QuestionTypes } from "../../constants/QuestionTypes";
+import SelectQuestion from "../question/SelectQuestion";
+import WritingQuestion from "../question/WritingQuestion";
 const NormalQuestion = ({ question, check, answerCheck, addRemainQuestion, removeRemainQuestion, isLastQuestion }) => {
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
@@ -66,26 +69,29 @@ const NormalQuestion = ({ question, check, answerCheck, addRemainQuestion, remov
     }
     return 'd-flex flex-column'
   }
-  function ResetQuestion(){
+  function ResetQuestion() {
     setChecked(false)
     setSelected(null);
     setResult(null);
     answerCheck(-1)
   }
   function RenderQuestion() {
-    if (question.isConversationQuestion) {
-      return (<ConversationQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}/>)
+    switch (question.type) {
+      case QuestionTypes.Arrange:
+        return (<ArrangeQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion} />)
+      case QuestionTypes.Connection:
+        return <ConnectionQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion} />
+      case QuestionTypes.Conversation:
+        return (<ConversationQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion} />)
+      case QuestionTypes.FillOut:
+        return (<FilloutQuestion question={question} checked={checked} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion} />)
+      case QuestionTypes.Select:
+        return(<SelectQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}></SelectQuestion>)
+      case QuestionTypes.Writing:
+        return (<WritingQuestion question={question}></WritingQuestion>)
+        default:
+        return <BasicQuestion question={question} switchAnswerDisplay={SwitchAnswerDisplay} checkAnswer={CheckAnswer} renderAnswerClass={RenderAnswerClass} checked={checked} isLastQuestion={isLastQuestion} reset={ResetQuestion} />
     }
-    if (question.isFillOutQuestion) {
-      return (<FilloutQuestion question={question} checked={checked} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}/>)
-    }
-    if (question.isArrangeQuestion) {
-      return (<ArrangeQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}/>)
-    }
-    if (question.isConnectionQuestion) {
-      return <ConnectionQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}/>
-    }
-    return <BasicQuestion question={question} switchAnswerDisplay={SwitchAnswerDisplay} checkAnswer={CheckAnswer} renderAnswerClass={RenderAnswerClass} checked={checked} isLastQuestion={isLastQuestion} reset={ResetQuestion}/>
   }
   return (
     <div>

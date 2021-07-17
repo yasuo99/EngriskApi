@@ -1,13 +1,42 @@
 import axiosClientv2 from "../../config/axiosClientv2";
 
 const examApiv2 = {
-    create: async (data, side) => {
+    getAll: async (params) => {
+        const url = `/exams`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, {params, headers });
+    },
+    getManage: async () => {
+        const url = `/exams/all`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, {headers });
+    },
+    get: async (id) => {
+        const url = `/exams/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers });
+    },
+    create: async (body, side) => {
         const url = side ? "/exams" : `/exams/user/${JSON.parse(localStorage.getItem('account')).id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.post(url, data, { headers });
+        return await axiosClientv2.post(url, body, { headers });
     },
+    edit: async (id,body) => {
+        const url = `/exams/${id}`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,body, { headers });
+    },
+
     doExam: async (id) => {
         const url = `/exams/${id}/do`;
         const headers = {

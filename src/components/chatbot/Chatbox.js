@@ -69,9 +69,9 @@ export class Chatbox extends Component {
                         }
                         return true;
                     }
-                },{
+                }, {
                     id: 'server-response-2',
-                    component: <Translation/>,
+                    component: <Translation />,
                     waitAction: true,
                     trigger: 'translate-response'
                 }
@@ -84,14 +84,18 @@ export class Chatbox extends Component {
                 }
             ]
         }
+        this.isComponentMounted = false;
+    }
+    componentDidMount() {
+        this.isComponentMounted = true;
     }
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <ChatBot
+                {this.isComponentMounted && <ChatBot
                     steps={this.state.steps}
                     {...config}
-                />
+                />}
             </ThemeProvider>
         )
     }

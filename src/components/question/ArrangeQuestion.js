@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
+import parse from 'html-react-parser'
 const ArrangeQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing }) => {
     const [splitted, setSplitted] = useState([])
     const [arrange, setArrange] = useState([])
+    console.log(question);
     useEffect(() => {
         console.log('?');
         if (question.content.trim().includes(" ")) {
@@ -38,11 +40,16 @@ const ArrangeQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing })
             console.log('Hết rồi');
             if (question.content.trim().includes(" ")) {
                 const answer = arrange.toString().replace(/,/gi, ' ') //Đáp án sau khi được nối lại
-                checkAnswer(answer)
+                if (!isReviewing) {
+                    checkAnswer(answer)
+                }
+
             }
             else {
                 const answer = arrange.toString().replace(/,/gi, '') //Đáp án sau khi được nối lại
-                checkAnswer(answer)
+                if (!isReviewing) {
+                    checkAnswer(answer)
+                }
             }
         }
     }
@@ -55,15 +62,15 @@ const ArrangeQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing })
     console.log(splitted);
     return (
         <div className='container'>
-            <h3>Chọn các từ theo đúng thứ tự</h3>
+            <div>{parse(question.preQuestion || 'Sắp xếp theo đúng thứ tự')}</div>
             <div className='border rounded arrange-box mt-2'>
                 {arrange.map((answer, index) =>
-                    <button disabled={splitted.length == 0} key={index} className='missing-box mr-4 mt-2 mb-2' onClick={() => reArrange(answer, index)}>{answer}</button>
+                    <button disabled={splitted.length == 0 && !isReviewing} key={index} className='missing-box mr-2 mt-2 mb-2' onClick={() => reArrange(answer, index)}>{answer}</button>
                 )}
             </div>
-            <div>
+            <div className='arrange-box'>
                 {splitted.map((split, index) =>
-                    <button disabled={isReviewing} key={index} className='missing-box mr-4 mt-2 mb-2' onClick={() => selectSplit(split, index)}>{split}</button>
+                    <button key={index} className='answer-card missing-box mr-2 mt-2 mb-2' onClick={() => selectSplit(split, index)}>{split}</button>
                 )}
             </div>
         </div>

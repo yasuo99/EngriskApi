@@ -26,9 +26,6 @@ import Exam from "./pages/Exam/Exam";
 import KetQuaExam from "./pages/HocPage/KetQuaExam";
 import QuyenTruyCap from "./pages/NotFoundPage/QuyenTruyCap";
 import ManagementInfor from "./pages/Admin/ManagementInfor";
-import ManagementDoc from "./pages/Admin/ManagementDoc";
-import ManagementQuestion from "./pages/Admin/ManagementQuestion";
-import ManagementPayment from "./pages/Admin/ManagementPayment";
 import ManagementQuiz from "./pages/Admin/ManagementQuiz";
 import ManagementExam from "./pages/Admin/ManagementExam";
 import ManagementAccount from "./pages/Admin/ManagementAccount";
@@ -79,6 +76,17 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import UserManagementRoutes from "./pages/Admin/User/UserManagementRoutes";
 import Word from "./components/managementwords/Word";
+import LearningHistory from "./pages/HistoryPage/LearningHistory";
+import { ScriptTypes } from "./constants/ScriptTypes";
+import CreateQuestion from "./components/question/CreateQuestion";
+import QuestionCreate from "./components/question/QuestionCreate";
+import ManagementQuestion from './pages/Admin/ManagementQuestion';
+import ExamCreate from "./pages/Exam/ExamCreate";
+import QuizCreate from "./pages/Quiz/QuizCreate";
+import NewExamPage from "./pages/Exam/NewExamPage";
+import ManagementcategoryTag from "./pages/Admin/ManagementCategoryTag";
+import ManagementPost from "./pages/Admin/ManagementPost";
+import ManagementCertificate from "./pages/Admin/ManagementCertificate";
 const routes = [
   {
     path: "/splash",
@@ -88,13 +96,43 @@ const routes = [
     roles: [],
   },
   {
+    path: "/test",
+    exact: true,
+    main: () => <NewExamPage />,
+    guard: false,
+    roles: [],
+  },
+  {
+    path: "/admin/quan-ly-exam/:examId/cai-dat",
+    exact: true,
+    main: () => <ExamCreate/>,
+    guard: true,
+    roles: ["superadmin", "manager"],
+  },
+  {
+    path: "/admin/quan-ly-quiz/:quizId/cai-dat",
+    exact: true,
+    main: () => <QuizCreate/>,
+    guard: true,
+    roles: ["superadmin", "manager"],
+  },
+  {
+    path: "/admin/quan-ly-exam/them",
+    exact: true,
+    main: () => <ExamCreate/>,
+    guard: true,
+    roles: ["superadmin", "manager"],
+  },
+  {
     path: "/chat",
     exact: true,
     main: () => <Chatbox />,
     guard: false,
     roles: [],
-  }, {
-    path: '/sections/:sectionId/vocabulary',
+  },
+  //Route cho phần học với script
+  {
+    path: `/routes/:routeId/sections/:sectionId/scripts/:scriptId`,
     exact: true,
     main: () => <SectionFlashcard />,
     guard: false,
@@ -106,10 +144,18 @@ const routes = [
     guard: true,
     roles: []
   },
+
   {
     path: "/home",
     exact: true,
     main: () => <HomePage />,
+    guard: false,
+    roles: [],
+  },
+  {
+    path: "/cau-hoi",
+    exact: true,
+    main: () => <CreateQuestion />,
     guard: false,
     roles: [],
   },
@@ -403,9 +449,16 @@ const routes = [
     roles: [],
   },
   {
-    path: "/nguoi-dung/:accountId/quan-ly-quiz-exam/",
+    path: "/nguoi-dung/:accountId/quan-ly-quiz-exam",
     exact: true,
     main: (match) => <QuizExamPage match={match} />,
+    guard: true,
+    roles: ["learner"],
+  },
+  {
+    path: "/nguoi-dung/:accountId/lich-su-hoc",
+    exact: true,
+    main: (match) => <LearningHistory />,
     guard: true,
     roles: ["learner"],
   },
@@ -441,6 +494,27 @@ const routes = [
     path: "/tuvung",
     exact: true,
     main: () => <Word />,
+    // guard: true,
+    // roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-tag",
+    exact: true,
+    main: () => <ManagementcategoryTag />,
+    // guard: true,
+    // roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-chung-chi",
+    exact: true,
+    main: () => <ManagementCertificate />,
+    // guard: true,
+    // roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-bai-viet",
+    exact: true,
+    main: () => <ManagementPost />,
     // guard: true,
     // roles: ["superadmin", "manager"]
   },

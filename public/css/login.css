@@ -50,7 +50,6 @@ a.text-primary:hover{color: #0a428f}
   display: flex;
   flex-wrap: wrap;
 }
-.btn-danger{padding: 3px 10px; }
 .card-body h6{color: #123064;}
 .card-body p{font-size: 16px;}
 /* ---------------------------search------------------- */

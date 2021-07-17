@@ -1,13 +1,17 @@
 import React, { useEffect } from "react"
 import { useState } from "react"
+import parse from 'html-react-parser'
 const temp = [1, 2, 3, 4, 5, 6]
 const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing }) => {
     const [conversation, setConversation] = useState([])
 
     function getHiddenText(text) {
-        var firstIndex = text.indexOf('<p>')
-        var secondIndex = text.indexOf('</p>')
-        return text.substring(firstIndex, secondIndex).replace(/(<([^>]+)>)/gi, "")
+        if (text) {
+            var firstIndex = text.indexOf('<p>')
+            var secondIndex = text.indexOf('</p>')
+            return text.substring(firstIndex, secondIndex).replace(/(<([^>]+)>)/gi, "")
+        }
+
     }
     const [missingBoxes, setMissingBoxes] = useState([]);
     function generateLines() {
@@ -29,6 +33,7 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
             i += 2;
             lines.push(line)
         }
+        console.log(lines);
         setConversation(lines);
         const hidden = []
         for (var i = 0; i < lines.length; i++) {
@@ -54,43 +59,56 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
     }, [isLastQuestion])
     console.log(missingBoxes);
     function removeFirstBox(index) {
-        const missingboxData = conversation[index].firstAnswer;
-        conversation[index].firstAnswer = ''
-        setMissingBoxes([...missingBoxes, missingboxData])
+
+        if (conversation[index].firstAnswer != '') {
+            const missingboxData = conversation[index].firstAnswer;
+            conversation[index].firstAnswer = ''
+            setMissingBoxes([...missingBoxes, missingboxData])
+        }
+
+
     }
     function removeSecondBox(index) {
-        const missingboxData = conversation[index].secondAnswer;
-        conversation[index].secondAnswer = ''
-        setMissingBoxes([...missingBoxes, missingboxData])
+        if (conversation[index].secondAnswer != '') {
+            const missingboxData = conversation[index].secondAnswer;
+            conversation[index].secondAnswer = ''
+            setMissingBoxes([...missingBoxes, missingboxData])
+        }
     }
     function renderFirstLine(line, index) {
-        var firstIndex = line.indexOf('<p>')
-        var secondIndex = line.indexOf('</p>')
-        var firstSubStr = line.substring(0, firstIndex);
-        var secondSubStr = line.substring(secondIndex + 4, line.length);
-        if (firstIndex != -1) {
-            const div = React.createElement('div', {key: index + 1}, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 3 }), firstSubStr, React.createElement('span', { className: 'missing-box text-dark', onClick: () => removeFirstBox(index), key: index + 5 }, [conversation[index].firstAnswer ? conversation[index].firstAnswer : ''])], secondSubStr);
-            return (div)
+        if (line) {
+            var firstIndex = line.indexOf('<p>')
+            var secondIndex = line.indexOf('</p>')
+            var firstSubStr = line.substring(0, firstIndex);
+            var secondSubStr = line.substring(secondIndex + 4, line.length);
+            if (firstIndex != -1) {
+                const div = React.createElement('div', { key: index + 1 }, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar mr-1', key: index + 3 }), firstSubStr, React.createElement('button', { className: 'missing-box text-dark', onClick: () => removeFirstBox(index), key: index + 5, disabled: missingBoxes.length == 0 }, [conversation[index].firstAnswer ? conversation[index].firstAnswer : ''])], secondSubStr);
+                return (div)
+            }
+            else {
+                const div = React.createElement('div', { key: index + 1, className: line.includes('<hidden></hidden>') ? 'hidden' : ''  }, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 3 }), line]);
+                return (div)
+            }
         }
-        else {
-            const div = React.createElement('div', {key:index + 1}, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key:index + 3 }), line]);
-            return (div)
-        }
+
 
     }
     function renderSecondLine(line, index) {
-        var firstIndex = line.indexOf('<p>')
-        var secondIndex = line.indexOf('</p>')
-        var firstSubStr = line.substring(0, firstIndex);
-        var secondSubStr = line.substring(secondIndex + 4, line.length);
-        if (firstIndex != -1) {
-            const div = React.createElement('div', {key:index + 2}, [firstSubStr, React.createElement('span', { className: 'missing-box text-dark', onClick: () => removeSecondBox(index), key:index + 4 }, [conversation[index].secondAnswer ? conversation[index].secondAnswer : ''])], secondSubStr, React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key:index + 6 }));
-            return (div)
+        if (line) {
+            var firstIndex = line.indexOf('<p>')
+            var secondIndex = line.indexOf('</p>')
+            var firstSubStr = line.substring(0, firstIndex);
+            var secondSubStr = line.substring(secondIndex + 4, line.length);
+            if (firstIndex != -1) {
+                const div = React.createElement('div', { key: index + 2 }, [firstSubStr, React.createElement('button', { className: 'missing-box text-dark', onClick: () => removeSecondBox(index), key: index + 4, disabled: missingBoxes.length == 0 }, [conversation[index].secondAnswer ? conversation[index].secondAnswer : ''])], secondSubStr, React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 6 }));
+                return (div)
+            }
+            else {
+                const div = React.createElement('div', { key: index + 2, className: line.includes('<hidden></hidden>') ? 'hidden' : '' }, [line, React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar ml-1', key: index + 4 })]);
+                return (div)
+            }
         }
-        else {
-            const div = React.createElement('div', {key:index + 2}, [line, React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 4 })]);
-            return (div)
-        }
+
 
     }
     function selectMissingBox(value, index) {
@@ -117,14 +135,19 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
 
             })
             console.log(answer);
-            checkAnswer(answer)
+            if (!isReviewing) {
+                checkAnswer(answer)
+            }
+
         }
         setConversation([...conversation])
         console.log(conversation);
     }
     return (
         <div className='container'>
-            <h2>Điền vào chỗ trống của đoạn hội thoại</h2>
+             <div className='container'>
+             <div>{parse(question.preQuestion || 'Điền vào đoạn hội thoại')}</div>
+             </div>
             {conversation.map((script, index) =>
                 <div className='container mt-4 text-dark' key={index}>
                     <div className='d-flex justify-content-start'>
@@ -133,11 +156,11 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
                         <div>{renderSecondLine(script.second, index)}</div></div>
                 </div>
             )}
-            <div className='container hidden-box'>
-                <div className="drawer-content">
-                    <div className="page-wrap">
+            <div className='container hidden-box mt-2'>
+                <div className='border'>
+                    <div className="page-wrap d-flex justify-content-center">
                         {missingBoxes.map((value, index) =>
-                            <button disabled={isReviewing} key={index} onClick={() => selectMissingBox(value, index)} className='missing-box mr-4 mt-2 mb-2'>
+                            <button key={index} onClick={() => selectMissingBox(value, index)} className='missing-box mr-2 mt-2 mb-2'>
                                 {value}
                             </button>
                         )}

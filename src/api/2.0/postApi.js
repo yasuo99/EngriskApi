@@ -7,6 +7,13 @@ const postApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url,{headers})
+    },
+    getManage: async (params) => {
+        const url = `/posts/manage`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url,{params,headers})
     }
 }
 export default postApiV2;

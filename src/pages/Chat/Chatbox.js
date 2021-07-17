@@ -50,12 +50,17 @@ export const Chatbox = () => {
     const [modalInfo, setModalInfo] = useState(false);
     const [multipleSelections, setMultipleSelections] = useState([])
     const dispatch = useDispatch();
+    const [isBusy, setIsBusy] = useState(true);
     const { unseenMessages } = useSelector(state => state.auth);
     latestBoxchat.current = boxchat;
     latestChat.current = messages;
-    useEffect(async () => {
-        const result = await accountApiV2.getUserBoxchats(account.id);
-        setBoxchats(result)
+    useEffect(() => {
+        async function fetchBoxchats() {
+            const result = await accountApiV2.getUserBoxchats(account.id);
+            setBoxchats(result)
+            setIsBusy(false);
+        }
+        fetchBoxchats()
     }, [setBoxchats])
 
     const sendMessage = (message) => {
@@ -161,7 +166,7 @@ export const Chatbox = () => {
                             <div id='chat-menu'>
                                 <div className="head">Giúp bạn trao đổi tốt hơn với các người dùng khác</div>
                             </div>
-                            <Carousel responsive={responsive}
+                            {!isBusy && <Carousel responsive={responsive}
                                 swipeable={true}
                                 containerClass="carousel-container"
                                 itemClass="carousel-item-padding-40-px ml-4"
@@ -171,7 +176,8 @@ export const Chatbox = () => {
                                         <img src="https://www.w3schools.com/howto/img_avatar.png" alt="" className='chat-avatar' /> <span className='text-danger badge-number'>{unseenMessages.filter(mes => mes.boxchatId == bc.id).length}</span>
                                     </div>
                                 )}
-                            </Carousel>
+                            </Carousel>}
+
                             <div className='chat-header d-flex justify-content-between'>
                                 <div>
                                     <h5 className='d-flex'>{boxchat.title}</h5>

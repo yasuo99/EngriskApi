@@ -1,6 +1,6 @@
 import SubMenu from "../../../components/admin/SubMenu";
 import HeaderAdmin from "../../../components/admin/HeaderAdmin";
-import { Button, Tabs, Tab, Table, Modal,OverlayTrigger, Popover } from "react-bootstrap";
+import { Button, Tabs, Tab, Table, Modal, OverlayTrigger, Popover } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import adminApi from "../../../api/2.0/adminApi";
 import Paginate from "../../../components/pagination/Paginate";
@@ -11,15 +11,18 @@ const ExampleManagement = () => {
         items: [],
         totalPages: 1
     });
-    useEffect(async () => {
-        const params = {
-            currentPage: examples.currentPage,
-            pageSize: examples.pageSize
+    useEffect(() => {
+        async function fetchData() {
+            const params = {
+                currentPage: examples.currentPage,
+                pageSize: examples.pageSize
+            }
+            const result = await adminApi.getWaitingCensorExamples(params);
+            setExamples(result);
         }
-        const result = await adminApi.getWaitingCensorExamples(params);
-        setExamples(result);
+        fetchData();
     }, [examples.currentPage, examples.pageSize])
-    function examplesPaginationChange(currentPage,pageSize){
+    function examplesPaginationChange(currentPage, pageSize) {
         setExamples({
             ...examples,
             currentPage: currentPage,

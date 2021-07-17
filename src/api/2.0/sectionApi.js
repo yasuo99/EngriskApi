@@ -8,6 +8,14 @@ const sectionApiV2 = {
         }
         return await axiosClientv2.get(url, { headers, params })
     },
+    getManage: async (params) => {
+        const url = `/sections/manage`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers, params })
+    }
+    ,
     start: async (id) => {
         const url = `/sections/${id}/vocabulary`;
         const headers = {
@@ -35,6 +43,27 @@ const sectionApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url, { headers })
+    },
+    delete: async (id) => {
+        const url = `/sections/${id}`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.delete(url, { headers })
+    },
+    getScriptEdit: async (id) => {
+        const url = `/sections/${id}/scripts/edit`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers })
+    },
+    editScripts: async (id, scripts) => {
+        const url = `/sections/${id}/scripts`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url, scripts, { headers })
     }
 }
 export default sectionApiV2;

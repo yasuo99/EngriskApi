@@ -2,7 +2,7 @@ const WrongAnswer = ({ indexChange}) => {
   return (
     <div className="container">
       <div className="drawer-content checked">
-        <div className="page-wrap">
+        <div className="page-wrap justify-content-between">
           <div className="ex-feedback-bar icon icon-primary-base fixed-bar">
             <span>
               <img className='w-75' src='/image/remove-lg.png'></img>

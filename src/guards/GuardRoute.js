@@ -2,8 +2,9 @@ import React from 'react'
 import { decodeToken, useJwt } from 'react-jwt';
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect, Route } from 'react-router-dom';
+import routes from '../routes';
 
-const GuardRoute = ({ path, exact, component, guard, roles }) => {
+const GuardRoute = ({ path, exact, Component, guard, roles }) => {
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const account = JSON.parse(localStorage.getItem('account'));
     if (guard) {
@@ -15,15 +16,59 @@ const GuardRoute = ({ path, exact, component, guard, roles }) => {
                 console.log(roles);
                 if (Array.isArray(decodedToken.role)) {
                     return decodedToken.role.some(el => roles.includes(el)) ? (
-                        <Route path={path} exact={exact} component={component} />
+                        <Route path={path} exact={exact} render={props => {
+                            const crumbs = routes
+                                // Get all routes that contain the current one.
+                                .filter(({ path }) => props.match.path.includes(path))
+                                // Swap out any dynamic routes with their param values.
+                                // E.g. "/pizza/:pizzaId" will become "/pizza/1"
+                                .map(({ path, ...rest }) => ({
+                                    path: Object.keys(props.match.params).length
+                                        ? Object.keys(props.match.params).reduce(
+                                            (path, param) => path.replace(
+                                                `:${param}`, props.match.params[param]
+                                            ), path
+                                        )
+                                        : path,
+                                    ...rest
+                                }));
+                            console.log(`Generated crumbs for ${props.match.path}`);
+                            console.log('cai lz');
+                            crumbs.map(({ name, path }) => console.log({ name, path }));
+                            return (
+                                <Component {...props} crumbs={crumbs}/>
+                            );
+                        }} />
                     ) : (<Redirect to={{ pathname: "/access-denied", state: { url: window.location.pathname } }}></Redirect>);
                 }
                 else {
-                    return roles.some(el => el === decodedToken.role) ? (<Route path={path} exact={exact} component={component} />) : (<Redirect to={{ pathname: "/access-denied", state: { url: window.location.pathname } }}></Redirect>);
+                    return roles.some(el => el === decodedToken.role) ? (<Route path={path} exact={exact} render={props => {
+                        const crumbs = routes
+                            // Get all routes that contain the current one.
+                            .filter(({ path }) => props.match.path.includes(path))
+                            // Swap out any dynamic routes with their param values.
+                            // E.g. "/pizza/:pizzaId" will become "/pizza/1"
+                            .map(({ path, ...rest }) => ({
+                                path: Object.keys(props.match.params).length
+                                    ? Object.keys(props.match.params).reduce(
+                                        (path, param) => path.replace(
+                                            `:${param}`, props.match.params[param]
+                                        ), path
+                                    )
+                                    : path,
+                                ...rest
+                            }));
+                        console.log(`Generated crumbs for ${props.match.path}`);
+                        console.log('cai cc');
+                        crumbs.map(({ name, path }) => console.log({ name, path }));
+                        return (
+                            <Component {...props} test={crumbs}/>
+                        );
+                    }} />) : (<Redirect to={{ pathname: "/access-denied", state: { url: window.location.pathname } }}></Redirect>);
                 }
             }
             else {
-                return (<Route path={path} exact={exact} component={component} />);
+                return (<Route path={path} exact={exact} component={Component} />);
             }
         }
         else {
@@ -32,7 +77,30 @@ const GuardRoute = ({ path, exact, component, guard, roles }) => {
     }
     else {
         return (
-            <Route path={path} exact={exact} component={component} />)
+            <Route path={path} exact={exact}
+                render={props => {
+                    const crumbs = routes
+                        // Get all routes that contain the current one.
+                        .filter(({ path }) => props.match.path.includes(path))
+                        // Swap out any dynamic routes with their param values.
+                        // E.g. "/pizza/:pizzaId" will become "/pizza/1"
+                        .map(({ path, ...rest }) => ({
+                            path: Object.keys(props.match.params).length
+                                ? Object.keys(props.match.params).reduce(
+                                    (path, param) => path.replace(
+                                        `:${param}`, props.match.params[param]
+                                    ), path
+                                )
+                                : path,
+                            ...rest
+                        }));
+                    console.log(`Generated crumbs for ${props.match.path}`);
+                    crumbs.map(({ name, path }) => console.log({ name, path }));
+                    return (
+                        <Component {...props} />
+                    );
+                }}
+            />)
     }
 }
 export default GuardRoute

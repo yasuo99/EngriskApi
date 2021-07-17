@@ -8,27 +8,39 @@ import examApiv2 from "../../api/2.0/examApi";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import sectionApi from "../../api/sectionApi";
+import { Link } from "react-browser-router";
+import BasicQuestionCreate from "./BasicQuestionCreate";
+import ToeicQuestionCreate from "./ToeicQuestionCreate";
+import ArrangeQuestionCreate from "./ArrangeQuestionCreate";
+import ConnectionQuestionCreate from "./ConnectionQuestionCreate";
+import { QuestionTypes } from "../../constants/QuestionTypes";
+import QuestionPreview from "../question/QuestionPreview";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import parse from 'html-react-parser';
 const info = {
     type: 'Quiz',
     title: '',
     description: '',
     difficult: 'easy',
     unlockPoint: 0,
-    sectionId: '',
     questions: [{
 
-    }]
+    }],
+    duration: 0
 }
 
 const question = {
     answers: [
         {
+
             content: '',
             isQuestionAnswer: false,
             image: null,
             isAudioAnswer: false,
         },
     ],
+    preQuestion: '',
     content: '',
     image: null,
     type: '',
@@ -58,9 +70,16 @@ const validate = (values, props /* only available when using withFormik */) => {
 class Thumb extends React.Component {
     state = {
         loading: false,
-        thumb: undefined
+        thumb: {},
     };
+    constructor(props) {
+        super(props)
+        this.isComponentMounted = false;
+    }
 
+    componentDidMount() {
+        this.isComponentMounted = true;
+    }
     componentWillReceiveProps(nextProps) {
         if (!nextProps.file) {
             return;
@@ -70,7 +89,10 @@ class Thumb extends React.Component {
             let reader = new FileReader();
 
             reader.onloadend = () => {
-                this.setState({ loading: false, thumb: reader.result });
+                if (this.isComponentMounted) {
+                    this.setState({ loading: false, thumb: reader.result });
+                }
+
             };
 
             reader.readAsDataURL(nextProps.file);
@@ -152,9 +174,10 @@ class Quiz_Exam extends Component {
         this.state = {
             typeQuestion: '',
             isDispalyForm: true,
-            check: 1,
+            check: QuestionTypes.Basic,
             srcAnswer: '',
             active: true,
+
             subject: {
                 type: 'Quiz',
                 title: '',
@@ -162,14 +185,15 @@ class Quiz_Exam extends Component {
                 description: '',
                 difficult: 'easy',
                 questions: [
-                ]
+                ],
+                pass: 0,
             },
             questionSettings: {
-                type: '',
+                type: 'Basic',
                 duration: 10,
                 score: 1,
                 answerType: 1,
-                toeicPart: 0,
+                toeicPart: 1,
                 answers: [
 
                 ]
@@ -181,7 +205,8 @@ class Quiz_Exam extends Component {
                 modalStatus: false
             },
             side: false,
-            sections: []
+            sections: [],
+            modalQuestionPreview: false
         }
         this.changeType = this.changeType.bind(this);
     }
@@ -194,12 +219,22 @@ class Quiz_Exam extends Component {
         const auth = this.props.account.roles.some(r => r == 'superadmin' || r == 'manager');
         this.setState({ side: auth });
         if (auth) {
-            var sections = await sectionApi.getManage({ auth });
-            console.log(sections);
-            this.setState({
-                sections: sections
-            })
+
         }
+    }
+    previewQuestion(question) {
+        question = {
+            preQuestion: question.preQuestion,
+            content: question.content,
+            answers: question.answers.map((answer, index) => ({ answer: answer.content })),
+            type: question.type
+        }
+        return question
+    }
+    toggleQuestionPreviewModal() {
+        this.setState({
+            modalQuestionPreview: !this.state.modalQuestionPreview
+        });
     }
     handleResetAnswer = (e) => {
         this.setState({
@@ -225,44 +260,47 @@ class Quiz_Exam extends Component {
     addQuestion = (values) => {
         console.log(values);
         var questions = this.state.subject.questions;
-        if (!values.answers.some(ans => ans.isQuestionAnswer)) {
-            toast('Câu hỏi phải có đáp án đúng', { type: 'warning', position: 'bottom-right' })
-            return false;
-        }
-        else {
-            if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isQuestionAnswer === true)) {
-                var question = {
-                    content: values.content,
-                    image: values.file,
-                    isAudioQuestion: values.isAudioQuestion,
-                    engVoice: values.engVoice,
-                    duration: this.state.questionSettings.duration,
-                    score: this.state.questionSettings.score,
-                    toeicPart: this.state.questionSettings.toeicPart == 0 ? null : this.state.questionSettings.toeicPart,
-                    explaination: values.explain,
-                    answers: this.state.check != 2 ? values.answers.filter(q => q.content != '') : values.answers,
+        console.log(this.state.questionSettings.type);
+        switch (this.state.questionSettings.type) {
+            case QuestionTypes.Conversation:
+                return true;
+            case QuestionTypes.Connection:
+                if (values.answers.length == 0) {
+                    toast('Câu hỏi thiếu đáp án', { type: 'warning', position: 'bottom-right' });
+                } else {
+                    var question = {
+                        type: this.state.questionSettings.type,
+                        preQuestion: values.preQuestion,
+                        answers: values.answers.map((answer, index) => ({ content: `<p>${answer.contentLeft.trim()}</p><p>${answer.contentRight.trim()}</p>`, isQuestionAnswer: true }))
+                    }
+                    questions.push({
+                        question
+                    })
+                    console.log(this.state.subject.questions);
+                    this.setState({
+                        subject: {
+                            ...this.state.subject,
+                            questions: questions,
+                            questionSettings: {
+                                ...this.state.questionSettings,
+                                toeicPart: 0,
+                                score: 5,
+                                duration: 10
+                            }
+                        }
+                    })
+                    return true;
                 }
-                switch (this.state.questionSettings.type) {
-                    case "Quiz":
-                        question.isQuizQuestion = true;
-                        break;
-                    case "QuestionFillout":
-                        question.isFilloutQuestion = true;
-                        break;
-                    case "QuizHinhAnh":
-                        question.isQuizQuestion = true;
-                        break;
-                    case "QuizSapXep":
-                        question.isArrangeQuestion = true;
-                        break;
-                    case "QuizNoiTu":
-                        question.isConnectionQuestion = true;
-                        break;
-                    case "ToeicReading":
-                        question.isReadingQuestion = true;
-                        break;
-                    default:
-                        break;
+            case QuestionTypes.Arrange:
+                if (values.content == '') {
+                    toast('Nội dung câu hỏi sắp xếp không được để trống', { type: 'warning' })
+                    return false;
+                }
+                var question = {
+                    type: this.state.questionSettings.type,
+                    preQuestion: values.preQuestion,
+                    content: values.content.trim(),
+                    answers: values.answers.map((answer, index) => ({ content: `<p>${answer.contentLeft.trim()}</p><p>${answer.contentRight.trim()}</p>`, isQuestionAnswer: true }))
                 }
                 questions.push({
                     question
@@ -281,7 +319,45 @@ class Quiz_Exam extends Component {
                     }
                 })
                 return true;
-            }
+            default:
+                if (!values.answers.some(ans => ans.isQuestionAnswer) && this.state.questionSettings.type) {
+                    toast('Câu hỏi phải có đáp án đúng', { type: 'warning', position: 'bottom-right' })
+                    return false;
+                }
+                else {
+                    if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isQuestionAnswer === true)) {
+                        var question = {
+                            type: this.state.questionSettings.type,
+                            preQuestion: values.preQuestion,
+                            content: values.content,
+                            image: values.file,
+                            isAudioQuestion: values.isAudioQuestion,
+                            engVoice: values.engVoice,
+                            duration: this.state.questionSettings.duration,
+                            score: this.state.questionSettings.score,
+                            toeicPart: this.state.questionSettings.toeicPart == 0 ? null : this.state.questionSettings.toeicPart,
+                            explaination: values.explain,
+                            answers: this.state.check != 2 ? values.answers.filter(q => q.content != '') : values.answers,
+                        }
+                        questions.push({
+                            question
+                        })
+                        console.log(this.state.subject.questions);
+                        this.setState({
+                            subject: {
+                                ...this.state.subject,
+                                questions: questions,
+                                questionSettings: {
+                                    ...this.state.questionSettings,
+                                    toeicPart: 0,
+                                    score: 5,
+                                    duration: 10
+                                }
+                            }
+                        })
+                        return true;
+                    }
+                }
         }
 
     }
@@ -309,42 +385,12 @@ class Quiz_Exam extends Component {
     //     e.preventDefault();
     //     document.getElementById("addInfoQuizForm").reset();
     // }(
-    ToToggleForm = (e) => {
-        console.log(e.target.value);
-        switch (e.target.value) {
-            case "Quiz":
-                this.setState({
-                    questionSettings: { ...this.state.questionSettings, type: 'Quiz' },
-                    check: 1,
-                })
-                break;
-            case "QuizHinhAnh":
-                this.setState({
-                    questionSettings: { ...this.state.questionSettings, type: "QuizHinhAnh" },
-                    check: 2,
-                })
-                break;
-            case "QuizSapXep":
-                this.setState({
-                    questionSettings: { ...this.state.questionSettings, type: "QuizSapXep" },
-                    check: 3,
-                })
-                break;
-            case "QuizNoiTu":
-                this.setState({
-                    questionSettings: { ...this.state.questionSettings, type: "QuizNoiTu" },
-                    check: 4,
-                })
-                break;
-            case "ToeicReading":
-                this.setState({
-                    questionSettings: { ...this.state.questionSettings, type: "ToeicReading" },
-                    check: 5,
-                })
-                break;
-            default:
-                break;
-        }
+    ToToggleForm = (value) => {
+        this.setState({
+            questionSettings: { ...this.state.questionSettings, type: value },
+            check: value,
+        })
+        this.resetQuestionForm();
     }
 
     selectQuestion = (index) => {
@@ -361,15 +407,23 @@ class Quiz_Exam extends Component {
             if (i == index) {
                 value.question.selected = true;
                 console.log(value.question);
+                this.ToToggleForm(value.question.type)
                 this.setState({
+                    ...this.state,
                     selectedQuestion: value.question,
-                    tempQuestion: value
+                    tempQuestion: value,
+                    questionSettings: {
+                        ...this.state.questionSettings,
+                        check: value.question.type
+                    }
                 });
+
                 question.answers = value.question.answers
                 question.content = value.question.content
                 question.isAudioQuestion = value.question.isAudioQuestion
                 question.words = value.question.answers
                 question.image = value.question.image
+                question.preQuestion = value.question.preQuestion
             } else {
                 value.question.selected = false;
             }
@@ -386,38 +440,17 @@ class Quiz_Exam extends Component {
         e.preventDefault();
         var currentIndex = this.state.subject.questions.indexOf(this.state.tempQuestion);
         var questions = this.state.subject.questions;
-        if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isQuestionAnswer === true)) {
+        if (values.content != '' && values.answers.length > 0 && values.answers.some(a => a.isQuestionAnswer === true) || this.state.questionSettings.type == QuestionTypes.Arrange) {
             var question = {
+                preQuestion: values.preQuestion,
                 content: values.content,
                 image: values.file,
                 isAudioQuestion: values.isAudioQuestion,
                 engVoice: values.engVoice,
-                toeicPart: values.toeicPart,
+                toeicPart: Number.parseInt(this.state.questionSettings.toeicPart),
                 explaination: values.explain,
                 answers: values.answers.filter(q => q.content != ''),
                 selected: false
-            }
-            switch (this.state.questionSettings.type) {
-                case "Quiz":
-                    question.isQuizQuestion = true;
-                    break;
-                case "QuestionFillout":
-                    question.isFilloutQuestion = true;
-                    break;
-                case "QuizHinhAnh":
-                    question.isQuizQuestion = true;
-                    break;
-                case "QuizSapXep":
-                    question.isArrangeQuestion = true;
-                    break;
-                case "QuizNoiTu":
-                    question.isConnectionQuestion = true;
-                    break;
-                case "ToeicReading":
-                    question.isReadingQuestion = true;
-                    break;
-                default:
-                    break;
             }
             questions[currentIndex].question = question;
             console.log(questions);
@@ -454,7 +487,7 @@ class Quiz_Exam extends Component {
         var tempQuestions = this.state.subject.questions.map((value, index) => {
             return value.question;
         })
-        switch (values.type) {
+        switch (this.state.subject.type) {
             case 'Quiz':
                 console.log("dm");
                 var tempQuestions = this.state.subject.questions.map((value, index) => {
@@ -471,7 +504,6 @@ class Quiz_Exam extends Component {
                 })
                 console.log(tempQuestions);
                 var formData = new FormData();
-                formData.set('sectionId', values.sectionId);
                 formData.set('quizName', values.title);
                 formData.set('detail', values.description);
                 formData.set('difficultLevel', values.difficult);
@@ -506,68 +538,66 @@ class Quiz_Exam extends Component {
 
                 break;
             case 'Exam':
-                console.log(values);
-                // var formData = new FormData();
-                // formData.set('title', values.title);
-                // formData.set('detail', values.description);
-                // formData.set('difficultLevel', values.difficult);
-                // formData.set('isPrivate', this.state.side ? false : true);
-                // formData.set('duration', 100);
-                // formData.set('pass', 10);
-                // tempQuestions.forEach((value) => {
-                //     if (value.image != null) {
-                //         formData.append('QuestionImages', value.image);
-                //     }
-                // })
-                // formData.set('stringifyQuestions', JSON.stringify(tempQuestions));
-                // // let exam = {
-                // //     title: values.title,
-                // //     detail: values.description,
-                // //     difficultLevel: values.difficult,
-                // //     isPrivate: true,
-                // //     pass: 10,
-                // //     examQuestions: tempQuestions,
-                // //     duration: 100
-                // // }
-                // // console.log(exam);
-                // var result = await examApiv2.create(formData, this.state.side)
-                // if (result != null) {
-                //     toast('Thêm exam thành công', { type: 'success' })
-                //     this.setState({
-                //         subject: {
-                //             questions: []
-                //         },
-                //     })
-                // } else {
-                //     toast('Thêm exam thất bại', { type: 'info' })
+                console.log(this.state.subject);
+                var formData = new FormData();
+                formData.set('title', values.title);
+                formData.set('detail', values.description);
+                formData.set('difficultLevel', values.difficult);
+                formData.set('isPrivate', this.state.side ? false : true);
+                formData.set('duration', values.duration);
+                tempQuestions.forEach((value) => {
+                    formData.append('QuestionImages', value.image);
+                })
+                formData.set('stringifyQuestions', JSON.stringify(tempQuestions));
+                // let exam = {
+                //     title: values.title,
+                //     detail: values.description,
+                //     difficultLevel: values.difficult,
+                //     isPrivate: true,
+                //     pass: 10,
+                //     examQuestions: tempQuestions,
+                //     duration: 100
                 // }
+                // console.log(exam);
+                var result = await examApiv2.create(formData, this.state.side)
+                if (result != null) {
+                    toast('Thêm exam thành công', { type: 'success' })
+                    this.setState({
+                        subject: {
+                            questions: []
+                        },
+                    })
+                } else {
+                    toast('Thêm exam thất bại', { type: 'info' })
+                }
                 break;
             default:
                 break;
         }
-        console.log(values);
 
     }
     resetQuestionForm = () => {
         this.setState({
-            selectedQuestion: {}
+            selectedQuestion: {},
+            tempQuestion: {}
         })
         this.clearQuestion();
     }
     changeType = (e) => {
-        this.setState({
-            subject: {
-                ...this.state.subject,
-                type: e.target.value
-            },
-        });
+        e.preventDefault();
         switch (e.target.value) {
             case "Quiz":
                 this.setState({
                     check: 1,
                     questionSettings: {
                         ...this.state.questionSettings,
-                        type: 'Quiz'
+                        type: QuestionTypes.Basic
+                    },
+                    subject: {
+                        ...this.state.subject,
+                        selectedQuestion: {},
+                        type: e.target.value,
+                        questions: []
                     }
                 })
                 break;
@@ -577,6 +607,12 @@ class Quiz_Exam extends Component {
                     questionSettings: {
                         ...this.state.questionSettings,
                         type: 'Toeic'
+                    },
+                    subject: {
+                        ...this.state.subject,
+                        selectedQuestion: {},
+                        type: e.target.value,
+                        questions: []
                     }
                 })
                 break;
@@ -586,13 +622,15 @@ class Quiz_Exam extends Component {
     }
     checkAnswer = (e, values) => {
         if (e.target.checked) {
-            values.answers.forEach((value, index) => {
-                if (index == e.target.dataset.id) {
-                    value.isQuestionAnswer = true;
-                } else {
-                    value.isQuestionAnswer = false;
-                }
-            })
+            if (this.state.questionSettings.type == QuestionTypes.Basic || this.state.subject.type == 'Exam') {
+                values.answers.forEach((value, index) => {
+                    if (index == e.target.dataset.id) {
+                        value.isQuestionAnswer = true;
+                    } else {
+                        value.isQuestionAnswer = false;
+                    }
+                })
+            }
         }
     }
 
@@ -600,7 +638,7 @@ class Quiz_Exam extends Component {
         // var srcc = this.state.src.replace("C:\\fakepath\\", "/image/");
         // var srcAnswer = this.state.srcAnswer.replace("C:\\fakepath\\", "/image/");
         var { check, active } = this.state;
-
+        console.log(this.state.selectedQuestion);
         return (
             <div id="wrapper">
                 <div id="content-wrapper" className="d-flex flex-column">
@@ -615,7 +653,7 @@ class Quiz_Exam extends Component {
 
                                 <div className="container-fluid">
                                     <div className="row">
-                                        <div className="col-md-3 kedoc">
+                                        <div className="col-md-3 border border-top-0 border-primary">
                                             {/* Thông tin quiz/exam: bắt đầu */}
                                             <div className="info-quiz">
                                                 <div className="info">
@@ -636,24 +674,12 @@ class Quiz_Exam extends Component {
                                                                     as="select"
                                                                     name="type"
                                                                     id="type"
-                                                                    onClick={(e) => this.changeType(e)}>
+                                                                    onChange={(e) => this.changeType(e)}
+                                                                    value={this.state.subject.type}>
                                                                     <option value="Quiz">Quiz</option>
                                                                     <option value="Exam">Exam</option>
                                                                 </Field>
                                                             </div>
-                                                            {this.state.subject.type == 'Quiz' && <div className="title">
-                                                                <label htmlFor="section">Section</label>
-                                                                <Field
-                                                                    as="select"
-                                                                    id="sectionId"
-                                                                    name="sectionId">
-                                                                    <option>Chọn tên section</option>
-                                                                    {this.state.sections.map((value, index) =>
-                                                                        <option key={index} value={value.id}>{value.sectionName}</option>
-                                                                    )
-                                                                    }
-                                                                </Field>
-                                                            </div>}
 
                                                             <div className="title">
                                                                 <label htmlFor="title">Tên bài</label>
@@ -678,24 +704,23 @@ class Quiz_Exam extends Component {
                                                                 <Field
                                                                     as="select"
                                                                     id="difficult"
-                                                                    name="difficult">
+                                                                    name="difficult"
+                                                                >
                                                                     <option value="easy">Dễ</option>
                                                                     <option value="medium">Vừa</option>
                                                                     <option value="hard">Khó</option>
                                                                 </Field>
                                                             </div>
-                                                            {this.state.subject.type === "Exam" && this.props.account.roles.some(role => role == "superadmin") &&
-                                                                <div className="unlockPoint">
-                                                                    <label htmlFor="level">Điểm mở khóa <i className="fa fa-info"></i></label>
-                                                                    <Field
-                                                                        type="number"
-                                                                        placeholder="Điểm mở khóa"
-                                                                        name="unlockPoint"
-                                                                        id="unlockPoint"
-                                                                    ></Field>
-                                                                </div>
+                                                            {this.state.subject.type == 'Exam' && <div className="level">
+                                                                <label htmlFor="level">Thời gian làm bài</label>
+                                                                <Field
+                                                                    type="number"
+                                                                    placeholder="Thời gian làm bài (phút)"
+                                                                    name="duration"
+                                                                    id="duration"
+                                                                    required></Field>
+                                                            </div>}
 
-                                                            }
                                                             <div className="row justify-content-end function">
                                                                 <div className="col-md-3">
                                                                     <button className="f1" onClick={() => resetForm(info)}>Cài lại</button>
@@ -713,30 +738,39 @@ class Quiz_Exam extends Component {
                                             <div className="item-questionQuizExam">
                                                 <ol type="1">
                                                     {this.state.subject.questions.map((question, index) =>
-                                                        <div className={question.question.selected === true ? 'cardActive' : 'card'} key={index} data-index={index} onClick={() => this.selectQuestion(index)}>
+                                                        <div className={this.state.selectedQuestion == question.question ? 'cardActive' : 'card'} key={index} data-index={index} onClick={() => { this.selectQuestion(index); this.toggleQuestionPreviewModal() }}>
                                                             <p className="order">Câu hỏi <li></li></p>
                                                             <div className="card bg-light">
                                                                 <div className="card-body">
+                                                                    <div className="question">{parse(question.question.preQuestion || '')}</div>
                                                                     <div className="card-title text-center">
-                                                                        <p className="question">{question.question.content}</p>
+                                                                        <div className="question">{parse(question.question.content || '')}</div>
                                                                         {question.question.image != null ? <Thumb file={question.question.image} /> : <img src="/image/english (1).jpg" />}
                                                                     </div>
                                                                     <div className="row">
-                                                                        {question.question.answers !== undefined && question.question.answers.map((answer, j) =>
-                                                                            <div className="col-6" key={j}>
-                                                                                <p className={answer.isQuestionAnswer === true ? 'answerTrue' : 'answer'}>{answer.content}</p>
-                                                                            </div>
-                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     )}
                                                     {/* <button className="btn btn-add" type="submit"><img src="/image/plus (1).png" /> Thêm câu hỏi</button> */}
-                                                    <a className="exit" href="#">Quay lại</a>
+
                                                 </ol>
                                             </div>
-
+                                            <Modal show={this.state.modalQuestionPreview} onHide={() => this.toggleQuestionPreviewModal()} contentClassName="modal-basic-content">
+                                                <Modal.Header closeButton onClick={() => this.toggleQuestionPreviewModal()}>
+                                                    <Modal.Title>Preview câu hỏi</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    {Object.keys(this.state.selectedQuestion).length > 0 && <QuestionPreview question={this.previewQuestion(this.state.selectedQuestion)}></QuestionPreview>}
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={() => this.toggleQuestionPreviewModal()}>
+                                                        Đóng
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
+                                            <Link className="exit" to="/admin/quan-ly-quiz-exam" >Quay lại</Link>
                                         </div>
                                         <div className="col-md-9">
                                             <Formik
@@ -752,495 +786,33 @@ class Quiz_Exam extends Component {
                                                     }
                                                 }}
                                             >
-                                                {({ values, setFieldValue, resetForm }) => (
+                                                {({ values, setFieldValue, resetForm, errors, touched }) => (
                                                     <Form>
                                                         <div className="row">
                                                             {
-                                                                check === 1 ?
+                                                                check === QuestionTypes.Basic ?
                                                                     (
-                                                                        <div className="col-md-8 kedoc">
-                                                                            <div className="question">
-                                                                                <div className="boxQuestion">
-                                                                                    <Field
-                                                                                        className="titleQuestion"
-                                                                                        placeholder="Nhập câu hỏi..."
-                                                                                        type="text"
-                                                                                        id="content"
-                                                                                        name="content"
-                                                                                        component="textarea"
-                                                                                        required
-                                                                                    />
-                                                                                    {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-                                                                                    <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                            type="checkbox"
-                                                                                            className="file mt-3"
-                                                                                            id="isAudioQuestion"
-                                                                                            name="isAudioQuestion" />
-                                                                                    </p>
-                                                                                    <div className="answer answerText">
-                                                                                        <ol type="A">
-                                                                                            <FieldArray name="answers">
-                                                                                                {({ insert, remove, push }) => (
-                                                                                                    <div>
-                                                                                                        {values.answers.length > 0 &&
-                                                                                                            values.answers.map((answer, index) => (
-                                                                                                                <div className="itemAnswer" key={index}>
-                                                                                                                    <div className="row" >
-                                                                                                                        <div className="col-1">
-                                                                                                                            <p className="textOrder"><li></li></p>
-
-                                                                                                                        </div>
-                                                                                                                        <div className="col-9">
-                                                                                                                            <Field
-                                                                                                                                name={`answers.${index}.content`}
-                                                                                                                                placeholder="Nhập đáp án..."
-                                                                                                                                type="text"
-                                                                                                                                className="answerFile"
-                                                                                                                                id="content"
-                                                                                                                                required
-                                                                                                                            />
-                                                                                                                            <ErrorMessage
-                                                                                                                                name={`answers.${index}.name`}
-                                                                                                                                component="div"
-                                                                                                                                className="field-error"
-                                                                                                                            />
-                                                                                                                        </div>
-                                                                                                                        <div className="col-1">
-
-                                                                                                                            <Field
-                                                                                                                                name={`answers.${index}.isQuestionAnswer`}
-                                                                                                                                className="radioAnswerFile"
-                                                                                                                                type="checkbox"
-                                                                                                                                id="isQuestionAnswer"
-                                                                                                                                data-id={index}
-                                                                                                                                onClick={(e) => this.checkAnswer(e, values)}
-                                                                                                                            />
-                                                                                                                            <ErrorMessage
-                                                                                                                                name={`answers.${index}.name`}
-                                                                                                                                component="div"
-                                                                                                                                className="field-error"
-                                                                                                                            />
-
-                                                                                                                        </div>
-                                                                                                                        <div className="col-1">
-                                                                                                                            <button
-                                                                                                                                type="button"
-                                                                                                                                className="secondary"
-                                                                                                                                onClick={() => remove(index)}
-                                                                                                                                className="exit"
-                                                                                                                            ><img src="/image/cross.png"></img>
-                                                                                                                            </button>
-                                                                                                                        </div>
-
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            ))}
-                                                                                                        <button
-                                                                                                            type="button"
-                                                                                                            className="btn btn-addAnswer fa fa-plus"
-                                                                                                            onClick={() => push({
-                                                                                                                content: '', isQuestionAnswer: false, image: null,
-                                                                                                                isAudioAnswer: false
-                                                                                                            })}>
-                                                                                                            Thêm đáp án
-                                                          </button>
-                                                                                                    </div>
-                                                                                                )}
-                                                                                            </FieldArray>
-                                                                                        </ol>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                        <BasicQuestionCreate errors={errors} touched={touched} values={values} checkAnswer={this.checkAnswer} setFieldValue={setFieldValue}></BasicQuestionCreate>
                                                                     )
-                                                                    : (check === 2 ?
+                                                                    : (check === QuestionTypes.Arrange ?
                                                                         (
-                                                                            <div className="col-md-8 kedoc">
-                                                                                <div className="question">
-                                                                                    <Field
-                                                                                        className="titleQuestion"
-                                                                                        placeholder="Nhập câu hỏi..."
-                                                                                        type="text"
-                                                                                        id="content"
-                                                                                        name="content"
-                                                                                        component="textarea"
-                                                                                        defaultValue={""} />
-                                                                                    <div className="boxImg">
-                                                                                        <Thumb file={values.file} />
-                                                                                        <div className="itemImg">
-                                                                                            <Field type="file"
-                                                                                                accept="image/png, image/jpeg"
-                                                                                                className="item-question fa fa-camera "
-                                                                                                id="imgQuestion"
-                                                                                                name="imgQuestion"
-                                                                                                onChange={(event) => {
-                                                                                                    setFieldValue("file", event.currentTarget.files[0]);
-                                                                                                }}
-                                                                                            />
-                                                                                            <img src="/image/delete1.png" className="img-question"
-                                                                                                onClick={() => {
-                                                                                                    setFieldValue("file", null);
-                                                                                                }}></img>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                            type="checkbox"
-                                                                                            className="file mt-3"
-                                                                                            id="isAudioQuestion"
-                                                                                            name="isAudioQuestion" />
-                                                                                    </p>
-                                                                                    <div className="answer answerHinhAnh">
-                                                                                        <ol type="A">
-                                                                                            <FieldArray name="answers">
-                                                                                                {({ insert, remove, push }) => (
-                                                                                                    <div>
-                                                                                                        {values.answers.length > 0 &&
-                                                                                                            values.answers.map((answer, index) => (
-                                                                                                                <div className="itemAnswer" key={index}>
-                                                                                                                    <div className="row">
-                                                                                                                        <div className="col-1 kedoc-2">
-                                                                                                                            <p className="textOrder"><li></li></p>
-                                                                                                                        </div>
-                                                                                                                        <div className="col-9 kedoc-2">
-                                                                                                                            <div className="row">
-                                                                                                                                <div className="col-8">
-                                                                                                                                    <Field name={`answers.${index}.content`} type="text" placeholder="Nhập đáp án..." className="answerTextThree" />
-                                                                                                                                </div>
-                                                                                                                                <div className="col-4">
-                                                                                                                                    <div className="boxImgAnswer">
-                                                                                                                                        {/* { srcAnswer === '' ? <img src="/image/picture (1).png" className="display-ImgAnswer"/> : (<img src={this.state.srcAnswer.replace("C:\\fakepath\\", "/image/")} className="display-ImgAnswer"/>) } */}
-
-                                                                                                                                        <Thumb_Answer imgAnswer={values.answers[index].image}></Thumb_Answer>
-                                                                                                                                        <div className="itemImg">
-                                                                                                                                            <Field name={`answers.${index}.file`} type="file"
-                                                                                                                                                accept="image/png, image/jpeg"
-                                                                                                                                                className="item-answer fa fa-camera "
-                                                                                                                                                onBlur={e => this.handleImgQuestion(e)}
-                                                                                                                                                // onFocus={e => this.handleImgQuestion(e)}
-                                                                                                                                                // onChange={e => this.handleImgQuestion(e)}
-                                                                                                                                                id='image'
-                                                                                                                                                onChange={(event) => {
-                                                                                                                                                    setFieldValue(`answers.${index}.image`, event.currentTarget.files[0]);
-                                                                                                                                                }}
-                                                                                                                                            />
-                                                                                                                                            <img src="/image/delete1.png" className="img-answer"
-                                                                                                                                                // onClick={() => {this.handleResetAnswer() }} 
-                                                                                                                                                // onBlur={e => this.handleResetAnswer(e)}
-                                                                                                                                                onClick={() => {
-                                                                                                                                                    setFieldValue(`answers.${index}.image`, null);
-                                                                                                                                                }}
-                                                                                                                                            >
-
-                                                                                                                                            </img>
-
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <div className="col-1">
-                                                                                                                            <Field type="checkbox" name={`answers.${index}.isQuestionAnswer`} onClick={(e) => this.checkAnswer(e, values)} className="radioAnswerThree" />
-                                                                                                                        </div>
-                                                                                                                        <div className="col-1">
-                                                                                                                            <button
-                                                                                                                                type="button"
-                                                                                                                                className="secondary"
-                                                                                                                                onClick={() => remove(index)}
-                                                                                                                                className="exitThree"
-                                                                                                                            ><img src="/image/cross.png"></img>
-                                                                                                                            </button>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            ))}
-                                                                                                        <button
-                                                                                                            type="button"
-                                                                                                            className="btn btn-addAnswer fa fa-plus"
-
-                                                                                                            onClick={() => push({
-                                                                                                                content: '', isQuestionAnswer: '', image: null,
-                                                                                                                isAudioAnswer: false
-                                                                                                            })}>
-                                                                                                            {/* onBlur={()=>{this.handleResetAnswer()}} */}
-                                                                                                Thêm đáp án
-                                                              </button>
-                                                                                                    </div>
-                                                                                                )}
-                                                                                            </FieldArray>
-                                                                                        </ol>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                            <ArrangeQuestionCreate values={values} setFieldValue={setFieldValue}></ArrangeQuestionCreate>
                                                                         )
-                                                                        : (check === 3 ?
+                                                                        : (check === QuestionTypes.Connection ?
                                                                             (
-                                                                                <div className="col-md-8 kedoc">
-                                                                                    <div className="question">
-                                                                                        <Field
-                                                                                            className="titleQuestion"
-                                                                                            placeholder="Nhập câu hỏi..."
-                                                                                            type="text"
-                                                                                            id="titleQuestion"
-                                                                                            name="titleQuestion"
-                                                                                            component="textarea"
-                                                                                            defaultValue={""} />
-                                                                                        {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-                                                                                        <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                                type="checkbox"
-                                                                                                className="file mt-3"
-                                                                                                id="isAudioQuestion"
-                                                                                                name="isAudioQuestion" />
-                                                                                        </p>
-                                                                                        <div className="boxWord">
-                                                                                            <FieldArray name="answers">
-                                                                                                {({ remove, push }) => (
-                                                                                                    <div className="words">
-                                                                                                        {values.answers.length > 0 &&
-                                                                                                            values.answers.map((word, index) => (
-                                                                                                                <div key={index} className="word">
-                                                                                                                    <Field type="text" id="word" name={`answers.${index}.content`} value={word.content} placeholder="Nhập từ" onBlur={() => push({ content: '', isQuestionAnswer: '', image: null, isAudioAnswer: false })}>
-
-                                                                                                                    </Field>
-                                                                                                                    <button
-                                                                                                                        type="button"
-                                                                                                                        className="secondary"
-                                                                                                                        onClick={() => remove(index)}
-                                                                                                                        className="exitThree"
-                                                                                                                    ><img src="/image/cross.png"></img>
-                                                                                                                    </button>
-                                                                                                                </div>
-
-                                                                                                            ))}
-                                                                                                    </div>)}
-                                                                                            </FieldArray>
-
-                                                                                        </div>
-                                                                                        <div className="answerSort">
-                                                                                            <h5>ĐÁP ÁN:</h5>
-                                                                                            <Field component="textarea" name="answerSort" id="answerSort" type="text" placeholder="Nhập đáp án..." className="textareaSort" defaultValue={""} />
-                                                                                        </div>
-                                                                                        {/* <button class="btn btn-addAnswer"><img src="/image/plus (3).png"> Thêm đáp án</button> */}
-                                                                                    </div>
-                                                                                </div>
+                                                                                <ConnectionQuestionCreate values={values}></ConnectionQuestionCreate>
                                                                             )
-                                                                            : (check === 4 ?
+                                                                            : (check === QuestionTypes.Select ?
                                                                                 (
-                                                                                    <div className="col-md-8 kedoc">
-                                                                                        <div className="question">
-                                                                                            <Field
-                                                                                                className="titleQuestion"
-                                                                                                placeholder="Nhập câu hỏi..."
-                                                                                                type="text"
-                                                                                                id="titleQuestion"
-                                                                                                name="titleQuestion"
-                                                                                                component="textarea"
-                                                                                                defaultValue={""} />
-                                                                                            {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-
-                                                                                            <div className="boxWord">
-                                                                                                <FieldArray name="answers">
-                                                                                                    {({ remove, push }) => (
-                                                                                                        <div className="words">
-                                                                                                            {values.answers.length > 0 &&
-                                                                                                                values.answers.map((word, index) => (
-                                                                                                                    <div key={index} className="word">
-                                                                                                                        <Field type="text" id="word" name={`answers.${index}.content`} placeholder="Nhập từ" onBlur={() => push({ content: '', isQuestionAnswer: '', image: null, isAudioAnswer: false })}>
-
-                                                                                                                        </Field>
-                                                                                                                        <button
-                                                                                                                            type="button"
-                                                                                                                            className="secondary"
-                                                                                                                            onClick={() => remove(index)}
-                                                                                                                            className="exitThree"
-                                                                                                                        ><img src="/image/cross.png"></img>
-                                                                                                                        </button>
-                                                                                                                    </div>
-
-                                                                                                                ))}
-                                                                                                        </div>)}
-                                                                                                </FieldArray>
-
-                                                                                            </div>
-                                                                                            <div className="answerSort">
-                                                                                                <h5>ĐÁP ÁN:</h5>
-
-                                                                                                <div className="answer answerText">
-                                                                                                    <ol type="1">
-                                                                                                        <FieldArray name="answers">
-                                                                                                            {({ insert, remove, push }) => (
-                                                                                                                <div>
-                                                                                                                    {values.answers.length > 0 &&
-                                                                                                                        values.answers.map((answer, index) => (
-                                                                                                                            <div className="itemAnswer" key={index}>
-                                                                                                                                <div className="row">
-                                                                                                                                    <div className="col-1">
-                                                                                                                                        <p className="textOrder"><li></li></p>
-
-                                                                                                                                    </div>
-                                                                                                                                    <div className="col-10">
-                                                                                                                                        <Field
-                                                                                                                                            name={`answers.${index}.content`}
-                                                                                                                                            placeholder="Nhập đáp án..."
-                                                                                                                                            type="text"
-                                                                                                                                            className="answerFile"
-                                                                                                                                            id="textAnswer"
-                                                                                                                                        />
-                                                                                                                                        <ErrorMessage
-                                                                                                                                            name={`answers.${index}.name`}
-                                                                                                                                            component="div"
-                                                                                                                                            className="field-error"
-                                                                                                                                        />
-                                                                                                                                    </div>
-                                                                                                                                    <div className="col-1">
-                                                                                                                                        <button
-                                                                                                                                            type="button"
-                                                                                                                                            className="secondary"
-                                                                                                                                            onClick={() => remove(index)}
-                                                                                                                                            className="exit"
-                                                                                                                                        ><img src="/image/cross.png"></img>
-                                                                                                                                        </button>
-                                                                                                                                    </div>
-
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        ))}
-                                                                                                                    <button
-                                                                                                                        type="button"
-                                                                                                                        className="btn btn-addAnswer fa fa-plus"
-                                                                                                                        onClick={() => push({ content: '', isQuestionAnswer: '', image: null, isAudioAnswer: false })}>
-                                                                                                                        Thêm đáp án
-                                                                      </button>
-                                                                                                                </div>
-                                                                                                            )}
-                                                                                                        </FieldArray>
-                                                                                                    </ol>
-                                                                                                </div>
-
-                                                                                            </div>
-                                                                                            {/* <button class="btn btn-addAnswer"><img src="/image/plus (3).png"> Thêm đáp án</button> */}
-                                                                                        </div>
-                                                                                    </div>
+                                                                                    <ConnectionQuestionCreate values={values}></ConnectionQuestionCreate>
                                                                                 )
                                                                                 :
                                                                                 (
-                                                                                    <div className="col-md-8 kedoc">
-                                                                                        <div className="question">
-                                                                                            <Field
-                                                                                                className="titleQuestion"
-                                                                                                placeholder="Nhập câu hỏi..."
-                                                                                                type="text"
-                                                                                                id="content"
-                                                                                                name="content"
-                                                                                                component="textarea"
-                                                                                                required />
-                                                                                            <div className="boxImg">
-                                                                                                <Thumb file={values.file} />
-                                                                                                <div className="itemImg">
-                                                                                                    <Field type="file"
-                                                                                                        accept="image/png, image/jpeg"
-                                                                                                        className="item-question fa fa-camera "
-                                                                                                        id="image"
-                                                                                                        name="image"
-                                                                                                        onChange={(event) => {
-                                                                                                            setFieldValue("file", event.currentTarget.files[0]);
-                                                                                                        }}
-                                                                                                    />
-                                                                                                    <img src="/image/delete1.png" className="img-question"
-                                                                                                        onClick={() => {
-                                                                                                            setFieldValue("file", null);
-                                                                                                        }}></img>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <p>Là câu hỏi nghe:
-                                                                        <Field
-                                                                                                    type="checkbox"
-                                                                                                    className="file mt-3"
-                                                                                                    id="isAudioQuestion"
-                                                                                                    name="isAudioQuestion" />
-                                                                                            </p>
-
-                                                                                            <div className="answer answerText">
-                                                                                                <ol type="A">
-                                                                                                    <FieldArray name="answers">
-                                                                                                        {({ insert, remove, push }) => (
-                                                                                                            <div>
-                                                                                                                {values.answers.length > 0 &&
-                                                                                                                    values.answers.map((answer, index) => (
-                                                                                                                        <div className="itemAnswer" key={index}>
-                                                                                                                            <div className="row" >
-                                                                                                                                <div className="col-1">
-                                                                                                                                    <p className="textOrder"><li></li></p>
-
-                                                                                                                                </div>
-                                                                                                                                <div className="col-9">
-                                                                                                                                    <Field
-                                                                                                                                        name={`answers.${index}.content`}
-                                                                                                                                        placeholder="Nhập đáp án..."
-                                                                                                                                        type="text"
-                                                                                                                                        className="answerFile"
-                                                                                                                                        id="content"
-                                                                                                                                    />
-                                                                                                                                    <ErrorMessage
-                                                                                                                                        name={`answers.${index}.name`}
-                                                                                                                                        component="div"
-                                                                                                                                        className="field-error"
-                                                                                                                                    />
-                                                                                                                                </div>
-                                                                                                                                <div className="col-1">
-
-                                                                                                                                    <Field
-                                                                                                                                        name={`answers.${index}.isQuestionAnswer`}
-                                                                                                                                        className="radioAnswerFile"
-                                                                                                                                        type="checkbox"
-                                                                                                                                        id="isQuestionAnswer"
-                                                                                                                                        onClick={(e) => this.checkAnswer(e, values)}
-                                                                                                                                    />
-                                                                                                                                    <ErrorMessage
-                                                                                                                                        name={`answers.${index}.name`}
-                                                                                                                                        component="div"
-                                                                                                                                        className="field-error"
-                                                                                                                                    />
-
-                                                                                                                                </div>
-                                                                                                                                <div className="col-1">
-                                                                                                                                    <button
-                                                                                                                                        type="button"
-                                                                                                                                        className="secondary"
-                                                                                                                                        onClick={() => remove(index)}
-                                                                                                                                        className="exit"
-                                                                                                                                    ><img src="/image/cross.png"></img>
-                                                                                                                                    </button>
-                                                                                                                                </div>
-
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    ))}
-                                                                                                                {values.answers.length < 4 && <button
-                                                                                                                    type="button"
-                                                                                                                    className="btn btn-addAnswer fa fa-plus"
-                                                                                                                    onClick={() => {
-                                                                                                                        if (values.answers.length < 4) {
-                                                                                                                            push({ content: '', isQuestionAnswer: false })
-                                                                                                                        }
-                                                                                                                    }}>
-                                                                                                                    Thêm đáp án
-                                                                      </button>}
-                                                                                                            </div>
-                                                                                                        )}
-                                                                                                    </FieldArray>
-                                                                                                </ol>
-                                                                                            </div>
-
-                                                                                        </div>
-                                                                                    </div>
+                                                                                    <ToeicQuestionCreate values={values} setFieldValue={setFieldValue} checkAnswer={this.checkAnswer}></ToeicQuestionCreate>
                                                                                 ))))
                                                             }
 
-                                                            <div className="col-md-4">
+                                                            <div className="col-md-4 border border-top-0 border-info">
                                                                 <div className="info-question">
                                                                     <div className="content">
                                                                         <div className="type">
@@ -1251,12 +823,16 @@ class Quiz_Exam extends Component {
                                                                                     as="select"
                                                                                     name="type"
                                                                                     value={this.state.questionSettings.type}
-                                                                                    onChange={this.ToToggleForm}
+                                                                                    onChange={(e) => this.ToToggleForm(e.target.value)}
                                                                                 >
-                                                                                    <option value="Quiz">Quiz</option>
-                                                                                    <option value="QuizHinhAnh" >Quiz hình ảnh</option>
-                                                                                    <option value="QuizSapXep" >Sắp xếp từ vựng</option>
-                                                                                    <option value="QuizNoiTu" >Nối từ</option></Field>}
+                                                                                    <option value="Basic">Mặc định</option>
+                                                                                    <option value="Arrange" >Sắp xếp</option>
+                                                                                    <option value="Connection" >Nối từ</option>
+                                                                                    <option value="Conversation" >Hội thoại</option>
+                                                                                    <option value="FillOut" >Điền chỗ trống 1</option>
+                                                                                    <option value="Select" >Điền chỗ trống 2</option>
+                                                                                </Field>
+                                                                            }
                                                                             {this.state.subject.type == 'Exam' &&
                                                                                 <Field
                                                                                     id="type"

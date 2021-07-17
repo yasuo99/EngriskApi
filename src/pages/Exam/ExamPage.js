@@ -17,6 +17,7 @@ import ReactPaginate from 'react-paginate';
 import Answer from '../../components/answer/Answer';
 import examApiv2 from '../../api/2.0/examApi';
 import queryString from 'querystring';
+import { QuestionTypes } from '../../constants/QuestionTypes';
 class ExamPage extends Component {
     constructor(props) {
         super(props);
@@ -545,12 +546,12 @@ class ExamPage extends Component {
                 <Fragment>
                     <Prompt when={!submitted} message="Bạn chưa nộp bài, có chắn chắn rời ?"></Prompt>
                     <div id="wrapper">
-                        <SubMenuClient></SubMenuClient>
                         <div id="content-wrapper" className="d-flex flex-column">
                             <div id="content">
-                                <HeaderClient></HeaderClient>
                                 <main id="hoc2">
                                     <div className="container">
+                                        <div>
+                                        </div>
                                         <div className="row kechan mt-5">
                                             <div className="col-4">Time left: <Countdown date={this.state.start + exam.duration * 60 * 1000} onComplete={this.submitExam} /></div>
                                             <div className="col-4"></div>
@@ -559,16 +560,16 @@ class ExamPage extends Component {
                                             </div>
                                             <div className="col-8 offset-2">
                                                 Câu {index + 1}
-                                                {currentQuestion.isListeningQuestion === false && currentQuestion.isFillOutQuestion === false && <div className="row"> <div className="col-5">
+                                                {currentQuestion.type === QuestionTypes.ToeicListening && <div className="row"> <div className="col-5">
                                                     <p className="mb-5">Chọn đáp án đúng</p></div>
                                                     {currentQuestion.imageFileName != undefined && <div className="col-7"><img src={`http://localhost:5000/api/v2/streaming/image?image=${currentQuestion.imageFileName}`} alt="" /></div>} </div>}
-                                                {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened == false &&
+                                                {currentQuestion.type === QuestionTypes.ToeicListening && this.state.listened == false &&
                                                     <div className="row">
                                                         <b>Chọn đáp án đúng</b>
                                                         <ReactPlayer url={currentQuestion.audio} playing={!this.state.listened} width="500px" height="30px" onEnded={() => this.listenningTimeout()} />
                                                         {currentQuestion.imageFileName != undefined && <div className="col-7"><img src={`http://localhost:5000/api/v2/streaming/image?image=${currentQuestion.imageFileName}`} alt="" /></div>}
                                                     </div>}
-                                                {currentQuestion.isListeningQuestion === true && currentQuestion.isFillOutQuestion === false && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
+                                                {currentQuestion.type === QuestionTypes.ToeicListening && this.state.listened && <p>Đây là câu hỏi nghe và chỉ được phép nghe 1 lần</p>}
                                                 <p>{currentQuestion.content}</p>
                                                 <Answer answers={this.state.currentShuffleAnswer} question={this.state.currentQuestion} setColor={this.setColor} selectedAnswer={this.selectedAnswer}></Answer>
                                             </div>

@@ -1,9 +1,23 @@
 import axiosClientv2 from "../../config/axiosClientv2";
 const clientUrl = `account/${JSON.parse(localStorage.getItem('account'))?.id}/quizzes`
 const quizApi = {
-    getAll: async () => {
+    getAll: async (params) => {
         const adminUrl = '/quizzes'
-        return await axiosClientv2.get(adminUrl)
+        return await axiosClientv2.get(adminUrl, {params})
+    },
+    get: async (id) => {
+        const url = `/quizzes/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, {headers});
+    },
+    edit: async (id,body) => {
+        const url = `/quizzes/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,body, {headers});
     },
     getUserQuizzes: async (id) => {
         const url = `/quizzes/user/${JSON.parse(localStorage.getItem('account')).id}`;

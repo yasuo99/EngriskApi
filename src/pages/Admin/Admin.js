@@ -4,7 +4,7 @@ import DashBoard from "../../components/admin/DashBoard";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
 
 class Admin extends Component {
-
+  
   render() {
     return (
       <div>

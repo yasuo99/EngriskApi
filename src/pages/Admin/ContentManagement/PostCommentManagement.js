@@ -5,6 +5,7 @@ import { Button, Tabs, Tab, Table, Modal, OverlayTrigger, Popover } from "react-
 import { Link } from "react-router-dom";
 import adminApi from "../../../api/2.0/adminApi";
 import Paginate from "../../../components/pagination/Paginate";
+import { toast } from "react-toastify";
 const PostCommentManagement = () => {
     const [postInspectModal, setPostInspectModal] = useState(false);
     const [posts, setPosts] = useState({
@@ -13,12 +14,27 @@ const PostCommentManagement = () => {
         items: [],
         totalPages: 1
     })
+    const [post, setPost] = useState({})
+    const [postRefresh, setPostRefresh] = useState(false);
+    const [commentRefresh, setCommentRefresh] = useState(false);
     const [comments, setComments] = useState({
         currentPage: 1,
         pageSize: 5,
         items: [],
         totalPages: 1
     })
+    useEffect(async () => {
+        if (postRefresh) {
+            const params = {
+                currentPage: posts.currentPage,
+                pageSize: posts.pageSize
+            }
+            const result = await adminApi.getWaitingCensorPosts(params);
+            console.log(result);
+            setPosts(result);
+            setPostRefresh(false);
+        }
+    }, [postRefresh])
     useEffect(async () => {
         const params = {
             currentPage: posts.currentPage,
@@ -30,25 +46,54 @@ const PostCommentManagement = () => {
     }, [posts.currentPage, posts.pageSize])
     useEffect(async () => {
         const params = {
-            currentPage: posts.currentPage,
-            pageSize: posts.pageSize
+            currentPage: comments.currentPage,
+            pageSize: comments.pageSize
         }
         const result = await adminApi.getWaitingCensorComments(params);
         setComments(result);
     }, [comments.currentPage, comments.pageSize])
-    function postPaginationChange(currentPage, pageSize){
+    useEffect(async () => {
+        if (commentRefresh) {
+            const params = {
+                currentPage: comments.currentPage,
+                pageSize: comments.pageSize
+            }
+            const result = await adminApi.getWaitingCensorComments(params);
+            setComments(result);
+            setCommentRefresh(false);
+        }
+    }, [commentRefresh])
+    function togglePostInspectModal(post) {
+        setPostInspectModal(!postInspectModal);
+        setPost(post);
+    }
+    function postPaginationChange(currentPage, pageSize) {
         setPosts({
             ...posts,
             currentPage: currentPage,
             pageSize: pageSize
         })
     }
-    function commentPaginationChange(currentPage, pageSize){
+    function commentPaginationChange(currentPage, pageSize) {
         setComments({
             ...comments,
             currentPage: currentPage,
             pageSize: pageSize
         })
+    }
+    async function censorComment(id, type, status) {
+        const result = await adminApi.submitCensored(id, type, status, 'Easy')
+        if (result.status === 200) {
+            toast('Thành công', { type: 'success' })
+            if (type === 'Post') {
+                setPostRefresh(true);
+            } else {
+                setCommentRefresh(true);
+            }
+        }
+        else {
+            toast('Thất bại', { type: 'error' })
+        }
     }
     return (<div>
         <div id="wrapper">
@@ -57,8 +102,8 @@ const PostCommentManagement = () => {
                 <div id="content">
                     <HeaderAdmin></HeaderAdmin>
                     <div className="container-fluid ql_quiz">
-                        <Tabs defaultActiveKey="quiz" id="controlled-tab-example">
-                            <Tab eventKey="quiz" title="Danh sách bài viết chờ duyệt" tabClassName='font-weight-bold'>
+                        <Tabs defaultActiveKey="post" id="controlled-tab-example">
+                            <Tab eventKey="post" title="Danh sách bài viết chờ duyệt" tabClassName='font-weight-bold'>
 
                                 <div className="card shadow mb-4">
                                     <div className="card-body">
@@ -99,7 +144,8 @@ const PostCommentManagement = () => {
                                                                 </td>
                                                             </OverlayTrigger>
                                                             <td>
-                                                                <Button variant="primary" className="btn btn-add mr-2" ><i className="fa fa-eye"></i></Button>
+                                                                <Button variant="primary" className="btn btn-add mr-2" onClick={() => censorComment(post.id, 'Post', 'Approved')} ><i className="fa fa-check"></i></Button>
+                                                                <Button variant="danger" className="btn btn-add mr-2 btn-delete" onClick={() => censorComment(post.id, 'Post', 'Declined')} ><i className="fa fa-remove"></i></Button>
                                                             </td>
                                                         </tr>
                                                     )}
@@ -109,7 +155,7 @@ const PostCommentManagement = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <Modal show={quizInspectModal} onHide={() => toggleQuizInspectModal({})} dialogClassName="modal-90w" size="lg">
+                                {/* <Modal show={postInspectModal} onHide={() => toggleQuizInspectModal({})} dialogClassName="modal-90w" size="lg">
                                     <Modal.Body>
                                         <QuizPreview quiz={selectedQuiz} closeReview={() => toggleQuizInspectModal({})}></QuizPreview>
                                     </Modal.Body>
@@ -123,7 +169,7 @@ const PostCommentManagement = () => {
                                     </Modal.Footer>
                                 </Modal> */}
                             </Tab >
-                            <Tab eventKey="exam" title="Danh sách bình luận chờ duyệt" tabClassName='font-weight-bold'>
+                            <Tab eventKey="comment" title="Danh sách bình luận chờ duyệt" tabClassName='font-weight-bold'>
                                 <div className="card shadow mb-4">
                                     <div className="card-body">
                                         <div className="table-responsive">
@@ -177,8 +223,8 @@ const PostCommentManagement = () => {
                                                                 </td>
                                                             </OverlayTrigger>
                                                             <td>
-                                                                <Button variant="primary" className="btn btn-add mr-2" ><i className="fa fa-check"></i></Button>
-                                                                <Button variant="danger" className="btn btn-add mr-2 btn-delete" ><i className="fa fa-remove"></i></Button>
+                                                                <Button variant="primary" className="btn btn-add mr-2" onClick={() => censorComment(comment.id, 'Comment', 'Approved')} ><i className="fa fa-check"></i></Button>
+                                                                <Button variant="danger" className="btn btn-add mr-2 btn-delete" onClick={() => censorComment(comment.id, 'Comment', 'Declined')} ><i className="fa fa-remove"></i></Button>
                                                             </td>
                                                         </tr>
                                                     )}

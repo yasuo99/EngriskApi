@@ -6,31 +6,42 @@ import HeaderAdmin from "../../components/admin/HeaderAdmin";
 import SubMenu from "../../components/admin/SubMenu";
 import { toast } from "react-toastify";
 import Paginate from "../../components/pagination/Paginate";
+import Search from "../../components/search/Search";
 
 const ManagementCategories = () => {
-  const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState({});
   const [modalCreate, setModalCreate] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [name, setName] = useState("");
   const [image, setImage] = useState({});
-  const [pagination, setPagination] = useState({
+  const [categories, setCategories] = useState({
     currentPage: 1,
     pageSize: 5,
-    totalPages: 0
+    totalPages: 1,
+    items: []
   });
-  useEffect(async () => {
-    const result = await wordCategoryApi.getAll(pagination);
-    setCategories(result.items);
-    setPagination({
-      currentPage: result.currentPage,
-      pageSize: result.pageSize,
-      totalPages: result.totalPages
-    });
-  }, [pagination.currentPage,pagination.pageSize]);
+  const [isRefresh, setIsRefresh] = useState(false);
+  const [query, setQuery] = useState('')
+  async function fetchCategories() {
+    const params = {
+      currentPage: categories.currentPage,
+      pageSize: categories.pageSize,
+      search: query
+    }
+    const result = await wordCategoryApi.getAll(params);
+    setCategories(result);
+  }
+  useEffect(() => {
+    fetchCategories();
+  }, [categories.currentPage, categories.pageSize, query]);
+  useEffect(() => {
+    if (isRefresh) {
+      fetchCategories();
+      setIsRefresh(false);
+    }
+  }, [isRefresh])
   function toggleModalCreate() {
-    console.log(pagination);
     modalCreate ? setModalCreate(false) : setModalCreate(true);
   }
   async function create() {
@@ -43,8 +54,7 @@ const ManagementCategories = () => {
     switch (result.status) {
       case 200:
         toast("Thêm thành công", { type: "success" });
-        categories.push(result.data);
-        setCategory(categories);
+        setIsRefresh(true)
         break;
       case 409:
         toast("Tài nguyên trùng", { type: "warning" });
@@ -63,7 +73,7 @@ const ManagementCategories = () => {
   }
   async function edit() {
     var formData = new FormData();
-    formData.set("CategoryName", name);
+    formData.set("CategoryName", name || category.categoryName);
     formData.set("Image", image);
     const result = await wordCategoryApi.updateWordCategory(
       category.id,
@@ -72,9 +82,7 @@ const ManagementCategories = () => {
     switch (result.status) {
       case 200:
         toast("Cập nhật thành công", { type: "info" });
-        const index = categories.findIndex((cate) => cate.id == category.id);
-        categories[index] = result.data;
-        setCategory(categories);
+        setIsRefresh(true)
         break;
       case 404:
         toast("Không tìm thấy tài nguyên", { type: "warning" });
@@ -110,17 +118,19 @@ const ManagementCategories = () => {
     toggleModalDelete({});
   }
   async function pageChange(currentPage, pageSize) {
-    const params = {
+    setCategories({
+      ...categories,
       currentPage: currentPage,
-      pageSize: pageSize,
-    };
-    setPagination({
-      ...pagination,
-      currentPage: params.currentPage,
-      pageSize: params.pageSize
+      pageSize: pageSize
     })
   }
-  console.log(pagination);
+  function search(query){
+    setQuery(query);
+    setCategories({
+      ...categories,
+      currentPage: 1
+    })
+  }
   return (
     <div>
       <div id="wrapper">
@@ -136,34 +146,38 @@ const ManagementCategories = () => {
                   </h6>
                 </div>
                 <div className="card-body">
-                  <button
-                    className="btn btn-primary mb-2"
-                    onClick={toggleModalCreate}
-                  >
-                    Thêm nhóm từ vựng
-                  </button>
+                  <div className='d-flex justify-content-between'>
+                    <button
+                      className="btn btn-primary mb-2"
+                      onClick={toggleModalCreate}
+                    >
+                      Thêm nhóm từ vựng
+                    </button>
+                    <Search queryFunction={search}></Search>
+                  </div>
+
                   <div className="table-responsive">
                     <Table striped bordered hover>
                       <thead>
                         <tr>
                           <th>Tên nhóm</th>
-                          <th>Ảnh</th>
+                          <th className="table-image">Ảnh</th>
                           <th>Số lượng từ vựng</th>
                           <th>Chức năng</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {categories.map((category, index) => (
+                        {categories.items.map((category, index) => (
                           <tr key={index}>
-                            <th>{category.categoryName}</th>
-                            <th>
+                            <td>{category.categoryName}</td>
+                            <td>
                               <img
-                                className="img-thumbnail"
-                                src={`${process.env.REACT_APP_V2_API_URL}/streaming/image?image=${category.categoryImage}`}
+                                className="img-fluid"
+                                src={category.categoryImage}
                               />
-                            </th>
-                            <th>{category.words.length}</th>
-                            <th>
+                            </td>
+                            <td>{category.words.length}</td>
+                            <td>
                               <button
                                 className="btn btn-success"
                                 onClick={() => toggleModalEdit(category)}
@@ -176,16 +190,16 @@ const ManagementCategories = () => {
                               >
                                 <i className="fa fa-trash"></i>
                               </button>
-                            </th>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </Table>
                     <div>
                       <Paginate
-                        currentPage={pagination.currentPage}
-                        totalPages={pagination.totalPages}
-                        pageSize={pagination.pageSize}
+                        currentPage={categories.currentPage}
+                        totalPages={categories.totalPages}
+                        pageSize={categories.pageSize}
                         change={pageChange}
                       />
                     </div>
@@ -251,7 +265,7 @@ const ManagementCategories = () => {
                       <span>Hình ảnh</span>
                       <img
                         className="img-thumbnail"
-                        src={`${process.env.REACT_APP_V2_API_URL}/streaming/image?image=${category.categoryImage}`}
+                        src={category.categoryImage}
                       />
                     </div>
                   </div>
