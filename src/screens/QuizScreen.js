@@ -204,7 +204,7 @@ const QuizScreen = ({ route, navigation }) => {
 
             <View style={{ justifyContent: "center", alignItems: "center", marginTop: 20 }}>
                 <Text style={styles.titleQuestion}>{quiz.quizName}</Text>
-                <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
+                {/* <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text> */}
                 <Text style={styles.numberQuestion}>Số câu đã chọn : {index} /{quiz.questions.length}</Text>
             </View>
             {

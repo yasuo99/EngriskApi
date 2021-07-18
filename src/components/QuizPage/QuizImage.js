@@ -40,7 +40,7 @@ const QuizImage = ({quiz}) => {
             numColumns={2}
             renderItem={({item, index})=>(
                 <TouchableOpacity disabled={answers.some(ans => ans.question == currentQuestion)} key={index} onPress={() => selectAnswer(item,index)} style={answers.find(ans => ans.answer == item) != undefined ? answers.find(ans => ans.answer == item).result && answers.find(ans => ans.answer == item).index == index ? styles.answerCorrect : styles.answerWrong : styles.answer}>
-                <Image source={`${BaseApiUrl}/streaming/image?image=${item.photoUrl}`} style={{width:70,height:70}}></Image>
+                <Image source={item.photoUrl} style={{width:70,height:70}}></Image>
                 <ScrollView>
                     <Text style={styles.contentAnswer}>{item.answer}</Text>
                 </ScrollView>

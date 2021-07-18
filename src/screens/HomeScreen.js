@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AuthorizationActions from '../redux/actions/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from "@react-native-community/netinfo";
+import { connection } from '../constants/hubConnection';
 const HomeScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalTwoVisible, setModalTwoVisible] = useState(false);
@@ -109,6 +110,7 @@ const HomeScreen = ({ navigation }) => {
     NetInfoSub = NetInfo.addEventListener(
       checkConnection,
     )
+   
     // async function fetchData() {
     //   try {
     //     const data = await HomeActions.getData(account.id);
@@ -344,7 +346,7 @@ const HomeScreen = ({ navigation }) => {
             {!isBusy && homeData.quizzes.map((quiz, index) =>
               <View style={styles.box} key={index}>
                 <TouchableOpacity animation="fadeInLeft" onPress={quiz.questions.length == 0 ? () => { inform() } : () => navigation.navigate('Quiz', { quizId: quiz.id })}>
-                  <ScrollView style={{height:80}}><Text style={styles.titleQuiz}>{quiz.quizName}</Text></ScrollView>
+                  <ScrollView style={{ height: 80 }}><Text style={styles.titleQuiz}>{quiz.quizName}</Text></ScrollView>
                 </TouchableOpacity>
                 <Text style={styles.question}>Số câu hỏi: {quiz.questions.length}</Text>
                 <Text style={styles.level}>Độ khó: {quiz.difficultLevel}</Text>

@@ -19,12 +19,15 @@ const ListSectionScreen = ({ navigation }) => {
     };
     const SECTIONS = lastRoute.sections.map((section, index) =>
     ({
+        id: section.id,
+        routeId: section.routeId,
         lesson: `Bài ${index + 1}`,
         title: `${section.sectionName}`,
         imageLesson: require('../assets/avatar2.png'),
         expand: `${section.description}`,
         imageExpand: require('../assets/english.jpg'),
-        time: '1 phút'
+        time: '1 phút',
+        scripts: section.scripts
     }));
 
     //   const _renderSectionTitle = (section) => {
@@ -35,7 +38,7 @@ const ListSectionScreen = ({ navigation }) => {
     //     );
     //   };
 
-    const _renderHeader = (section) => {
+const _renderHeader = (section) => {
         return (
             <View style={{ flexDirection: "row", width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
                 <View style={{ flexDirection: "column" }}>
@@ -50,15 +53,26 @@ const ListSectionScreen = ({ navigation }) => {
     };
 
     const _renderContent = (section) => {
+        console.log('script', section);
         return (
             <LinearGradient
                 colors={['rgba(2,33,64,0.4)', 'rgba(30,66,88,0.4)', 'rgba(30,66,88,0.4)']}
                 style={styles.linearGradient}>
                 <Image source={section.imageExpand} style={styles.image} ></Image>
                 <View style={{ zIndex: 9999, marginTop: -140 }}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Lesson') }}><Text style={{ marginLeft: 16, fontSize: 21, color: "#fff", fontWeight: "bold" }}>{section.expand}</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => { navigation.navigate('Lesson',{scripts: JSON.stringify(section.scripts), title: section.title, expand: section.expand, sectionId: section.id, routeId: section.routeId})}}><Text style={{ marginLeft: 16, fontSize: 21, color: "#fff", fontWeight: "bold" }}>{section.expand}</Text></TouchableOpacity>
                     <Text style={{ marginLeft: 16, fontSize: 21, color: "#fff" }}>{section.time}</Text>
                     <View style={{ flexDirection: "row", marginLeft: 10, marginTop: 8 }}>
+                        {section?.scripts.map((script, idx) =>
+                            <MaterialIcons
+                                key={idx}
+                                name="check-circle"
+                                size={32}
+                                color="#1DA1F2">
+                            </MaterialIcons>
+                        )}
+
+                        {/* <View style={{ borderBottomWidth: 4, borderColor: "#1DA1F2", width: 20, marginBottom: 14 }}></View>
                         <MaterialIcons
                             name="check-circle"
                             size={32}
@@ -69,13 +83,7 @@ const ListSectionScreen = ({ navigation }) => {
                             name="check-circle"
                             size={32}
                             color="#1DA1F2">
-                        </MaterialIcons>
-                        <View style={{ borderBottomWidth: 4, borderColor: "#1DA1F2", width: 20, marginBottom: 14 }}></View>
-                        <MaterialIcons
-                            name="check-circle"
-                            size={32}
-                            color="#1DA1F2">
-                        </MaterialIcons>
+                        </MaterialIcons> */}
                     </View>
                 </View>
 
@@ -89,80 +97,80 @@ const ListSectionScreen = ({ navigation }) => {
     };
     const drawerContent = () => {
         return (
-          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-            <FontAwesome
-              name="bars"
-              color="#ffffff"
-              size={32}
-            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-            />
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
-              <MaterialIcons
-                name="home"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+                <FontAwesome
+                    name="bars"
+                    color="#ffffff"
+                    size={32}
+                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                />
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => { navigation.navigate('Home'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="home"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListSection'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="ballot"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListExam'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="rule"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="book"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Message'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="chat"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Calender'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="today"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Notification'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="notifications"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+                    <MaterialIcons
+                        name="logout"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+                </TouchableOpacity>
             </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
-              <MaterialIcons
-                name="ballot"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
-              <MaterialIcons
-                name="rule"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
-              <MaterialIcons
-                name="book"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
-              <MaterialIcons
-                name="chat"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
-              <MaterialIcons
-                name="today"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
-              <MaterialIcons
-                name="notifications"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
-              <MaterialIcons
-                name="logout"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
-            </TouchableOpacity>
-          </TouchableOpacity>
         );
-      };
+    };
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
@@ -268,7 +276,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         height: 140,
     },
-    
+
 });
 
 export default ListSectionScreen;

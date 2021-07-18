@@ -9,11 +9,12 @@ import QuestionSection from '../components/SectionPage/QuestionSection'
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
-const SectionScreen = ({ navigation }) => {
+const SectionScreen = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
+    const { routeId, sectionId, scriptId } = route.params
     const { lastRoute } = useSelector(state => state.route);
     console.log(lastRoute);
     const [open, setOpen] = useState(false)
@@ -144,7 +145,7 @@ const SectionScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <Section></Section>
+            <Section routeId={routeId} sectionId={sectionId} scriptId={scriptId} navigation={navigation}></Section>
         </View>
     );
 };

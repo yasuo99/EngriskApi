@@ -1,6 +1,7 @@
 import { AuthorizationActionTypes } from "../actions/auth";
 import { toastError, toastSuccess } from '../../utils/toastHelper';
-
+import signalr from 'react-native-signalr';
+import { Base } from './../../constants/api';
 const INITIAL_STATE = {
   account: {},
   token: '',
@@ -30,6 +31,17 @@ const auth = (state = INITIAL_STATE, action) => {
       return {...state};
     case AuthorizationActionTypes.LOGIN:
       console.log('login');
+      const connection = new signalr.hubConnection(`${Base}/notification`, {
+        qs: {
+          access_token: action.token,
+        }
+      })
+      connection.logging = true;
+      connection.start().done(() => {
+        console.log('Now connected, connection ID=' + connection.id);
+      }).fail((error) => {
+        console.log(error);
+      })
       return {
         ...state,
         token: action.token,
