@@ -1,5 +1,5 @@
 import axiosClient from "../../utils/axiosClient";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const HomeActionsTypes = {
     GET_DATA: 'GET_DATA'
 };
@@ -12,6 +12,7 @@ Object.keys(HomeActionsTypes).forEach((key) => {
 const getHomeData = async (id) => {
     try {
         const data = await axiosClient.get(`/app/${id}`)
+        await AsyncStorage.setItem('home',JSON.stringify(data));
         return {
             type: HomeActionsTypes.GET_DATA,
             data

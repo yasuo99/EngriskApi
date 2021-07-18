@@ -47,19 +47,21 @@ class Notification {
             (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
           );
     }
-    kirimNotifikasi = (channel,judul,pesan) => {
+    kirimNotifikasi = (channel,judul,date,pesan) => {
         PushNotification.localNotification({
             channelId: channel, // 
             title: judul, // (optional)
+            date: date,
             message: pesan, // (required)
         });
     }
 
-    kirimNotifikasiJadwal = (channel,judul,pesan) => {
+    kirimNotifikasiJadwal = (channel,judul,date,pesan) => {
         PushNotification.localNotificationSchedule({
             channelId:channel,
             message: pesan, // (required)
-            date: new Date(Date.now() + (5 * 1000)), // in 60 secs
+            // date: new Date(Date.now() + (5 * 1000)), // in 60 secs
+            date: date,
             title:judul,
           });
     }

@@ -4,7 +4,7 @@ const initial = {
     engrisk: [],
     private: [],
     lastRoute: {
-        sections: []
+        sections: [],
     }
 }
 const route = (state = initial, action) => {

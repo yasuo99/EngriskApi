@@ -16,6 +16,7 @@ const getAll = async (id) => {
         Authorization: `Bearer ${await AsyncStorage.getItem('token')}`
     }
     const data = await axiosClient.get(url,{headers})
+    await AsyncStorage.setItem('routes',JSON.stringify(data));
     return({
         type: RouteActionTypes.GET_ALL,
         routes: data

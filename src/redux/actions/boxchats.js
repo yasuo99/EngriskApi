@@ -1,5 +1,5 @@
 import axiosClient from "../../utils/axiosClient"
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const BoxChatActionsTypes = {
     GET_ALL: 'GET_ALL',
     GET_DETAIL: 'GET_DETAIL',
@@ -15,6 +15,7 @@ const getAll = async (id) => {
         Authorization: `Bearer {token}`
     }
     const data = await axiosClient.get(url);
+    await AsyncStorage.setItem('boxchats',JSON.stringify(data));
     return {
         type: BoxChatActionsTypes.GET_ALL,
         data: data

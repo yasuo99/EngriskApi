@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, Button } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import NetInfo from "@react-native-community/netinfo";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import NotificationActions from '../redux/actions/notifications';
 import Moment from 'react-moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notification } from '../components/NotificationPage/Notification'
 const sendMessage = () => {
   notification.configure();
@@ -23,13 +25,12 @@ const NotificationItem = ({ item }) => (
       <View style={styles.itemTopTextContainer}>
         <Text style={styles.itemName}>{item.content}</Text>
         <Moment element={Text} format="YYYY/MM/DD" style={{ color: "#fff", marginTop: 5 }}>{item.createdDate}</Moment>
-        <Button onPress={sendMessage} title="Nhận thông báo"></Button>
+        {/* <Button onPress={sendMessage} title="Nhận thông báo"></Button> */}
         {/* <View style={styles.itemDate}>{item.createdDate}</View> */}
+        <Text style={styles.itemDetail}>{item.status}</Text>
       </View>
     </View>
-    <View>
-      <Text style={styles.itemDetail}>{item.status}</Text>
-    </View>
+
     <View style={styles.kengang}></View>
   </View>
 );
@@ -38,14 +39,29 @@ const NotificationScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [isBusy, setIsBusy] = useState(true);
-  useEffect(async () => {
-    try {
-      const data = await NotificationActions.getData(1)
-      console.log(data);
-      setNotifications(data.data);
-    } catch (error) {
-      console.log(error);
+  const checkConnection = async (state) =>{   
+    if (state.isConnected) {
+      try {
+        const data = await NotificationActions.getData(1)
+        console.log(data);
+        setNotifications(data.data.items);
+      } catch (error) {
+        console.log(error);
+      }
+    } 
+    else {
+      AsyncStorage.getItem('notification')
+      .then(notified => {
+        let data = JSON.parse(notified)
+        setNotifications(data)
+      })
+      
     }
+ }
+  useEffect(async () => {
+    NetInfoSub = NetInfo.addEventListener(
+      checkConnection,
+    )
 
   }, [setNotifications])
   const toggleOpen = () => {
@@ -233,7 +249,7 @@ const styles = StyleSheet.create({
   itemDetail: {
     color: '#ccc',
     fontSize: 14,
-    marginTop: 12,
+    marginTop: 5,
   },
   buttonExit: {
     marginTop: 8,

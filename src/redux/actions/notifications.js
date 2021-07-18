@@ -1,5 +1,5 @@
 import axiosClient from "../../utils/axiosClient";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const NotificationActionsTypes = {
     GET_ALL: "GET_ALL",
 }
@@ -12,11 +12,11 @@ const getAll = async (id) => {
     const params = {
         pageSize: 50,
     }
-    const notifications = await axiosClient.get(url,{params})
-    console.log(notifications);
+    const data = await axiosClient.get(url,{params})
+    await AsyncStorage.setItem('notification',JSON.stringify(data.items));
     return {
         type: NotificationActions.GET_ALL,
-        data: notifications.items
+        data: data
     }
 }
 const NotificationActions = {

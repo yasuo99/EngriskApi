@@ -201,6 +201,7 @@ const CreateGroupScreen = ({ navigation }) => {
             <View>
                 <ScrollView style={{ flexDirection: "row" }} horizontal={true}>
                     {active === true ? (
+                        <>
                         <View style={{ margin: 16, alignItems: 'center' }}>
                             <View style={{ flexDirection: "row" }}>
                                 <Image
@@ -219,6 +220,25 @@ const CreateGroupScreen = ({ navigation }) => {
                                 Thanh Lap
                             </Text>
                         </View>
+                        <View style={{ margin: 16, alignItems: 'center' }}>
+                            <View style={{ flexDirection: "row" }}>
+                                <Image
+                                    source={require('../assets/avatar.png')}
+                                    style={{ width: 70, height: 70, zIndex: -1 }}>
+                                </Image>
+                                <TouchableOpacity onPress={checkActive}>
+                                    <MaterialIcons
+                                        name="cancel"
+                                        size={32}
+                                        color="#ffffff"
+                                        style={{ marginLeft: -20, zIndex: 1 }}></MaterialIcons>
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={{ color: '#fff', fontSize: 18, marginTop: 4 }}>
+                                Ngọc Thanh
+                            </Text>
+                        </View>
+                        </>
                     ) : <View></View>}
                 </ScrollView>
             </View>
@@ -261,7 +281,7 @@ const CreateGroupScreen = ({ navigation }) => {
                                     source={require('../assets/avatar.png')}
                                     style={{ width: 60, height: 60 }}></Image>
                                 <Text style={{ color: '#fff', fontSize: 24, marginTop: 12, marginLeft: 10 }}>
-                                    Thanh Lap
+                                    Ngọc Thanh
                                 </Text>
                             </View>
                         }

@@ -13,11 +13,13 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { SearchBar } from 'react-native-elements';
+import NetInfo from "@react-native-community/netinfo";
 import ModalDropdown from 'react-native-modal-dropdown';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ExamsActions from '../redux/actions/exams';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ListExamScreen = ({ navigation }) => {
     const [search, setSearch] = useState('')
     const updateSearch = (search) => {
@@ -25,13 +27,28 @@ const ListExamScreen = ({ navigation }) => {
     };
     const [open, setOpen] = useState(false)
     const [exams, setExams] = useState([])
-    useEffect(async () => {
-        try {
-            const data = await ExamsActions.getAll();
-            setExams(data.data)
-        } catch (error) {
-            console.log(error);
+    const checkConnection = async (state) =>{   
+        if (state.isConnected) {
+            try {
+                const data = await ExamsActions.getAll();
+                setExams(data.data)
+            } catch (error) {
+                console.log(error);
+            }
+        } 
+        else {
+          AsyncStorage.getItem('exams')
+          .then(exam => {
+            let data = JSON.parse(exam)
+            setExams(data)
+          })
+          
         }
+     }
+    useEffect(async () => {
+        NetInfoSub = NetInfo.addEventListener(
+            checkConnection,
+          )
     }, [setExams])
     const toggleOpen = () => {
         setOpen(!open);

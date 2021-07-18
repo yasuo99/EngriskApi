@@ -13,7 +13,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from "@react-native-community/netinfo";
 const SplashScreen = ({ navigation }) => {
     const { colors } = useTheme();
     const { loggedIn } = useSelector(state => state.auth)
@@ -25,20 +26,34 @@ const SplashScreen = ({ navigation }) => {
             )
         )
     }
-    useEffect(async () => {
+    const checkConnection = async (state) =>{  
         try {
             const data = await performTimeConsumingTask();
             if (data) {
-                if (!loggedIn) {
-                    navigation.navigate('SignIn')
-                } else {
-                    navigation.navigate('Tab')
+                if (state.isConnected) {
+                    if (!loggedIn) {
+                        navigation.navigate('SignIn')
+                    } else {
+                        navigation.navigate('Tab')
+                    }
+                } 
+                else {
+                    AsyncStorage.getItem('token')
+                    .then(token => {
+                      if(token){
+                        navigation.navigate("Tab")
+                      }
+                    })
                 }
             }
         } catch (error) {
             console.log(error);
-        }
-
+        } 
+     }
+    useEffect(async () => {
+        NetInfoSub = NetInfo.addEventListener(
+            checkConnection,
+          )
 
     })
     return (

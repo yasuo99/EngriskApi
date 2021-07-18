@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, ToastAndroid, Platform, Alert  } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import NetInfo from "@react-native-community/netinfo";
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
@@ -9,6 +10,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 import WordCategoriesActions from '../redux/actions/wordCategory';
 import Toast from 'react-native-simple-toast';
 import { BaseApiUrl } from '../constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ListFlashCardScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
     const [activeSections, setActiveSections] = useState([])
@@ -16,14 +18,27 @@ const ListFlashCardScreen = ({ navigation }) => {
     const toggleOpen = () => {
         setOpen(!open);
     };
-    useEffect(async () => {
-        try {
-            const wordcategories = await WordCategoriesActions.getAll();
-            setWordCategories(wordcategories.data.items);
-            console.log(wordcategories.data.items)
-        } catch (error) {
-            console.log(error);
+  const checkConnection = async (state) =>{   
+     if (state.isConnected) {
+        try{
+          const wordcategories = await WordCategoriesActions.getAll();
+          setWordCategories(wordcategories.data.items)
+        }catch (error) {
+          console.log(error);
         }
+     } 
+     else {
+       AsyncStorage.getItem('wordCategories')
+       .then(wordCategory => {
+         let data = JSON.parse(wordCategory)
+         setWordCategories(data)
+       })
+     }
+  }
+    useEffect(async () => {
+        NetInfoSub = NetInfo.addEventListener(
+        checkConnection,
+      )
     },[setWordCategories])
     const drawerContent = () => {
         return (
@@ -169,6 +184,11 @@ const ListFlashCardScreen = ({ navigation }) => {
                         </View>
                     </View>)}
             />
+            {/* <ScrollView>
+              {
+                wordCategories
+              }
+            </ScrollView> */}
         </View>
     );
 };

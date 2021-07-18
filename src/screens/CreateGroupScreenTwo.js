@@ -201,7 +201,7 @@ const CreateGroupScreenTwo = ({ navigation }) => {
                         source={require('../assets/avatar.png')}
                         style={{ width: 60, height: 60 }}></Image>
                     <Text style={{ color: '#fff', fontSize: 24, marginTop: 12, marginLeft: 10 }}>
-                        Thanh Lap
+                        Ngọc Thanh
                     </Text>
                 </View>
 

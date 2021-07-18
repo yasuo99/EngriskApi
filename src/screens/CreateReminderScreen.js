@@ -19,126 +19,172 @@ import Feather from 'react-native-vector-icons/Feather';
 import DatePicker from 'react-native-date-picker'
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const logo = require('../../assets/world.png');
 import { notification } from '../components/NotificationPage/Notification'
-const sendMessage = () => {
-    notification.configure();
-    notification.buatChannel("2");
-    notification.kirimNotifikasiJadwal("2", "Thông báo nhắc nhở", "Làm bài kiểm tra vào lúc 9A.M");
-}
-const CreateReminderScreen = ({ navigation }) => {
-    const [date, setDate] = React.useState(new Date());
-    const [open, setOpen] = useState(false)
-    const [data, setData] = React.useState({
-        title: '',
-        content: '',
-        time: '',
-        beforeTime: '',
-    });
 
+const CreateReminderScreen = ({ navigation }) => {
+    const [open, setOpen] = useState(false)
+    const [data, setData] = useState(
+        {
+            title: '',
+            content: '',
+            time: new Date(),
+            checkTitle: false,
+            checkContent: false,
+            checkTime: false,
+    });
+    const [check, setCheck] = useState(
+        {
+            checkTitle: false,
+            checkContent: false,
+            checkTime: false,
+    });
     const handleTitle = (val) => {
         setData({
             ...data,
             title: val,
+            
         });
+        setCheck({
+            checkTitle: true
+        })
     }
     const handleContent = (val) => {
         setData({
             ...data,
             content: val,
+           
         });
+        setCheck({
+            checkContent: true
+        })
     }
     const handleTime = (val) => {
         setData({
             ...data,
             time: val,
         });
+        setCheck({
+            checkTime: true
+        })
     }
-    const handleBeforeTime = (val) => {
+    function createReminder() {
+        notification.configure();
+        notification.buatChannel(1);
+        notification.kirimNotifikasiJadwal(1, "Thông báo nhắc nhở", data.time, data.content);
+        // console.log(reminder)
+        // await AsyncStorage.setItem('reminders', JSON.stringify(data))
+        AsyncStorage.getItem('reminder')
+          .then(reminder => {
+            if(reminder !== null){
+                const test = JSON.parse(reminder)
+                test.push(data)
+                AsyncStorage.setItem('reminder', JSON.stringify(test))
+                console.log(reminder);
+            }
+            else{
+                const test = [];
+                test.push(data)
+                AsyncStorage.setItem('reminder', JSON.stringify(test))
+                console.log(reminder);
+            }
+          })
+        // AsyncStorage.getItem('reminder')
+        // .then(reminder => {
+        //     console.log(reminder)
+        // })
         setData({
-            ...data,
-            beforeTime: val,
-        });
+            title: '',
+            content: '',
+            time: new Date(),
+            
+        })
+        setCheck({
+            checkTitle: false,
+            checkContent: false,
+            checkTime: false,
+        })
     }
     const toggleOpen = () => {
         setOpen(!open);
     };
     const drawerContent = () => {
         return (
-          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-            <FontAwesome
-              name="bars"
-              color="#ffffff"
-              size={32}
-            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-            />
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
-              <MaterialIcons
-                name="home"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+                <FontAwesome
+                    name="bars"
+                    color="#ffffff"
+                    size={32}
+                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                />
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => { navigation.navigate('Home'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="home"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListSection'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="ballot"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListExam'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="rule"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="book"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Message'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="chat"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Calender'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="today"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Notification'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="notifications"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+                    <MaterialIcons
+                        name="logout"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+                </TouchableOpacity>
             </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
-              <MaterialIcons
-                name="ballot"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
-              <MaterialIcons
-                name="rule"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
-              <MaterialIcons
-                name="book"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
-              <MaterialIcons
-                name="chat"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
-              <MaterialIcons
-                name="today"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
-              <MaterialIcons
-                name="notifications"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
-              <MaterialIcons
-                name="logout"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
-            </TouchableOpacity>
-          </TouchableOpacity>
         );
-      };
+    };
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#15202B' barStyle="light-content" />
@@ -200,6 +246,7 @@ const CreateReminderScreen = ({ navigation }) => {
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(val) => handleTitle(val)}
+                        value={data.title}
                     />
                 </View>
                 <Text style={styles.text_content}>Nội dung <Text style={{ color: '#FF0000', fontSize: 18 }}>*</Text>
@@ -211,6 +258,7 @@ const CreateReminderScreen = ({ navigation }) => {
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(val) => handleContent(val)}
+                        value={data.content}
                     />
                 </View>
                 <Text style={styles.text_time}>Thời gian <Text style={{ color: '#FF0000', fontSize: 18 }}>*</Text>
@@ -218,9 +266,9 @@ const CreateReminderScreen = ({ navigation }) => {
 
                 <View style={styles.boxDate}>
                     <DatePicker
-                        date={date}
-                        onDateChange={setDate}
-                        mode="time"
+                        date={data.time}
+                        onDateChange={(val) => handleTime(val)}
+                        mode="datetime"
                         style={{ width: 400, marginTop: 10, height: 120, backgroundColor: "#fff" }}
                         androidVariant="nativeAndroid"
                     />
@@ -228,7 +276,7 @@ const CreateReminderScreen = ({ navigation }) => {
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={styles.create}
-                        onPress={sendMessage}
+                        onPress={createReminder}
                     >
                         <LinearGradient
                             colors={['#1DA1F2', '#1DA1F2']}

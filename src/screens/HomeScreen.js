@@ -26,6 +26,8 @@ import { BaseApiUrl } from '../constants/api';
 import RouteActions from '../redux/actions/routes';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthorizationActions from '../redux/actions/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from "@react-native-community/netinfo";
 const HomeScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalTwoVisible, setModalTwoVisible] = useState(false);
@@ -52,38 +54,92 @@ const HomeScreen = ({ navigation }) => {
     setModalVisible(!isModalVisible);
     setSelectUser(user)
   };
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await HomeActions.getData(account.id);
-        const routes = await RouteActions.getAll(account.id);
-        console.log(routes);
-        dispatch(RouteActions.saveAll(routes.routes))
-        setHomeData({
-          ...homeData,
-          quizzes: data.data.quizzes,
-          users: data.data.users,
-          words: data.data.words,
-          routes: routes.routes
-        });
-        setIsBusy(false);
-      } catch (error) {
-        console.log(error);
+  const checkConnection = async (state) => {
+    if (state.isConnected) {
+      async function fetchData() {
+        try {
+          const data = await HomeActions.getData(account.id);
+          const routes = await RouteActions.getAll(account.id);
+          dispatch(RouteActions.saveAll(routes.routes))
+          setHomeData({
+            ...homeData,
+            quizzes: data.data.quizzes,
+            users: data.data.users,
+            words: data.data.words,
+            routes: routes.routes
+          });
+          setIsBusy(false);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      if (Object.keys(account).length > 0) {
+        fetchData();
       }
     }
-    if (Object.keys(account).length > 0) {
-      fetchData();
+    else {
+      async function fetchData() {
+        AsyncStorage.getItem('home')
+          .then(home => {
+            let data = JSON.parse(home)
+            setHomeData({
+              ...homeData,
+              quizzes: data.quizzes,
+              users: data.users,
+              words: data.words,
+              routes: routes.routes
+            });
+          })
+        AsyncStorage.getItem('routes')
+          .then(route => {
+            let routes = JSON.parse(route)
+            dispatch(RouteActions.saveAll(routes.routes))
+          })
+        setIsBusy(false);
+      }
+      AsyncStorage.getItem('account')
+        .then(account => {
+          if (Object.keys(account).length > 0) {
+            fetchData();
+          }
+        })
     }
+  }
+  useEffect(() => {
+    NetInfoSub = NetInfo.addEventListener(
+      checkConnection,
+    )
+    // async function fetchData() {
+    //   try {
+    //     const data = await HomeActions.getData(account.id);
+    //     const routes = await RouteActions.getAll(account.id);
+    //     console.log(routes);
+    //     dispatch(RouteActions.saveAll(routes.routes))
+    //     setHomeData({
+    //       ...homeData,
+    //       quizzes: data.data.quizzes,
+    //       users: data.data.users,
+    //       words: data.data.words,
+    //       routes: routes.routes
+    //     });
+    //     setIsBusy(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    // if (Object.keys(account).length > 0) {
+    //   fetchData();
+    // }
   }, [account])
-  async function LogOut(){
+  async function LogOut() {
     try {
-        const result = await AuthorizationActions.onLogout();
-        dispatch(result)
+      const result = await AuthorizationActions.onLogout();
+      dispatch(result)
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-   
-}
+
+  }
   const toggleOpen = () => {
     setOpen(!open);
   };
@@ -154,10 +210,10 @@ const HomeScreen = ({ navigation }) => {
   });
   const inform = () => {
     ToastAndroid.showWithGravity(
-        "Bài luyện tập này hiện chưa có câu hỏi",
-        ToastAndroid.LONG,
-        ToastAndroid.TOP,
-      );
+      "Bài luyện tập này hiện chưa có câu hỏi",
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+    );
   };
   const drawerContent = () => {
     return (
@@ -168,7 +224,7 @@ const HomeScreen = ({ navigation }) => {
           size={32}
         // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
         />
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => { navigation.navigate('Home'), setOpen(!open) }}>
           <MaterialIcons
             name="home"
             size={32}
@@ -176,7 +232,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListSection'), setOpen(!open) }}>
           <MaterialIcons
             name="ballot"
             size={32}
@@ -184,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListExam'), setOpen(!open) }}>
           <MaterialIcons
             name="rule"
             size={32}
@@ -192,7 +248,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
           <MaterialIcons
             name="book"
             size={32}
@@ -200,7 +256,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Message'), setOpen(!open) }}>
           <MaterialIcons
             name="chat"
             size={32}
@@ -208,7 +264,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Calender'), setOpen(!open) }}>
           <MaterialIcons
             name="today"
             size={32}
@@ -216,7 +272,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Notification'), setOpen(!open) }}>
           <MaterialIcons
             name="notifications"
             size={32}
@@ -224,7 +280,7 @@ const HomeScreen = ({ navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }} onPress={()=>{LogOut(),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }} onPress={() => { LogOut(), setOpen(!open) }}>
           <MaterialIcons
             name="logout"
             size={32}
@@ -261,7 +317,7 @@ const HomeScreen = ({ navigation }) => {
         <View >
           <Text style={{ fontWeight: 'bold', fontSize: 42, color: '#ffffff', marginLeft: '35%' }}>ENGRISH</Text>
         </View>
-        <TouchableOpacity onPress={() => {toggleModalTwo(),setOpen(false)}}>
+        <TouchableOpacity onPress={() => { toggleModalTwo(), setOpen(false) }}>
           <Image source={require('../assets/icon.png')} style={{ marginTop: 20, marginLeft: 60 }}></Image>
         </TouchableOpacity>
 
@@ -274,7 +330,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxQuiz}>
           <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }} >
-            <View style={{width:"85%"}}>
+            <View style={{ width: "85%" }}>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Gợi ý luyện tập</Text>
             </View>
             <TouchableOpacity onPress={() => { navigation.navigate("ListExam") }}>
@@ -287,8 +343,8 @@ const HomeScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}>
             {!isBusy && homeData.quizzes.map((quiz, index) =>
               <View style={styles.box} key={index}>
-                <TouchableOpacity animation="fadeInLeft" onPress={quiz.questions.length == 0?()=>{inform()}:() => navigation.navigate('Quiz', { quizId: quiz.id })}>
-                  <Text style={styles.titleQuiz}>{quiz.quizName}</Text>
+                <TouchableOpacity animation="fadeInLeft" onPress={quiz.questions.length == 0 ? () => { inform() } : () => navigation.navigate('Quiz', { quizId: quiz.id })}>
+                  <ScrollView style={{height:80}}><Text style={styles.titleQuiz}>{quiz.quizName}</Text></ScrollView>
                 </TouchableOpacity>
                 <Text style={styles.question}>Số câu hỏi: {quiz.questions.length}</Text>
                 <Text style={styles.level}>Độ khó: {quiz.difficultLevel}</Text>
@@ -302,7 +358,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxWord}>
           <View style={{ flexDirection: "row", marginBottom: 20, width: "100%" }} >
-            <View style={{width:"85%"}}>
+            <View style={{ width: "85%" }}>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Từ vựng hôm nay</Text>
             </View>
             <TouchableOpacity onPress={() => { navigation.navigate('ListFlashCard') }}>
@@ -316,9 +372,9 @@ const HomeScreen = ({ navigation }) => {
             {!isBusy && homeData.words.map((word, index) =>
               <View style={styles.box} key={index}>
                 {/* <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('ListFlashCard')}> */}
-                  <ScrollView style={{ height: 36 }}>
-                    <Text style={styles.word} >{word.eng}</Text>
-                  </ScrollView>
+                <ScrollView style={{ height: 36 }}>
+                  <Text style={styles.word} >{word.eng}</Text>
+                </ScrollView>
                 {/* </TouchableOpacity> */}
                 <Text style={styles.spelling}>{word.spelling}</Text>
                 <Image source={word.wordImg ? `${BaseApiUrl}/streaming/image?image=${word.wordImg}` : require('../assets/abideby.jpeg')} style={{ width: 170, height: 100, justifyContent: "flex-end" }}></Image>
@@ -331,7 +387,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ flex: 1, flexDirection: "row" }}>
         <View style={styles.boxUser}>
           <View style={{ flexDirection: "row", marginBottom: 5, width: "100%" }} >
-            <View style={{width:"85%"}}>
+            <View style={{ width: "85%" }}>
               <Text style={{ fontSize: 32, color: '#fff', fontWeight: 'bold' }}>Top users</Text>
             </View>
             <View >
@@ -436,13 +492,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   user: {
-    marginTop:-30,
+    marginTop: -30,
     textAlign: 'center',
     flex: 1,
     width: 115,
     backgroundColor: 'transparent',
-    justifyContent:"center",
-    alignItems:"center"
+    justifyContent: "center",
+    alignItems: "center"
   },
   image: {
     marginTop: 5,
