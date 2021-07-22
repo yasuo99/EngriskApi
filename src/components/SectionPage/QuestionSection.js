@@ -89,7 +89,7 @@ const QuestionSection = ({ navigation }) => {
                         <Text style={{ fontSize: 24, marginTop: 10, color: "#fff" }}>Chúng ta nói điều này khi chúng ta muốn biết tên của người khác</Text>
                     </View>
                     {/* ĐÁP ÁN LẺ */}
-                    <View style={{ flexDirection: "row" }}>
+                    {/* <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity onPress={checkAnswer} style={bgColor === false ? styles.answer : styles.answerCorrect}>
                             <Text style={{ fontSize: 21, color: "#fff" }}>Đúng</Text>
                         </TouchableOpacity>
@@ -103,16 +103,16 @@ const QuestionSection = ({ navigation }) => {
                         <TouchableOpacity onPress={checkAnswerWrong} style={bgColorTwo === false ? styles.answer : styles.answerWrong}>
                             <Text style={{ fontSize: 21, color: "#fff" }}>Sai</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     {/* ĐÁP ÁN CHẴN */}
-                    {/* <View style={{ flexDirection: "row" }}>
+                    <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity onPress={checkAnswer} style={bgColor === false ? styles.answerTwo : styles.answerCorrectTwo}>
                             <Text style={{ fontSize: 21, color: "#fff" }}>Đúng</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={checkAnswerWrong} style={bgColorTwo === false ? styles.answerTwo : styles.answerWrongTwo}>
                             <Text style={{ fontSize: 21, color: "#fff" }}>Sai</Text>
                         </TouchableOpacity>
-                    </View> */}
+                    </View>
                 </ScrollView>
             </View>
             <Modal onBackdropPress={() => { setModalVisible(false), setBgColor(!bgColor) }} isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'}

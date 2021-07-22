@@ -69,6 +69,7 @@ const Lesson = ({ route, navigation }) => {
   }
   const slides = parsedScripts.map((script, idx) =>
   ({
+    key:idx,
     id: idx + 1,
     scriptId: script.id,
     lesson: `Bài ${idx + 1}`,
@@ -101,7 +102,9 @@ const Lesson = ({ route, navigation }) => {
           <View style={{ marginTop: "50%", alignItems: "center", justifyContent: "center" }}>
             <Text style={styles.content}>{item.content}</Text>
             <Text style={styles.description}>{item.description}</Text>
+            {/* <TouchableOpacity onPress={() => { navigation.navigate('Section', { routeId: routeId, sectionId: sectionId, scriptId: item.scriptId }) }} style={styles.buttonActive} ><Text style={{ fontSize: 21, color: "#fff" }}>Bắt đầu</Text></TouchableOpacity> */}
             <TouchableOpacity onPress={() => { navigation.navigate('Section', { routeId: routeId, sectionId: sectionId, scriptId: item.scriptId }) }} style={styles.buttonActive} ><Text style={{ fontSize: 21, color: "#fff" }}>Bắt đầu</Text></TouchableOpacity>
+            
           </View>
           {/* <Text style={styles.text}>{item.text}</Text> */}
         </View>

@@ -106,6 +106,12 @@ const HomeScreen = ({ navigation }) => {
         })
     }
   }
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     Alert.alert('Refreshed');
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
   useEffect(() => {
     NetInfoSub = NetInfo.addEventListener(
       checkConnection,
@@ -164,7 +170,7 @@ const HomeScreen = ({ navigation }) => {
       <Text style={{ fontSize: 28, color: '#1DA1F2', fontWeight: 'bold', margin: 10 }}>Bạn đang học</Text>
       {homeData.routes?.engrisk?.map((route, index) =>
         <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
-          <Text style={styles.title}>{route.title}</Text>
+          <TouchableOpacity onPress={()=>navigation.navigate('ListSection')}><Text style={styles.title}>{route.title}</Text></TouchableOpacity>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flexDirection: "column", width: 220 }}>
               <Text style={styles.content}>{route.description}</Text>
@@ -184,7 +190,7 @@ const HomeScreen = ({ navigation }) => {
       <Text style={{ fontSize: 28, color: '#1DA1F2', fontWeight: 'bold', margin: 10 }}>Bạn đang học</Text>
       {homeData.routes?.private?.map((route, index) =>
         <View style={styles.boxRouteWord} key={index} onStartShouldSetResponder={() => selectRoute(route)}>
-          <Text style={styles.title}>{route.title}</Text>
+           <TouchableOpacity onPress={()=>navigation.navigate('ListSection')}><Text style={styles.title}>{route.title}</Text></TouchableOpacity>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flexDirection: "column", width: 220 }}>
               <Text style={styles.content}>{route.description}</Text>
@@ -437,7 +443,12 @@ const HomeScreen = ({ navigation }) => {
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }}
                 renderTabBar={renderTabBar}
-              /></View>
+              />
+              <View style={{flexDirection:"row",marginBottom:20, justifyContent:"center",alignContent:"center"}}>
+                <TouchableOpacity onPress={()=> setModalTwoVisible(false)} style={styles.button}><Text style={styles.textButton}>Quay lại</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={()=> {navigation.navigate('ListSection'),setModalTwoVisible(false)}}><Text style={styles.textButton}>Học ngay</Text></TouchableOpacity>
+              </View>
+            </View>
           </Modal>
         </View>
       </View>
@@ -473,6 +484,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 10,
     alignItems: 'center'
+  },
+  button: {
+    width: 150,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    marginRight: 20,
+    marginLeft: 20,
+    backgroundColor:"#1DA1F2"
+  },
+  textButton: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color:"#fff"
   },
   boxUser: {
     marginTop: 110,
@@ -555,14 +581,14 @@ const styles = StyleSheet.create({
     borderColor: '#f4f4f4',
   },
   modalTwo: {
-    height: 400,
+    // height: 400,
+    flex:1,
     marginBottom: 65,
-    // alignItems: "center",
     color: "#fff",
     backgroundColor: "#192734",
     borderRadius: 20,
     opacity: 0.95,
-    padding: 20,
+    padding:20,
     shadowColor: "#1DA1F2",
     shadowOffset: {
       width: 1,

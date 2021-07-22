@@ -128,7 +128,7 @@ const QuizScreen = ({ route, navigation }) => {
     const nextQuestion = () => {
         if (currentQuestionIndex < quiz.questions.length - 1) {
             const nextQuestion = quiz.questions[currentQuestionIndex + 1]
-            // console.log(nextQuestion)
+            console.log(nextQuestion)
             setCurrentQuestionIndex(currentQuestionIndex + 1)
             setIndex(index + 1)
             setCheckAudio(quiz.questions[currentQuestionIndex + 1].audio)
@@ -138,7 +138,7 @@ const QuizScreen = ({ route, navigation }) => {
     const skipQuestion = () => {
         if (currentQuestionIndex > 0) {
             const nextQuestion = quiz.questions[currentQuestionIndex - 1]
-            // console.log(nextQuestion)
+            console.log(nextQuestion)
             setCurrentQuestionIndex(currentQuestionIndex - 1)
             setIndex(index - 1)
             setCheckAudio(quiz.questions[currentQuestionIndex - 1].audio)

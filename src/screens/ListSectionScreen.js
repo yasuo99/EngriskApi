@@ -9,6 +9,7 @@ import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Accordion from 'react-native-collapsible/Accordion';
 import { useSelector } from 'react-redux';
+import ProgressBar from 'react-native-progress/Bar';
 const ListSectionScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
     const { lastRoute } = useSelector(state => state.route);
@@ -19,6 +20,7 @@ const ListSectionScreen = ({ navigation }) => {
     };
     const SECTIONS = lastRoute.sections.map((section, index) =>
     ({
+        key: index,
         id: section.id,
         routeId: section.routeId,
         lesson: `Bài ${index + 1}`,
@@ -44,10 +46,21 @@ const _renderHeader = (section) => {
                 <View style={{ flexDirection: "column" }}>
                     <Image source={section.imageLesson} style={{ width: 70, height: 70, borderRadius: 50 }}></Image>
                 </View>
-                <View style={{ flexDirection: "column", marginTop: 5, marginLeft: 16, width: "70%" }}>
-                    <Text style={{ color: "#ccc", fontSize: 21 }}>{section.lesson}</Text>
+                <View style={{ flexDirection: "column", marginTop: 5, marginLeft: 16, width: "50%" }}>
+                    <View style={{flexDirection:"row"}}>
+                        <Text style={{ color: "#ccc", fontSize: 21,width:"110%" }}>{section.lesson}</Text>
+                        <View style={{marginTop:5}}>
+                        <ProgressBar progress={3/5} width={100} height={15} color={'#1DA1F2'} borderRadius={20} />
+                        </View>
+                        
+                    </View>
+                    
                     <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>{section.title}</Text>
                 </View>
+                <View>
+                
+                </View>
+              
             </View>
         );
     };
@@ -64,29 +77,28 @@ const _renderHeader = (section) => {
                     <Text style={{ marginLeft: 16, fontSize: 21, color: "#fff" }}>{section.time}</Text>
                     <View style={{ flexDirection: "row", marginLeft: 10, marginTop: 8 }}>
                         {section?.scripts.map((script, idx) =>
+                    
+                        <>
                             <MaterialIcons
                                 key={idx}
                                 name="check-circle"
                                 size={32}
-                                color="#1DA1F2">
+                                color="#1DA1F2"
+                                style={{marginRight:10}}>
                             </MaterialIcons>
+                            {/* Màu icon khác */}
+                             {/* <MaterialIcons
+                                key={idx}
+                                name="check-circle"
+                                size={32}
+                                color="#ccc"
+                                style={{marginRight:10}}>
+                            </MaterialIcons> */}
+                            </>
                         )}
-
-                        {/* <View style={{ borderBottomWidth: 4, borderColor: "#1DA1F2", width: 20, marginBottom: 14 }}></View>
-                        <MaterialIcons
-                            name="check-circle"
-                            size={32}
-                            color="#1DA1F2">
-                        </MaterialIcons>
-                        <View style={{ borderBottomWidth: 4, borderColor: "#1DA1F2", width: 20, marginBottom: 14 }}></View>
-                        <MaterialIcons
-                            name="check-circle"
-                            size={32}
-                            color="#1DA1F2">
-                        </MaterialIcons> */}
                     </View>
+                    
                 </View>
-
             </LinearGradient>
 
         );
@@ -231,6 +243,7 @@ const _renderHeader = (section) => {
                     underlayColor={""}
                 />
             </ScrollView>
+            
         </View>
     );
 };

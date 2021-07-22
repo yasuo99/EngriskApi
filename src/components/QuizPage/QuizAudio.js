@@ -89,7 +89,7 @@ const QuizAudio = ({quiz}) => {
                             />
                             }
                             <View style={styles.boxNumber}>
-                                <Text style={styles.titleNumber}>{index}</Text>
+                                <Text style={styles.titleNumber}>{index = index + 1}</Text>
                             </View>
                             <View>
                                 <Text style={styles.contentAnswer}>{answer.answer}</Text>
