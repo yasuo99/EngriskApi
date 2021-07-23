@@ -254,7 +254,7 @@ const HomeScreen = ({ navigation }) => {
             size={32}
             color="#ffffff"
             style={{ marginLeft: 16 }}></MaterialIcons>
-          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+          <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
           <MaterialIcons
@@ -444,7 +444,7 @@ const HomeScreen = ({ navigation }) => {
                 initialLayout={{ width: layout.width }}
                 renderTabBar={renderTabBar}
               />
-              <View style={{flexDirection:"row",marginBottom:20, justifyContent:"center",alignContent:"center"}}>
+              <View style={{flexDirection:"row",marginBottom:10,marginTop:20, justifyContent:"center",alignContent:"center"}}>
                 <TouchableOpacity onPress={()=> setModalTwoVisible(false)} style={styles.button}><Text style={styles.textButton}>Quay lại</Text></TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={()=> {navigation.navigate('ListSection'),setModalTwoVisible(false)}}><Text style={styles.textButton}>Học ngay</Text></TouchableOpacity>
               </View>

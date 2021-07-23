@@ -84,7 +84,7 @@ const ListExamScreen = ({ navigation }) => {
                 size={32}
                 color="#ffffff"
                 style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
               <MaterialIcons
@@ -177,7 +177,7 @@ const ListExamScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-           <Text style={{ fontSize: 32, color: "#fff", marginLeft: 10, fontWeight: "bold", marginTop: 20 }}>Danh sách bài luyện tập</Text>
+           <Text style={{ fontSize: 32, color: "#fff", marginLeft: 10, fontWeight: "bold", marginTop: 20 }}>Danh sách bài quiz</Text>
             <View style={{ flexDirection: "row" }}>
                 <View style={styles.boxSearch}>
                     <SearchBar

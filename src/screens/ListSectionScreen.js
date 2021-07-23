@@ -138,7 +138,7 @@ const _renderHeader = (section) => {
                         size={32}
                         color="#ffffff"
                         style={{ marginLeft: 16 }}></MaterialIcons>
-                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Exam</Text>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
                     <MaterialIcons
