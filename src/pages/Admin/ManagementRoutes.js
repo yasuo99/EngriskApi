@@ -19,35 +19,33 @@ const ManagementRoutes = () => {
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalSections, setModalSections] = useState(false);
-    const [routes, setRoutes] = useState([])
-    const [route, setRoute] = useState({})
-    const [data, setData] = useState(defaultData)
-    const [pagination, setPagination] = useState({
+    const [routes, setRoutes] = useState({
         currentPage: 1,
         pageSize: 5,
-        totalPages: 1
-    });
+        totalPages: 1,
+        items: []
+    })
+    const [route, setRoute] = useState({})
+    const [data, setData] = useState(defaultData)
+    const [query,setQuery] = useState('')
     const [isRefresh, setIsRefresh] = useState(false);
     const tempRoutes = useRef(null);
 
-    useEffect(async () => {
+    async function fetchData(){
         const params = {
-            currentPage: pagination.currentPage,
-            pageSize: pagination.pageSize
+            currentPage: routes.currentPage,
+            pageSize: routes.pageSize,
+            search: query
         }
         const result = await routeApi.adminGetAll(params);
-        setRoutes(result.items);
-        tempRoutes.current = result.items;
-    }, [pagination])
-    useEffect(async () => {
+        setRoutes(result);
+    }
+    useEffect(() => {
+        fetchData();
+    }, [routes.currentPage,routes.pageSize, query])
+    useEffect(() => {
         if (isRefresh) {
-            const params = {
-                currentPage: pagination.currentPage,
-                pageSize: pagination.pageSize
-            }
-            const result = await routeApi.adminGetAll(params);
-            setRoutes(result.items);
-            tempRoutes.current = result.items;
+            fetchData();
             setIsRefresh(false);
         }
     }, [isRefresh])
@@ -116,19 +114,18 @@ const ManagementRoutes = () => {
             currentPage: currentPage,
             pageSize: pageSize,
         };
-        setPagination({
-            ...pagination,
+        setRoutes({
+            ...routes,
             currentPage: params.currentPage,
             pageSize: params.pageSize
         })
     }
     function querySearch(query) {
-        if (query == '') {
-            console.log(tempRoutes.current);
-            setRoutes([...tempRoutes.current])
-        } else {
-            setRoutes(routes.filter(route => route.title.toLowerCase().includes(query.toLowerCase()) || route.description.toLowerCase().includes(query.toLowerCase()) || route.sections.length === parseInt(query)))
-        }
+        setQuery(query);
+        setRoutes({
+            ...routes,
+            currentPage: 1
+        })
     }
     return (
         <div id="wrapper">
@@ -165,12 +162,12 @@ const ManagementRoutes = () => {
 
                                         </thead>
                                         <tbody>
-                                            {routes.map((route, index) =>
+                                            {routes.items.map((route, index) =>
                                                 <tr key={index}>
                                                     <th>{route.title}</th>
-                                                    <th className='w-25'>
+                                                    <th style={{width: '200px'}}>
                                                         <img
-                                                            className="img-thumbnail"
+                                                            className="img-fluid"
                                                             src={route.routeImage}
                                                         />
                                                     </th>
@@ -202,9 +199,9 @@ const ManagementRoutes = () => {
                                     </Table>
                                     <div>
                                         <Paginate
-                                            currentPage={pagination.currentPage}
-                                            totalPages={pagination.totalPages}
-                                            pageSize={pagination.pageSize}
+                                            currentPage={routes.currentPage}
+                                            totalPages={routes.totalPages}
+                                            pageSize={routes.pageSize}
                                             change={pageChange}
                                         />
                                     </div>

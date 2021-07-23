@@ -14,6 +14,7 @@ const Paginate = ({currentPage,pageSize, totalPages, change}) => {
     setPage(e.selected+1)
     await change(e.selected + 1, parseInt(size));
   }
+  console.log(totalPages);
   return (
     <div className="d-flex justify-content-between">
       <select

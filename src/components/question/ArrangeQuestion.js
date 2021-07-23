@@ -6,6 +6,7 @@ const ArrangeQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing })
     console.log(question);
     useEffect(() => {
         console.log('?');
+        setArrange([])
         if (question.content.trim().includes(" ")) {
             const splittedContent = question.content.trim().split(' ');
             console.log(splittedContent.sort(() => Math.random() - 0.5));

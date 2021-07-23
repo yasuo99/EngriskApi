@@ -7,7 +7,7 @@ const initial = {
         public: [],
         private: []
     },
-    collapse: false
+    collapse: true
 }
 const routeReducer = (state = initial, action) => {
     switch (action.type) {
