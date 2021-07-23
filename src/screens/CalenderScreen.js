@@ -365,7 +365,7 @@ const CalenderScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ marginTop: 60 }}>
+      <View style={{ marginTop: 60,flex:1 }}>
         <CalendarPicker
           onDateChange={onDateChange}
           customDatesStyles={customDatesStyles}
@@ -492,7 +492,7 @@ const CalenderScreen = ({ navigation }) => {
           }
 
         </View>
-        <View>
+        <View style={{flexDirection:"row", justifyContent:"flex-end",flex:1, marginBottom:30,alignItems:"flex-end"}}>
           <TouchableOpacity
             onPress={() => { showModal(true) }}
             style={styles.btn_container}>
@@ -622,7 +622,7 @@ const CalenderScreen = ({ navigation }) => {
                 <DatePicker
                   date={data.time}
                   onDateChange={(val) => handleTime(val)}
-                  mode="datetime"
+                  mode="time"
                   style={{ width: 400, marginTop: 10, height: 120, backgroundColor: "#fff" }}
                   androidVariant="nativeAndroid"
                 />
@@ -799,7 +799,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#1DA1F2',
     position: 'absolute',
     right: 15,
-    top: 30
   },
   view: {
     justifyContent: "flex-end",

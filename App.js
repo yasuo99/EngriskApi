@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import { Badge } from 'react-native-elements'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -28,6 +29,8 @@ import ListSectionScreen from './src/screens/ListSectionScreen';
 import ListFlashCardScreen from './src/screens/ListFlashCardScreen';
 import Lesson from './src/components/SectionPage/Lesson';
 import Finish from './src/components/SectionPage/FinishSection';
+import NotificationBottom from './src/components/NotificationBottom/NotificationBottom';
+import UserBottom from './src/components/UserBottom/UserBottom';
 //Redux
 import 'localstorage-polyfill';
 import { Provider, useSelector } from 'react-redux';
@@ -78,11 +81,7 @@ function TabScreen(){
       component={ProfileScreen}
       options={{
         tabBarLabel: 'Cá nhân',
-        tabBarIcon: ({ color }) => (
-          <Image
-            style={{ marginTop: -20 }}
-            source={logo} />
-        ),
+        tabBarIcon: ({ color }) => <UserBottom color={color}></UserBottom>
       }}
     />
     <Tab.Screen
@@ -90,9 +89,7 @@ function TabScreen(){
       component={NotificationScreen}
       options={{
         tabBarLabel: 'Thông báo',
-        tabBarIcon: ({ color }) => (
-          <MaterialIcons name="notifications" size={32} color={color} />
-        ),
+        tabBarIcon: ({ color }) => <NotificationBottom color={color}></NotificationBottom>
       }}
     />
     <Tab.Screen
