@@ -9,6 +9,8 @@ import QuizAudio from '../components/QuizPage/QuizAudio'
 import QuizImage from '../components/QuizPage/QuizImage'
 import QuizMatchWord from '../components/QuizPage/QuizMatchWord'
 import QuizSort from '../components/QuizPage/QuizSort'
+import QuizSelect from '../components/QuizPage/QuizSelect'
+import QuizInput from '../components/QuizPage/QuizInput'
 import QuizConversation from '../components/QuizPage/QuizConversation'
 import Section from '../components/SectionPage/Section'
 import QuestionSection from '../components/SectionPage/QuestionSection'
@@ -214,6 +216,8 @@ const QuizScreen = ({ route, navigation }) => {
                 <QuizImage quiz={quiz.questions[currentQuestionIndex]}></QuizImage> :
                 <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz>)
             }
+            {/* <QuizSelect></QuizSelect> */}
+            {/* <QuizConversation></QuizConversation> */}
             {/* <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz> */}
             <View style={styles.changeQuestion}>
                 <TouchableOpacity onPress={() => { skipQuestion() }}>

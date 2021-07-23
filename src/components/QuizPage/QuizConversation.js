@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, StatusBar, FlatList, Text, Image, TouchableOpacity, Button } from 'react-native';
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import Player from "../Play_Progress";
 import localTrack from "../../assets/pure.m4a";
@@ -14,7 +14,6 @@ const QuizConversation = () => {
     useEffect(() => {
         setup();
     }, []);
-
     async function setup() {
         await TrackPlayer.setupPlayer({});
         await TrackPlayer.updateOptions({
@@ -51,10 +50,10 @@ const QuizConversation = () => {
     return (
         <View style={styles.screenContainer}>
             <View style={styles.boxQuestion} >
-                <Text style={styles.titleQuestion}>Quiz về động vật</Text>
+                {/* <Text style={styles.titleQuestion}>Quiz về động vật</Text>
                 <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
-                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
-                <View style={{ marginLeft: 50, marginRight: 30,flexDirection:"row",height:60 }}>
+                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text> */}
+                <View style={{ marginLeft: 50, marginRight: 30, flexDirection: "row", height: 60 }}>
                     <Text style={styles.question}>Câu 2:</Text>
                     <Player
                         style={styles.player}
@@ -64,152 +63,141 @@ const QuizConversation = () => {
             </View>
             <View style={styles.kengang}></View>
             <ScrollView>
-            <View style={styles.boxConversation}>
-                <View style={styles.conversationA}>
-                    <Image source={require('../../assets/avatar.png')} style={{marginTop:10,marginRight:10}}></Image>
-                    <FontAwesome
-                        name="caret-left"
-                        color="#fff"
-                        size={48}
-                        style={{ marginTop: 16 }}
-                    />
-                    <View style={styles.boxA}>
-                        <Text style={{fontSize:21}}>ThanhLap</Text>
-                        <Text style={styles.content}>
-                            Which<Input style={styles.input}/>do you work for?
-                        </Text>
+                <View style={styles.boxConversation}>
+                    <View style={styles.conversationA}>
+                        <Image source={require('../../assets/avatar.png')} style={{ marginTop: 10, marginRight: 10 }}></Image>
+                        <FontAwesome
+                            name="caret-left"
+                            color="#fff"
+                            size={48}
+                            style={{ marginTop: 16 }}
+                        />
+                        <View style={styles.boxA}>
+                            <Text style={{ fontSize: 21 }}>ThanhLap</Text>
+                            <View style={styles.content}>
+                                <Text style={{fontSize:18}}>Which</Text>
+                                <TouchableOpacity><Text style={{fontSize:18}}> ______ </Text></TouchableOpacity>
+                                <Text style={{fontSize:18}}>do you work for?</Text>
+                            </View>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.conversationB}>
-                    <View style={styles.boxB}>
-                        <Text style={{fontSize:21,marginLeft:"70%"}}>ThanhLap</Text>                      
-                        <Text style={styles.content}>
-                            Which<Input style={styles.input}/>do you work for?
-                        </Text>
+                    <View style={styles.conversationB}>
+                        <View style={styles.boxB}>
+                            <Text style={{ fontSize: 21, marginLeft: "70%" }}>ThanhLap</Text>
+                            <View style={styles.content}>
+                                <Text style={{fontSize:18}}>Which</Text>
+                                <TouchableOpacity><Text style={{fontSize:18}}> ______ </Text></TouchableOpacity>
+                                <Text style={{fontSize:18}}>do you work for?</Text>
+                            </View>
+                        </View>
+                        <FontAwesome
+                            name="caret-right"
+                            color="#fff"
+                            size={48}
+                            style={{ marginTop: 16 }}
+                        />
+                        <Image source={require('../../assets/avatar.png')} style={{ marginTop: 10, marginLeft: 10 }}></Image>
                     </View>
-                    <FontAwesome
-                        name="caret-right"
-                        color="#fff"
-                        size={48}
-                        style={{ marginTop: 16 }}
-                    />
-                    <Image source={require('../../assets/avatar.png')} style={{marginTop:10,marginLeft:10}}></Image>
-                </View>
-                <View style={styles.conversationA}>
-                    <Image source={require('../../assets/avatar.png')} style={{marginTop:10,marginRight:10}}></Image>
-                    <FontAwesome
-                        name="caret-left"
-                        color="#fff"
-                        size={48}
-                        style={{ marginTop: 16 }}
-                    />
-                    <View style={styles.boxA}>
-                        <Text style={{fontSize:21}}>ThanhLap</Text>
-                       
-                        <Text style={styles.content}>
-                            Which<Input style={styles.input}/>do you work for?
-                        </Text>
+                    <View style={styles.conversationA}>
+                        <Image source={require('../../assets/avatar.png')} style={{ marginTop: 10, marginRight: 10 }}></Image>
+                        <FontAwesome
+                            name="caret-left"
+                            color="#fff"
+                            size={48}
+                            style={{ marginTop: 16 }}
+                        />
+                        <View style={styles.boxA}>
+                            <Text style={{ fontSize: 21 }}>ThanhLap</Text>
+
+                            <View style={styles.content}>
+                                <Text style={{fontSize:18}}>Which</Text>
+                                <TouchableOpacity><Text style={{fontSize:18}}> ______ </Text></TouchableOpacity>
+                                <Text style={{fontSize:18}}>do you work for?</Text>
+                            </View>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.conversationB}>
-                    <View style={styles.boxB}>
-                        <Text style={{fontSize:21,marginLeft:"70%"}}>ThanhLap</Text>                      
-                        <Text style={styles.content}>
-                            Which<Input style={styles.input}/>do you work for?
-                        </Text>
+                    <View style={styles.conversationB}>
+                        <View style={styles.boxB}>
+                            <Text style={{ fontSize: 21, marginLeft: "70%" }}>ThanhLap</Text>
+                            <View style={styles.content}>
+                                <Text style={{fontSize:18}}>Which</Text>
+                                <TouchableOpacity><Text style={{fontSize:18}}> ______ </Text></TouchableOpacity>
+                                <Text style={{fontSize:18}}>do you work for?</Text>
+                            </View>
+                        </View>
+                        <FontAwesome
+                            name="caret-right"
+                            color="#fff"
+                            size={48}
+                            style={{ marginTop: 16 }}
+                        />
+                        <Image source={require('../../assets/avatar.png')} style={{ marginTop: 10, marginLeft: 10 }}></Image>
                     </View>
-                    <FontAwesome
-                        name="caret-right"
-                        color="#fff"
-                        size={48}
-                        style={{ marginTop: 16 }}
-                    />
-                    <Image source={require('../../assets/avatar.png')} style={{marginTop:10,marginLeft:10}}></Image>
-                </View>
-                <View style={styles.conversationA}>
-                    <Image source={require('../../assets/avatar.png')} style={{marginTop:10,marginRight:10}}></Image>
-                    <FontAwesome
-                        name="caret-left"
-                        color="#fff"
-                        size={48}
-                        style={{ marginTop: 16 }}
-                    />
-                    <View style={styles.boxA}>
-                        <Text style={{fontSize:21}}>ThanhLap</Text>
-                       
-                        <Text style={styles.content}>
-                            Which<Input style={styles.input}/>do you work for?
-                        </Text>
+                    <View style={styles.conversationA}>
+                        <Image source={require('../../assets/avatar.png')} style={{ marginTop: 10, marginRight: 10 }}></Image>
+                        <FontAwesome
+                            name="caret-left"
+                            color="#fff"
+                            size={48}
+                            style={{ marginTop: 16 }}
+                        />
+                        <View style={styles.boxA}>
+                            <Text style={{ fontSize: 21 }}>ThanhLap</Text>
+
+                            <View style={styles.content}>
+                                <Text style={{fontSize:18}}>Which</Text>
+                                <TouchableOpacity><Text style={{fontSize:18}}> ______ </Text></TouchableOpacity>
+                                <Text style={{fontSize:18}}>do you work for?</Text>
+                            </View>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.conversationB}>
-                    <View style={styles.boxB}>
-                        <Text style={{fontSize:21,marginLeft:"70%"}}>ThanhLap</Text>                      
-                        <Text style={styles.content}>
-                            Which<Input style={styles.input}/>do you work for? do you work for?
-                        </Text>
+                    <View style={styles.conversationB}>
+                        <View style={styles.boxB}>
+                            <Text style={{ fontSize: 21, marginLeft: "70%" }}>ThanhLap</Text>
+                            <View style={styles.content}>
+                                <Text style={{fontSize:18}}>Which</Text>
+                                <TouchableOpacity><Text style={{fontSize:18}}> ______ </Text></TouchableOpacity>
+                                <Text style={{fontSize:18}}>do you work for?</Text>
+                            </View>
+                        </View>
+                        <FontAwesome
+                            name="caret-right"
+                            color="#fff"
+                            size={48}
+                            style={{ marginTop: 16 }}
+                        />
+                        <Image source={require('../../assets/avatar.png')} style={{ marginTop: 10, marginLeft: 10 }}></Image>
                     </View>
-                    <FontAwesome
-                        name="caret-right"
-                        color="#fff"
-                        size={48}
-                        style={{ marginTop: 16 }}
-                    />
-                    <Image source={require('../../assets/avatar.png')} style={{marginTop:10,marginLeft:10}}></Image>
+
                 </View>
-            
-            </View>
             </ScrollView>
             <View style={styles.boxWord}>
                 <ScrollView>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                    <View style={{ flexDirection: "row" }}>
+                        <TouchableOpacity style={styles.word}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.word}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.word}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#15202B" }}>hello</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                    <View style={{ flexDirection: "row" }}>
+                        <TouchableOpacity style={styles.word}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#15202B" }}>Notification</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.word}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#15202B" }}>Notification</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.word}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#15202B" }}>Notification</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hi</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hi</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hi</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hi</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                
                 </ScrollView>
             </View>
-     
+
         </View>
     );
 };
@@ -233,12 +221,12 @@ const styles = StyleSheet.create({
         marginRight: 60,
         marginTop: 30,
         marginBottom: 30,
-        backgroundColor:"#1DA1F2",
-        padding:5,
-        borderRadius:5
+        backgroundColor: "#1DA1F2",
+        padding: 5,
+        borderRadius: 5
     },
     boxAnswer: {
-        flex:1
+        flex: 1
     },
     boxNumber: {
         backgroundColor: "#fff",
@@ -264,14 +252,14 @@ const styles = StyleSheet.create({
     boxQuestion: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40
+        marginTop: 10
     },
     question: {
         fontSize: 28,
         color: "#fff",
         marginTop: 25,
         fontWeight: 'bold',
-        marginRight:30
+        marginRight: 30
     },
     titleQuestion: {
         fontSize: 38,
@@ -292,56 +280,48 @@ const styles = StyleSheet.create({
         width: '90%',
         borderBottomColor: '#ededed',
         borderBottomWidth: 1,
-        marginTop: 80,
+        marginTop: 30,
         marginLeft: 30,
     },
-    conversationA : {
-        flexDirection:"row",
-        margin:16
+    conversationA: {
+        flexDirection: "row",
+        margin: 16
     },
-    conversationB : {
-        flexDirection:"row",
-        margin:16
+    conversationB: {
+        flexDirection: "row",
+        margin: 16
     },
     boxA: {
-        backgroundColor:"#fff",
-        width:"80%",
-        padding:10,
-        borderRadius:10,
-        marginLeft:-5
+        backgroundColor: "#fff",
+        width: "80%",
+        padding: 10,
+        borderRadius: 10,
+        marginLeft: -5
     },
     boxB: {
-        backgroundColor:"#fff",
-        width:"80%",
-        padding:10,
-        borderRadius:10,
-        marginRight:-5
+        backgroundColor: "#fff",
+        width: "80%",
+        padding: 10,
+        borderRadius: 10,
+        marginRight: -5
     },
-    input : {
-        width:80,
-        height:40,
-        borderColor:"#ccc",
-        borderWidth:1,
-        backgroundColor:"#fff",
-        marginBottom:-30,
-    },
-    content : {
-        color:"#15202B",
-        fontSize:21,
-        marginTop:8,
-        marginBottom:8,
-        display:"flex"
+    content: {
+        color: "#15202B",
+        fontSize: 21,
+        marginTop: 8,
+        marginBottom: 8,
+        display: "flex",
+        flexDirection:"row"
     },
     boxWord: {
-        width: 440,
-        height: 80,
+        height: 120,
         marginLeft: 20,
     },
     word: {
         alignItems: "center",
         backgroundColor: "#fff",
         padding: 10,
-        width: 90,
+        minWidth: 135,
         height: 50,
         borderRadius: 20,
         shadowColor: "#1DA1F2",
@@ -352,7 +332,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 6,
         elevation: 8,
-        margin: 10,
+        margin: 5,
 
     },
 });
