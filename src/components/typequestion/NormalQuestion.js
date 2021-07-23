@@ -9,11 +9,14 @@ import BasicQuestion from "../question/BasicQuestion"
 import { QuestionTypes } from "../../constants/QuestionTypes";
 import SelectQuestion from "../question/SelectQuestion";
 import WritingQuestion from "../question/WritingQuestion";
+import ToeicQuestion from "../question/ToeicQuestion";
+import ToeicBasicQuestion from "../question/ToeicBasicQuestion";
 const NormalQuestion = ({ question, check, answerCheck, addRemainQuestion, removeRemainQuestion, isLastQuestion }) => {
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
   const [checked, setChecked] = useState(false);
   const CheckAnswer = async (answer, id) => {
+    console.log(answer);
     AnswerCheck(answer)
     setSelected(id)
   }
@@ -86,10 +89,12 @@ const NormalQuestion = ({ question, check, answerCheck, addRemainQuestion, remov
       case QuestionTypes.FillOut:
         return (<FilloutQuestion question={question} checked={checked} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion} />)
       case QuestionTypes.Select:
-        return(<SelectQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}></SelectQuestion>)
+        return (<SelectQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}></SelectQuestion>)
       case QuestionTypes.Writing:
         return (<WritingQuestion question={question}></WritingQuestion>)
-        default:
+      case QuestionTypes.Toeic:
+        return (<ToeicBasicQuestion question={ question} renderAnswerClass={RenderAnswerClass} checkAnswer={CheckAnswer} checked={checked}></ToeicBasicQuestion>)
+      default:
         return <BasicQuestion question={question} switchAnswerDisplay={SwitchAnswerDisplay} checkAnswer={CheckAnswer} renderAnswerClass={RenderAnswerClass} checked={checked} isLastQuestion={isLastQuestion} reset={ResetQuestion} />
     }
   }

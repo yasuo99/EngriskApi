@@ -6,5 +6,6 @@ export const ScriptTypes = {
     READING: 'Reading',
     LISTENING: 'Listening',
     TOEICVOCABULARY: 'ToeicVocabulary',
-    MINIEXAM: 'MiniExam'
+    MINIEXAM: 'MiniExam',
+    CERTIFICATE: 'Certificate'
 }

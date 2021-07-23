@@ -64,6 +64,13 @@ const routeApi = {
         }
         return await axiosClientv2.put(url,body, {headers})
     },
+    deleteRoute: async (id) => {
+        const url = `/routes/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.delete(url, {headers})
+    },
     changeRouteStatus: async (id,accountId) => {
         const url = `/routes/${id}/users/${accountId}/status`;
         const headers = {

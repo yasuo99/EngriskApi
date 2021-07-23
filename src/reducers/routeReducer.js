@@ -6,7 +6,8 @@ const initial = {
         engrisk: [],
         public: [],
         private: []
-    }
+    },
+    collapse: false
 }
 const routeReducer = (state = initial, action) => {
     switch (action.type) {
@@ -19,6 +20,16 @@ const routeReducer = (state = initial, action) => {
             return {
                 ...state,
                 typeRoute: action.typeRoute
+            }
+        case "COLLAPSE":
+            return{
+                ...state,
+                collapse: true
+            };
+        case "EXPAND":
+            return{
+                ...state,
+                collapse: false
             }
         default:
             return {

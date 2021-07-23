@@ -6,7 +6,7 @@ import { Modal, Table, Button } from 'react-bootstrap';
 import Paginate from './../../components/pagination/Paginate';
 import certificateApi from "../../api/2.0/certificateApi";
 const ManagementCertificate = ({ }) => {
-    const [certificates, setcertificates] = useState({
+    const [certificates, setCertificates] = useState({
         currentPage: 1,
         totalPages: 1,
         pageSize: 5,
@@ -26,7 +26,7 @@ const ManagementCertificate = ({ }) => {
             search: query
         }
         const result = await certificateApi.getAll(params);
-        setcertificates(result)
+        setCertificates(result)
     }
     useEffect(() => {
         fetchData();
@@ -43,7 +43,7 @@ const ManagementCertificate = ({ }) => {
 
     }
     function pageChange(currentPage, pageSize) {
-        setcertificates({
+        setCertificates({
             ...certificates,
             currentPage: currentPage,
             pageSize: pageSize
@@ -51,7 +51,7 @@ const ManagementCertificate = ({ }) => {
     }
     function search(query) {
         setQuery(query);
-        setcertificates({
+        setCertificates({
             ...certificates,
             currentPage: 1
         })
@@ -92,7 +92,7 @@ const ManagementCertificate = ({ }) => {
                                                         <td>{certificate.subject}</td>
                                                         <td>{certificate.title}</td>
                                                         <td><img className='img-fluid' src={certificate.template}></img></td>
-                                                        <td>{certificate.route.title}</td>
+                                                        <td>{certificate?.route?.title}</td>
                                                         <td>
                                                             <button
                                                                 className="btn btn-success"

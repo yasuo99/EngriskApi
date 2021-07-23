@@ -241,7 +241,7 @@ const ManagementWord = () => {
                                             </tbody>
                                         </Table>
                                         <Paginate currentPage={words.currentPage} pageSize={words.pageSize} totalPages={words.totalPages} change={wordsPaginationChange}></Paginate>
-                                        {Object.keys(selectedWord).length > 0 && <Modal centered show={modalAdd} onHide={() => toggleModalAdd()} animation size="lg">
+                                        <Modal centered show={modalAdd} onHide={() => toggleModalAdd()} animation size="lg">
                                             <Modal.Header closeButton onClick={() => toggleModalAdd()}>
                                                 <Modal.Title>Thêm từ vựng</Modal.Title>
                                             </Modal.Header>
@@ -335,7 +335,7 @@ const ManagementWord = () => {
                                                 <Button variant="secondary" onClick={() => toggleModalAdd()}>Trở lại</Button>
                                                 <Button variant="primary" onClick={(e) => submitCreate(e)}>Lưu lại</Button>
                                             </Modal.Footer>
-                                        </Modal>}
+                                        </Modal>
                                         {Object.keys(selectedWord).length > 0 && <Modal centered show={modalEdit} onHide={() => toggleModalEdit({})} size="lg">
                                             <Modal.Body>
                                                 <div className='row'>

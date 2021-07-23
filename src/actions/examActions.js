@@ -25,3 +25,8 @@ export const updateExam = (id, body) => {
 export const deleteExam = (id) => {
     return examApi.deleteExam(id);
 }
+export const removeResult = () => {
+    return dispatch => {
+        return dispatch({type: 'REMOVE_RESULT'});
+    }
+}

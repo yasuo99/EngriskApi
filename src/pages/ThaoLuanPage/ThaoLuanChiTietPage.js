@@ -205,7 +205,7 @@ class ThaoLuanChiTietPage extends Component {
                                         <div className="col-md-11">
                                             <textarea rows={2} cols={120} placeholder="Gửi một bình luận mới" value={this.state.comment} onChange={this.handleChange} />
                                             <button type="button" className="btn btn-primary mr-3 mt-2" onClick={this.handleSubmit}>ĐĂNG</button>
-                                            <button type="button" className="btn btn-primary mt-2" onClick={this.cancel}>HỦY</button>
+                                            <button type="button" className="btn btn-secondary mt-2" onClick={this.cancel}>HỦY</button>
                                         </div>
                                     </div>
                                 </div>}

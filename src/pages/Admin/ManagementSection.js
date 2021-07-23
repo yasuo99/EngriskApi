@@ -20,6 +20,7 @@ import ListeningScript from '../../components/script/ListeningScript';
 import ReadingScript from '../../components/script/ReadingScript';
 import MiniExamScript from '../../components/script/MiniExamScript';
 import questionApiV2 from './../../api/2.0/questionApi';
+import CertificateScript from '../../components/script/CertificateScript';
 const styles = {
     width: 250,
     display: 'inline-table',
@@ -31,6 +32,13 @@ const ManagementSection = () => {
         description: '',
         file: {}
     }
+    
+    useEffect(() => {
+        if (history.length == 1) {  // Um, needs to be 0 for IE, 1 for Firefox
+            // This is a new window or a new tab.
+            console.log('mở tab mới');
+        }
+    },[history])
     const [sections, setSections] = useState({
         currentPage: 1,
         pageSize: 5,
@@ -63,6 +71,7 @@ const ManagementSection = () => {
     const [conversation, setConversation] = useState({})
     const [vocabulary, setVocabulary] = useState({})
     const [miniExam, setMiniExam] = useState({})
+    const [certificate,setCertificate] = useState({})
     const [query, setQuery] = useState('')
     function toggleQuestionModal() {
         setQuestionModal(!questionModal)
@@ -216,6 +225,7 @@ const ManagementSection = () => {
         console.log(grammar);
         console.log(writing);
         console.log(vocabulary);
+        console.log(certificate);
         let scripts = [];
         scripts.push(conversation);
         scripts.push(listening);
@@ -224,6 +234,9 @@ const ManagementSection = () => {
         scripts.push(grammar);
         scripts.push(vocabulary);
         scripts.push(miniExam);
+        if(certificate.certificateId != "00000000-0000-0000-0000-000000000000" && certificate.exam != '"00000000-0000-0000-0000-000000000000"'){
+            scripts.push(certificate);
+        }
         const result = await sectionApiV2.editScripts(selectedSection.id, scripts);
         if (result.status == 200) {
             toast('Thành công', { type: 'success' })
@@ -389,7 +402,7 @@ const ManagementSection = () => {
                                             </div>
                                         </div>
                                         <div className='nav d-flex flex-column'>
-                                            <Tab.Container id="left-tabs-example" defaultActiveKey="grammar" className='h-100'>
+                                            <Tab.Container id="left-tabs-example" defaultActiveKey="grammar" className='h-100' mountOnEnter={true}>
                                                 <Row title='Kịch bản' className='script-panel'>
 
                                                     <Col sm={2} title='Kịch bản' className='col sticky-top'>
@@ -416,6 +429,9 @@ const ManagementSection = () => {
                                                             <Nav.Item className='border rounded mt-1'>
                                                                 <Nav.Link eventKey="exam">Mini exam</Nav.Link>
                                                             </Nav.Item>
+                                                            {selectedSection.certificateScriptAvailable &&  <Nav.Item className='border rounded mt-1'>
+                                                                <Nav.Link eventKey="certificate">Chứng chỉ</Nav.Link>
+                                                            </Nav.Item>}
                                                         </Nav>
                                                     </Col>
                                                     <Col sm={10} className='col'>
@@ -441,6 +457,9 @@ const ManagementSection = () => {
                                                             </Tab.Pane>
                                                             <Tab.Pane eventKey="exam">
                                                                 <MiniExamScript script={selectedSection.scripts.find(script => script.type == ScriptTypes.MINIEXAM)} setMiniExam={setMiniExam}></MiniExamScript>
+                                                            </Tab.Pane>
+                                                            <Tab.Pane eventKey="certificate">
+                                                                <CertificateScript script={selectedSection.scripts.find(script => script.type == ScriptTypes.CERTIFICATE)} setCertificate={setCertificate}></CertificateScript>
                                                             </Tab.Pane>
                                                         </Tab.Content>
                                                     </Col>

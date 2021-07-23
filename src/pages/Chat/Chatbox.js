@@ -12,10 +12,12 @@ import { connection } from "../../signalR/createSignalRConnection";
 import notificationApiV2 from "../../api/2.0/notificationApi";
 import Sharing from "../../components/managementquizs/Sharing";
 import { toast } from "react-toastify";
-import { Button, Modal, Container } from 'react-bootstrap';
+import { Button, Modal, Container, Badge } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { seenMessages, unseenMessage } from "../../actions/authActions";
+import { BsPencilSquare } from 'react-icons/bs'
+import Search from './../../components/search/Search';
 export const Chatbox = () => {
     const responsive = {
         superLargeDesktop: {
@@ -48,6 +50,7 @@ export const Chatbox = () => {
     const latestChat = useRef(null);
     const latestBoxchat = useRef(null);
     const [modalInfo, setModalInfo] = useState(false);
+    const [modalCreate, setModalCreate] = useState(false);
     const [multipleSelections, setMultipleSelections] = useState([])
     const dispatch = useDispatch();
     const [isBusy, setIsBusy] = useState(true);
@@ -88,7 +91,9 @@ export const Chatbox = () => {
                 if (dataParsed.boxchatId == latestBoxchat.current.id) {
                     setMessages(newMessages);
                 } else {
-                    dispatch(unseenMessage(dataParsed));
+                    if (dataParsed.sender.uid !== account.username) {
+                        dispatch(unseenMessage(dataParsed));
+                    }
                 }
             });
         }
@@ -164,35 +169,43 @@ export const Chatbox = () => {
                     <main id="scroll">
                         <div className='container'>
                             <div id='chat-menu'>
-                                <div className="head">Giúp bạn trao đổi tốt hơn với các người dùng khác</div>
+                                <div className="head">Giúp bạn trao đổi tốt hơn với những người dùng khác</div>
                             </div>
-                            {!isBusy && <Carousel responsive={responsive}
-                                swipeable={true}
-                                containerClass="carousel-container"
-                                itemClass="carousel-item-padding-40-px ml-4"
-                            >
-                                {boxchats.map((bc, index) =>
-                                    <div onClick={(e) => selectBoxchat(bc.id)} key={index}>
-                                        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="" className='chat-avatar' /> <span className='text-danger badge-number'>{unseenMessages.filter(mes => mes.boxchatId == bc.id).length}</span>
-                                    </div>
-                                )}
-                            </Carousel>}
+
 
                             <div className='chat-header d-flex justify-content-between'>
                                 <div>
                                     <h5 className='d-flex'>{boxchat.title}</h5>
                                 </div>
+                                <div className='mt-4'>
+                                    <Search></Search>
+                                </div>
+
                                 {boxchat.id != undefined && <div onClick={() => toggleModal()}>
+
                                     <i className='fa fa-info-circle fa-2x cursor'></i>
                                 </div>}
                             </div>
                             <ChatBox user={user} onSubmit={(message) => sendMessage(message)} messages={messages} />
+                            <br></br>
+                            {!isBusy && <Carousel responsive={responsive}
+                                swipeable={true}
+                                containerClass="carousel-container"
+                                itemClass="carousel-item-padding-40-px ml-4"
+                            >
+                                <div onClick={(e) => console.log(e)} className='d-flex align-items-center'>
+                                    <button onClick={() => setModalCreate(!modalCreate)} className='btn btn-light rounded-circle mt-1'><i className='fa fa-plus'></i></button>
+                                </div>
+                                {boxchats.map((bc, index) =>
+                                    <div key={index}>
+                                        <img onClick={(e) => selectBoxchat(bc.id)} src="https://www.w3schools.com/howto/img_avatar.png" alt="" className='chat-avatar cursor-pointer' /> <span className='badge-number'><Badge variant='info'>{unseenMessages.filter(mes => mes.boxchatId == bc.id).length}</Badge></span>
+                                    </div>
+                                )}
+
+                            </Carousel>}
                         </div>
                     </main>
-                    <Modal show={modalInfo} onHide={() => toggleModal()}>
-                        <Modal.Header closeButton onClick={() => toggleModal()}>
-                            <Modal.Title>Chi tiết cuộc hội thoại</Modal.Title>
-                        </Modal.Header>
+                    <Modal show={modalInfo} onHide={() => toggleModal()} size='lg' centered animation dialogClassName='sweet-alert-modal'>
                         <Modal.Body>
                             {boxchat.accountId == account.id ? <div className="form-group">
                                 <div className="container">
@@ -285,6 +298,22 @@ export const Chatbox = () => {
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => toggleModal()}>Trở lại</Button>
                             <Button variant="primary" onClick={(e) => submit()}>Lưu lại</Button>
+                        </Modal.Footer>
+                    </Modal>
+                    <Modal show={modalCreate} onHide={() => setModalCreate(!modalCreate)} size='lg' centered animation dialogClassName='sweet-alert-modal' contentClassName='rounded'>
+                        <Modal.Body>
+                            <div className='form-group'>
+                                <label>Tên nhóm chat</label>
+                                <input type='text'></input>
+                            </div>
+                            <div className='form-group'>
+                                <label>Mô tả</label>
+                                <textarea type='text'></textarea>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setModalCreate(!modalCreate)}>Đóng</Button>
+                            <Button variant="primary" onClick={(e) => setModalCreate(!modalCreate)}>Lưu lại</Button>
                         </Modal.Footer>
                     </Modal>
                     <Footer></Footer>

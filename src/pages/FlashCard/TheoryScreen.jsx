@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const TheoryScreen = ({ theory, next, isFinish, sectionId, scriptId }) => {
   return (
     <div>
-      <Jumbotron className="mt-4">
+      <Jumbotron className="mt-4 card border-0 bg-light shadow-sm">
         <h1>Lý thuyết</h1>
         <div>{parse(theory)}</div>
         <p></p>

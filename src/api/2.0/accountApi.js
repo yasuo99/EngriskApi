@@ -118,6 +118,33 @@ const accountApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url,{params})
+    },
+    getUserCertificates: async (id,params) => {
+        const url = `/accounts/${id}/certificates`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url,{params,headers});
+    },
+    getUserQuestions: async (id, params, grammar, query) => {
+        const url = `/accounts/${id}/questions`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        if(query){
+            params.search = query;
+        }
+        if(grammar){
+            params.grammar = grammar
+        }
+        return await axiosClientv2.get(url,{params,headers});
+    },
+    selectRoute: async (id, routeId) => {
+        const url = `/accounts/${id}/routes/${routeId}/select`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,null, {headers});
     }
 }
 export default accountApiV2;

@@ -41,12 +41,12 @@ const quizApi = {
         const url = `/quizzes/${id}/do`
         return await axiosClientv2.post(url);
     },
-    getUserQuizzes: async (id) => {
+    getUserQuizzes: async (id,params) => {
         const url = `/quizzes/users/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url, {headers});
+        return await axiosClientv2.get(url, {params,headers});
     },
 }
 export default quizApi;

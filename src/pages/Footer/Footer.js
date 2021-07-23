@@ -1,7 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Chatbox from "../../components/chatbot/Chatbox"
 
 const Footer = () => {
+    const [isBusy,setIsBusy] = useState(true)
+    useEffect(() => {
+        setIsBusy(false);
+        return () => setIsBusy(true)
+    },[setIsBusy])
     return (
         <footer>
             <div className="container">
@@ -44,8 +49,8 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <Chatbox></Chatbox>
+            {!isBusy && <Chatbox></Chatbox>}
         </footer>
-    )
+     )
 }
 export default Footer;

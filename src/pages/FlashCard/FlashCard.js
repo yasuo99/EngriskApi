@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import wordCategoryApi from "../../api/2.0/wordCategoryApi";
 import HeaderClient from "../../components/client/HeaderClient";
 import SubMenuClient from "../../components/client/SubMenuClient";
@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import Footer from "../Footer/Footer";
 import Carousel from "react-multi-carousel";
 import Search from "../../components/search/Search";
+import categoryTagApi from "../../api/2.0/categoryTagApi";
+import { Badge } from "react-bootstrap";
 const responsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
@@ -31,22 +33,28 @@ const FlashCard = ({ }) => {
   const [categories, setCategories] = useState({
     currentPage: 1,
     totalPages: 1,
-    pageSize: 4,
+    pageSize: 5,
     items: []
   })
   const [query, setQuery] = useState('')
+  const [tags, setTags] = useState([])
+  const [selectTag, setSelectTag] = useState({})
+  const tempTag = useRef(null)
   useEffect(() => {
     fetchWordCategories();
-  }, [categories.currentPage, categories.pageSize, query])
+  }, [categories.currentPage, categories.pageSize, query, selectTag.tag])
   async function fetchWordCategories() {
     const params = {
       currentPage: categories.currentPage,
       pageSize: categories.pageSize,
       search: query,
-      learn: true
+      learn: true,
+      tag: selectTag.tag || 'all'
     }
     const result = await wordCategoryApi.getAll(params);
     setCategories(result);
+    const tags = await categoryTagApi.getAllWithoutPaginate();
+    setTags(tags);
   };
   const handleChange = (e) => {
     this.setState({
@@ -71,6 +79,7 @@ const FlashCard = ({ }) => {
       currentPage: 1
     })
   }
+  console.log(tempTag.current);
   return (
     <div id="wrapper">
       <SubMenuClient></SubMenuClient>
@@ -79,28 +88,36 @@ const FlashCard = ({ }) => {
           <HeaderClient></HeaderClient>
           <main id="flashcard">
             <div className="container">
-              <div className='d-flex justify-content-between'>
-                <select className='pagination-select' onChange={handleChange}>
-                  <option>Lọc theo tag</option>
-                  <option>Hàng ngày</option>
-                  <option>Giao Tiếp</option>
-                  <option>Toeic</option>
-                </select>
-                <Search queryFunction={search}></Search>
-              </div>
+              <div className='container'>
+                <div className='d-flex justify-content-end'>
 
-              <div className="boxCommunicate">
-                <h5>CHỦ ĐỀ GIAO TIẾP HẰNG NGÀY</h5>
+                  <Search queryFunction={search}></Search>
+                </div>
+              </div>
+              <div className='container'>
+                <div className='row'>
+                  <div className='col-sm-12'>
+                    <p>
+                      <button onClick={() => {setSelectTag({});tempTag.current = null}} type="button" className={`btn btn-xs btn-tag mr-1 ${tempTag.current == null ? 'btn-success' : 'btn-default'}`}>All</button>
+                      {tags.map((tag, idx) =>
+                        <button onClick={() => {setSelectTag(tag); tempTag.current = tag}} type="button" key={idx} className={`btn btn-xs btn-tag mr-1 ${tag.id == tempTag.current?.id ? 'btn-success' : 'btn-info'}`}>{tag.tag}</button>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="boxCommunicate mt-1">
                 <div className="container">
-                  <div className="card-columns">
+                  <h5>NHÓM TỪ VỰNG</h5>
+                  <div className="card-columns justify-content-center">
                     {categories.items.map((category, index) =>
-                      <Link to={`/card-detail/${category.id}`} disabled>
-                        <div className="card" key={index}>
+                      <Link to={`/card-detail/${category.id}`} key={index}>
+                        <div className="card" >
                           <img src={category.categoryImage} className="card-img-top" alt="..." />
                           <div className="card-body">
                             <h5 className="card-title">{category.categoryName}</h5>
                             <p className="card-text">Số từ vựng: {category.words.length}</p>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            {/* <p className="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p> */}
                           </div>
                         </div>
                       </Link>
@@ -113,12 +130,6 @@ const FlashCard = ({ }) => {
                   </div>
                 </div>
                 <div className="gachchan"></div>
-              </div>
-              <div className="boxToeic">
-                <h5>CHỦ ĐỀ LUYỆN THI TOEIC</h5>
-                <div className="container">
-
-                </div>
               </div>
             </div>
           </main>

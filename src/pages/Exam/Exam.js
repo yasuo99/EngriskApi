@@ -121,13 +121,12 @@ class Exam extends Component {
                         </div>
                         <div className="col-7">
                             <a className="link-title">{exam.title} </a><Badge variant="primary">{exam.isNew ? "New" : "Old"}</Badge> {this.state.histories.some(el => el.examId == exam.id && el.isDone) && <Badge variant="success">Đã làm</Badge>}{this.state.histories.some(el => el.examId == exam.id && el.isPause) && <Badge variant="success">Tạm dừng</Badge>}
-                            {this.props.isLoggedIn && <p>Kinh nghiệm đạt được: {exam.expGain}  </p>}
                             <p>Thời gian làm bài: {exam.duration} phút</p>
                         </div>
                         <div className="col-3 pr-4">
                             {exam.isPrivate ? (this.props.isLoggedIn ? ((this.state.histories.some(h => h.examId == exam.id && h.isPause == false) ?
-                                <Link className="btn btn-primary do-btn" to={"/exam/" + exam.id}>Làm ngay <i className="fa fa-pencil"></i></Link> :
-                                <Link className="btn btn-primary do-btn" to={`/exam/${exam.id}?resume=true`}>Tiếp tục <i className="fa fa-pencil"></i></Link>)) : <Link className='btn btn-primary do-btn disabled text-warning'>Yêu cầu đăng nhập</Link>) : <Link className='btn btn-primary do-btn' to={"/exam/" + exam.id}>Làm ngay <i className='fa fa-pencil'></i></Link>}
+                                <Link className="btn btn-primary do-btn" to={"/test/" + exam.id}>Làm ngay <i className="fa fa-pencil"></i></Link> :
+                                <Link className="btn btn-primary do-btn" to={`/test/${exam.id}?resume=true`}>Tiếp tục <i className="fa fa-pencil"></i></Link>)) : <Link className='btn btn-primary do-btn disabled text-warning'>Yêu cầu đăng nhập</Link>) : <Link className='btn btn-primary do-btn' to={"/test/" + exam.id}>Làm ngay <i className='fa fa-pencil'></i></Link>}
                         </div>
                     </div>
                 </div>
@@ -142,7 +141,7 @@ class Exam extends Component {
                         <main id='trangchu'>
                             <div className="container">
                                 <div className="row">
-                                    <div className="col-md-10 offset-1">
+                                    <div className="col-md-10 ">
                                         <div id="homeSearch" className="mb-2">
                                             <div className="d-flex justify-content-start">
                                                 <p className="text-white mr-1 mt-2">Tìm kiếm</p>
@@ -150,7 +149,7 @@ class Exam extends Component {
                                                 <button className="btn btn-primary"><i className="fa fa-search"></i></button>
                                             </div>
                                             <div className="col-md-5 offset-md-3 d-flex justify-content-end">
-                                                <select className='form-select' name="filter" id="">
+                                                <select className='pagination-select' name="filter" id="">
                                                     <option value="newest">Mới nhất</option>
                                                     <option value="hotest">Hot nhất</option>
                                                     <option value="easiest">Dễ nhất</option>
@@ -159,7 +158,30 @@ class Exam extends Component {
                                             </div>
                                         </div>
                                         {renderExam}
-                                        { }
+                                        <div className='d-flex justify-content-center'>
+                                            <button className='btn border border-primary round'>Hiển thị thêm</button>
+                                        </div>
+                                    </div>
+                                    <div className='col card border-0 rounded shadow-sm p-2' style={{height: '50%'}}>
+                                        <h5 className='text-center'>Menu</h5>
+                                        <h6>Loại bài</h6>
+                                        <div className="custom-control custom-checkbox">
+                                            <input type="checkbox" className="custom-control-input top"></input>
+                                            <label className="custom-control-label text-dark">Quiz</label>
+                                        </div>
+                                        <div className="custom-control custom-checkbox">
+                                            <input type="checkbox" className="custom-control-input top" checked></input>
+                                            <label className="custom-control-label text-dark">Exam</label>
+                                        </div>
+                                        <br></br>
+                                        <div className='form-group'>
+                                            <h6>Độ khó</h6>
+                                            <input type='radio' name='difficult' checked></input><span>Dễ</span>
+                                            <br></br>
+                                            <input type='radio' name='difficult'></input><span>Vừa</span>
+                                            <br></br>
+                                            <input type='radio' name='difficult'></input><span>Khó</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

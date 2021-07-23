@@ -32,9 +32,6 @@ const GuardRoute = ({ path, exact, Component, guard, roles }) => {
                                         : path,
                                     ...rest
                                 }));
-                            console.log(`Generated crumbs for ${props.match.path}`);
-                            console.log('cai lz');
-                            crumbs.map(({ name, path }) => console.log({ name, path }));
                             return (
                                 <Component {...props} crumbs={crumbs}/>
                             );
@@ -58,9 +55,6 @@ const GuardRoute = ({ path, exact, Component, guard, roles }) => {
                                     : path,
                                 ...rest
                             }));
-                        console.log(`Generated crumbs for ${props.match.path}`);
-                        console.log('cai cc');
-                        crumbs.map(({ name, path }) => console.log({ name, path }));
                         return (
                             <Component {...props} test={crumbs}/>
                         );
@@ -94,8 +88,6 @@ const GuardRoute = ({ path, exact, Component, guard, roles }) => {
                                 : path,
                             ...rest
                         }));
-                    console.log(`Generated crumbs for ${props.match.path}`);
-                    crumbs.map(({ name, path }) => console.log({ name, path }));
                     return (
                         <Component {...props} />
                     );

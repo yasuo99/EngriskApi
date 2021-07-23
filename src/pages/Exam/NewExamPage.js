@@ -9,7 +9,10 @@ import Countdown from 'react-countdown';
 import examApiv2 from "../../api/2.0/examApi";
 import ToeicPartQuestions from "../../components/question/ToeicPartQuestions";
 import { GrNext, GrPrevious } from 'react-icons/gr'
+import { useDispatch } from "react-redux";
+import { doneExam } from "../../actions/examActions";
 const NewExamPage = ({ }) => {
+    const dispatch = useDispatch();
     const [isBusy, setIsBusy] = useState(true);
     const [questions, setQuestions] = useState([])
     const [currentQuestion, setCurrentQuestion] = useState({
@@ -32,10 +35,10 @@ const NewExamPage = ({ }) => {
     const [modalTimeUp, setModalTimeUp] = useState(false);
     const [firstTimeConfig, setFirstTimeConfig] = useState(false);
     const [start, setStart] = useState(Date.now())
-    const examId = useParams();
+    const { examId } = useParams();
     useEffect(() => {
         async function fetchQuestions() {
-            const result = await examApiv2.get('6326AAF4-69FB-435D-D3B0-08D942A87632');
+            const result = await examApiv2.doExam(examId);
             const formatQuestions = result.questions.map((value, index) => ({ question: value, index: index + 1, answer: '', isListened: false }))
             setQuestions(formatQuestions);
             setCurrentQuestion(formatQuestions[index]);
@@ -132,8 +135,10 @@ const NewExamPage = ({ }) => {
         questions[index].isListened = true;
         setQuestions([...questions]);
     }
-    async function submitFinish(){
-        
+    async function submitFinish() {
+        const answers = questions.map((val) => ({ answer: val.answer, questionId: val.question.id }))
+        dispatch(doneExam(examId, answers));
+        setIsFinish(true);
     }
     console.log(examConfig);
     return (
@@ -359,15 +364,13 @@ const NewExamPage = ({ }) => {
                         <br></br>
                         <br></br>
                         <h3>Bạn có chắc muốn nộp bài</h3>
-                        <p>
-                            {questions.some(q => q.answer == '') && <p className='text-warning'>Vẫn có câu hỏi bạn chưa chọn đáp án</p>}
-                        </p>
+                        {questions.some(q => q.answer == '') && <p className='text-warning'>Vẫn có câu hỏi bạn chưa chọn đáp án</p>}
                     </div>
 
                 </Modal.Body>
                 <div className='d-flex justify-content-end mb-2'>
                     <Button variant="secondary mr-2" onClick={() => setModalSubmit(!modalSubmit)}>Làm tiếp</Button>
-                    <Link className='btn btn-primary' to={'/home'}>Nộp bài</Link>
+                    <Link className='btn btn-primary' onClick={() => submitFinish()} to={`/ketqua-exam/${examId}`}>Nộp bài</Link>
                 </div>
             </Modal>
             <Modal show={modalTimeUp} animation backdrop='static' centered size="md" dialogClassName='sweet-alert-modal' contentClassName='p-3'>

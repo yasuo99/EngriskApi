@@ -27,13 +27,12 @@ const GrammarScript = ({ setGrammar, script }) => {
   const [availableQuestions, setAvailableQuestions] = useState([]);
   const [questionToast, setQuestionToast] = useState(false);
   const [isBusy, setIsBusy] = useState(true);
-  console.log(script.questions);
   useEffect(() => {
     setNewGrammarScript(script);
     setTheory(script?.theory || "");
     setQuestions(script?.questions || []);
     setIsBusy(false);
-  }, [script.questions, script.theory, script]);
+  }, [script?.questions, script?.theory, script]);
   useEffect(() => {
     setGrammar({
       id: script?.id || "00000000-0000-0000-0000-000000000000",

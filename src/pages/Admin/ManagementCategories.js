@@ -7,6 +7,7 @@ import SubMenu from "../../components/admin/SubMenu";
 import { toast } from "react-toastify";
 import Paginate from "../../components/pagination/Paginate";
 import Search from "../../components/search/Search";
+import categoryTagApi from "../../api/2.0/categoryTagApi";
 
 const ManagementCategories = () => {
   const [category, setCategory] = useState({});
@@ -21,16 +22,21 @@ const ManagementCategories = () => {
     totalPages: 1,
     items: []
   });
+  const [tags, setTags] = useState([])
+  const [newTags, setNewTags] = useState([])
   const [isRefresh, setIsRefresh] = useState(false);
   const [query, setQuery] = useState('')
   async function fetchCategories() {
     const params = {
       currentPage: categories.currentPage,
       pageSize: categories.pageSize,
-      search: query
+      search: query,
+      tag: 'all'
     }
     const result = await wordCategoryApi.getAll(params);
     setCategories(result);
+    const tags = await categoryTagApi.getAllWithoutPaginate();
+    setTags(tags);
   }
   useEffect(() => {
     fetchCategories();
@@ -49,6 +55,10 @@ const ManagementCategories = () => {
     var formData = new FormData();
     formData.set("CategoryName", name);
     formData.set("Image", image);
+    newTags.forEach((val, idx) => {
+      formData.append(`tags[${idx}].id`, val.id)
+    }
+    )
     const result = await wordCategoryApi.createWordCategory(formData);
     console.log(result);
     switch (result.status) {
@@ -66,6 +76,7 @@ const ManagementCategories = () => {
     setName("");
     setImage({});
     toggleModalCreate();
+    setNewTags([]);
   }
   function toggleModalEdit(category) {
     modalEdit ? setModalEdit(false) : setModalEdit(true);
@@ -75,6 +86,9 @@ const ManagementCategories = () => {
     var formData = new FormData();
     formData.set("CategoryName", name || category.categoryName);
     formData.set("Image", image);
+    category.tags.forEach((val, idx) => {
+      formData.append(`tags[${idx}].categoryTagId`, val.categoryTagId)
+    })
     const result = await wordCategoryApi.updateWordCategory(
       category.id,
       formData
@@ -83,6 +97,7 @@ const ManagementCategories = () => {
       case 200:
         toast("Cập nhật thành công", { type: "info" });
         setIsRefresh(true)
+        setNewTags([])
         break;
       case 404:
         toast("Không tìm thấy tài nguyên", { type: "warning" });
@@ -110,9 +125,9 @@ const ManagementCategories = () => {
         break;
       default:
         toast("Xóa thành công", { type: "success" });
+        setIsRefresh(true)
         break;
     }
-    setCategories(categories.filter((cate) => cate.id != category.id));
     setName("");
     setImage({});
     toggleModalDelete({});
@@ -124,13 +139,29 @@ const ManagementCategories = () => {
       pageSize: pageSize
     })
   }
-  function search(query){
+  function search(query) {
     setQuery(query);
     setCategories({
       ...categories,
       currentPage: 1
     })
   }
+  function selectTag(e, tag) {
+    if (e.currentTarget.checked) {
+      setNewTags([...newTags, tag])
+    } else {
+      setNewTags([...newTags.filter(val => val != tag)])
+    }
+  }
+  function editTag(e,tag){
+    console.log(tag);
+    if (e.currentTarget.checked) {
+      setCategory({...category,tags: [...category.tags,{categoryTagId: tag.id}]})
+      console.log(category);
+    } else {
+      setCategory({...category,tags: [...category.tags.filter(val => val.categoryTagId != tag.id)]})
+    }
+}
   return (
     <div>
       <div id="wrapper">
@@ -231,6 +262,24 @@ const ManagementCategories = () => {
                   onChange={(e) => setImage(e.target.files[0])}
                 />
               </div>
+              <div className='card-input row'>
+                <div className='col-2'>
+                  <h6>Tag</h6>
+                </div>
+                <div className='col-10'>
+                  <ul className="list-group list-group-flush checkbox-wrapper">
+                    {tags.map((tag, index) =>
+                      <li className="list-group-item" key={index}>
+                        <div className="custom-control custom-checkbox">
+                          <input type="checkbox" className="custom-control-input top" onChange={(e) => selectTag(e,tag)}></input>
+                          <label className="custom-control-label">{tag.tag}</label>
+                        </div>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+              </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -242,7 +291,7 @@ const ManagementCategories = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Modal show={modalEdit} onHide={() => toggleModalEdit({})} contentClassName="modal-basic-content">
+        {Object.keys(category).length > 0 && <Modal show={modalEdit} onHide={() => toggleModalEdit({})} contentClassName="modal-basic-content">
           <Modal.Header closeButton onClick={() => toggleModalEdit({})}>
             <Modal.Title>Thêm nhóm từ vựng</Modal.Title>
           </Modal.Header>
@@ -288,6 +337,24 @@ const ManagementCategories = () => {
                     </div>
                   </div>
                 </div>
+                <div className='card-input row'>
+                <div className='col-2'>
+                  <h6>Tag</h6>
+                </div>
+                <div className='col-10'>
+                  <ul className="list-group list-group-flush checkbox-wrapper">
+                    {tags.map((tag, index) =>
+                      <li className="list-group-item" key={index}>
+                        <div className="custom-control custom-checkbox">
+                          <input type="checkbox" className="custom-control-input top" onChange={(e) => editTag(e,tag)} checked={category.tags.some(val => val.categoryTagId == tag.id)}></input>
+                          <label className="custom-control-label">{tag.tag}</label>
+                        </div>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+
+              </div>
               </div>
             </div>
           </Modal.Body>
@@ -299,7 +366,7 @@ const ManagementCategories = () => {
               Lưu lại
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal>}
         <Modal show={modalDelete} onHide={() => toggleModalDelete({})} contentClassName="modal-basic-content">
           <Modal.Header closeButton onClick={() => toggleModalDelete({})}>
             <Modal.Title>Xác nhận xóa nhóm từ vựng</Modal.Title>

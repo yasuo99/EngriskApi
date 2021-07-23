@@ -7,6 +7,13 @@ const certificateApi = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url,{params,headers})
+    },
+    getManage: async (params) => {
+        const url = `/certificate/manage`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url,{params,headers})
     }
 }
 export default certificateApi

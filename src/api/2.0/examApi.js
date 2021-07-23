@@ -8,12 +8,12 @@ const examApiv2 = {
         }
         return await axiosClientv2.get(url, {params, headers });
     },
-    getManage: async () => {
+    getManage: async (params) => {
         const url = `/exams/all`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url, {headers });
+        return await axiosClientv2.get(url, {params, headers });
     },
     get: async (id) => {
         const url = `/exams/${id}`;
@@ -68,12 +68,12 @@ const examApiv2 = {
         }
         return await axiosClientv2.post(url, body, { headers });
     },
-    getUserExams: async (id) => {
+    getUserExams: async (id, params) => {
         const url = `/exams/user/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url, { headers });
+        return await axiosClientv2.get(url, {params, headers });
     }
 }
 export default examApiv2;

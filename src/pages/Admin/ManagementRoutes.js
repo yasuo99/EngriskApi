@@ -80,6 +80,7 @@ const ManagementRoutes = () => {
             toast('Thêm thành công', { type: 'success' })
             setModalCreate(!modalCreate)
             setRoutes([...routes, result.route])
+            setIsRefresh(true);
         } else {
             toast('Thêm thất bại', { type: 'error' })
         }
@@ -94,12 +95,21 @@ const ManagementRoutes = () => {
         if (result.status == 200) {
             toast('Cập nhật thành công', { type: 'success' })
             toggleModalEdit({})
+            setIsRefresh(true);
         } else {
             toast('Cập nhật thất bại', { type: 'error' })
         }
     }
     async function submitDelete() {
         setModalDelete(!modalDelete)
+        const result = await routeApi.deleteRoute(route.id);
+        if (result.status == 200) {
+            toast('Xóa thành công', { type: 'success' })
+            toggleModalDelete({})
+            setIsRefresh(true);
+        } else {
+            toast('Xóa thất bại', { type: 'error' })
+        }
     }
     async function pageChange(currentPage, pageSize) {
         const params = {
@@ -203,11 +213,11 @@ const ManagementRoutes = () => {
                         </div>
                     </div>
                 </div>
-                <Modal show={modalCreate} onHide={() => toggleModalCreate()} contentClassName="modal-basic-content">
-                    <Modal.Header closeButton onClick={() => toggleModalCreate()}>
-                        <Modal.Title>Thêm lộ trình học</Modal.Title>
-                    </Modal.Header>
+                <Modal show={modalCreate} onHide={() => toggleModalCreate()} dialogClassName='sweet-alert-modal' contentClassName="modal-basic-content">
                     <Modal.Body>
+                    <div className='text-center'>
+                            <h3 className='text-info'> Thêm lộ trình mới</h3>
+                        </div>
                         <div className="form-group">
                             <p className="titleInfo">Thông tin lộ trình</p>
                             <div className="card-input mt-3">
@@ -216,6 +226,8 @@ const ManagementRoutes = () => {
                                     type="text"
                                     name="url"
                                     onChange={(e) => setData({ ...data, title: e.target.value })}
+                                    required
+                                    placeholder="Tiêu đề của lộ trình..."
                                 />
                             </div>
                             <div className="card-input mt-3">
@@ -223,6 +235,9 @@ const ManagementRoutes = () => {
                                 <input
                                     type="file"
                                     onChange={(e) => setData({ ...data, image: e.target.files[0] })}
+                                    required
+                                    accept="image/*"
+                                    placeholder="Hình ảnh của lộ trình..."
                                 />
                             </div>
                             <div className="card-input mt-3">
@@ -231,16 +246,18 @@ const ManagementRoutes = () => {
                                     type="text"
                                     name="url"
                                     onChange={(e) => setData({ ...data, description: e.target.value })}
+                                    required
+                                    placeholder="Mô tả của lộ trình..."
                                 />
                             </div>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => toggleModalCreate()}>
-                            Trở lại
+                            Hủy
                         </Button>
                         <Button variant="primary" onClick={(e) => submitCreate()}>
-                            Lưu lại
+                            Thêm
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -249,11 +266,11 @@ const ManagementRoutes = () => {
                         <Sections sourceRoute={route} closeEdit={toggleModalSections} />
                     </Modal.Body>
                 </Modal>
-                <Modal show={modalEdit} onHide={() => toggleModalEdit({})} contentClassName="modal-basic-content">
-                    <Modal.Header closeButton onClick={() => toggleModalEdit({})}>
-                        <Modal.Title>Thêm nhóm từ vựng</Modal.Title>
-                    </Modal.Header>
+                <Modal show={modalEdit} onHide={() => toggleModalEdit({})} dialogClassName='sweet-alert-modal' contentClassName="modal-basic-content">
                     <Modal.Body>
+                        <div className='text-center'>
+                            <h3 className='text-info'> Cập nhật thông tin lộ trình</h3>
+                        </div>
                         <div className="form-group">
                             <div className="container">
                                 <div className="row">
@@ -317,26 +334,31 @@ const ManagementRoutes = () => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => toggleModalEdit({})}>
-                            Trở lại
+                            Hủy
                         </Button>
                         <Button variant="primary" onClick={(e) => submitEdit()}>
-                            Lưu lại
+                            Lưu
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <Modal show={modalDelete} onHide={() => toggleModalDelete({})} contentClassName="modal-basic-content">
-                    <Modal.Header closeButton onClick={() => toggleModalDelete({})}>
-                        <Modal.Title>Xác nhận xóa nhóm từ vựng</Modal.Title>
-                    </Modal.Header>
+                <Modal show={modalDelete} onHide={() => toggleModalDelete({})} dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
                     <Modal.Body>
-                        Bạn có chắc chắn muốn xóa nhóm từ vựng này không?
+                        <div className='text-center'>
+                            <i className='fa fa-4x fa-warning text-danger'></i>
+                            <br></br>
+                            <br></br>
+                            <h3 className='text-info'>Bạn có chắc muốn xóa lộ trình này</h3>
+                            <p className='text-danger'>
+                                Không thể hoàn tác
+                            </p>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => toggleModalDelete({})}>
-                            Trở lại
+                            Hủy
                         </Button>
-                        <Button variant="primary" onClick={(e) => submitDelete()}>
-                            Lưu lại
+                        <Button variant="danger" onClick={(e) => submitDelete()}>
+                            Xác nhận
                         </Button>
                     </Modal.Footer>
                 </Modal>

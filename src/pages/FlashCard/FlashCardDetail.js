@@ -209,8 +209,8 @@ class FlashCardDetail extends Component {
                                                             }
                                                         }
                                                     }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={this.state.currentWord.wordVoice}></ReactPlayer>}
-                                                    <h1 className="word">{this.state.currentWord.eng}</h1>
-                                                    <p className="synonym">(n) ({this.state.currentWord.vie})</p>
+                                                    <h1 className="word">{this.state.currentWord.eng}  <small className='text-dark'>{this.state.currentWord.spelling}</small></h1>
+                                                    <p className="synonym">({this.state.currentWord.vie})</p>
                                                     <p className="typeWord">n</p>
                                                     {this.state.currentWord.memory != null && <div className="row">
                                                         <div className="row">

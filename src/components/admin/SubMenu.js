@@ -67,14 +67,14 @@ const SubMenu = () => {
             <Link className="collapse-item" to="/admin/quan-ly-quiz-exam">
               Quiz/Exam
             </Link>
+            <Link className="collapse-item" to="/admin/quan-ly-chung-chi">
+              Chứng chỉ
+            </Link>
             <Link className="collapse-item" to="/admin/quan-ly-bai-hoc">
               Bài học
             </Link>
             <Link className="collapse-item" to="/admin/quan-ly-lo-trinh">
               Lộ trình học
-            </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-chung-chi">
-              Chứng chỉ
             </Link>
           </div>
         </div>

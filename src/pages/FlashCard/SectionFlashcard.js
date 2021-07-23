@@ -16,8 +16,10 @@ import TheoryScreen from "./TheoryScreen";
 import StartPhaseScreen from "./StartPhaseScreen";
 import ReactPlayer from "react-player";
 import { AudioPlayer } from "../../components/utils/AudioPlayer";
-import { Button, Modal} from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import sectionApiV2 from '../../api/2.0/sectionApi';
+import { QuestionTypes } from "../../constants/QuestionTypes";
+import { toast } from "react-toastify";
 const cardData = [
   {
     front: {
@@ -66,7 +68,8 @@ const SectionFlashcard = () => {
   const [isVocabularyScreen, setIsVocabularyScreen] = useState(false); //Screen check
   const [isQuestionScreen, setIsQuestionScreen] = useState(false) //Screen check
   const [isQuestionLoop, setIsQuestionLoop] = useState(false);
-  const [modalExit,setModalExit] = useState(false);
+  const [modalExit, setModalExit] = useState(false);
+  const [isFail,setIsFail] = useState(false);
   useEffect(async () => {
     async function fetchData() {
       const result = await routeApi.routeLearn(routeId, sectionId, scriptId);
@@ -115,7 +118,9 @@ const SectionFlashcard = () => {
   }
   useEffect(() => {
     if (!isBusy) {
-      if (remainQuestions.length = 0) {
+      if (remainQuestions.length == 0) {
+        console.log('clgv');
+        setIsQuestionLoop(false);
         setIsStartPhaseScreen(true);
         setIsQuestionScreen(false);
         setIsVocabularyScreen(false);
@@ -219,38 +224,49 @@ const SectionFlashcard = () => {
     }
   }, [isQuestionScreen])
   function AddRemainQuestion(question) {
-    setIsLastQuestion(false);
-    setRemainQuestions([...remainQuestions.filter(q => q !== question), question])
+    if (question.type != QuestionTypes.Toeic) {
+      setIsLastQuestion(false);
+      setRemainQuestions([...remainQuestions.filter(q => q !== question), question])
+    }else{
+      setIsFail(true);
+    }
+
   }
   function RemoveRemainQuestion(question) {
-    console.log(...remainQuestions.filter(q => q !== question));
-    setRemainQuestions([...remainQuestions.filter(q => q !== question)])
+    if (question.type != QuestionTypes.Toeic) {
+      console.log(...remainQuestions.filter(q => q !== question));
+      setRemainQuestions([...remainQuestions.filter(q => q !== question)])
+    }
   }
   function finishScript() {
     if (isLoggedIn) {
-      if (connection.state == HubConnectionState.Connected) {
-
-        connection.on("SectionProgress", (data) => {
-          const result = JSON.parse(data);
-          dispatch(FinishUp(result))
-          setIsFinish(true);
-        })
-        connection.on("NextScript", (data) => {
-          const result = JSON.parse(data);
-          console.log(result);
-          setCurrentScript(result);
-          setWordIndex(0);
-          setQuestionIndex(0);
-          history.push(`/routes/${routeId}/sections/${sectionId}/scripts/${result.id}`)
-        })
-        const data = {
-          sectionId: sectionId,
-          accountId: account.id,
-          scriptId: scriptId
-        }
+      connection.on("SectionProgress", (data) => {
+        const result = JSON.parse(data);
+        console.log(result);
+        dispatch(FinishUp(result))
+        setIsFinish(true);
+      })
+      connection.on("ExamScriptFail", () => {
+        setIsFinish(true);
+        toast('Bạn không hoàn thành bài kiểm tra này', {type: 'info'})
+      });
+      connection.on("NextScript", (data) => {
         console.log(data);
-        connection.send("ScriptDone", data);
+        const result = JSON.parse(data);
+        console.log(result);
+        setCurrentScript(result);
+        setWordIndex(0);
+        setQuestionIndex(0);
+        history.push(`/routes/${routeId}/sections/${sectionId}/scripts/${result.id}`)
+      })
+      const data = {
+        sectionId: sectionId,
+        accountId: account.id,
+        scriptId: scriptId,
+        status: isFail
       }
+      console.log(data);
+      connection.send("ScriptDone", data);
     }
     else {
       console.log('finish');
@@ -349,14 +365,14 @@ const SectionFlashcard = () => {
                           {currentWord.eng}
                           <span>{currentWord.wordVoice && <div className='d-flex justify-content-center'><AudioPlayer src={currentWord.wordVoice}></AudioPlayer></div>}</span>
                         </h4>
+                        <br></br>
                         <h4 className="">{currentWord.vie}</h4>
                         <hr className="d-flex justify-content-center w-75"></hr>
                         <div className="mt-2 example">
                           <h5>Ví dụ</h5>
-                          Vd1: ............................
-                          <img src="/image/sound.png" className="sound"></img>
-                          <br></br>
-                          Vd2: ............................
+                          {currentWord.examples.map((example, idx) =>
+                            <h6 key={idx} className='text-dark'>{example.eng} ~ {example.vie}</h6>
+                          )}
                         </div>
                       </div>
                       <div className="container">
@@ -388,7 +404,7 @@ const SectionFlashcard = () => {
                     </div>}
                   {isQuestionScreen && <NormalQuestion question={currentQuestion} addRemainQuestion={AddRemainQuestion} removeRemainQuestion={RemoveRemainQuestion} check={Check} answerCheck={SelectAnswer} isLastQuestion={isLastQuestion} />}
                   {answerCheck === 1 && <RightAnswer indexChange={questionIndexChange} isFinish={isFinish} sectionId={sectionId} />}
-                  {answerCheck === 0 && <WrongAnswer indexChange={questionIndexChange} />}
+                  {answerCheck === 0 && (currentQuestion.type == QuestionTypes.Toeic ? <WrongAnswer indexChange={questionIndexChange} isFinish={isFinish} sectionId={sectionId}/> : <WrongAnswer indexChange={questionIndexChange} />)}
                 </div>
               </main>
             </div>
@@ -419,18 +435,21 @@ const SectionFlashcard = () => {
         </div>
       </div>
       }
-      <Modal show={modalExit} animation onHide={() => setModalExit(!modalExit)} centered size="lg">
+      <Modal show={modalExit} animation onHide={() => setModalExit(!modalExit)} centered size="lg" dialogClassName='sweet-alert-modal'>
         <Modal.Body>
-          <p>
-            Bạn có chắc muốn thoát
-            <br />
-            Quá trình có thể sẽ không được lưu lại
-          </p>
-
+          <div className='text-center'>
+            <i className='fa fa-4x fa-warning text-danger'></i>
+            <br></br>
+            <br></br>
+            <h3 className='text-info'>Bạn có chắc muốn thoát</h3>
+            <p className='text-danger'>
+              Mọi kết quả có thể sẽ không được lưu!
+            </p>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setModalExit(!modalExit)}>Hủy</Button>
-          <Link className='btn btn-primary' to={'/home'}>Xác nhận</Link>
+          <Link className='btn btn-danger' to={'/home'}>Xác nhận</Link>
         </Modal.Footer>
       </Modal>
     </div>

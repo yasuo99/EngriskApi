@@ -87,6 +87,9 @@ import NewExamPage from "./pages/Exam/NewExamPage";
 import ManagementcategoryTag from "./pages/Admin/ManagementCategoryTag";
 import ManagementPost from "./pages/Admin/ManagementPost";
 import ManagementCertificate from "./pages/Admin/ManagementCertificate";
+import UserManagementCertificatae from "./pages/Admin/User/UserManagementCertificate";
+import CertificateExam from "./pages/Exam/CertificateExam";
+import ExamResult from "./pages/HocPage/ExamResult";
 const routes = [
   {
     path: "/splash",
@@ -96,12 +99,26 @@ const routes = [
     roles: [],
   },
   {
-    path: "/test",
+    path: "/result",
     exact: true,
-    main: () => <NewExamPage />,
+    main: () => <ExamResult />,
     guard: false,
     roles: [],
   },
+  {
+    path: "/test/:examId",
+    exact: true,
+    main: () => <NewExamPage />,
+    guard: true,
+    roles: [],
+  },
+  {
+    path: "/certificate-review/:examId",
+    exact: true,
+    main: () => <CertificateExam />,
+    guard: true,
+    roles: [],
+  },,
   {
     path: "/admin/quan-ly-exam/:examId/cai-dat",
     exact: true,
@@ -318,7 +335,7 @@ const routes = [
     path: "/ketqua-exam/:examId",
     exact: true,
     main: (match) => <KetQuaExam match={match} />,
-    guard: true,
+    guard: false,
     roles: [],
   },
   {
@@ -449,9 +466,16 @@ const routes = [
     roles: [],
   },
   {
-    path: "/nguoi-dung/:accountId/quan-ly-quiz-exam",
+    path: "/nguoi-dung/:accountId/quan-ly-tai-nguyen",
     exact: true,
     main: (match) => <QuizExamPage match={match} />,
+    guard: true,
+    roles: ["learner"],
+  },
+  {
+    path: "/nguoi-dung/:accountId/quan-ly-chung-chi",
+    exact: true,
+    main: (match) => <UserManagementCertificatae />,
     guard: true,
     roles: ["learner"],
   },

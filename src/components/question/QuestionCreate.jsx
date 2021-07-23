@@ -153,7 +153,7 @@ const QuestionCreate = ({values,setFieldValue, errors, touched}) => {
   };
   return (
     <div>
-      <div id="content-wrapper" className="d-flex flex-column script-panel">
+      <div id="content-wrapper" className="d-flex flex-column script-panel-2">
         {/* <SubMenuClient></SubMenuClient> */}
         <div id="quiz">
           <div>
@@ -171,8 +171,9 @@ const QuestionCreate = ({values,setFieldValue, errors, touched}) => {
                         className="h-100"
                         transition={false}
                         onSelect={(e) => {setType(e); values.type = e}}
+                        mountOnEnter={true}
                       >
-                        <Row title="Loại câu hỏi" className="script-panel">
+                        <Row title="Loại câu hỏi" className="script-panel-2">
                           <Col sm={2} title="Kịch bản" className="col">
                             <h5>Kịch bản</h5>
                             <Nav

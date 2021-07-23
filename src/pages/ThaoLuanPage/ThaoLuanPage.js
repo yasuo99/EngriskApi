@@ -9,11 +9,11 @@ import Footer from '../Footer/Footer';
 import postApi from '../../api/postApi';
 import Paypal from '../../components/paypal/Paypal';
 import { connect } from 'react-redux';
-import { Button } from 'react-bootstrap';
+import { Button, Tab, Tabs } from 'react-bootstrap';
 import { Formik, Field, Form } from "formik";
 import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 import postApiV2 from '../../api/2.0/postApi';
-
+import Chatbox from "../../components/chatbot/Chatbox"
 const post = {
     title: '',
     content: '',
@@ -234,78 +234,78 @@ class ThaoLuanPage extends Component {
                                                 <Link className="btn btn-primary" to="/thao-luan/them-bai-viet">ĐĂNG BÀI MỚI</Link>
                                             </div>}
                                         </div>
-                                        <ul className="nav nav-tabs">
-                                            <li className="nav-item"> <a className="active nav-link" data-toggle="pill" data-target="#tabone"><i className="fa fa-book" /> ĐANG ĐƯỢC YÊU THÍCH</a> </li>
-                                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabtwo"><i className="fa fa-star" /> MỚI </a> </li>
-                                            <li className="nav-item"> <a className="nav-link" data-toggle="pill" data-target="#tabfour"><i className="fa fa-share-alt" /> CHIA SẺ</a> </li>
-                                        </ul>
-                                        <div className="tab-content">
-                                            <div className="tab-pane fade show active" id="tabone" role="tabpanel">
-                                                {this.isComponentMounted && renderHotPosts}
-                                            </div>
+                                        <Tabs defaultActiveKey='hot' mountOnEnter>
+                                            <Tab eventKey='hot' title='Đang hot' tabClassName='font-weight-bold'>
+                                                <div className='container'>
+                                                    {this.isComponentMounted && renderHotPosts}
+                                                </div>
 
-                                            <div className="tab-pane fade" id="tabtwo" role="tabpanel">
-                                                {this.isComponentMounted && renderNewPost}
-                                            </div>
-                                            <div className="tab-pane fade" id="tabfour" role="tabpanel">
-                                                <div className="boxContent">
-                                                    <img src={this.props.photoUrl || "/image/user.png"} className="img-user"></img>
-                                                    <p className="username">{this.state.username}</p>
-                                                    <Formik
-                                                        initialValues={post}
-                                                        onSubmit={async (values, { resetForm }) => {
-                                                            await new Promise((r) => setTimeout(r, 500));
-                                                            // this.createPost(values);
-                                                            this.createPost(values);
-                                                            resetForm({})
-                                                            this.removeImageSelected();
-                                                        }}
-                                                    >
-                                                        {({ values, setFieldValue }) => (
-                                                            <div>
-                                                                <Form className="content" >
-                                                                    <Field
-                                                                        className="ml-3 border-bottom"
-                                                                        placeholder="Tiêu đề?"
-                                                                        type="text"
-                                                                        id="title"
-                                                                        name="title"
-                                                                        component="input"
-                                                                    />
-                                                                    <div className="contentPost">
+                                            </Tab>
+                                            <Tab eventKey='new' title='Mới' tabClassName='font-weight-bold'>
+                                                <div className='container'>
+                                                    {this.isComponentMounted && renderNewPost}
+                                                </div>
+                                            </Tab>
+                                            <Tab eventKey='share' title='Chia sẻ' tabClassName='font-weight-bold'>
+                                                <div id="tabfour" role="tabpanel">
+                                                    <div className="boxContent">
+                                                        <img src={this.props.photoUrl || "/image/user.png"} className="img-user"></img>
+                                                        <p className="username">{this.state.username}</p>
+                                                        <Formik
+                                                            initialValues={post}
+                                                            onSubmit={async (values, { resetForm }) => {
+                                                                await new Promise((r) => setTimeout(r, 500));
+                                                                // this.createPost(values);
+                                                                this.createPost(values);
+                                                                resetForm({})
+                                                                this.removeImageSelected();
+                                                            }}
+                                                        >
+                                                            {({ values, setFieldValue }) => (
+                                                                <div>
+                                                                    <Form className="content" >
                                                                         <Field
-                                                                            className="contentPost"
-                                                                            placeholder="Bạn muốn chia sẻ điều gì thế?"
+                                                                            className="ml-3 border-bottom"
+                                                                            placeholder="Tiêu đề?"
                                                                             type="text"
-                                                                            id="content"
-                                                                            name="content"
-                                                                            component="textarea"
+                                                                            id="title"
+                                                                            name="title"
+                                                                            component="input"
                                                                         />
-                                                                    </div>
-                                                                    {/* <FilePost file={values.file} /> */}
-                                                                    {renderImages}
-                                                                    <div className="row">
-                                                                        <div className="function">
-                                                                            <div className="col-11">
-                                                                                <p className="title">Thêm vào bài viết</p>
-                                                                            </div>
-                                                                            <div className="imgPost">
-                                                                                <label htmlFor="imgPost"><img src="/image/pictures.png"></img>
+                                                                        <div className="contentPost">
+                                                                            <Field
+                                                                                className="contentPost"
+                                                                                placeholder="Bạn muốn chia sẻ điều gì thế?"
+                                                                                type="text"
+                                                                                id="content"
+                                                                                name="content"
+                                                                                component="textarea"
+                                                                            />
+                                                                        </div>
+                                                                        {/* <FilePost file={values.file} /> */}
+                                                                        {renderImages}
+                                                                        <div className="row">
+                                                                            <div className="function">
+                                                                                <div className="col-11">
+                                                                                    <p className="title">Thêm vào bài viết</p>
+                                                                                </div>
+                                                                                <div className="imgPost">
+                                                                                    <label htmlFor="imgPost"><img src="/image/pictures.png"></img>
 
-                                                                                    <Field type="file"
-                                                                                        multiple
-                                                                                        accept="image/png, image/jpeg"
-                                                                                        className="f-image"
-                                                                                        id="imgPost"
-                                                                                        name="imgPost"
-                                                                                        onChange={(event) => {
-                                                                                            this.selectImages(event);
-                                                                                            setFieldValue("fileImg", event.currentTarget.files);
-                                                                                        }}
-                                                                                    />
-                                                                                </label>
-                                                                            </div>
-                                                                            {/* <div className="filePost">
+                                                                                        <Field type="file"
+                                                                                            multiple
+                                                                                            accept="image/png, image/jpeg"
+                                                                                            className="f-image"
+                                                                                            id="imgPost"
+                                                                                            name="imgPost"
+                                                                                            onChange={(event) => {
+                                                                                                this.selectImages(event);
+                                                                                                setFieldValue("fileImg", event.currentTarget.files);
+                                                                                            }}
+                                                                                        />
+                                                                                    </label>
+                                                                                </div>
+                                                                                {/* <div className="filePost">
                                                                                 <label htmlFor="filePost"><img src="/image/file-storage.png"></img>
 
                                                                                     <Field type="file"
@@ -318,19 +318,21 @@ class ThaoLuanPage extends Component {
                                                                                     />
                                                                                 </label>
                                                                             </div> */}
-                                                                            {/* <img src="/image/file-storage.png" className="f-file"></img> */}
+                                                                                {/* <img src="/image/file-storage.png" className="f-file"></img> */}
+                                                                            </div>
+                                                                            <button className="save" type="submit" >Đăng</button>
+
+
                                                                         </div>
-                                                                        <button className="save" type="submit" >Đăng</button>
-
-
-                                                                    </div>
-                                                                </Form>
-                                                            </div>
-                                                        )}
-                                                    </Formik>
+                                                                    </Form>
+                                                                </div>
+                                                            )}
+                                                        </Formik>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </Tab>
+                                        </Tabs>
+
                                     </div>
                                     <div className="col-4 mt-4">
                                         <div className="search">
@@ -344,8 +346,10 @@ class ThaoLuanPage extends Component {
                                 </div>
                             </div>
                         </section>
+                        <div className='fixed-bottom'>
+                            <Chatbox></Chatbox>
+                        </div>
 
-                        <Footer></Footer>
                     </div>
                 </div>
 

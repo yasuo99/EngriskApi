@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import HeaderClient from "../../components/client/HeaderClient";
 import SubMenuClient from "../../components/client/SubMenuClient";
 import examApiv2 from "../../api/2.0/examApi";
-import { Button, Form, Modal } from 'react-bootstrap'
+import { Button, Form, Modal, Tab, Tabs, Table } from 'react-bootstrap'
 import { Fragment } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import quizApi from "../../api/2.0/quizApi";
@@ -11,12 +11,27 @@ import accountApiV2 from "../../api/2.0/accountApi";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import Sharing from "../../components/managementquizs/Sharing";
+import ManagementQuestionComponent from "../../components/question/ManagementQuestionComponent";
+import questionApiV2 from "../../api/2.0/questionApi";
+import Paginate from "../../components/pagination/Paginate";
+import QuizPreview from "../Admin/ContentManagement/QuizPreview";
+import Search from "../../components/search/Search";
 class QuizExamPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            quizzes: [],
-            exams: [],
+            quizzes: {
+                currentPage: 1,
+                pageSize: 5,
+                totalPages: 1,
+                items: []
+            },
+            exams: {
+                currentPage: 1,
+                pageSize: 5,
+                totalPages: 1,
+                items: []
+            },
             sharingQuizModal: false,
             sharingExamModal: false,
             selectedQuiz: {
@@ -30,21 +45,34 @@ class QuizExamPage extends Component {
             deleteQuizModal: false,
             deleteExamModal: false,
             selectedQuiz: '',
-            selectedExam: ''
+            selectedExam: '',
+            quizQuery: '',
+            examQuery: '',
+            quizInspectModal: false
         };
         this.isComponentMounted = false;
+    }
+    async fetchQuizData(params) {
+        const quizzes = await quizApi.getUserQuizzes(this.props.account.id, params);
+        if (this.isComponentMounted) {
+            this.setState({
+                quizzes: quizzes
+            })
+        }
+    }
+    async fetchExamData(params) {
+        const exams = await examApiv2.getUserExams(this.props.account.id, params);
+        if (this.isComponentMounted) {
+            this.setState({
+                exams: exams,
+            })
+        }
     }
     async componentDidMount() {
         this.isComponentMounted = true;
         const { match: { match: { params } } } = this.props
-        const exams = await examApiv2.getUserExams(params.accountId);
-        const quizzes = await quizApi.getUserQuizzes(params.accountId);
-        if (this.isComponentMounted) {
-            this.setState({
-                exams: exams,
-                quizzes: quizzes.items
-            })
-        }
+        await this.fetchQuizData();
+        await this.fetchExamData();
     }
     toggleQuizModal = async (e) => {
         this.setState({
@@ -90,7 +118,7 @@ class QuizExamPage extends Component {
                 quizzes: remainQuizzes,
                 selectedQuiz: ''
             })
-            toast('Xóa bài quiz thành công', {type:'info'})
+            toast('Xóa bài quiz thành công', { type: 'info' })
             this.toggleDeleteQuizModal();
         }
     }
@@ -112,7 +140,7 @@ class QuizExamPage extends Component {
                 exams: remainExams,
                 selectedExam: ''
             })
-            toast('Xóa bài exam thành công', {type:'info'})
+            toast('Xóa bài exam thành công', { type: 'info' })
             this.toggleDeleteExamModal();
         }
     }
@@ -156,8 +184,11 @@ class QuizExamPage extends Component {
     async componentWillUnmount() {
         this.isComponentMounted = false;
     }
+    fetchQuestions = async (params, filter, query) => {
+        return await accountApiV2.getUserQuestions(this.props.account.id, params, filter, query)
+    }
     render() {
-        const renderExams = this.state.exams.map((exam, index) =>
+        const renderExams = this.state.exams.items.map((exam, index) =>
             <tr key={index}>
                 <td>{exam.title}</td>
                 <td>{exam.detail}</td>
@@ -166,12 +197,12 @@ class QuizExamPage extends Component {
                 <td>{exam.totalReading}</td>
                 <td>
                     <Button data-id={exam.id} variant="primary" className="btn btn-add mr-2" onClick={(e) => this.toggleExamModal(e)} ><i data-id={exam.id} className="fa fa-share"></i></Button>
-                    <Button variant="success" className="btn btn-edit mr-2" ><Link to='/' className="fa fa-edit"></Link></Button>
+                    <Button variant="success" className="btn btn-edit mr-2" ><i className="fa fa-edit"></i></Button>
                     <Button data-id={exam.id} onClick={(e) => this.toggleDeleteExamModal(e)} variant="danger" className="btn btn-delete"><i data-id={exam.id} className="fa fa-trash" /></Button>
                 </td>
             </tr>
         )
-        const renderQuizzes = this.state.quizzes.map((quiz, index) =>
+        const renderQuizzes = this.state.quizzes.items.map((quiz, index) =>
             <tr key={index}>
                 <td>{quiz.quizName}</td>
                 <td>{quiz.detail}</td>
@@ -184,6 +215,45 @@ class QuizExamPage extends Component {
                 </td>
             </tr>
         )
+        const quizPaginationChange = async (currentPage, pageSize) => {
+            this.setState({
+                ...this.state,
+                quizzes: {
+                    ...this.state.quizzes,
+                    currentPage: currentPage,
+                    pageSize: pageSize
+                }
+            })
+            await this.fetchData(currentPage, pageSize);
+        }
+        const examPaginationChange = async (currentPage, pageSize) => {
+            this.setState({
+                ...this.state,
+                exams: {
+                    ...this.state.exams,
+                    currentPage: currentPage,
+                    pageSize: pageSize
+                }
+            })
+            const params = {
+                currentPage: currentPage,
+                pageSize: pageSize,
+                search: this.state.examQuery
+            }
+            await this.fetchExamData(params);
+        }
+        const examSearch = async (query) => {
+            this.setState({
+                ...this.state,
+                examQuery: query
+            })
+            const params = {
+                currentPage: 1,
+                pageSize: this.state.exams.pageSize,
+                search: query
+            }
+            await this.fetchExamData(params);
+        }
         return (
             <div>
                 <div id="wrapper">
@@ -191,59 +261,79 @@ class QuizExamPage extends Component {
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
                             <HeaderClient></HeaderClient>
-                            <div className="container-fluid ql_quiz">
-                                <div className="card shadow mb-4 mt-4">
-                                    <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Quản lý bài quiz</h6>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="table-responsive">
-                                            <Link variant="primary" className="btn btn-quiz mr-2 mb-3" to="/user/quiz_exam"><i className="fa fa-plus" /> Thêm bài quiz</Link>
-                                            {/* <Button variant="primary" className="btn btn-success mr-2 mb-3"  ><i className="fa fa-plus" /> </Button> */}
-                                            <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
-                                                <thead>
-                                                    <tr>
-                                                        <th className="tenbaiquiz">Tên bài</th>
-                                                        <th className="motaquiz">Mô tả</th>
-                                                        <th className="dokhoquiz">Độ khó</th>
-                                                        <th className="dokhoquiz">Số câu hỏi</th>
-                                                        <th className="chucnang" />
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {this.isComponentMounted && renderQuizzes}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card shadow mb-4 mt-4">
-                                    <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Quản lý bài exam</h6>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="table-responsive">
-                                            <Link variant="primary" className="btn btn-quiz mr-2 mb-3" to="/user/quiz_exam"><i className="fa fa-plus" /> Thêm bài exam</Link>
-                                            {/* <Button variant="primary" className="btn btn-success mr-2 mb-3"  ><i className="fa fa-plus" /> </Button> */}
-                                            <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
-                                                <thead>
-                                                    <tr>
-                                                        <th className="tenbaiquiz">Tên bài</th>
-                                                        <th className="motaquiz">Mô tả</th>
-                                                        <th className="dokhoquiz">Thời gian làm bài</th>
-                                                        <th className="dokhoquiz">Số câu nghe</th>
-                                                        <th className="dokhoquiz">Số câu đọc</th>
-                                                        <th className="chucnang" />
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {renderExams}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="container-fluid ql_quiz mt-4">
+                                <Tabs defaultActiveKey='question'>
+                                    <Tab eventKey='question' title='Quản lý ngân hàng câu hỏi' tabClassName='font-weight-bold'>
+                                        <ManagementQuestionComponent header={false} fetch={this.fetchQuestions}></ManagementQuestionComponent>
+                                    </Tab>
+                                    <Tab eventKey='quiz' title='Quản lý quiz' tabClassName='font-weight-bold'>
+                                        <div className="card shadow mb-4">
+                                            <div className="card-body">
+                                                <div className="table-responsive">
+                                                    <Link variant="primary" className="btn btn-quiz mr-2 mb-3" to="/admin/quiz-exam"><i className="fa fa-plus" /> Thêm quiz</Link>
+                                                    {/* <Button variant="primary" className="btn btn-success mr-2 mb-3"  ><i className="fa fa-plus" /> </Button> */}
+                                                    <Table striped bordered hover responsive>
 
+                                                        <thead>
+                                                            <tr>
+                                                                <th className="tenbaiquiz">Tên bài</th>
+                                                                <th className="motaquiz">Số câu hỏi</th>
+                                                                <th className="dokhoquiz">Độ khó</th>
+                                                                <th className="chucnang" >Preview</th>
+                                                                <th className="chucnang" />
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {this.isComponentMounted && renderQuizzes}
+                                                        </tbody>
+                                                    </Table>
+                                                    <Paginate currentPage={this.state.quizzes.currentPage} pageSize={this.state.quizzes.pageSize} totalPages={this.state.quizzes.totalPages} change={quizPaginationChange}></Paginate>
+                                                </div>
+                                            </div>
+                                            {/* <Modal show={quizInspectModal} onHide={() => this.setState({...this.state, quizInspectModal: false})} dialogClassName="modal-90w" size="lg" animation>
+                                                <Modal.Body>
+                                                    {Object.keys(this.state.selectedQuiz).length > 1 && <QuizPreview quiz={this.state.selectedQuiz} closeReview={() => setQuizInspectModal(!quizInspectModal)}></QuizPreview>}
+                                                </Modal.Body>
+                                                <Modal.Footer bsPrefix='d-flex justify-content-end mb-2'>
+                                                    <Button className='mr-4' variant="secondary" onClick={() => setQuizInspectModal(!quizInspectModal)}>
+                                                        Kết thúc preview
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal> */}
+                                        </div>
+                                    </Tab>
+                                    <Tab eventKey='exam' title='Quản lý exam' tabClassName='font-weight-bold'>
+                                        <div className="card shadow mb-4">
+                                            <div className="card-body">
+                                                <div className="table-responsive">
+                                                    <div className='d-flex justify-content-between'>
+                                                        <Link variant="primary" className="btn btn-quiz mr-2 mb-3" to="/user/quiz_exam"><i className="fa fa-plus" /> Thêm bài exam</Link>
+                                                        <Search queryFunction={examSearch}></Search>
+                                                    </div>
+
+                                                    {/* <Button variant="primary" className="btn btn-success mr-2 mb-3"  ><i className="fa fa-plus" /> </Button> */}
+                                                    <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
+                                                        <thead>
+                                                            <tr>
+                                                                <th className="tenbaiquiz">Tên bài</th>
+                                                                <th className="motaquiz">Mô tả</th>
+                                                                <th className="dokhoquiz">Thời gian làm bài</th>
+                                                                <th className="dokhoquiz">Số câu nghe</th>
+                                                                <th className="dokhoquiz">Số câu đọc</th>
+                                                                <th className="chucnang" />
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {this.isComponentMounted && renderExams}
+                                                        </tbody>
+                                                    </table>
+                                                    <Paginate currentPage={this.state.exams.currentPage} pageSize={this.state.exams.pageSize} totalPages={this.state.exams.totalPages} change={examPaginationChange}></Paginate>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Tab>
+
+                                </Tabs>
                             </div>
                             <Modal animation={true} show={this.state.sharingQuizModal} onHide={this.toggleQuizModal}>
                                 <Modal.Header closeButton onClick={(e) => this.toggleQuizModal(e)}>
@@ -253,7 +343,7 @@ class QuizExamPage extends Component {
                                     <Fragment>
                                         <Form.Group style={{ marginTop: '20px' }}>
                                             <Form.Label>Chia sẻ với</Form.Label>
-                                            <Sharing share={this.sharingChange} options={this.state.quizSharingTo} shared={this.state.currentQuizSharing} placeholder='Chia sẻ với...'/>
+                                            <Sharing share={this.sharingChange} options={this.state.quizSharingTo} shared={this.state.currentQuizSharing} placeholder='Chia sẻ với...' />
                                         </Form.Group>
                                     </Fragment>
                                 </Modal.Body>
@@ -270,7 +360,7 @@ class QuizExamPage extends Component {
                                     <Fragment>
                                         <Form.Group style={{ marginTop: '20px' }}>
                                             <Form.Label>Chia sẻ với</Form.Label>
-                                            <Sharing share={this.sharingChange} options={this.state.examSharingTo} shared={this.state.currentExamSharing} placeholder='Chia sẻ với...'/>
+                                            <Sharing share={this.sharingChange} options={this.state.examSharingTo} shared={this.state.currentExamSharing} placeholder='Chia sẻ với...' />
                                         </Form.Group>
                                     </Fragment>
                                 </Modal.Body>

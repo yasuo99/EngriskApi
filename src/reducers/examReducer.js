@@ -5,10 +5,14 @@ const initialState = {
 const examReducer = (state = initialState, action) => {
     switch (action.type) {
         case "SUBMIT_EXAM":
-            toast("Nộp bài thành công");
             return {
                 ...state,
                 result:action.result
+            }
+        case "REMOVE_RESULT":
+            return{
+                ...state,
+                result: {}
             }
         default:
             return state;

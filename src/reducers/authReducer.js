@@ -1,5 +1,5 @@
 import { HubConnectionState } from "@microsoft/signalr";
-import { useJwt } from "react-jwt";
+import jwtDecode from "jwt-decode"
 import { toast } from "react-toastify"
 import { connection } from "../signalR/createSignalRConnection";
 const initState = {
@@ -30,11 +30,25 @@ const initState = {
   unseenMessages: []
 }
 const initialState = () => {
-  return {
-    ...initState,
-    isLoggedIn: localStorage.getItem('account') ? true : false,
-    account: localStorage.getItem('account') === null ? initState.account : JSON.parse(localStorage.getItem('account')),
-    token: localStorage.getItem('token') === null ? "" : localStorage.getItem('token')
+  let token = localStorage.getItem('token')
+  if(token){
+    const { exp } = jwtDecode(token)
+    // Refresh the token a minute early to avoid latency issues
+    const expirationTime = (exp * 1000) - 60000
+    if (Date.now() <= expirationTime) {
+      return {
+        ...initState,
+        isLoggedIn: localStorage.getItem('account') ? true : false,
+        account: localStorage.getItem('account') === null ? initState.account : JSON.parse(localStorage.getItem('account')),
+        token: localStorage.getItem('token') === null ? "" : localStorage.getItem('token')
+      }
+    }
+    return {
+      ...initState
+    }
+  }
+  return{
+    ...initState
   }
 }
 const authReducer = (state = initialState(), action) => {
@@ -42,7 +56,7 @@ const authReducer = (state = initialState(), action) => {
   switch (action.type) {
     case "SIGN_IN": {
       toast("Xin chào bạn đã đến với website", { type: 'info' });
-      if(connection.state == HubConnectionState.Disconnected){
+      if (connection.state == HubConnectionState.Disconnected) {
         connection.start();
       }
       return {
@@ -189,7 +203,7 @@ const authReducer = (state = initialState(), action) => {
     case "UNSEEN_MESSAGE":
       return {
         ...state,
-        unseenMessages: [action.message,...state.unseenMessages]
+        unseenMessages: [action.message, ...state.unseenMessages]
       }
     case "SEEN_MESSAGES":
       return {

@@ -17,7 +17,7 @@ const TinNhanClient = ({ }) => {
                     Trung tâm tin nhắn
                 </h6>
                 {unseenMessages.slice(0,5).map((message, index) =>
-                    <a className="dropdown-item d-flex align-items-center" href="#">
+                    <a key={index} className="dropdown-item d-flex align-items-center" href="#">
                         <div className="dropdown-list-image mr-3">
                             <img className="rounded-circle" src={message.sender.avatar}
                                 alt="..." />
