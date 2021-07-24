@@ -9,6 +9,8 @@ import QuizAudio from '../components/QuizPage/QuizAudio'
 import QuizImage from '../components/QuizPage/QuizImage'
 import QuizMatchWord from '../components/QuizPage/QuizMatchWord'
 import QuizSort from '../components/QuizPage/QuizSort'
+import QuizSelect from '../components/QuizPage/QuizSelect'
+import QuizInput from '../components/QuizPage/QuizInput'
 import QuizConversation from '../components/QuizPage/QuizConversation'
 import Section from '../components/SectionPage/Section'
 import QuestionSection from '../components/SectionPage/QuestionSection'
@@ -207,13 +209,16 @@ const QuizScreen = ({ route, navigation }) => {
                 {/* <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text> */}
                 <Text style={styles.numberQuestion}>Số câu đã chọn : {index} /{quiz.questions.length}</Text>
             </View>
-            {
+            {/* {
                 checkAudio !== null ?
                 <QuizAudio quiz={quiz.questions[currentQuestionIndex]}></QuizAudio> :
                 (checkImage !== null ?
                 <QuizImage quiz={quiz.questions[currentQuestionIndex]}></QuizImage> :
                 <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz>)
-            }
+            } */}
+            {/* <QuizSelect></QuizSelect> */}
+            <QuizInput></QuizInput>
+            {/* <QuizConversation></QuizConversation> */}
             {/* <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz> */}
             <View style={styles.changeQuestion}>
                 <TouchableOpacity onPress={() => { skipQuestion() }}>

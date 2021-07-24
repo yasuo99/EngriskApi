@@ -66,6 +66,11 @@ function TabScreen(){
           <MaterialIcons name="home" size={32} color={color} />
         ),
       })}
+      listeners={({ navigation, route }) => ({
+        tabPress: e => {
+          navigation.navigate(route.name);
+        },
+      })}
     >
     </Tab.Screen>
     <Tab.Screen

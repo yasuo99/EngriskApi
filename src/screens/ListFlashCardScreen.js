@@ -11,21 +11,25 @@ import WordCategoriesActions from '../redux/actions/wordCategory';
 import Toast from 'react-native-simple-toast';
 import { BaseApiUrl } from '../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { set } from 'lodash';
 const ListFlashCardScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
     const [activeSections, setActiveSections] = useState([])
     const [wordCategories, setWordCategories] = useState([])
+    const [test, setTest] = useState([])
+    const [total, setTotal] = useState(1);
     const toggleOpen = () => {
         setOpen(!open);
     };
+  
   const checkConnection = async (state) =>{   
      if (state.isConnected) {
-        try{
-          const wordcategories = await WordCategoriesActions.getAll();
-          setWordCategories(wordcategories.data.items)
-        }catch (error) {
-          console.log(error);
-        }
+          try{
+            const wordcategories = await WordCategoriesActions.getAll(total);
+            setWordCategories(wordcategories.data.items)
+          }catch (error) {
+            console.log(error);
+          }
      } 
      else {
        AsyncStorage.getItem('wordCategories')
@@ -39,7 +43,7 @@ const ListFlashCardScreen = ({ navigation }) => {
         NetInfoSub = NetInfo.addEventListener(
         checkConnection,
       )
-    },[setWordCategories])
+    },[setWordCategories,total])
     const drawerContent = () => {
         return (
           <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
@@ -123,6 +127,13 @@ const ListFlashCardScreen = ({ navigation }) => {
             ToastAndroid.TOP
           );
       };
+      const number =async () => {
+        const wordcategories =await WordCategoriesActions.getAll(total);
+        if(wordcategories.data.totalPages > total){
+          setTotal(total+1)
+          console.log(total+1)
+        }
+  }
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
@@ -183,12 +194,10 @@ const ListFlashCardScreen = ({ navigation }) => {
                             <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>{item.words.length} từ vựng</Text>
                         </View>
                     </View>)}
+                 onEndReached={number}
+                 onEndReachedThreshold={0}
             />
-            {/* <ScrollView>
-              {
-                wordCategories
-              }
-            </ScrollView> */}
+           
         </View>
     );
 };

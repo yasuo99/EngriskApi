@@ -47,9 +47,9 @@ const QuizSort = () => {
     return (
         <View style={styles.screenContainer}>
             <View style={styles.boxQuestion} >
-                <Text style={styles.titleQuestion}>Quiz về động vật</Text>
+                {/* <Text style={styles.titleQuestion}>Quiz về động vật</Text>
                 <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
-                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
+                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text> */}
                 <View style={{ marginLeft: 50, marginRight: 30, flexDirection: "row", height: 60 }}>
                     <Image source={require('../../assets/problem.png')}></Image>
                     <View style={styles.question}>
@@ -58,7 +58,7 @@ const QuizSort = () => {
                         <Player
                             onTogglePlayback={togglePlayback}
                         />
-                        <Text style={styles.textQuestion}>What is your name?</Text></View>
+                        <Text style={styles.textQuestion}>What is your name? What is your name? What are your name? What is your name?</Text></View>
                         </ScrollView>
                     </View>              
                 </View>
@@ -68,7 +68,7 @@ const QuizSort = () => {
                 <View style={styles.line}>
                     <View style={styles.word}>
                         <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>Notification</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -94,6 +94,18 @@ const QuizSort = () => {
                             <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                    <View style={styles.word}>
+                        <TouchableOpacity>
+                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.word}>
+                        <TouchableOpacity>
+                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.word}>
                         <TouchableOpacity>
                             <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
@@ -116,33 +128,7 @@ const QuizSort = () => {
                             <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
+                   
                 </View>
                 
                 </ScrollView>
@@ -186,7 +172,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#fff",
         padding: 10,
-        width: 90,
+        minWidth: 130,
         height: 50,
         borderRadius: 20,
         shadowColor: "#1DA1F2",
@@ -219,8 +205,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 10,
         marginLeft: 10,
-        width: 280,
-        height: 60,
+        padding:10,
+        width: 300,
+        height: 80,
     },
     textQuestion: {
         marginLeft:10,

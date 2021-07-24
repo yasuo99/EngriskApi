@@ -26,7 +26,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const FlashCardScreen = ({ route, navigation }) => {
   const playbackState = usePlaybackState();
   const [wordCategories, setWordCategories] = useState({
-    vocabulary: []
+    vocabulary: [],
   })
   const { WordCategoryId } = route.params
   useEffect(async () => {
