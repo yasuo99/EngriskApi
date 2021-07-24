@@ -29,6 +29,9 @@ import AuthorizationActions from '../redux/actions/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from "@react-native-community/netinfo";
 import { connection } from '../constants/hubConnection';
+import { HubConnectionState } from '@microsoft/signalr';
+import NotificationActions from '../redux/actions/notifications';
+import BoxChatActions from '../redux/actions/boxchats';
 const HomeScreen = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalTwoVisible, setModalTwoVisible] = useState(false);
@@ -46,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
   const [isBusy, setIsBusy] = useState(true);
   const [selectUser, setSelectUser] = useState({})
   const { lastRoute } = useSelector(state => state.route);
-  const { account } = useSelector(state => state.auth);
+  const { account, token, loggedIn } = useSelector(state => state.auth);
   const dispatch = useDispatch()
   const toggleModalTwo = () => {
     setModalTwoVisible(!isModalTwoVisible);
@@ -116,7 +119,23 @@ const HomeScreen = ({ navigation }) => {
     NetInfoSub = NetInfo.addEventListener(
       checkConnection,
     )
-   
+    console.log('token', token);
+    console.log('state', connection.state);
+      if(connection.state == HubConnectionState.Disconnected){
+        connection.start().then(() => 
+        console.log('Kết nối thành công'));
+        connection.on('NewNotification', (data) => {
+          console.log('Nhận đc rồi nè');
+          var notification = JSON.parse(data);
+          dispatch(NotificationActions.newNotify(notification));
+        });
+        connection.on('NewMessage', (data) => {
+          console.log('Nhận đc rồi nè');
+          const dataParsed = JSON.parse(data);
+          console.log(dataParsed);
+          dispatch(BoxChatActions.newMessage(dataParsed));
+      });
+      }
     // async function fetchData() {
     //   try {
     //     const data = await HomeActions.getData(account.id);

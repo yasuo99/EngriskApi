@@ -8,15 +8,18 @@ import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BoxChatActions from '../redux/actions/boxchats';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
 const MessageScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false)
   const [boxchats, setBoxchats] = useState([])
+  const {account} = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const checkConnection = async (state) =>{   
     if (state.isConnected) {
       try {
-        const boxchats = await BoxChatActions.getAll(1);
+        const boxchats = await BoxChatActions.getAll(account.id);
+        dispatch(boxchats)
         setBoxchats(boxchats.data);
-        console.log(boxchats)
       } catch (error) {
         console.log(error);
       }
@@ -212,7 +215,7 @@ const MessageScreen = ({ navigation }) => {
                       <Text style={styles.itemName}>{item.title}</Text>
                     </TouchableOpacity>
                     {/* <Text style={styles.itemDate}>{item.hostUsername}</Text> */}
-                    <Text style={styles.itemDate}>Hoạt động 10 giờ trước</Text>
+                    <Text style={styles.itemDate}>{item.description}</Text>
                   </View>
                 </View>
                 <View style={styles.kengang}></View>

@@ -9,6 +9,7 @@ import NotificationActions from '../redux/actions/notifications';
 import Moment from 'react-moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notification } from '../components/NotificationPage/Notification'
+import { useDispatch, useSelector } from 'react-redux';
 const sendMessage = () => {
   notification.configure();
   notification.buatChannel("1");
@@ -36,15 +37,17 @@ const NotificationItem = ({ item }) => (
 );
 
 const NotificationScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false)
-  const [notifications, setNotifications] = useState([])
+  const [data, setData] = useState([])
+  const {account} = useSelector(state => state.auth)
   const [isBusy, setIsBusy] = useState(true);
+  const {notifications} = useSelector(state => state.notification)
   const checkConnection = async (state) =>{   
     if (state.isConnected) {
       try {
-        const data = await NotificationActions.getData(1)
-        console.log(data);
-        setNotifications(data.data.items);
+        const result = await NotificationActions.getData(account.id);
+        dispatch(result)
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +56,7 @@ const NotificationScreen = ({ navigation }) => {
       AsyncStorage.getItem('notification')
       .then(notified => {
         let data = JSON.parse(notified)
-        setNotifications(data)
+        setData(data)
       })
       
     }
@@ -63,7 +66,12 @@ const NotificationScreen = ({ navigation }) => {
       checkConnection,
     )
 
-  }, [setNotifications])
+  }, [setData])
+  useEffect(() => {
+    if(notifications.length > 0){
+      setData(notifications)
+    }
+  },[notifications.length])
   const toggleOpen = () => {
     setOpen(!open);
   };
@@ -196,7 +204,7 @@ const NotificationScreen = ({ navigation }) => {
       <View style={styles.bodyContainer}>
         <View style={styles.listContainer}>
           <FlatList
-            data={notifications}
+            data={data}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <NotificationItem item={item} />}
           />

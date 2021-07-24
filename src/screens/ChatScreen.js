@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, StatusBar, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import { Input } from 'react-native-elements/dist/input/Input';
 import LinearGradient from 'react-native-linear-gradient';
@@ -6,26 +6,41 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BoxChatActions from '../redux/actions/boxchats';
+import { useDispatch, useSelector } from 'react-redux';
+import { connection } from '../constants/hubConnection';
 const ChatScreen = ({ route, navigation }) => {
   const [open, setOpen] = useState(false)
   //Tạm thời set cứng ở đây để sử dụng
-  const userId = 1;
-  const username = 'Thanhpro719'
-  const [boxchat,setBoxchat] = useState({
+  const { account } = useSelector(state => state.auth);
+  const [message, setMessage ] = useState('')
+  const scrollViewRef = useRef();
+  const [boxchat, setBoxchat] = useState({
     messages: []
   })
-  const {boxchatId} = route.params
+  const dispatch = useDispatch();
+  const { boxchatId } = route.params
+  const {current} = useSelector(state => state.boxchat);
   const toggleOpen = () => {
     setOpen(!open);
   };
   useEffect(async () => {
     try {
-      const data = await BoxChatActions.getDetail(userId,boxchatId);
-      setBoxchat(data.data)
+      const data = await BoxChatActions.getDetail(account.id, boxchatId);
+      dispatch(data);
     } catch (error) {
       console.log(error);
-    } 
-  },[boxchatId])
+    }
+  }, [boxchatId])
+  function sendMessage() {
+    const newMessage = {
+      boxchatId: boxchatId,
+      fromId: account.id,
+      fromUsername: account.username,
+      content: message
+    }
+    setMessage('')
+    connection.send('SendMessage',newMessage);
+  }
   const drawerContent = () => {
     return (
       <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
@@ -35,7 +50,7 @@ const ChatScreen = ({ route, navigation }) => {
           size={32}
         // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
         />
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => { navigation.navigate('Home'), setOpen(!open) }}>
           <MaterialIcons
             name="home"
             size={32}
@@ -43,7 +58,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListSection'), setOpen(!open) }}>
           <MaterialIcons
             name="ballot"
             size={32}
@@ -51,7 +66,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListExam'), setOpen(!open) }}>
           <MaterialIcons
             name="rule"
             size={32}
@@ -59,7 +74,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
           <MaterialIcons
             name="book"
             size={32}
@@ -67,7 +82,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Message'), setOpen(!open) }}>
           <MaterialIcons
             name="chat"
             size={32}
@@ -75,7 +90,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Calender'), setOpen(!open) }}>
           <MaterialIcons
             name="today"
             size={32}
@@ -83,7 +98,7 @@ const ChatScreen = ({ route, navigation }) => {
             style={{ marginLeft: 16 }}></MaterialIcons>
           <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Notification'), setOpen(!open) }}>
           <MaterialIcons
             name="notifications"
             size={32}
@@ -107,7 +122,7 @@ const ChatScreen = ({ route, navigation }) => {
       <StatusBar barStyle="light-content" />
 
       <View style={{ flexDirection: "row" }}>
-      <MenuDrawer
+        <MenuDrawer
           open={open}
           drawerContent={drawerContent()}
           drawerPercentage={45}
@@ -159,37 +174,40 @@ const ChatScreen = ({ route, navigation }) => {
             <Text style={styles.itemName}>{boxchat.title}</Text>
             <Text style={styles.itemStatus}>Đang hoạt động</Text>
           </View>
-          <TouchableOpacity onPress={()=>navigation.navigate('CreateMember')}>
-          <MaterialIcons
-            name="group-add"
-            size={32}
-            color="#ffffff"
-            style={{marginLeft:16,marginTop:16}}></MaterialIcons>
+          <TouchableOpacity onPress={() => navigation.navigate('CreateMember')}>
+            <MaterialIcons
+              name="group-add"
+              size={32}
+              color="#ffffff"
+              style={{ marginLeft: 16, marginTop: 16 }}></MaterialIcons>
           </TouchableOpacity>
         </View>
         <View style={styles.kengang}></View>
         <View style={styles.boxContent}>
-          <ScrollView style={{paddingRight:16}}>
-            {boxchat.messages.map((message,index) => 
-              <View style={message.sender.name == username ? styles.contentRight : styles.contentLeft} key={index}>
-              <View>
-               {message.sender.name !==  username && <Image source={message.sender.avatar ? {uri: `${message.sender.avatar}`} : require('../assets/avatar.png')} style={{ width: 50, height: 50 }}></Image>} 
+          <ScrollView style={{ paddingRight: 16 }} ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({animated: true})}>
+            {current.messages.map((message, index) =>
+              <View style={message.sender.name == account.username ? styles.contentRight : styles.contentLeft} key={index}>
+                <View>
+                  {message.sender.name !== account.username && <Image source={message.sender.avatar ? { uri: `${message.sender.avatar}` } : require('../assets/avatar.png')} style={{ width: 50, height: 50 }}></Image>}
+                </View>
+                <View style={message.sender.name == account.username ? styles.textRight : styles.textLeft} key={index}>
+                  <Text style={{ color: "#fff", fontSize: 16, marginTop: 16, marginLeft: 16 }}>{message.text}</Text>
+                </View>
               </View>
-              <View style={message.sender.name == username ? styles.textRight : styles.textLeft} key={index}>
-                <Text style={{color:"#fff", fontSize:16, marginTop:16,marginLeft:16}}>{message.text}</Text>
-              </View>
-            </View>
             )}
-            </ScrollView>
+          </ScrollView>
         </View>
         <View style={styles.boxAnswer}>
-          <View style={{width:400}}>
-            <Input placeholder="Aa" style={styles.inputAnswer}>
-              
-             </Input>
+          <View style={{ width: 400 }}>
+            <Input placeholder="Aa" style={styles.inputAnswer} value={message} onChangeText={(val) => setMessage(val)}>
+
+            </Input>
           </View>
           <View>
-            <Image source={require('../assets/send.png')}  style={{width:32,height:32,marginTop:5}}></Image>
+            <TouchableOpacity onPress={() => sendMessage()}>
+              <Image source={require('../assets/send.png')} style={{ width: 32, height: 32, marginTop: 5 }}></Image>
+            </TouchableOpacity>
+
           </View>
         </View>
       </View>
@@ -215,58 +233,58 @@ const styles = StyleSheet.create({
   boxTitle: {
     flexDirection: 'row',
   },
-  boxContent : {
-    height:'75%',
-    marginTop:16,
-    marginBottom:16
+  boxContent: {
+    height: '75%',
+    marginTop: 16,
+    marginBottom: 16
   },
-  inputAnswer : {
-    borderColor:"#f2f2f2",
-    borderWidth:1,
-    borderRadius:10,
-    height:30,
-    fontSize:16,
-    padding:10,
-    backgroundColor:'#fff',
+  inputAnswer: {
+    borderColor: "#f2f2f2",
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 30,
+    fontSize: 16,
+    padding: 10,
+    backgroundColor: '#fff',
   },
-  contentLeft : {
+  contentLeft: {
     flexDirection: 'row',
-    width:"80%",
-    marginTop:5,
-    marginBottom:5
+    width: "80%",
+    marginTop: 5,
+    marginBottom: 5
   },
-  contentRight : {
-    marginLeft:60,
-    marginTop:5,
-    marginBottom:5,
-    flexDirection:"row",
-    justifyContent:"flex-end",
+  contentRight: {
+    marginLeft: 60,
+    marginTop: 5,
+    marginBottom: 5,
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
-  textRight : {
-    backgroundColor:"#1DA1F2",
-    paddingTop:0,
-    paddingLeft:10,
-    paddingRight:10,
-    paddingBottom:5,
-    borderRadius:10,
-    marginRight:8
+  textRight: {
+    backgroundColor: "#1DA1F2",
+    paddingTop: 0,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 5,
+    borderRadius: 10,
+    marginRight: 8
   },
-  textLeft : {
-    backgroundColor:"#192734",
-    paddingTop:0,
+  textLeft: {
+    backgroundColor: "#192734",
+    paddingTop: 0,
     // paddingLeft:10,
-    paddingRight:10,
-    paddingBottom:5,
-    borderRadius:10,
-    marginLeft:8
+    paddingRight: 10,
+    paddingBottom: 5,
+    borderRadius: 10,
+    marginLeft: 8
   },
   itemText: {
     marginRight: 40,
     marginLeft: 8,
     marginTop: 5,
-    width:260
+    width: 260
   },
-  boxAnswer : {
+  boxAnswer: {
     flexDirection: 'row',
   },
   itemName: {

@@ -36,13 +36,12 @@ export const AuthorizationActionTypes = {
 const onLogin = async (payload) => {
   try {
     const data = await axiosClientV1.post('/accounts/login', payload)
-  console.log(data.token);
-  await AsyncStorage.setItem('token', data.token);
+  await AsyncStorage.setItem('token', data.token.trim());
   await AsyncStorage.setItem('account', JSON.stringify(data.account))
   return ({
     type: AuthorizationActionTypes.LOGIN,
     account: data.account,
-    token: data.token
+    token: data.token.trim()
   });
   } catch (error) {
     console.log(error);

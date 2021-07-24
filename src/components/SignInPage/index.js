@@ -18,7 +18,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthorizationActions from '../../redux/actions/auth';
 const logo = require('../../assets/world.png');
-
 const SignInScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
@@ -268,7 +267,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#15202B'
+        backgroundColor: '#15202B',
     },
     header: {
         // flex: 1,
