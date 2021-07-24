@@ -209,14 +209,15 @@ const QuizScreen = ({ route, navigation }) => {
                 {/* <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text> */}
                 <Text style={styles.numberQuestion}>Số câu đã chọn : {index} /{quiz.questions.length}</Text>
             </View>
-            {
+            {/* {
                 checkAudio !== null ?
                 <QuizAudio quiz={quiz.questions[currentQuestionIndex]}></QuizAudio> :
                 (checkImage !== null ?
                 <QuizImage quiz={quiz.questions[currentQuestionIndex]}></QuizImage> :
                 <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz>)
-            }
+            } */}
             {/* <QuizSelect></QuizSelect> */}
+            <QuizInput></QuizInput>
             {/* <QuizConversation></QuizConversation> */}
             {/* <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz> */}
             <View style={styles.changeQuestion}>

@@ -8,12 +8,13 @@ export const WordCategoriesActionsTypes = {
 Object.keys(WordCategoriesActionsTypes).forEach((key) => {
     WordCategoriesActionsTypes[key] = `WORDCATEGORY_${WordCategoriesActionsTypes[key]}`
 })
-const getAll = async () => {
+// const test = []
+const getAll = async (currentPage) => {
     const url = `/wordCategories`
     const headers = {
         Authorization: `Bearer {token}`
     }
-    const data = await axiosClient.get(url);
+    const data = await axiosClient.get(url,{ params: { tag: "all", currentPage:currentPage} });
     await AsyncStorage.setItem('wordCategories',JSON.stringify(data.items));
     return{
         type: WordCategoriesActionsTypes.GET_ALL,

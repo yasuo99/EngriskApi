@@ -1,33 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Keyboard, TextInput } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 const QuizInput = () => {
     useEffect(() => {
-        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
-        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
-
-        // cleanup function
-        return () => {
-            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
-            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
-        };
+       
     }, []);
-    const UselessTextInput = (props) => {
-        return (
-          <TextInput
-            {...props}
-            editable
-            maxLength={40}
-          />
-        );
-      }
-    const [keyboardStatus, setKeyboardStatus] = useState(undefined);
-    const _keyboardDidShow = () => setKeyboardStatus("Keyboard Shown");
-    const _keyboardDidHide = () => setKeyboardStatus("Keyboard Hidden");
     return (
         <View style={styles.screenContainer}>
             <View style={styles.boxQuestion}>
-                <Text style={styles.question}>What is your name? What is your name? What is your name? What is your name? </Text>
+                <ScrollView>
+                <Text style={styles.question}>What is your name? What is your name? What is your name? What is your name? What is your name?</Text>
+                </ScrollView>
             </View>
             <View style={styles.kengang}></View>
             <Text style={{fontSize:24,color:"#fff", marginLeft:30, marginTop:20}}>ĐÁP ÁN:</Text>
@@ -51,11 +35,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
-        padding: 20
+        padding: 20,
+        height:140
     },
     question: {
         fontSize: 28,
         color: "#fff",
+        height:100
     },
     textQuestion: {
         marginLeft: 10,
@@ -83,11 +69,13 @@ const styles = StyleSheet.create({
         width: '90%',
         borderBottomColor: '#ededed',
         borderBottomWidth: 1,
-        marginTop: 40,
+        marginTop: 20,
         marginLeft: 30,
     },
     input: {
-        margin:30,
+        marginLeft:30,
+        marginRight:30,
+        marginTop:20,
         padding: 10,
         borderWidth: 0.5,
         borderRadius: 20,
