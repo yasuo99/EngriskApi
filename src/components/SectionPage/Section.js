@@ -35,12 +35,14 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
     const [questionIndex, setQuestionIndex] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState({})
     const [isFinish, setIsFinish] = useState(false);
+    const [remainQuestions, setRemainQuestions] = useState([])
+    const [isLastQuestion,setIsLastQuestion] = useState(false);
     useEffect(() => {
-        async function preLoad(){
+        async function preLoad() {
             const script = await AsyncStorage.getItem('script')
-            if(script){
+            if (script) {
                 const parsedScript = JSON.parse(script);
-                if(parsedScript.id == scriptId){
+                if (parsedScript.id == scriptId) {
                     setScript(parsedScript)
                     if (parsedScript.words.length > 0) {
                         setIsVocabularyScreen(true)
@@ -51,11 +53,11 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
                             setCurrentWord(parsedScript.questions[questionIndex])
                         }
                     }
-                }else{
+                } else {
                     fetchData();
                 }
-                
-            }else{
+
+            } else {
                 await fetchData();
             }
         }
@@ -67,22 +69,43 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
                 setIsVocabularyScreen(true)
                 console.log('Tu vung', data.script.words[wordIndex])
                 setCurrentWord(data.script.words[wordIndex])
+
             } else {
                 if (data.script.questions.length > 0) {
+                    console.log('?', data.script.questions[questionIndex]);
                     setIsQuestionScreen(true)
-                    setCurrentWord(data.script.questions[questionIndex])
+                    setCurrentQuestion(data.script.questions[questionIndex])
                 }
             }
-            await AsyncStorage.setItem('script',JSON.stringify(data.script));
+            await AsyncStorage.setItem('script', JSON.stringify(data.script));
         }
-        preLoad();
+        fetchData();
+        setQuestionIndex(0);
+        setWordIndex(0);
+        setIsFinish(false);
     }, [scriptId, sectionId, routeId])
     useEffect(() => {
         setCurrentWord(script.words[wordIndex])
     }, [wordIndex])
     useEffect(() => {
         setCurrentQuestion(script.questions[questionIndex])
+        if(questionIndex == script.questions.length - 1){
+            setIsLastQuestion(true);
+        }
     }, [questionIndex])
+    useEffect(() => {
+        if(remainQuestions.length > 0){
+            setScript({
+                ...script,
+                questions: [...script.questions, ...remainQuestions]
+            })
+            setRemainQuestions([]);
+            setIsLastQuestion(false);
+        }
+    },[remainQuestions.length])
+    function addRemainQuestion(question){
+        setRemainQuestions([...remainQuestions,question])
+    }
     const next = () => {
         setBgColor(!bgColor);
     }
@@ -90,11 +113,20 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
         if (wordIndex < script.words.length - 1) {
             setWordIndex(wordIndex + 1)
         } else {
+            setIsVocabularyScreen(false);
             if (script.questions.length > 0) {
                 setIsQuestionScreen(true);
             } else {
                 setIsFinish(true);
             }
+        }
+    }
+    function questionIndexChange(){
+        console.log('dkm');
+        if(questionIndex < script.questions.length - 1){
+            setQuestionIndex(questionIndex + 1);
+        }else{
+            setIsFinish(true);
         }
     }
     useEffect(() => {
@@ -140,7 +172,7 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
-            <View style={{ margin: 30 }}>
+            {isVocabularySreen && <View style={{ margin: 30 }}>
                 <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10, color: "#1DA1F2" }}>Đọc và nghe câu</Text>
                 <View style={{ alignItems: "center", backgroundColor: "#1DA1F2", borderRadius: 10 }}>
                     <Image source={require('../../assets/abideby.jpeg')} style={{ width: 420, height: 200, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
@@ -148,30 +180,31 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
                         onTogglePlayback={togglePlayback}
                     />
                 </View>
-                {isVocabularySreen &&
-                    <ScrollView style={{ height: 320 }}>
-                        <Text style={{ fontSize: 32, fontWeight: "bold", marginTop: 20, color: "#fff" }}>{currentWord?.eng}</Text>
-                        <Text style={{ fontSize: 24, marginTop: 10, color: "#fff" }}>{currentWord?.vie}</Text>
 
-                    </ScrollView>}
+                <ScrollView style={{ height: 320 }}>
+                    <Text style={{ fontSize: 32, fontWeight: "bold", marginTop: 20, color: "#fff" }}>{currentWord?.eng}</Text>
+                    <Text style={{ fontSize: 24, marginTop: 10, color: "#fff" }}>{currentWord?.vie}</Text>
 
-
-            </View>
-            {isVocabularySreen && !isFinish &&
+                </ScrollView>
+            </View>}
+            {isQuestionScreen &&
+                <QuestionSection navigation={navigation} routeId={routeId} question={currentQuestion} nextIndex={questionIndexChange} isFinish={isFinish} addRemainQuestion={addRemainQuestion} isLastQuestion={isLastQuestion}></QuestionSection>
+            }
+            {isVocabularySreen &&
                 <View style={styles.view}>
                     <TouchableOpacity onPress={() => vocabularyIndexChange()} style={bgColor === false ? styles.next : styles.nextActive}>
                         <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }} >{isFinish ? 'Kết thúc' : 'Tiếp theo'} </Text>
                     </TouchableOpacity>
                 </View>}
-            {isQuestionScreen && <View style={styles.view}>
-                <TouchableOpacity onPress={next} style={bgColor === false ? styles.next : styles.nextActive} onPress={() => setQuestionIndex(questionIndex + 1)}>
+            {/* {isQuestionScreen && <View style={styles.view}>
+                <TouchableOpacity onPress={() => questionIndexChange()} style={bgColor === false ? styles.next : styles.nextActive} onPress={() => setQuestionIndex(questionIndex + 1)}>
                     <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>{isFinish ? 'Kết thúc' : 'Tiếp theo'} </Text>
                 </TouchableOpacity>
-            </View>}
-            {isFinish && <View style={styles.view}>
-                <TouchableOpacity onPress={() => navigation.navigate('Lesson', {routeId: routeId, sectionId: sectionId})} style={bgColor === false ? styles.next : styles.nextActive}>
+            </View>} */}
+            {/* {isFinish && <View style={styles.view}>
+                <TouchableOpacity onPress={() => navigation.navigate('Lesson', { routeId: routeId, sectionId: sectionId })} style={bgColor === false ? styles.next : styles.nextActive}>
                     <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>Kết thúc </Text>
-                </TouchableOpacity></View>}
+                </TouchableOpacity></View>} */}
         </View>
     );
 };

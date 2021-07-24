@@ -2,15 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Keyboard, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-const QuizInput = () => {
+const QuizInput = ({question, submitAnswer, isLastQuestion}) => {
+    const [answer,setAnswer] = useState('')
     useEffect(() => {
-       
-    }, []);
+       setAnswer('')
+    }, [question]);
+    useEffect(() => {
+        if(isLastQuestion){
+            setAnswer('')
+        }
+    },[isLastQuestion])
     return (
         <View style={styles.screenContainer}>
             <View style={styles.boxQuestion}>
                 <ScrollView>
-                <Text style={styles.question}>What is your name? What is your name? What is your name? What is your name? What is your name?</Text>
+                <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16, color: "#1DA1F2" }}>{question.preQuestion.replace(/(<([^>]+)>)/gi, "")}</Text>
+                <Text style={styles.question}>{question.content.replace(/(<([^>]+)>)/gi, "")}</Text>
                 </ScrollView>
             </View>
             <View style={styles.kengang}></View>
@@ -18,7 +25,9 @@ const QuizInput = () => {
             <TextInput
                 style={styles.input}
                 placeholder='Nhập câu trả lời...'
-                onSubmitEditing={Keyboard.dismiss}
+                value={answer}
+                onChangeText={(val) => setAnswer(val)}
+                onSubmitEditing={() => {Keyboard.dismiss; submitAnswer(answer)}}
             />
             {/* <Text style={styles.status}>{keyboardStatus}</Text> */}
         </View>
@@ -32,10 +41,8 @@ const styles = StyleSheet.create({
     },
 
     boxQuestion: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-        padding: 20,
+        marginLeft: 30,
+        marginTop: 50,
         height:140
     },
     question: {

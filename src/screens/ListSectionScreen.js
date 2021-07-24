@@ -13,7 +13,6 @@ import ProgressBar from 'react-native-progress/Bar';
 const ListSectionScreen = ({ navigation }) => {
     const [open, setOpen] = useState(false)
     const { lastRoute } = useSelector(state => state.route);
-    console.log('route: ', lastRoute);
     const [activeSections, setActiveSections] = useState([])
     const toggleOpen = () => {
         setOpen(!open);
@@ -29,7 +28,8 @@ const ListSectionScreen = ({ navigation }) => {
         expand: `${section.description}`,
         imageExpand: require('../assets/english.jpg'),
         time: '1 phút',
-        scripts: section.scripts
+        scripts: section.scripts,
+        done: section.donePercent
     }));
 
     //   const _renderSectionTitle = (section) => {
@@ -50,7 +50,7 @@ const _renderHeader = (section) => {
                     <View style={{flexDirection:"row"}}>
                         <Text style={{ color: "#ccc", fontSize: 21,width:"110%" }}>{section.lesson}</Text>
                         <View style={{marginTop:5}}>
-                        <ProgressBar progress={3/5} width={100} height={15} color={'#1DA1F2'} borderRadius={20} />
+                        <ProgressBar progress={section.done/100} width={100} height={15} color={'#1DA1F2'} borderRadius={20} />
                         </View>
                         
                     </View>
@@ -58,7 +58,6 @@ const _renderHeader = (section) => {
                     <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>{section.title}</Text>
                 </View>
                 <View>
-                
                 </View>
               
             </View>
@@ -81,9 +80,9 @@ const _renderHeader = (section) => {
                         <>
                             <MaterialIcons
                                 key={idx}
-                                name="check-circle"
+                                name={script.isDone ? 'check-circle' : 'circle'}
                                 size={32}
-                                color="#1DA1F2"
+                                color= {script.isDone ? '#28a745' : '#1DA1F2'}
                                 style={{marginRight:10}}>
                             </MaterialIcons>
                             {/* Màu icon khác */}

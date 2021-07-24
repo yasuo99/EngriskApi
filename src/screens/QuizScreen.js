@@ -18,9 +18,11 @@ import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QuizActions from '../redux/actions/quiz';
 import { set } from 'lodash';
+import { QuestionTypes } from '../constants/QuestionTypes';
 const QuizScreen = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [currentQuestion, setCurrentQuestion] = useState({});
     const [index, setIndex] = useState(1)
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -31,6 +33,9 @@ const QuizScreen = ({ route, navigation }) => {
     })
     const [checkAudio, setCheckAudio] = useState(null)
     const [checkImage, setCheckImage] = useState(null)
+    const [isLastQuestion, setIsLastQuestion] = useState(false);
+    const [remainQuestion, setRemainQuestion] = useState([])
+    const [isFinish, setIsFinish] = useState(false);
     const { quizId } = route.params
 
     useEffect(() => {
@@ -40,6 +45,7 @@ const QuizScreen = ({ route, navigation }) => {
                 setQuiz(quizData.quiz)
                 setCheckAudio(quizData.quiz.questions[currentQuestionIndex].audio)
                 setCheckImage(quizData.quiz.questions[currentQuestionIndex].photoUrl)
+                setCurrentQuestion(quizData.quiz.questions[currentQuestionIndex]);
             } catch (error) {
                 console.log(error);
             }
@@ -48,105 +54,118 @@ const QuizScreen = ({ route, navigation }) => {
             fetchQuizData();
         }
     }, [quizId])
+    useEffect(() => {
+        setCurrentQuestion(quiz.questions[currentQuestionIndex])
+        if(currentQuestionIndex == quiz.questions.length - 1){
+            setIsLastQuestion(true);
+        }
+    }, [currentQuestionIndex])
+    useEffect(() => {
+        if (remainQuestion.length > 0) {
+            setQuiz({
+                ...quiz,
+                questions: [...quiz.questions, ...remainQuestion]
+            })
+            setRemainQuestion([])
+            setIsLastQuestion(false);
+        }
+    }, [remainQuestion.length])
+    function addRemainQuestion(question) {
+        setRemainQuestion([...remainQuestion, question])
+    }
     const toggleOpen = () => {
         setOpen(!open);
     };
     const drawerContent = () => {
         return (
-          <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
-            <FontAwesome
-              name="bars"
-              color="#ffffff"
-              size={32}
-            // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
-            />
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => {navigation.navigate('Home'),setOpen(!open)}}>
-              <MaterialIcons
-                name="home"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+            <TouchableOpacity onPress={toggleOpen} style={styles.animatedBox}>
+                <FontAwesome
+                    name="bars"
+                    color="#ffffff"
+                    size={32}
+                // style={{ marginLeft: 10, marginTop: 10, paddingTop: 5 }}
+                />
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: "40%" }} onPress={() => { navigation.navigate('Home'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="home"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Trang chủ</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListSection'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="ballot"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListExam'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="rule"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('ListFlashCard'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="book"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Message'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="chat"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Calender'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="today"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => { navigation.navigate('Notification'), setOpen(!open) }}>
+                    <MaterialIcons
+                        name="notifications"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
+                    <MaterialIcons
+                        name="logout"
+                        size={32}
+                        color="#ffffff"
+                        style={{ marginLeft: 16 }}></MaterialIcons>
+                    <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
+                </TouchableOpacity>
             </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListSection'),setOpen(!open)}}>
-              <MaterialIcons
-                name="ballot"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Section</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListExam'),setOpen(!open)}}>
-              <MaterialIcons
-                name="rule"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Quiz</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('ListFlashCard'),setOpen(!open)}}>
-              <MaterialIcons
-                name="book"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Flash card</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Message'),setOpen(!open)}}>
-              <MaterialIcons
-                name="chat"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Tin nhắn</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Calender'),setOpen(!open)}}>
-              <MaterialIcons
-                name="today"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Lịch</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: 36 }} onPress={() => {navigation.navigate('Notification'),setOpen(!open)}}>
-              <MaterialIcons
-                name="notifications"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Thông báo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: "row", marginTop: "100%" }}>
-              <MaterialIcons
-                name="logout"
-                size={32}
-                color="#ffffff"
-                style={{ marginLeft: 16 }}></MaterialIcons>
-              <Text style={{ fontSize: 21, color: "#fff", paddingLeft: 16 }}>Đăng xuất</Text>
-            </TouchableOpacity>
-          </TouchableOpacity>
         );
-      };
+    };
     const nextQuestion = () => {
         if (currentQuestionIndex < quiz.questions.length - 1) {
-            const nextQuestion = quiz.questions[currentQuestionIndex + 1]
-            console.log(nextQuestion)
             setCurrentQuestionIndex(currentQuestionIndex + 1)
             setIndex(index + 1)
-            setCheckAudio(quiz.questions[currentQuestionIndex + 1].audio)
-            setCheckImage(quiz.questions[currentQuestionIndex + 1].photoUrl)
+        } else {
+            setIsFinish(true);
         }
     }
     const skipQuestion = () => {
         if (currentQuestionIndex > 0) {
-            const nextQuestion = quiz.questions[currentQuestionIndex - 1]
-            console.log(nextQuestion)
             setCurrentQuestionIndex(currentQuestionIndex - 1)
             setIndex(index - 1)
-            setCheckAudio(quiz.questions[currentQuestionIndex - 1].audio)
-            setCheckImage(quiz.questions[currentQuestionIndex - 1].photoUrl)
         }
-       
+
     }
     const selectQuestion = (number) => {
         setIndex(number)
@@ -154,7 +173,7 @@ const QuizScreen = ({ route, navigation }) => {
         setCheckImage(quiz.questions[number - 1].photoUrl)
         setCurrentQuestionIndex(number = number - 1)
     }
-
+    console.log(quiz.questions.length);
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
@@ -217,10 +236,10 @@ const QuizScreen = ({ route, navigation }) => {
                 <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz>)
             } */}
             {/* <QuizSelect></QuizSelect> */}
-            <QuizInput></QuizInput>
+            <QuestionSection question={currentQuestion} navigation={navigation} nextIndex={nextQuestion} addRemainQuestion={addRemainQuestion} isLastQuestion={isLastQuestion} isFinish={isFinish}></QuestionSection>
             {/* <QuizConversation></QuizConversation> */}
             {/* <Quiz quiz={quiz.questions[currentQuestionIndex]}></Quiz> */}
-            <View style={styles.changeQuestion}>
+            {/* <View style={styles.changeQuestion}>
                 <TouchableOpacity onPress={() => { skipQuestion() }}>
                     <FontAwesome
                         name="chevron-left"
@@ -269,8 +288,8 @@ const QuizScreen = ({ route, navigation }) => {
                         data={quiz.questions}
                         numColumns={5}
                         renderItem={({ item, index }) => (
-                            <TouchableOpacity style={styles.box} onPress={() => { selectQuestion(index)}}>
-                                <View style={quiz.result? styles.boxNumberActive:styles.boxNumber}>
+                            <TouchableOpacity style={styles.box} onPress={() => { selectQuestion(index) }}>
+                                <View style={quiz.result ? styles.boxNumberActive : styles.boxNumber}>
                                     <Text style={styles.titleNumber}>{index = index + 1}</Text>
                                 </View>
                             </TouchableOpacity>
@@ -280,7 +299,7 @@ const QuizScreen = ({ route, navigation }) => {
 
 
                 </View>
-            </Modal>
+            </Modal> */}
         </View>
     );
 };
@@ -293,7 +312,9 @@ const styles = StyleSheet.create({
     changeQuestion: {
         flexDirection: "row",
         backgroundColor: "#1DA1F2",
-        height: 60
+        height: 60,
+        position: 'absolute',
+        bottom: 0
     },
     headerModal: {
         flexDirection: "row",
@@ -340,7 +361,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         width: 60,
         height: 60,
-        marginTop:10
+        marginTop: 10
     },
     boxNumberActive: {
         backgroundColor: "#1DA1F2",

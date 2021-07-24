@@ -17,7 +17,13 @@ import Feather from 'react-native-vector-icons/Feather';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthorizationActions from '../../redux/actions/auth';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+
 const logo = require('../../assets/world.png');
+GoogleSignin.configure({
+    webClientId: '704575261938-i3iiefjaminroc2114rbd02qpjbcgho9.apps.googleusercontent.com',
+    offlineAccess: false
+})
 const SignInScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
@@ -28,14 +34,14 @@ const SignInScreen = ({ navigation }) => {
         isValidUser: true,
         isValidPassword: true,
     });
-    const {loggedIn} = useSelector(state => state.auth);
+    const { loggedIn } = useSelector(state => state.auth);
     useEffect(() => {
-        if(loggedIn){
+        if (loggedIn) {
             navigation.navigate("Tab")
         }
-    },[loggedIn])
+    }, [loggedIn])
     const dispatch = useDispatch();
-    async function signIn(){
+    async function signIn() {
         const payload = {
             loginMethod: data.username,
             password: data.password
@@ -47,7 +53,7 @@ const SignInScreen = ({ navigation }) => {
         } catch (error) {
             console.log(error);
         }
-       
+
     }
     const textInputChange = (val) => {
         if (val.trim().length >= 4) {
@@ -125,7 +131,25 @@ const SignInScreen = ({ navigation }) => {
         }
         signIn(foundUser);
     }
-
+    const googleSignIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log(userInfo);
+        }
+        catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+            } else {
+                // some other error happened
+                console.log(error);
+            }
+        }
+    }
     return (
         <ScrollView style={styles.container}>
             <StatusBar backgroundColor='#15202B' barStyle="light-content" />
@@ -216,7 +240,7 @@ const SignInScreen = ({ navigation }) => {
                     <TouchableOpacity
                         style={styles.signIn}
                         disabled={!data.isValidUser || !data.isValidPassword || data.username == '' || data.password == ''}
-                        onPress={() => {signIn()}}
+                        onPress={() => { signIn() }}
                     >
                         <LinearGradient
                             colors={['#1DA1F2', '#1DA1F2']}
@@ -230,7 +254,7 @@ const SignInScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "row" }}>
-                    <View style={{ width: 200,  }}>
+                    <View style={{ width: 200, }}>
                         <TouchableOpacity animation="fadeInLeft" onPress={() => navigation.navigate('ForgotPassword')}>
                             <Text style={{ color: '#1DA1F2', marginTop: 15, fontSize: 16 }}>Quên mật khẩu?</Text>
                         </TouchableOpacity>
@@ -242,16 +266,11 @@ const SignInScreen = ({ navigation }) => {
                     </View>
 
                 </View>
-                <View style={{alignItems:"center", justifyContent:"center"}}>
-                <Text style={{color:"#fff",fontSize:18,marginTop:10,marginBottom:10}}>
-                    Hoặc
-                </Text>
-                <TouchableOpacity>
-                    <Text style={styles.facebook}>Login with facebook</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <Text style={styles.google}>Login with google</Text>
-                </TouchableOpacity>
+                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ color: "#fff", fontSize: 18, marginTop: 10, marginBottom: 10 }}>
+                        Hoặc
+                    </Text>
+                    <View><GoogleSigninButton onPress={() => googleSignIn()} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} style={{ width: 400, height: 50 }}></GoogleSigninButton></View>
                 </View>
             </View>
         </ScrollView>
@@ -359,28 +378,28 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     },
-    facebook : {
-        color: '#fff', 
-        backgroundColor:"#1DA1F2", 
-        width:400,
-        textAlign:"center",
-        paddingTop:12,
-        borderRadius:10,
+    facebook: {
+        color: '#fff',
+        backgroundColor: "#1DA1F2",
+        width: 400,
+        textAlign: "center",
+        paddingTop: 12,
+        borderRadius: 10,
         fontSize: 18,
         fontWeight: 'bold',
-        height:50
+        height: 50
     },
-    google : {
-        marginTop:15,
-        color: '#fff', 
-        backgroundColor:"#E7453C", 
-        width:400,
-        textAlign:"center",
-        paddingTop:12,
-        borderRadius:10,
+    google: {
+        marginTop: 15,
+        color: '#fff',
+        backgroundColor: "#E7453C",
+        width: 400,
+        textAlign: "center",
+        paddingTop: 12,
+        borderRadius: 10,
         fontSize: 18,
         fontWeight: 'bold',
-        height:50, 
-        marginBottom:30
+        height: 50,
+        marginBottom: 30
     }
 });

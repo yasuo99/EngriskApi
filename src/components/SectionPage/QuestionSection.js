@@ -14,23 +14,60 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import TrackPlayer, { reset, usePlaybackState } from "react-native-track-player";
 import Player from "../PlaySection";
 import localTrack from "../../assets/pure.m4a";
 import Modal from 'react-native-modal';
-const QuestionSection = ({ navigation }) => {
+import QuestionActions from '../../redux/actions/questions';
+import { QuestionTypes } from '../../constants/QuestionTypes';
+import QuizSort from '../QuizPage/QuizSort';
+import QuizInput from '../QuizPage/QuizInput';
+import QuizMatchWord from '../QuizPage/QuizMatchWord';
+const QuestionSection = ({ navigation, question, nextIndex, addRemainQuestion, removeRemainQuestion, isLastQuestion, isFinish, routeId }) => {
     const [bgColor, setBgColor] = useState(false)
     const [bgColorTwo, setBgColorTwo] = useState(false)
     const [isModalVisible, setModalVisible] = useState(false);
     const [isModalVisibleTwo, setModalVisibleTwo] = useState(false);
     const playbackState = usePlaybackState();
     const [bgColorNext, setBgColorNext] = useState(false)
+    const [result, setResult] = useState(null);
+    const [isChecked, setIsChecked] = useState(false);
+    const [selectedAnswer, setSelectedAnswer] = useState('')
+    const [isOdd,setIsOdd] = useState(false);
+    useEffect(() => {
+        setModalVisible(false);
+        setIsOdd(question?.answers?.length % 2 != 0)
+    }, [question])
+    useEffect(() => {
+        if(isLastQuestion){
+            setModalVisible(false);
+        }
+    },[isLastQuestion])
+    function reset() {
+        setIsChecked(false);
+        setResult(null);
+        setSelectedAnswer('')
+    }
+    useEffect(() => {
+        if (isLastQuestion) {
+            setIsChecked(false);
+            setResult(null);
+            setSelectedAnswer('')
+            setModalVisible(false);
+        }
+    }, [isLastQuestion])
     const next = () => {
         setBgColorNext(!bgColorNext);
     }
-    const checkAnswer = () => {
-        setBgColor(!bgColor);
+    const checkAnswer = async (answer) => {
+        setSelectedAnswer(answer)
         setModalVisible(!isModalVisible)
+        const data = await QuestionActions.checkAnswer(question.id, answer);
+        setResult(data.result.result)
+        setIsChecked(true);
+        if (!data.result.result) {
+            addRemainQuestion(question);
+        }
     }
     const checkAnswerWrong = () => {
         setBgColorTwo(!bgColorTwo);
@@ -39,7 +76,6 @@ const QuestionSection = ({ navigation }) => {
     useEffect(() => {
         setup();
     }, []);
-
     async function setup() {
         await TrackPlayer.setupPlayer({});
         await TrackPlayer.updateOptions({
@@ -76,17 +112,17 @@ const QuestionSection = ({ navigation }) => {
     return (
         <View style={styles.screenContainer}>
             <StatusBar barStyle="light-content" />
-            <View style={{ margin: 30 }}>
-                <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16, color: "#1DA1F2" }}>Đúng hay sai?</Text>
+            {question?.type == QuestionTypes.BASIC && <View style={{ margin: 30 }}>
+                <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16, color: "#1DA1F2" }}>{question?.preQuestion.replace(/(<([^>]+)>)/gi, "")}</Text>
                 <View style={{ alignItems: "center", backgroundColor: "#1DA1F2", borderRadius: 40 }}>
-                    <Player
+                    {question?.audio && <Player
                         onTogglePlayback={togglePlayback}
-                    />
+                    />}
                 </View>
                 <ScrollView style={{ height: 500 }}>
                     <View>
-                        <Text style={{ fontSize: 32, fontWeight: "bold", marginTop: 20, color: "#fff" }}>What is your name?</Text>
-                        <Text style={{ fontSize: 24, marginTop: 10, color: "#fff" }}>Chúng ta nói điều này khi chúng ta muốn biết tên của người khác</Text>
+                        <Text style={{ fontSize: 32, fontWeight: "bold", marginTop: 20, color: "#fff" }}>{question?.content.replace(/(<([^>]+)>)/gi, "")}</Text>
+
                     </View>
                     {/* ĐÁP ÁN LẺ */}
                     {/* <View style={{ flexDirection: "row" }}>
@@ -105,17 +141,19 @@ const QuestionSection = ({ navigation }) => {
                         </TouchableOpacity>
                     </View> */}
                     {/* ĐÁP ÁN CHẴN */}
-                    <View style={{ flexDirection: "row" }}>
-                        <TouchableOpacity onPress={checkAnswer} style={bgColor === false ? styles.answerTwo : styles.answerCorrectTwo}>
-                            <Text style={{ fontSize: 21, color: "#fff" }}>Đúng</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={checkAnswerWrong} style={bgColorTwo === false ? styles.answerTwo : styles.answerWrongTwo}>
-                            <Text style={{ fontSize: 21, color: "#fff" }}>Sai</Text>
-                        </TouchableOpacity>
+                    <View style={{ flexDirection: `${!isOdd ? 'row' : 'column'}` }}>
+                        {question?.answers.map((answer, index) =>
+                           <TouchableOpacity key={index} onPress={() => checkAnswer(answer.answer)} style={!isChecked ? (isOdd ? styles.answer : styles.answerTwo) : (selectedAnswer == answer.answer ? result ? (isOdd ? styles.answerCorrect : styles.answerCorrectTwo) : (isOdd ? styles.answerWrong : styles.answerWrongTwo) : (isOdd ? styles.answer : styles.answerTwo))}>
+                                <Text style={{ fontSize: 21, color: "#fff" }}>{answer.answer}</Text>
+                            </TouchableOpacity> 
+                        )}
                     </View>
                 </ScrollView>
-            </View>
-            <Modal onBackdropPress={() => { setModalVisible(false), setBgColor(!bgColor) }} isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'}
+            </View>}
+            {question?.type == QuestionTypes.ARRANGE && <QuizSort question={question} isLastQuestion={isLastQuestion} submitAnswer={checkAnswer}></QuizSort>}
+            {question?.type == QuestionTypes.FILLOUT && <QuizInput question={question} submitAnswer={checkAnswer} isLastQuestion={isLastQuestion}></QuizInput>}
+            {question?.type == QuestionTypes.CONNECTION && <QuizMatchWord question={question} submitAnswer={checkAnswer} isLastQuestion={isLastQuestion}></QuizMatchWord>}
+            <Modal isVisible={isModalVisible} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'} onSwipeComplete={() => console.log('Tắt rồi nè')} onModalHide={() => reset()}
                 style={styles.view}>
                 <View style={styles.modal}>
                     <View style={{ flexDirection: "row" }}>
@@ -124,33 +162,16 @@ const QuestionSection = ({ navigation }) => {
                             size={32}
                             color="#1DA1F2"
                             style={{ marginLeft: 16 }}></MaterialIcons>
-                        <Text style={{ color: "#1DA1F2", fontSize: 24, fontWeight: "bold", marginLeft: 10 }}>Chính xác</Text>
+                        {result ? <Text style={{ color: "#1DA1F2", fontSize: 24, fontWeight: "bold", marginLeft: 10 }}>Chính xác</Text> : <Text style={{ color: "#E63946", fontSize: 24, fontWeight: "bold", marginLeft: 10 }}>Không chính xác</Text>
+                        }
                     </View>
                     <View style={styles.viewNext}>
-                        <TouchableOpacity onPress={next} style={bgColorNext === false ? styles.next : styles.nextActive}>
-                            <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>Tiếp theo</Text>
+                        <TouchableOpacity onPress={() => { if (!isFinish) { nextIndex() } else { navigation.navigate('Finish', { routeId: routeId }) } }} style={result ? styles.nextActive : styles.next}>
+                            <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}> {!isFinish ? 'Tiếp theo' : 'Kết thúc'}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-            </Modal>
-            <Modal onBackdropPress={() => { setModalVisibleTwo(false), setBgColorTwo(!bgColorTwo) }} isVisible={isModalVisibleTwo} backdropOpacity={0} deviceWidth={100} swipeDirection={'down'}
-                style={styles.view}>
-                <View style={styles.modal}>
-                    <View style={{ flexDirection: "row" }}>
-                        <MaterialIcons
-                            name="cancel"
-                            size={32}
-                            color="#E63946"
-                            style={{ marginLeft: 16 }}></MaterialIcons>
-                        <Text style={{ color: "#E63946", fontSize: 24, fontWeight: "bold", marginLeft: 10 }}>Không chính xác</Text>
-                    </View>
-                    <View style={styles.viewNext}>
-                        <TouchableOpacity onPress={next} style={bgColorNext === false ? styles.next : styles.nextActive}>
-                            <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>Tiếp theo</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
             </Modal>
         </View>
     );
@@ -160,6 +181,11 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: '#15202B',
+    },
+    boxQuestion: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30
     },
     buttonExit: {
         marginTop: 8,

@@ -14,9 +14,8 @@ const SectionScreen = ({ route, navigation }) => {
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
-    const { routeId, sectionId, scriptId } = route.params
+    const { routeId, sectionId, scriptId, percent } = route.params
     const { lastRoute } = useSelector(state => state.route);
-    console.log(lastRoute);
     const [open, setOpen] = useState(false)
     const toggleOpen = () => {
         setOpen(!open);

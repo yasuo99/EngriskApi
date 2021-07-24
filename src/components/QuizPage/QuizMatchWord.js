@@ -1,120 +1,66 @@
-import React, {useState} from 'react';
-import { StyleSheet, View, Text,} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-const QuizMatchWord = () => {
+const QuizMatchWord = ({ question, isLastQuestion, submitAnswer }) => {
     const [wordActive, setWordActive] = useState(false)
     const [wordActiveRight, setWordActiveRight] = useState(false)
+    const [firstCol, setFirstcol] = useState([]);
+    const [secondCol, setSecondCol] = useState([]);
+    useEffect(() => {
+        const tempFirst = []
+        const tempSecond = []
+        for (var i = 0; i < question.answers.length; i++) {
+            const answer = question.answers[i].answer;
+            var n = answer.indexOf("</p>");
+            var m = answer.indexOf("<p>");
+            const firstWord = answer.substring(m, n)
+            const secondWord = answer.substring(n, answer.length)
+            const firstStr = firstWord.replace(/(<([^>]+)>)/gi, "");
+            const secondStr = secondWord.replace(/(<([^>]+)>)/gi, "");
+            tempFirst.push(firstStr)
+            tempSecond.push(secondStr)
+        }
+        setFirstcol(tempFirst.sort(() => Math.random() - 0.3))
+        setSecondCol(tempSecond.sort(() => Math.random() - 0.7))
+    }, [question])
+    console.log(firstCol);
     return (
         <View style={styles.screenContainer}>
-           <View style={styles.boxQuestion} >
-                <Text style={styles.titleQuestion}>Quiz về động vật</Text>
-                <Text style={styles.timeQuestion}>Thời gian còn lại: 00:10:30</Text>
-                <Text style={styles.numberQuestion}>Số câu đã chọn: 1/15</Text>
-                <ScrollView>
-                    <Text style={styles.question}>Nối các từ vựng thành cụm từ có nghĩa</Text>
-                </ScrollView>
-            </View>
-            <View style={styles.kengang}></View>
             <ScrollView>
+                <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 100, textAlign: 'center', color: "#1DA1F2" }}>{question?.preQuestion}</Text>
                 <View style={styles.boxAnswer} >
-                    <View style={{ flexDirection:"column"}}>
-                        <TouchableOpacity onPress={() => {setWordActive(!wordActive)}} style={wordActive === false ? {flexDirection:"row"} : styles.active}>
-                            <View style={styles.word}>
-                                <Text style={styles.textWord}>Beaver</Text>
-                            </View>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#fff"
-                                size={48}
-                                style={{ marginLeft: -18, marginTop: 22, zIndex:4 }}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: "row" }}>
-                            <View style={styles.word}>
-                                <Text style={styles.textWord}>pig</Text>
-                            </View>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#fff"
-                                size={48}
-                                style={{ marginLeft: -18, marginTop: 22 }}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: "row" }}>
-                            <View style={styles.word}>
-                                <Text style={styles.textWord}>wolf</Text>
-                            </View>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#fff"
-                                size={48}
-                                style={{ marginLeft: -18, marginTop: 22 }}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: "row" }}>
-                            <View style={styles.word}>
-                                <Text style={styles.textWord}>horse</Text>
-                            </View>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#fff"
-                                size={48}
-                                style={{ marginLeft: -18, marginTop: 22 }}
-                            />
-                        </TouchableOpacity>
-
+                    <View style={{ flexDirection: "column" }}>
+                        {firstCol.map((val, idx) =>
+                            <TouchableOpacity key={idx} onPress={() => { setWordActive(!wordActive) }} style={wordActive === false ? { flexDirection: "row" } : styles.active}>
+                                <View style={styles.word}>
+                                    <Text style={styles.textWord}>{val}</Text>
+                                </View>
+                                <FontAwesome
+                                    name="caret-right"
+                                    color="#fff"
+                                    size={48}
+                                    style={{ marginLeft: -18, marginTop: 22, zIndex: 4 }}
+                                />
+                            </TouchableOpacity>
+                        )}
                     </View>
-                    <View style={{ flexDirection: "column"}}>
-                        <TouchableOpacity onPress={() => {setWordActiveRight(!wordActiveRight)}} style={wordActiveRight === false ? {flexDirection:"row"} : styles.activeRight}>
-                            <FontAwesome
-                                name="caret-right"
-                                color={wordActiveRight === false ? "#15202B" : "#fff"}
-                                // color="#15202B"
-                                size={48}
-                                style={{ marginTop: 22, marginLeft: 26,zIndex:2 }}
-                            />
-                            <View style={styles.wordRight}>
-                                <Text style={styles.textWord}>out</Text>
-                            </View>
+                    <View style={{ flexDirection: "column" }}>
+                        {secondCol.map((val, idx) =>
+                            <TouchableOpacity key={idx} onPress={() => { setWordActiveRight(!wordActiveRight) }} style={wordActiveRight === false ? { flexDirection: "row" } : styles.activeRight}>
+                                <FontAwesome
+                                    name="caret-right"
+                                    color={wordActiveRight === false ? "#15202B" : "#fff"}
+                                    // color="#15202B"
+                                    size={48}
+                                    style={{ marginTop: 22, marginLeft: 26, zIndex: 2 }}
+                                />
+                                <View style={styles.wordRight}>
+                                    <Text style={styles.textWord}>{val}</Text>
+                                </View>
 
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: "row" }}>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#15202B"
-                                size={48}
-                                style={{ marginTop: 22, marginLeft: 26,zIndex:2 }}
-                            />
-                            <View style={styles.wordRight}>
-                                <Text style={styles.textWord}>away</Text>
-                            </View>
-
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: "row" }}>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#15202B"
-                                size={48}
-                                style={{ marginTop: 22, marginLeft: 26,zIndex:2 }}
-                            />
-                            <View style={styles.wordRight}>
-                                <Text style={styles.textWord}>around</Text>
-                            </View>
-
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: "row" }}>
-                            <FontAwesome
-                                name="caret-right"
-                                color="#15202B"
-                                size={48}
-                                style={{ marginTop: 22, marginLeft: 26,zIndex:2 }}
-                            />
-                            <View style={styles.wordRight}>
-                                <Text style={styles.textWord}>down</Text>
-                            </View>
-
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </View>
             </ScrollView>
@@ -131,15 +77,16 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         marginLeft: 20,
-        marginRight:20
+        marginRight: 20,
+        marginTop: 100
     },
-    active :{
-        marginLeft:30,
-        flexDirection:"row",
+    active: {
+        marginLeft: 30,
+        flexDirection: "row",
     },
-    activeRight :{
-        marginLeft:-40,
-        flexDirection:"row",
+    activeRight: {
+        marginLeft: -40,
+        flexDirection: "row",
     },
     boxQuestion: {
         justifyContent: 'center',

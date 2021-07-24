@@ -1,16 +1,41 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, FlatList, } from 'react-native';
 import { ScrollView } from 'react-native';
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import Player from "../PlayQuizSort";
 import localTrack from "../../assets/pure.m4a";
-const QuizSort = () => {
+const QuizSort = ({ question, isLastQuestion, submitAnswer }) => {
     const playbackState = usePlaybackState();
-
+    const [splitted, setSplitted] = useState([])
+    const [arrange, setArrange] = useState([])
     useEffect(() => {
-        setup();
-    }, []);
+        setArrange([])
+        if (question.content.trim().includes(" ")) {
+            const splittedContent = question.content.trim().split(' ');
+            console.log(splittedContent.sort(() => Math.random() - 0.5));
+            setSplitted(splittedContent.sort(() => Math.random() - 0.5))
+        } else {
+            const splittedChar = question.content.trim().split('');
+            console.log(splittedChar);
+            setSplitted(splittedChar.sort(() => Math.random() - 0.5))
+        }
 
+    }, [question])
+    useEffect(() => {
+        if (isLastQuestion) {
+            setArrange([])
+            if (question.content.trim().includes(" ")) {
+                const splittedContent = question.content.trim().split(' ');
+                console.log(splittedContent.sort(() => Math.random() - 0.5));
+                setSplitted(splittedContent.sort(() => Math.random() - 0.5))
+            } else {
+                const splittedChar = question.content.trim().split('');
+                console.log(splittedChar);
+                setSplitted(splittedChar.sort(() => Math.random() - 0.5))
+            }
+        }
+
+    }, [isLastQuestion])
     async function setup() {
         await TrackPlayer.setupPlayer({});
         await TrackPlayer.updateOptions({
@@ -44,6 +69,28 @@ const QuizSort = () => {
             }
         }
     }
+    function selectSplit(index) {
+        arrange.push(splitted[index])
+        setArrange([...arrange])
+        splitted.splice(index, 1)
+        setSplitted([...splitted])
+        if (splitted.length == 0) {
+            if (question.content.trim().includes(" ")) {
+                const answer = arrange.toString().replace(/,/gi, ' ') //Đáp án sau khi được nối lại
+                console.log(answer);
+                submitAnswer(answer)
+            }
+            else {
+                const answer = arrange.toString().replace(/,/gi, '') //Đáp án sau khi được nối lại
+                submitAnswer(answer)
+            }
+        }
+    }
+    function selectArrange(index) {
+        setSplitted([...splitted, arrange[index]])
+        arrange.splice(index, 1)
+        setArrange([...arrange])
+    }
     return (
         <View style={styles.screenContainer}>
             <View style={styles.boxQuestion} >
@@ -54,83 +101,32 @@ const QuizSort = () => {
                     <Image source={require('../../assets/problem.png')}></Image>
                     <View style={styles.question}>
                         <ScrollView>
-                            <View style={{flexDirection:"row",paddingRight:20}}>
-                        <Player
-                            onTogglePlayback={togglePlayback}
-                        />
-                        <Text style={styles.textQuestion}>What is your name? What is your name? What are your name? What is your name?</Text></View>
+                            <View style={{ flexDirection: "row", paddingRight: 20 }}>
+                                <Text style={styles.textQuestion}>{question.preQuestion.replace(/(<([^>]+)>)/gi, "")}</Text></View>
                         </ScrollView>
-                    </View>              
+                    </View>
                 </View>
             </View>
             <View style={styles.kengang}></View>
             <View style={styles.boxAnswer}>
                 <View style={styles.line}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>Notification</Text>
+                    {arrange.map((arr, idx) =>
+                        <TouchableOpacity style={styles.word} key={idx} onPress={() => selectArrange(idx)}>
+                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>{arr}</Text>
                         </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.line}>
+                    )}
 
                 </View>
             </View>
             <View style={styles.boxWord}>
                 <ScrollView>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
+                    < View style={{ flex: 1, flexDirection: "row", flexWrap: 'wrap' }}>
+                        {splitted.map((split, idx) =>
+                            <TouchableOpacity style={styles.word} key={idx} onPress={() => selectSplit(idx)}>
+                                <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>{split} </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.word}>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 21, fontWeight: "bold", color: "#15202B" }}>hello</Text>
-                        </TouchableOpacity>
-                    </View>
-                   
-                </View>
-                
                 </ScrollView>
             </View>
         </View>
@@ -161,12 +157,12 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     boxAnswer: {
-       flex:1
+        flex: 1
     },
     boxWord: {
         width: 440,
-        height: 260,
-        marginLeft: 20,
+        height: 300,
+        margin: 20
     },
     word: {
         alignItems: "center",
@@ -193,28 +189,32 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         height: 80,
         marginLeft: 30,
-        flexDirection: "row"
+        flexDirection: "row",
+        flex: 1,
+        flexWrap: 'wrap'
     },
     boxQuestion: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 40
+        marginTop: 30
     },
     question: {
         marginTop: 10,
         backgroundColor: "#fff",
         borderRadius: 10,
         marginLeft: 10,
-        padding:10,
+        padding: 10,
         width: 300,
         height: 80,
+        flex: 1,
+        flexWrap: 'wrap',
+        flexDirection: 'row'
     },
     textQuestion: {
-        marginLeft:10,
+        marginLeft: 10,
         fontSize: 24,
         fontWeight: 'bold',
         color: "#15202B",
-        padding: 5,
     },
     titleQuestion: {
         fontSize: 38,
