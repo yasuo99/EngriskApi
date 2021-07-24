@@ -15,6 +15,8 @@ import ui from "./ui";
 import user from "./user";
 import auth from './auth'
 import route from "./route";
+import notification from './notifications'
+import boxchat from "./boxchats";
 export default combineReducers({
-  address, auth, brands, categories, cart, color, currency, group, order, operations, products, review, user, ui, route
+  address, auth, brands, categories, cart, color, currency, group, order, operations, products, review, user, ui, route, notification,boxchat
 });

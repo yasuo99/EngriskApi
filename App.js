@@ -43,6 +43,8 @@ const HomeStack = createStackNavigator();
 import {
   Image
 } from 'react-native';
+import { connection } from './src/constants/hubConnection';
+import { HubConnectionState } from '@microsoft/signalr';
 const logo = require('./src/assets/avatar.png');
 function TabScreen(){
 

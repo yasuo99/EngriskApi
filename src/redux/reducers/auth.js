@@ -10,7 +10,6 @@ const INITIAL_STATE = {
 };
 
 const auth = (state = INITIAL_STATE, action) => {
-  console.log('type:' ,action);
   switch (action.type) {
     case AuthorizationActionTypes.REGISTER:
       return {...state};
@@ -30,18 +29,6 @@ const auth = (state = INITIAL_STATE, action) => {
       var { message } = action.payload;
       return {...state};
     case AuthorizationActionTypes.LOGIN:
-      console.log('login');
-      const connection = new signalr.hubConnection(`${Base}/notification`, {
-        qs: {
-          access_token: action.token,
-        }
-      })
-      connection.logging = true;
-      connection.start().done(() => {
-        console.log('Now connected, connection ID=' + connection.id);
-      }).fail((error) => {
-        console.log(error);
-      })
       return {
         ...state,
         token: action.token,

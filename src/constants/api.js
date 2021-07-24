@@ -1,3 +1,3 @@
-export const BaseApiUrl = 'http://ba2b598178ac.ngrok.io/api/v2'
-export const BaseApiUrlV1 = 'http://ba2b598178ac.ngrok.io/api/v1'
-export const Base = 'http://ba2b598178ac.ngrok.io'
+export const BaseApiUrl = 'http://10.0.2.2:5000/api/v2'
+export const BaseApiUrlV1 = 'http://10.0.2.2:5000/api/v1'
+export const Base = 'http://10.0.2.2:5000'

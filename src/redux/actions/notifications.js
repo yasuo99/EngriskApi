@@ -2,6 +2,7 @@ import axiosClient from "../../utils/axiosClient";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const NotificationActionsTypes = {
     GET_ALL: "GET_ALL",
+    NEW: "NEW"
 }
 Object.keys(NotificationActionsTypes).forEach((key) => {
     NotificationActionsTypes[key] = `NOTIFICATION_${NotificationActionsTypes[key]}`
@@ -13,13 +14,20 @@ const getAll = async (id) => {
         pageSize: 50,
     }
     const data = await axiosClient.get(url,{params})
-    await AsyncStorage.setItem('notification',JSON.stringify(data.items));
+    await AsyncStorage.setItem('notification', JSON.stringify(data.items))
     return {
-        type: NotificationActions.GET_ALL,
-        data: data
+        type: NotificationActionsTypes.GET_ALL,
+        notifications: data
+    }
+}
+const newNotify = (notification) => {
+    return {
+        type: NotificationActionsTypes.NEW,
+        notification: notification
     }
 }
 const NotificationActions = {
-    getData: getAll
+    getData: getAll,
+    newNotify: newNotify
 }
 export default NotificationActions

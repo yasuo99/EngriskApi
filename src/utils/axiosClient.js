@@ -6,6 +6,7 @@ const axiosClient = axios.create({
     baseURL: BaseApiUrl,
     headers: {
         'content-type': 'application/json',
+        'device-type': 'App'
     },
     paramsSerializer: params => queryString.stringify(params),
 });
