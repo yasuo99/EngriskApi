@@ -4,7 +4,6 @@ import { ChatBox } from 'react-chatbox-component';
 import HeaderClient from '../../components/client/HeaderClient';
 import SubMenuClient from '../../components/client/SubMenuClient';
 import Footer from '../Footer/Footer';
-import 'react-chatbox-component/dist/style.css';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import accountApiV2 from '../../api/2.0/accountApi';
@@ -18,6 +17,9 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { seenMessages, unseenMessage } from "../../actions/authActions";
 import { BsPencilSquare } from 'react-icons/bs'
 import Search from './../../components/search/Search';
+import { useForm } from "react-hook-form";
+import { Input, VStack } from "@chakra-ui/react"
+import { useToast } from "@chakra-ui/react"
 export const Chatbox = () => {
     const responsive = {
         superLargeDesktop: {
@@ -57,6 +59,8 @@ export const Chatbox = () => {
     const { unseenMessages } = useSelector(state => state.auth);
     latestBoxchat.current = boxchat;
     latestChat.current = messages;
+    const createButton = useRef(null);
+    const { register, handleSubmit, formState: { errors } } = useForm();
     useEffect(() => {
         async function fetchBoxchats() {
             const result = await accountApiV2.getUserBoxchats(account.id);
@@ -160,6 +164,15 @@ export const Chatbox = () => {
                 return ""
         }
     }
+    const onSubmit = data => {
+        console.log(data);
+        toast({
+            title: "Submitted!",
+            status: "success",
+            duration: 3000,
+            isClosable: true
+        });
+    };
     return (
         <div id="wrapper">
             <SubMenuClient></SubMenuClient>
@@ -205,13 +218,13 @@ export const Chatbox = () => {
                             </Carousel>}
                         </div>
                     </main>
-                    <Modal show={modalInfo} onHide={() => toggleModal()} size='lg' centered animation dialogClassName='sweet-alert-modal'>
+                    <Modal show={modalInfo} onHide={() => toggleModal()} size='lg' centered animation dialogClassName='sweet-alert-modal' contentClassName='modal-background rounded'>
                         <Modal.Body>
                             {boxchat.accountId == account.id ? <div className="form-group">
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-6">
-                                            <p className="titleInfo">Thông tin thông báo</p>
+                                            <p className="titleInfo">Thông tin nhóm chat</p>
                                             <div className="card-input mt-3">
                                                 <span>Đường dẫn</span>
                                                 <input
@@ -300,20 +313,34 @@ export const Chatbox = () => {
                             <Button variant="primary" onClick={(e) => submit()}>Lưu lại</Button>
                         </Modal.Footer>
                     </Modal>
-                    <Modal show={modalCreate} onHide={() => setModalCreate(!modalCreate)} size='lg' centered animation dialogClassName='sweet-alert-modal' contentClassName='rounded'>
+                    <Modal show={modalCreate} onHide={() => setModalCreate(!modalCreate)} size='lg' centered animation dialogClassName='sweet-alert-modal' contentClassName='rounded modal-background'>
                         <Modal.Body>
-                            <div className='form-group'>
-                                <label>Tên nhóm chat</label>
-                                <input type='text'></input>
-                            </div>
-                            <div className='form-group'>
-                                <label>Mô tả</label>
-                                <textarea type='text'></textarea>
-                            </div>
+                            {/* <form onSubmit={handleSubmit}>
+                                <div className='form-group'>
+                                    <label>Tên nhóm chat</label>
+                                    <input type='text'></input>
+                                </div>
+                                <div className='form-group'>
+                                    <label>Mô tả</label>
+                                    <textarea type='text'></textarea>
+                                </div>
+                            </form> */}
+                            <h5 className='text-info text-center'>Thêm nhóm chat</h5>
+                            <br></br>
+                            <form id="create-form" onSubmit={handleSubmit(onSubmit)}>
+                                <div className='md-form card-input'>
+                                    <Input type="text" placeholder='Tên nhóm chat' {...register("title", { required: "Tên nhóm chat không được để trống" })} />
+                                    {errors.title && <div className='invalid'>{errors.title.message}</div>}
+                                </div>
+                                <div className='md-form card-input'>
+                                    <textarea type="textarea" placeholder='Mô tả' {...register("description", { required: "Mô tả không được để trống" })} />
+                                    {errors.description && <div className='invalid'>{errors.description.message}</div>}
+                                </div>
+                            </form>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => setModalCreate(!modalCreate)}>Đóng</Button>
-                            <Button variant="primary" onClick={(e) => setModalCreate(!modalCreate)}>Lưu lại</Button>
+                            <Button variant="primary" form="create-form" type='submit'>Lưu lại</Button>
                         </Modal.Footer>
                     </Modal>
                     <Footer></Footer>

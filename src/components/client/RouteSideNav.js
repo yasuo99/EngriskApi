@@ -24,7 +24,6 @@ const RouteSideNav = ({ typeRoute, selectRoute, display }) => {
         privateRoutes[index] = value;
         setPrivateRoutes([...privateRoutes]);
     }
-    console.log(engriskRoutes);
     return (
         <div className={`sidebar-dark accordion ${display ? 'route-side-nav' : 'route-side-nav-hidden'}`} id="accordionSidebar">
             <Tabs defaultActiveKey="engrisk" id="controlled-tab-example" className='d-flex justify-content-center tabs border-0'>

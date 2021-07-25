@@ -1,13 +1,13 @@
 import axiosClient from "../config/axiosClient";
 
 const accountApi = {
-    getAll: () => {
+    getAll: async () => {
         const url = "/accounts";
         const token = localStorage.getItem('token');
         const headers = {
             authorization: "Bearer " + token
         }
-        return axiosClient.get(url, { headers });
+        return await axiosClient.get(url, { headers });
     },
     getDetail: async (id) => {
         const url = `/accounts/detail/${id}`;
@@ -15,49 +15,49 @@ const accountApi = {
         const headers = {
             authorization: "Bearer " + token
         }
-        return await axiosClient.get(url, { headers });
+        return await await axiosClient.get(url, { headers });
     },
-    getExamProgress: (id) => {
+    getExamProgress: async (id) => {
         const url = `/accounts/${id}/exam-progress`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: 'Bearer ' + token
         };
-        return axiosClient.get(url,{headers});
+        return await axiosClient.get(url,{headers});
     },
-    getQuizProgress: (id) => {
+    getQuizProgress: async (id) => {
         const url = `/accounts/${id}/quiz-progress`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: 'Bearer ' + token
         };
-        return axiosClient.get(url,{headers});
+        return await axiosClient.get(url,{headers});
     },
-    getWordProgress: (id) => {
+    getWordProgress: async (id) => {
         const url = `/accounts/${id}/word-progress`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: 'Bearer ' + token
         };
-        return axiosClient.get(url,{headers});
+        return await axiosClient.get(url,{headers});
     },
-    quizProgress: (id) => {
+    quizProgress: async (id) => {
         const url = `/accounts/${id}/quiz-progress`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: 'Bearer ' + token
         };
-        return axiosClient.get(url,{headers});
+        return await axiosClient.get(url,{headers});
     },
-    updateAccount: (id, body) => {
+    updateAccount: async (id, body) => {
         const url = `/accounts/${id}`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: "Bearer " + token
         }
-        return axiosClient.put(url, body, { headers });
+        return await axiosClient.put(url, body, { headers });
     },
-    banAccount: (id, body) => {
+    banAccount: async (id, body) => {
         const url = `/accounts/${id}/ban`;
         const token = localStorage.getItem('token');
         const headers = {
@@ -66,21 +66,21 @@ const accountApi = {
         const params = {
             hour: body
         }
-        return axiosClient.put(url, null, { params, headers });
+        return await axiosClient.put(url, null, { params, headers });
     },
-    disableAccount: (id) => {
+    disableAccount: async (id) => {
         const url = `/accounts/${id}/disable`;
         const token = localStorage.getItem('token');
         const headers = {
             authorization: "Bearer " + token
         }
-        return axiosClient.put(url, null, {headers });
+        return await axiosClient.put(url, null, {headers });
     },
-    forgetPassword: (email) => {
+    forgetPassword: async (email) => {
         const url =`/accounts/forget-pw?email=${email}`;
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     },
-    resetPassword: (otp,email, newPassword, confirmPassword) => {
+    resetPassword: async (otp,email, newPassword, confirmPassword) => {
         const url = `/accounts/reset-pw`;
         const body = {
             otp: otp,
@@ -88,9 +88,9 @@ const accountApi = {
             newPassword: newPassword,
             confirmPassword: confirmPassword
         };
-        return axiosClient.post(url,body);
+        return await axiosClient.post(url,body);
     },
-    changePassword: (accountId,currentPassword,newPassword) => {
+    changePassword: async (accountId,currentPassword,newPassword) => {
         const url = `/accounts/${accountId}/changepw`;
         const token = localStorage.getItem('token');
         const headers = {
@@ -100,9 +100,9 @@ const accountApi = {
             currentPassword: currentPassword,
             newPassword: newPassword
         };
-        return axiosClient.put(url, body,{headers});
+        return await axiosClient.put(url, body,{headers});
     },
-    addAccountToRole: (accountId, roleName) => {
+    addAccountToRole: async (accountId, roleName) => {
         const url = `/accounts/${accountId}/roles`;
         const token = localStorage.getItem('token');
         const headers = {
@@ -111,22 +111,26 @@ const accountApi = {
         const body = {
             roleName: roleName
         }
-        return axiosClient.put(url,body, {headers});
+        return await axiosClient.put(url,body, {headers});
     },
-    sendEmailActive: (email) => {
+    sendEmailActive: async (email) => {
         const url = `/account/verify-email`;
         const params = {
             email: email
         };
-        return axiosClient.get(url,{params});
+        return await axiosClient.get(url,{params});
     },
-    activeEmail: (otp, email) => {
+    activeEmail: async (otp, email) => {
         const url = `/account/active-email`;
         const params = {
             email: email,
             otp: otp
         }
-        return axiosClient.post(url, {params});
+        return await axiosClient.post(url, {params});
+    },
+    register: async (body) => {
+        const url = `/accounts/register`;
+        return await axiosClient.post(url,body);
     }
 }
 export default accountApi;

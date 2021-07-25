@@ -127,23 +127,11 @@ const DashBoard = () => {
                 </div>
             </div>
 
-            <div className="row">
-                <div className="col-xl-8 col-lg-7">
+            <div className="d-flex justify-content-center">
+                <div>
                     <div className="card shadow mb-4">
                         <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 className="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                            <div className="dropdown no-arrow">
-                                <Link className="dropdown-toggle" to="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i className="fa fa-ellipsis-v fa-sm fa-fw text-gray-400" />
-                                </Link>
-                                <div className="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                    <div className="dropdown-header">Dropdown Header:</div>
-                                    <Link className="dropdown-item" to="#">Action</Link>
-                                    <Link className="dropdown-item" to="#">Another action</Link>
-                                    <div className="dropdown-divider" />
-                                    <Link className="dropdown-item" to="#">Something else here</Link>
-                                </div>
-                            </div>
+                            <h6 className="m-0 font-weight-bold text-primary">Biểu đồ tham gia hệ thống</h6>
                         </div>
 
                         <div className="card-body">
@@ -151,42 +139,6 @@ const DashBoard = () => {
                                 <Chart options={progressChart.options} series={progressChart.series} type="line" height={300} width={1000} />
                             </div>
 
-                        </div>
-                    </div>
-                </div>
-                <div className="col-xl-4 col-lg-5">
-                    <div className="card shadow mb-4">
-                        <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 className="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                            <div className="dropdown no-arrow">
-                                <Link className="dropdown-toggle" to="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i className="fa fa-ellipsis-v fa-sm fa-fw text-gray-400" />
-                                </Link>
-                                <div className="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                    <div className="dropdown-header">Dropdown Header:</div>
-                                    <Link className="dropdown-item" to="#">Action</Link>
-                                    <Link className="dropdown-item" to="#">Another action</Link>
-                                    <div className="dropdown-divider" />
-                                    <Link className="dropdown-item" to="#">Something else here</Link>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="card-body">
-                            <div className="chart-pie pt-4 pb-2">
-                                <canvas id="myPieChart" />
-                            </div>
-                            <div className="mt-4 text-center small">
-                                <span className="mr-2">
-                                    <i className="fa fa-circle text-primary" /> Direct
-                                </span>
-                                <span className="mr-2">
-                                    <i className="fa fa-circle text-success" /> Social
-                                </span>
-                                <span className="mr-2">
-                                    <i className="fa fa-circle text-info" /> Referral
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

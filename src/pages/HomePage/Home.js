@@ -170,7 +170,7 @@ class Home extends Component {
                             <div className='activity-circle'>
                               <Link
                                 className={
-                                  section.isCurrentLocked
+                                  section.isCurrentLocked && this.props.route.isSequentially
                                     ? "logo nav-link disabled"
                                     : "logo nav-link"
                                 }
@@ -225,7 +225,7 @@ class Home extends Component {
                           <div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }
@@ -279,7 +279,7 @@ class Home extends Component {
                           <div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }
@@ -333,7 +333,7 @@ class Home extends Component {
                           <div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }
@@ -388,7 +388,7 @@ class Home extends Component {
                           <div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }
@@ -442,7 +442,7 @@ class Home extends Component {
                         ><div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }
@@ -496,7 +496,7 @@ class Home extends Component {
                         ><div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }
@@ -548,7 +548,7 @@ class Home extends Component {
                         ><div className='activity-circle'>
                             <Link
                               className={
-                                section.isCurrentLocked
+                                section.isCurrentLocked && this.props.route.isSequentially
                                   ? "logo no-transition nav-link disabled"
                                   : "logo no-transition nav-link"
                               }

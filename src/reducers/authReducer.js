@@ -80,8 +80,12 @@ const authReducer = (state = initialState(), action) => {
     }
     case "SIGN_UP": {
       toast("Đăng ký thành công");
-      toast("Xin chào bạn đã đến với website", { type: 'success' });
-      return state;
+      return {
+        ...state,
+        isLoggedIn: true,
+        account: action.data.account,
+        token: action.data.token
+      };
     }
     case "SIGN_UP_ERR": {
       toast("Lỗi");

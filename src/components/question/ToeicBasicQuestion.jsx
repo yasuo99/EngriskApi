@@ -33,7 +33,6 @@ const ToeicBasicQuestion = ({ question, checkAnswer, renderAnswerClass, checked 
           {question.audio && (
             <div className="d-flex justify-content-center">
               <ReactPlayer
-                ref={player}
                 url={question.audio}
                 playing={playing}
                 height="0"

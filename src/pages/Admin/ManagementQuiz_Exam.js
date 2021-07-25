@@ -129,7 +129,7 @@ const ManagementQuiz_Exam = ({ }) => {
                                                                 <td><DifficultRender difficult={quiz.difficultLevel}></DifficultRender></td>
                                                                 <td> <Button variant="primary" onClick={() => { setSelectedQuiz(quiz); setQuizInspectModal(!quizInspectModal) }} className="btn btn-success btn-delete btn-add" ><i className="fa fa-play-circle"></i></Button></td>
                                                                 <td>
-                                                                    <Button variant="primary" className="btn btn-edit btn-delete mr-2" ><Link to={`/admin/quan-ly-quiz/${quiz.id}/cai-dat`} className="fa fa-edit"></Link></Button>
+                                                                    <Link to={`/admin/quan-ly-quiz/${quiz.id}/cai-dat`} className="btn btn-primary btn-delete btn-delete mr-2"><i className="fa fa-edit"></i></Link>
                                                                     <Button variant="danger" className="btn btn-danger btn-delete"><i className="fa fa-trash" /></Button>
                                                                 </td>
                                                             </tr>
@@ -174,8 +174,8 @@ const ManagementQuiz_Exam = ({ }) => {
                                                     <tbody>
                                                         {exams.items.map((exam, index) =>
                                                             <tr key={index}>
-                                                                <td>{exam.title}</td>
-                                                                <td>{exam.detail}</td>
+                                                                <td style={{width: '100px'}}>{exam.title}</td>
+                                                                <td className='cell-4'><span className='text-overflow'>{exam.detail}</span></td>
                                                                 <td>{exam.duration} phút</td>
                                                                 <td>{exam.questions.length}</td>
                                                                 <td><DifficultRender difficult={exam.difficult}></DifficultRender></td>

@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import Paginate from "../../components/pagination/Paginate";
 import Search from "../../components/search/Search";
 import categoryTagApi from "../../api/2.0/categoryTagApi";
-
+import { useForm } from 'react-hook-form'
 const ManagementCategories = () => {
   const [category, setCategory] = useState({});
   const [modalCreate, setModalCreate] = useState(false);
@@ -26,6 +26,7 @@ const ManagementCategories = () => {
   const [newTags, setNewTags] = useState([])
   const [isRefresh, setIsRefresh] = useState(false);
   const [query, setQuery] = useState('')
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   async function fetchCategories() {
     const params = {
       currentPage: categories.currentPage,
@@ -48,12 +49,13 @@ const ManagementCategories = () => {
     }
   }, [isRefresh])
   function toggleModalCreate() {
+    reset();
     modalCreate ? setModalCreate(false) : setModalCreate(true);
   }
-  async function create() {
+  const create = async (data) => {
     console.log(name, " ", image);
     var formData = new FormData();
-    formData.set("CategoryName", name);
+    formData.set("CategoryName", data.name);
     formData.set("Image", image);
     newTags.forEach((val, idx) => {
       formData.append(`tags[${idx}].id`, val.id)
@@ -82,9 +84,9 @@ const ManagementCategories = () => {
     modalEdit ? setModalEdit(false) : setModalEdit(true);
     setCategory(category);
   }
-  async function edit() {
+  const edit = async (source) => {
     var formData = new FormData();
-    formData.set("CategoryName", name || category.categoryName);
+    formData.set("CategoryName", source.name || data.categoryName);
     formData.set("Image", image);
     category.tags.forEach((val, idx) => {
       formData.append(`tags[${idx}].categoryTagId`, val.categoryTagId)
@@ -95,9 +97,12 @@ const ManagementCategories = () => {
     );
     switch (result.status) {
       case 200:
-        toast("Cập nhật thành công", { type: "info" });
+        toast("Cập nhật thành công", { type: "success" });
         setIsRefresh(true)
         setNewTags([])
+        break;
+      case 204:
+        toast("Không cập nhật dữ liệu mới", { type: "info" });
         break;
       case 404:
         toast("Không tìm thấy tài nguyên", { type: "warning" });
@@ -153,15 +158,15 @@ const ManagementCategories = () => {
       setNewTags([...newTags.filter(val => val != tag)])
     }
   }
-  function editTag(e,tag){
+  function editTag(e, tag) {
     console.log(tag);
     if (e.currentTarget.checked) {
-      setCategory({...category,tags: [...category.tags,{categoryTagId: tag.id}]})
+      setCategory({ ...category, tags: [...category.tags, { categoryTagId: tag.id }] })
       console.log(category);
     } else {
-      setCategory({...category,tags: [...category.tags.filter(val => val.categoryTagId != tag.id)]})
+      setCategory({ ...category, tags: [...category.tags.filter(val => val.categoryTagId != tag.id)] })
     }
-}
+  }
   return (
     <div>
       <div id="wrapper">
@@ -240,62 +245,72 @@ const ManagementCategories = () => {
             </div>
           </div>
         </div>
-        <Modal show={modalCreate} onHide={() => toggleModalCreate()} contentClassName="modal-basic-content">
-          <Modal.Header closeButton onClick={() => toggleModalCreate()}>
-            <Modal.Title>Thêm nhóm từ vựng</Modal.Title>
-          </Modal.Header>
+        <Modal show={modalCreate} onHide={() => toggleModalCreate()} centered dialogClassName="modal-90w" contentClassName="rounded" size="lg" animation>
           <Modal.Body>
-            <div className="form-group">
-              <p className="titleInfo">Thông tin thông báo</p>
-              <div className="card-input mt-3">
-                <span>Tên nhóm</span>
-                <input
-                  type="text"
-                  name="url"
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="card-input mt-3">
-                <span>Hình ảnh</span>
-                <input
-                  type="file"
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
-              </div>
-              <div className='card-input row'>
-                <div className='col-2'>
-                  <h6>Tag</h6>
-                </div>
-                <div className='col-10'>
-                  <ul className="list-group list-group-flush checkbox-wrapper">
-                    {tags.map((tag, index) =>
-                      <li className="list-group-item" key={index}>
-                        <div className="custom-control custom-checkbox">
-                          <input type="checkbox" className="custom-control-input top" onChange={(e) => selectTag(e,tag)}></input>
-                          <label className="custom-control-label">{tag.tag}</label>
-                        </div>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-
-              </div>
+            <div className='text-center'>
+              <h3 className='text-info'> Thêm nhóm từ vựng</h3>
             </div>
+            <form className="form-group" id="create-form" onSubmit={handleSubmit(create)}>
+              <div className='form-row script-panel'>
+                <div className='col'>
+                  <h5>Thông tin cơ bản</h5>
+                  <div>Tiêu đề</div>
+                  <div className="wrap-input100 mb-3">
+                    <input className="input100" name="title" placeholder='Nhập tên nhóm' {...register('name',
+                      {
+                        required: 'Tên nhóm không được để trống'
+                      })}
+                      type="text"
+                      id="title"
+                      autoComplete="off"
+                    ></input>
+                    {errors.name && <div className='invalid'>{errors.name.message}</div>}
+                  </div>
+                  <div className="card-input mb-3">
+                    <span>Hình ảnh</span>
+                    <input
+                      type="file"
+                      onChange={(e) => setImage(e.target.files[0])}
+                    />
+                  </div>
+                </div>
+                <div className='col'>
+                  <h5>Thông tin thêm</h5>
+                  <div>Tag</div>
+                  <div className='card-input'>
+                    <div className='categories-tab'>
+                      <ul className="list-group list-group-flush checkbox-wrapper">
+                        {tags.map((tag, index) =>
+                          <li className="list-group-item" key={index}>
+                            <div className="custom-control custom-checkbox">
+                              <input type="checkbox" className="custom-control-input top" onChange={(e) => selectTag(e, tag)}></input>
+                              <label className="custom-control-label">{tag.tag}</label>
+                            </div>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </form>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => toggleModalCreate()}>
               Trở lại
             </Button>
-            <Button variant="primary" onClick={(e) => create()}>
+            <Button variant="primary" form="create-form" type="submit">
               Lưu lại
             </Button>
           </Modal.Footer>
         </Modal>
         {Object.keys(category).length > 0 && <Modal show={modalEdit} onHide={() => toggleModalEdit({})} contentClassName="modal-basic-content">
-          <Modal.Header closeButton onClick={() => toggleModalEdit({})}>
-            <Modal.Title>Thêm nhóm từ vựng</Modal.Title>
-          </Modal.Header>
           <Modal.Body>
+          <div className='text-center'>
+              <h3 className='text-info'> Cập nhật từ vựng</h3>
+            </div>
+            <br></br>
             <div className="form-group">
               <div className="container">
                 <div className="row">
@@ -320,41 +335,52 @@ const ManagementCategories = () => {
                   </div>
                   <div className="col-6">
                     <p className="titleInfo">Thông tin mới</p>
-                    <div className="card-input mt-3">
-                      <span>Tên nhóm</span>
-                      <input
-                        type="text"
-                        name="url"
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                    <div className="card-input mt-3">
-                      <span>Hình ảnh</span>
-                      <input
-                        type="file"
-                        onChange={(e) => setImage(e.target.files[0])}
-                      />
-                    </div>
+                    <form className="form-group" id="edit-form" onSubmit={handleSubmit(edit)}>
+                      <div className='script-panel'>
+                        <div>
+                          <div>Tiêu đề</div>
+                          <div className="wrap-input100 mb-3">
+                            <input className="input100" name="title" placeholder='Nhập tên nhóm' {...register('name',
+                              {
+                                required: 'Tên nhóm không được để trống'
+                              })}
+                              type="text"
+                              id="title"
+                              autoComplete="off"
+                              defaultValue={category.categoryName}
+                            ></input>
+                            {errors.name && <div className='invalid'>{errors.name.message}</div>}
+                          </div>
+                          <div className="card-input mb-3">
+                            <span>Hình ảnh</span>
+                            <input
+                              type="file"
+                              onChange={(e) => setImage(e.target.files[0])}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div>Tag</div>
+                          <div className='card-input'>
+                            <div className='categories-tab'>
+                            <ul className="list-group list-group-flush checkbox-wrapper">
+                      {tags.map((tag, index) =>
+                        <li className="list-group-item" key={index}>
+                          <div className="custom-control custom-checkbox">
+                            <input type="checkbox" className="custom-control-input top" onChange={(e) => editTag(e, tag)} checked={category.tags.some(val => val.categoryTagId == tag.id)}></input>
+                            <label className="custom-control-label">{tag.tag}</label>
+                          </div>
+                        </li>
+                      )}
+                    </ul>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
-                <div className='card-input row'>
-                <div className='col-2'>
-                  <h6>Tag</h6>
-                </div>
-                <div className='col-10'>
-                  <ul className="list-group list-group-flush checkbox-wrapper">
-                    {tags.map((tag, index) =>
-                      <li className="list-group-item" key={index}>
-                        <div className="custom-control custom-checkbox">
-                          <input type="checkbox" className="custom-control-input top" onChange={(e) => editTag(e,tag)} checked={category.tags.some(val => val.categoryTagId == tag.id)}></input>
-                          <label className="custom-control-label">{tag.tag}</label>
-                        </div>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-
-              </div>
               </div>
             </div>
           </Modal.Body>
@@ -362,24 +388,29 @@ const ManagementCategories = () => {
             <Button variant="secondary" onClick={() => toggleModalEdit({})}>
               Trở lại
             </Button>
-            <Button variant="primary" onClick={(e) => edit()}>
+            <Button variant="primary" form="edit-form" type="submit">
               Lưu lại
             </Button>
           </Modal.Footer>
         </Modal>}
-        <Modal show={modalDelete} onHide={() => toggleModalDelete({})} contentClassName="modal-basic-content">
-          <Modal.Header closeButton onClick={() => toggleModalDelete({})}>
-            <Modal.Title>Xác nhận xóa nhóm từ vựng</Modal.Title>
-          </Modal.Header>
+        <Modal show={modalDelete} onHide={() => toggleModalDelete({})} dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
           <Modal.Body>
-            Bạn có chắc chắn muốn xóa nhóm từ vựng này không?
+            <div className='text-center'>
+              <i className='fa fa-4x fa-warning text-danger'></i>
+              <br></br>
+              <br></br>
+              <h3 className='text-info'>Bạn có chắc muốn xóa nhóm từ này</h3>
+              <p className='text-danger'>
+                Không thể hoàn tác
+              </p>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => toggleModalDelete({})}>
-              Trở lại
+              Hủy
             </Button>
-            <Button variant="primary" onClick={(e) => submitDelete()}>
-              Lưu lại
+            <Button variant="danger" onClick={(e) => submitDelete()}>
+              Xác nhận
             </Button>
           </Modal.Footer>
         </Modal>

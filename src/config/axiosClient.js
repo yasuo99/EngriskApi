@@ -5,6 +5,7 @@ const axiosClient = axios.create({
     baseURL: process.env.REACT_APP_BASE_API_URL,
     headers: {
         'content-type': 'application/json',
+        'device-type': 'Browser'
     },
     paramsSerializer: params => queryString.stringify(params),
 });

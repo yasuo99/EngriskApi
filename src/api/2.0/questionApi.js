@@ -31,10 +31,10 @@ const questionApiV2 = {
     },
     getManage: async (params, grammar, search) => {
         const url = `/questions/manage`;
-        if(search){
+        if (search) {
             params.search = search;
         }
-        if(grammar){
+        if (grammar) {
             params.grammar = grammar
         }
         const headers = {
@@ -54,7 +54,14 @@ const questionApiV2 = {
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return axiosClientv2.post(url,body,{headers})
+        return axiosClientv2.post(url, body, { headers })
+    },
+    deleteQuestion: async (id) => {
+        const url = `/questions/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.delete(url, { headers })
     }
 }
 export default questionApiV2

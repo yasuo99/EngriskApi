@@ -75,7 +75,7 @@ export const signUp = (user) => {
             .then(res => {
                 if (res) {
                     console.log(res);
-                    return dispatch({ type: "SIGN_UP" });
+                    return dispatch({ type: "SIGN_UP", data: res });
                 }
                 return dispatch({ type: "SIGN_UP_ERROR" });
             })

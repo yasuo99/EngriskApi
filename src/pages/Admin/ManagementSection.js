@@ -21,6 +21,7 @@ import ReadingScript from '../../components/script/ReadingScript';
 import MiniExamScript from '../../components/script/MiniExamScript';
 import questionApiV2 from './../../api/2.0/questionApi';
 import CertificateScript from '../../components/script/CertificateScript';
+import { useForm } from 'react-hook-form';
 const styles = {
     width: 250,
     display: 'inline-table',
@@ -32,13 +33,13 @@ const ManagementSection = () => {
         description: '',
         file: {}
     }
-    
+
     useEffect(() => {
         if (history.length == 1) {  // Um, needs to be 0 for IE, 1 for Firefox
             // This is a new window or a new tab.
             console.log('mở tab mới');
         }
-    },[history])
+    }, [history])
     const [sections, setSections] = useState({
         currentPage: 1,
         pageSize: 5,
@@ -59,9 +60,6 @@ const ManagementSection = () => {
     })
     const [newSection, setNewSection] = useState(initSection)
     const [refresh, setRefresh] = useState(false)
-    const [errors, setErrors] = useState({
-        sectionName: '',
-    })
     const [wasValidate, setWasValidate] = useState(false);
     const [renderImage, setRenderImage] = useState({})
     const [grammar, setGrammar] = useState({})
@@ -71,8 +69,9 @@ const ManagementSection = () => {
     const [conversation, setConversation] = useState({})
     const [vocabulary, setVocabulary] = useState({})
     const [miniExam, setMiniExam] = useState({})
-    const [certificate,setCertificate] = useState({})
+    const [certificate, setCertificate] = useState({})
     const [query, setQuery] = useState('')
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     function toggleQuestionModal() {
         setQuestionModal(!questionModal)
         setVocabularyModal(false);
@@ -82,6 +81,8 @@ const ManagementSection = () => {
         setQuestionModal(false)
     }
     function toggleModalCreate() {
+        reset();
+        setRenderImage({})
         setModalCreate(!modalCreate)
     }
     function toggleModalEdit(section) {
@@ -97,7 +98,7 @@ const ManagementSection = () => {
         if (!modalScript) {
             const result = await getSectionScriptEdit(section);
             setSelectedSection(result)
-        }else{
+        } else {
             setSelectedSection({})
         }
     }
@@ -113,7 +114,7 @@ const ManagementSection = () => {
     useEffect(async () => {
         if (refresh) {
             const params = {
-                currentPage: sections.currentPage,
+                currentPage: 1,
                 pageSize: sections.pageSize
             }
             const data = await sectionApiV2.getManage(params)
@@ -135,7 +136,7 @@ const ManagementSection = () => {
         })
         setQuery(query);
     }
-    async function sumitDelete() {
+    async function submitDelete() {
         const result = await sectionApiV2.delete(selectedSection.id);
         if (result.status === 200) {
             toast('Thành công', { type: 'success' })
@@ -145,10 +146,10 @@ const ManagementSection = () => {
             toast('Thất bại', { type: 'error' })
         }
     }
-    async function submitCreate() {
+    const submitCreate = async (data) => {
         var formData = new FormData();
-        formData.set('sectionName', newSection.sectionName);
-        formData.set('description', newSection.description);
+        formData.set('sectionName', data.title);
+        formData.set('description', data.description);
         formData.set('file', newSection.file);
         try {
             const data = await sectionApi.create(formData);
@@ -157,10 +158,6 @@ const ManagementSection = () => {
                 setNewSection(initSection)
                 toggleModalCreate()
                 setRefresh(true);
-                setErrors({
-                    ...errors,
-                    sectionName: ''
-                })
                 setRenderImage({})
             }
             else {
@@ -169,19 +166,15 @@ const ManagementSection = () => {
         } catch (error) {
             console.log(error.response);
             if (error.response.status === 409) {
-                setErrors({
-                    ...errors,
-                    sectionName: error.response.data.error
-                })
                 toast('Thất bại', { type: 'error' })
             }
         }
         setWasValidate(true);
     }
-    async function submitEdit() {
+    const submitEdit = async (data) => {
         var formData = new FormData();
-        formData.set('sectionName', newSection.sectionName);
-        formData.set('description', newSection.description);
+        formData.set('sectionName', data.title);
+        formData.set('description', data.description);
         formData.set('file', newSection.file);
         try {
             const data = await sectionApi.update(selectedSection.id, formData);
@@ -191,10 +184,6 @@ const ManagementSection = () => {
                 setNewSection(initSection)
                 toggleModalEdit({})
                 setRefresh(true);
-                setErrors({
-                    ...errors,
-                    sectionName: ''
-                })
                 setRenderImage({})
             }
             else {
@@ -203,10 +192,6 @@ const ManagementSection = () => {
         } catch (error) {
             console.log(error.response);
             if (error.response.status === 409) {
-                setErrors({
-                    ...errors,
-                    sectionName: error.response.data.error
-                })
                 toast('Thất bại', { type: 'error' })
             }
         }
@@ -234,7 +219,7 @@ const ManagementSection = () => {
         scripts.push(grammar);
         scripts.push(vocabulary);
         scripts.push(miniExam);
-        if(certificate.certificateId != "00000000-0000-0000-0000-000000000000" && certificate.exam != '"00000000-0000-0000-0000-000000000000"'){
+        if (certificate.certificateId != "00000000-0000-0000-0000-000000000000" && certificate.exam != '"00000000-0000-0000-0000-000000000000"') {
             scripts.push(certificate);
         }
         const result = await sectionApiV2.editScripts(selectedSection.id, scripts);
@@ -329,36 +314,39 @@ const ManagementSection = () => {
                                 </div>
                             </div>
                         </div>
-                        <Modal show={modalCreate} animation onHide={() => toggleModalCreate()} centered>
-                            <Modal.Header closeButton onClick={() => toggleModalCreate()}>
-                                <h5>Thêm bài học</h5>
-                            </Modal.Header>
+                        <Modal show={modalCreate} animation onHide={() => toggleModalCreate()} centered size="lg" animation>
                             <Modal.Body>
-                                <div className="form-group">
+                                <div className='text-center'>
+                                    <h3 className='text-info'> Thêm bài học</h3>
+                                </div>
+                                <form id="create-form" className="form-group" onSubmit={handleSubmit(submitCreate)}>
                                     <div className="container">
                                         <div>
-                                            <div className={`card-input mt-3 ${wasValidate ? 'was-validated' : ''}`}>
-                                                <span>Tiêu đề</span>
-                                                <input
-                                                    required
+                                            <div>Tiêu đề</div>
+                                            <div className="wrap-input100 mb-3">
+                                                <input className="input100" name="title" placeholder='Nhập tiêu đề' {...register('title',
+                                                    {
+                                                        required: 'Tiêu đề của bài học không được để trống'
+                                                    })}
                                                     type="text"
-                                                    onChange={(e) => {
-                                                        setNewSection({ ...newSection, sectionName: e.target.value })
-                                                        setErrors({ ...errors, sectionName: '' })
-                                                    }}
-                                                />
-                                                <div className="invalid-feedback">
-                                                    {errors.sectionName}
-                                                </div>
+                                                    id="title"
+                                                    autoComplete="off"
+                                                ></input>
+                                                {errors.title && <div className='invalid'>{errors.title.message}</div>}
                                             </div>
 
 
-                                            <div className="card-input mt-3">
-                                                <span>Mô tả</span>
-                                                <textarea placeholder="Nhập mô tả bài học..."
-                                                    name="content"
-                                                    onChange={(e) => setNewSection({ ...newSection, description: e.target.value })}
-                                                />
+                                            <div>Mô tả</div>
+                                            <div className="wrap-input100">
+                                                <textarea className="input100" name="description" placeholder='Nhập mô tả' {...register('description',
+                                                    {
+                                                        required: 'Mô tả của bài học không được để trống'
+                                                    })}
+                                                    type="text"
+                                                    id="title"
+                                                    autoComplete="off"
+                                                ></textarea>
+                                                {errors.description && <div className='invalid'>{errors.description.message}</div>}
                                             </div>
                                             <div className='row'>
                                                 <div className="card-input mt-3 col-6">
@@ -380,11 +368,11 @@ const ManagementSection = () => {
                                     </div>
 
 
-                                </div>
+                                </form>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={() => toggleModalCreate()}>Trở lại</Button>
-                                <Button variant="primary" onClick={(e) => submitCreate()}>Lưu lại</Button>
+                                <Button variant="primary" form="create-form" type="submit">Lưu lại</Button>
                             </Modal.Footer>
                         </Modal>
                         {/* Modal Scripts */}
@@ -429,7 +417,7 @@ const ManagementSection = () => {
                                                             <Nav.Item className='border rounded mt-1'>
                                                                 <Nav.Link eventKey="exam">Mini exam</Nav.Link>
                                                             </Nav.Item>
-                                                            {selectedSection.certificateScriptAvailable &&  <Nav.Item className='border rounded mt-1'>
+                                                            {selectedSection.certificateScriptAvailable && <Nav.Item className='border rounded mt-1'>
                                                                 <Nav.Link eventKey="certificate">Chứng chỉ</Nav.Link>
                                                             </Nav.Item>}
                                                         </Nav>
@@ -476,31 +464,35 @@ const ManagementSection = () => {
                         </Modal>}
                         {/* Modal Question */}
                         {/* Modal delete */}
-                        <Modal show={modalDelete} animation onHide={() => toggleModalDelete({})} centered size="lg">
-                            <Modal.Header closeButton onClick={() => toggleModalDelete({})} className='bg-danger'>
-                                <h5>Xóa bài học</h5>
-                            </Modal.Header>
+                        <Modal show={modalDelete} onHide={() => toggleModalDelete({})} dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
                             <Modal.Body>
-                                <p>
-                                    Bạn có chắc chắn muốn xóa bài học này!
-                                    <br />
-                                    Không thể hoàn tác
-                                </p>
-
+                                <div className='text-center'>
+                                    <i className='fa fa-4x fa-warning text-danger'></i>
+                                    <br></br>
+                                    <br></br>
+                                    <h3 className='text-info'>Bạn có chắc muốn xóa bài học này</h3>
+                                    <p className='text-danger'>
+                                        Không thể hoàn tác
+                                    </p>
+                                </div>
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="secondary" onClick={() => toggleModalDelete({})}>Hủy</Button>
-                                <Button variant="primary" onClick={(e) => sumitDelete()}>Xác nhận</Button>
+                                <Button variant="secondary" onClick={() => toggleModalDelete({})}>
+                                    Hủy
+                                </Button>
+                                <Button variant="danger" onClick={(e) => submitDelete()}>
+                                    Xác nhận
+                                </Button>
                             </Modal.Footer>
                         </Modal>
 
                         {/* Modal edit */}
                         <Modal show={modalEdit} animation onHide={() => toggleModalEdit({})} centered size='lg'>
-                            <Modal.Header closeButton onClick={() => toggleModalEdit({})} className='bg-success'>
-                                <h5>Chỉnh sửa bài học</h5>
-                            </Modal.Header>
                             <Modal.Body>
-                                <div className="form-group">
+                                <div className='text-center'>
+                                    <h3 className='text-info'> Chỉnh sửa thông tin bài học</h3>
+                                </div>
+                                <form className="form-group" id="edit-form" onSubmit={handleSubmit(submitEdit)}>
                                     <div className="container">
                                         <div className='row'>
                                             <div className='col-6'>
@@ -521,28 +513,33 @@ const ManagementSection = () => {
                                             </div>
                                             <div className='col-6'>
                                                 <h6>Thông tin mới</h6>
-                                                <div className={`card-input mt-3 ${wasValidate ? 'was-validated' : ''}`}>
-                                                    <span>Tiêu đề</span>
-                                                    <input
-                                                        required
+                                                <div>Tiêu đề</div>
+                                                <div className="wrap-input100 mb-3">
+                                                    <input className="input100" name="title" placeholder='Nhập tiêu đề' {...register('title',
+                                                        {
+                                                            required: 'Tiêu đề của bài học không được để trống'
+                                                        })}
                                                         type="text"
-                                                        onChange={(e) => {
-                                                            setNewSection({ ...newSection, sectionName: e.target.value })
-                                                            setErrors({ ...errors, sectionName: '' })
-                                                        }}
-                                                    />
-                                                    <div className="invalid-feedback">
-                                                        {errors.sectionName}
-                                                    </div>
+                                                        id="title"
+                                                        autoComplete="off"
+                                                        defaultValue={selectedSection.sectionName}
+                                                    ></input>
+                                                    {errors.title && <div className='invalid'>{errors.title.message}</div>}
                                                 </div>
 
 
-                                                <div className="card-input mt-3">
-                                                    <span>Mô tả</span>
-                                                    <textarea placeholder="Nhập mô tả bài học..."
-                                                        name="content"
-                                                        onChange={(e) => setNewSection({ ...newSection, description: e.target.value })}
-                                                    />
+                                                <div>Mô tả</div>
+                                                <div className="wrap-input100">
+                                                    <textarea className="input100" name="description" placeholder='Nhập mô tả' {...register('description',
+                                                        {
+                                                            required: 'Mô tả của bài học không được để trống'
+                                                        })}
+                                                        type="text"
+                                                        id="title"
+                                                        autoComplete="off"
+                                                        defaultValue={selectedSection.description}
+                                                    ></textarea>
+                                                    {errors.description && <div className='invalid'>{errors.description.message}</div>}
                                                 </div>
                                                 <div className='row'>
                                                     <div className="card-input mt-3 col-6">
@@ -563,12 +560,12 @@ const ManagementSection = () => {
                                         </div>
 
                                     </div>
-                                </div>
+                                </form>
 
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={() => toggleModalEdit({})}>Hủy</Button>
-                                <Button variant="primary" onClick={(e) => submitEdit()}>Xác nhận</Button>
+                                <Button variant="primary" form="edit-form" type="submit">Xác nhận</Button>
                             </Modal.Footer>
                         </Modal>
                     </div>

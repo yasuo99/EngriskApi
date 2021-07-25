@@ -9,6 +9,9 @@ import Paginate from "../../components/pagination/Paginate";
 import Search from "../../components/search/Search";
 import { toast } from "react-toastify";
 import wordCategoryApi from './../../api/2.0/wordCategoryApi';
+import { useForm } from "react-hook-form";
+import CircleControls from "react-player-circle-controls";
+import "react-player-circle-controls/dist/styles.css";
 const ManagementWord = () => {
     const initWord = {
         eng: '',
@@ -34,12 +37,14 @@ const ManagementWord = () => {
     const [query, setQuery] = useState('')
     const [isRefresh, setIsRefresh] = useState(false);
     const tempWords = useRef(null);
+    const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset, unregister } = useForm();
     async function toggleModalAdd() {
         setModalAdd(!modalAdd);
         setCategories([])
         setTempImage({});
     }
     function toggleModalEdit(word) {
+        reset();
         setModalEdit(!modalEdit);
         setSelectedWord(word)
         setTempImage({});
@@ -93,7 +98,15 @@ const ManagementWord = () => {
         })
         setQuery(query);
     }
+    useEffect(() => {
+        console.log((word.image?.name));
+        if (word.image?.name) {
 
+            const url = URL.createObjectURL(word.image);
+            console.log(url);
+            setTempImage(url)
+        }
+    }, [word.image])
     async function submitCreate(e) {
         e.preventDefault();
         const data = new FormData();
@@ -120,34 +133,6 @@ const ManagementWord = () => {
             }
         }
     }
-    async function submitEdit(e) {
-        e.preventDefault();
-        const data = new FormData();
-        data.set('eng', word.eng);
-        data.set('vie', word.vie);
-        data.set('spelling', word.spelling);
-        data.set('engVoice', word.engVoice);
-        data.set('image', word.image);
-        selectedWord.categories.forEach((cate, index) => {
-            data.append(`categories[${index}].id`, cate.id);
-        })
-        console.log(selectedWord.categories);
-        const result = await wordApiV2.updateWord(selectedWord.id, data);
-        if (result) {
-            toast('Thành công', { type: 'success' })
-            setWord(initWord)
-            toggleModalEdit({});
-            setTempImage({});
-            setCategories([])
-            setIsRefresh(true);
-        } else {
-            if (result.status == 409) {
-                toast('Trùng từ vựng', { type: 'warning' })
-            } else {
-                toast('Thất bại', { type: 'error' })
-            }
-        }
-    }
     async function submitDelete() {
         const result = await wordApiV2.deleteWord(selectedWord.id);
         if (result.status == 204) {
@@ -161,6 +146,7 @@ const ManagementWord = () => {
                 currentPage: 1,
             })
             setQuery('')
+            setIsRefresh(true);
         } else {
             if (result.status == 404) {
                 toast('Không tìm thấy từ vựng', { type: 'warning' })
@@ -169,24 +155,84 @@ const ManagementWord = () => {
             }
         }
     }
-    function selectCategory(e,category){
-        if(e.currentTarget.checked){
-            setCategories([...categories,category])
-        }else{
+    function selectCategory(e, category) {
+        if (e.currentTarget.checked) {
+            setCategories([...categories, category])
+        } else {
             setCategories(categories.filter(cate => cate.id != category.id))
         }
     }
-    function editCategory(e,category){
-        if(e.currentTarget.checked){
+    function editCategory(e, category) {
+        if (e.currentTarget.checked) {
             setSelectedWord({
                 ...selectedWord,
                 categories: [...selectedWord.categories, category]
             })
-        }else{
+        } else {
             setSelectedWord({
                 ...selectedWord,
                 categories: [...selectedWord.categories.filter(cate => cate.id != category.id)]
             })
+        }
+    }
+    const submit = async (data) => {
+        console.log(data);
+        const body = new FormData();
+        body.set('eng', data.eng);
+        body.set('vie', data.vie);
+        body.set('spelling', data.spelling);
+        body.set('engVoice', word.engVoice);
+        body.set('image', word.image);
+        categories.forEach((cate, index) => {
+            body.append(`categories[${index}].id`, cate.id);
+        })
+        const result = await wordApiV2.createWord(body);
+        if (result.status == 200) {
+            toast('Thành công', { type: 'success' })
+            setWord(initWord)
+            setTempImage({});
+            setCategories([])
+            setIsRefresh(true)
+            reset({
+                eng: '',
+                vie: '',
+                file: {},
+                spelling: ''
+            });
+            unregister('file');
+        } else {
+            if (result.status == 409) {
+                toast('Trùng từ vựng', { type: 'warning' })
+            } else {
+                toast('Thất bại', { type: 'error' })
+            }
+        }
+    }
+    const submitEdit = async (data) => {
+        const form = new FormData();
+        form.set('eng', data.eng);
+        form.set('vie', data.vie);
+        form.set('spelling', data.spelling);
+        form.set('engVoice', word.engVoice);
+        form.set('image', word.image);
+        selectedWord.categories.forEach((cate, index) => {
+            form.append(`categories[${index}].id`, cate.id);
+        })
+        console.log(selectedWord.categories);
+        const result = await wordApiV2.updateWord(selectedWord.id, form);
+        if (result) {
+            toast('Thành công', { type: 'success' })
+            setWord(initWord)
+            toggleModalEdit({});
+            setTempImage({});
+            setCategories([])
+            setIsRefresh(true);
+        } else {
+            if (result.status == 409) {
+                toast('Trùng từ vựng', { type: 'warning' })
+            } else {
+                toast('Thất bại', { type: 'error' })
+            }
         }
     }
     return (
@@ -214,10 +260,10 @@ const ManagementWord = () => {
                                             <thead>
                                                 <tr>
                                                     <th className="tuvung">Từ vựng</th>
-                                                    <th className="loaitu">Loại từ</th>
-                                                    <th className="chude">Phát âm</th>
-                                                    <th className="tudongnghia">Từ đồng nghĩa</th>
-                                                    <th className="nghia">Nghĩa từ vựng</th>
+                                                    <th className="loaitu">Nghĩa</th>
+                                                    <th className="loaitu">Từ loại</th>
+                                                    <th className="chude">Phiên âm</th>
+                                                    <th className='table-image'>Hình ảnh</th>
                                                     <th className="chucnang" />
                                                 </tr>
                                             </thead>
@@ -226,11 +272,13 @@ const ManagementWord = () => {
                                                     <tr key={index}>
                                                         <td>{word.eng}</td>
                                                         <td>{word.vie}</td>
+                                                        <td>{word.class}</td>
                                                         <td>{word.spelling}</td>
-                                                        <td>Hi</td>
-                                                        <td>Xin chào</td>
+                                                        <td className='table-image'>
+                                                            <img className='img-fluid' src={word.wordImg}></img>
+                                                        </td>
                                                         <td>
-                                                            <Button variant="primary" className="btn btn-edit btn-delete mr-2" onClick={() => toggleModalEdit(word)} ><i className="fa fa-edit"></i></Button>
+                                                            <Button variant="success" className="btn btn-edit btn-delete mr-2" onClick={() => toggleModalEdit(word)} ><i className="fa fa-edit"></i></Button>
                                                             <Button variant="primary" className="btn btn-delete mr-2"><Link to='/quiz-tuvung' className="fa fa-info" /></Button>
                                                             <Button variant="danger" className="btn btn-delete mr-2" onClick={() => toggleModalDelete(word)}><i className="fa fa-trash" /></Button>
 
@@ -241,42 +289,89 @@ const ManagementWord = () => {
                                             </tbody>
                                         </Table>
                                         <Paginate currentPage={words.currentPage} pageSize={words.pageSize} totalPages={words.totalPages} change={wordsPaginationChange}></Paginate>
-                                        <Modal centered show={modalAdd} onHide={() => toggleModalAdd()} animation size="lg">
-                                            <Modal.Header closeButton onClick={() => toggleModalAdd()}>
-                                                <Modal.Title>Thêm từ vựng</Modal.Title>
-                                            </Modal.Header>
+                                        <Modal centered show={modalAdd} onHide={() => toggleModalAdd()} animation size="lg" dialogClassName="modal-90w" contentClassName="modal-90w-content">
                                             <Modal.Body>
-                                                <form className="form-group card p-2">
-                                                    <div className="card-input">
-                                                        <h6>Từ vựng</h6>
-                                                        <input
-                                                            type="text"
-                                                            value={word.eng}
-                                                            name="englishCreate"
-                                                            onChange={e => setWord({ ...word, eng: e.target.value })}
-                                                            required
-                                                        />
+                                                <h5 className='text-center'>Thêm từ vựng</h5>
+                                                <br></br>
+                                                <form id="create-form" className="form-group card p-2" onSubmit={handleSubmit(submit)}>
+                                                    <div className='form-row script-panel'>
+                                                        <div className='col border-right'>
+                                                            <div>Từ vựng</div>
+                                                            <div className="wrap-input100 mb-3">
+                                                                <input className="input100" name="cc" placeholder='Nhập từ vựng' {...register('eng',
+                                                                    {
+                                                                        required: 'Từ vựng không được để trống'
+                                                                    })}
+                                                                    type="text"
+                                                                    id="eng"
+                                                                    autoComplete="off"
+                                                                ></input>
+                                                                {errors.eng && <div className='invalid'>{errors.eng.message}</div>}
+                                                            </div>
+                                                            <div>Nghĩa</div>
+                                                            <div className="wrap-input100 mb-3">
+                                                                <input className="input100" name="cc" placeholder='Nhập nghĩa từ vựng' {...register('vie',
+                                                                    {
+                                                                        required: 'Nghĩa của từ vựng không được để trống'
+                                                                    })}
+                                                                    type="text"
+                                                                    id="vie"
+                                                                    autoComplete="off"
+                                                                ></input>
+                                                                {errors.vie && <div className='invalid'>{errors.vie.message}</div>}
+                                                            </div>
+                                                            <div>Phiên âm</div>
+                                                            <div className="wrap-input100 mb-3">
+                                                                <input className="input100" name="cc" placeholder='Nhập phiên âm' {...register('spelling',
+                                                                    {
+                                                                        required: 'Phiên âm của từ vựng không được để trống'
+                                                                    })}
+                                                                    type="text"
+                                                                    id="spelling"
+                                                                    autoComplete="off"
+                                                                ></input>
+                                                                {errors.spelling && <div className='invalid'>{errors.spelling.message}</div>}
+                                                            </div>
+                                                            <div>Ảnh minh họa</div>
+                                                            <div className="d-flex justify-content-between">
+
+                                                                <div>
+
+                                                                    <input className="input100" name="cc" placeholder='Chọn ảnh'
+                                                                        type="file"
+                                                                        id="image"
+                                                                        autoComplete="off"
+                                                                        onChange={(e) => setWord({ ...word, image: e.target.files[0] })}
+                                                                    ></input>
+                                                                    {errors.file && <div className='invalid'>{errors.file.message}</div>}
+                                                                </div>
+                                                                <div>
+                                                                    <div>Hình được chọn</div>
+                                                                    <img className="img-thumbnail preview-image" src={tempImage} alt='Chưa chọn'></img>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div className='col'>
+                                                            <div>Nhóm từ</div>
+                                                            <div className='card-input'>
+                                                                <div className='categories-tab'>
+                                                                    <ul className="list-group list-group-flush checkbox-wrapper">
+                                                                        {wordCategories.map((category, index) =>
+                                                                            <li className="list-group-item" key={index}>
+                                                                                <div className="custom-control custom-checkbox">
+                                                                                    <input type="checkbox" className="custom-control-input top" onChange={(e) => selectCategory(e, category)}></input>
+                                                                                    <label className="custom-control-label">{category.categoryName}</label>
+                                                                                </div>
+                                                                            </li>
+                                                                        )}
+                                                                    </ul>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="card-input">
-                                                        <h6>Nghĩa</h6>
-                                                        <input
-                                                            type="text"
-                                                            value={word.vie}
-                                                            name="vietNamCreate"
-                                                            onChange={e => setWord({ ...word, vie: e.target.value })}
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className="card-input">
-                                                        <h6>Phát âm</h6>
-                                                        <input
-                                                            type="text"
-                                                            value={word.spelling}
-                                                            name="spellingCreate"
-                                                            onChange={e => setWord({ ...word, spelling: e.target.value })}
-                                                            required
-                                                        />
-                                                    </div>
+
                                                     {/* <div className="card-input">
                                                         <span>Loại từ</span>
                                                         <select
@@ -290,55 +385,18 @@ const ManagementWord = () => {
                                                             <option value="Trạng từ">Trạng từ</option>
                                                         </select>
                                                     </div> */}
-                                                    <div className="card-input row">
-                                                        <div className='col-5'>
-                                                            <h6>Hình ảnh minh họa</h6>
-                                                            <input
-                                                                value=''
-                                                                type="file"
-                                                                accept="image/*"
-                                                                name="imageCreate"
-                                                                onChange={(e) => {
-                                                                    setWord({ ...word, image: e.target.files[0] })
-                                                                    const url = URL.createObjectURL(e.target.files[0]);
-                                                                    setTempImage(url);
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className='col-6'>
-                                                            <h6>Hình được chọn</h6>
-                                                            <img className="img-thumbnail" src={tempImage} alt='Chưa chọn'></img>
-                                                        </div>
 
-                                                    </div>
-                                                    <div className='card-input row'>
-                                                        <div className='col-2'>
-                                                            <h6>Nhóm từ</h6>
-                                                        </div>
-                                                        <div className='col-10'>
-                                                            <ul className="list-group list-group-flush checkbox-wrapper">
-                                                                {wordCategories.map((category, index) =>
-                                                                    <li className="list-group-item" key={index}>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input top" onChange={(e) => selectCategory(e,category)}></input>
-                                                                            <label className="custom-control-label">{category.categoryName}</label>
-                                                                        </div>
-                                                                    </li>
-                                                                )}
-                                                            </ul>
-                                                        </div>
 
-                                                    </div>
                                                 </form>
                                             </Modal.Body>
                                             <Modal.Footer>
-                                                <Button variant="secondary" onClick={() => toggleModalAdd()}>Trở lại</Button>
-                                                <Button variant="primary" onClick={(e) => submitCreate(e)}>Lưu lại</Button>
+                                                <Button variant="secondary" onClick={() => toggleModalAdd()}>Hủy</Button>
+                                                <Button variant="primary" form="create-form" type="submit">Lưu lại</Button>
                                             </Modal.Footer>
                                         </Modal>
-                                        {Object.keys(selectedWord).length > 0 && <Modal centered show={modalEdit} onHide={() => toggleModalEdit({})} size="lg">
+                                        {Object.keys(selectedWord).length > 0 && <Modal centered show={modalEdit} onHide={() => toggleModalEdit({})} size="lg" dialogClassName="modal-90w" animation contentClassName="modal-90w-content">
                                             <Modal.Body>
-                                                <div className='row'>
+                                                <div className='row script-panel'>
                                                     <div className='col-6'>
                                                         <h6>Thông tin cũ</h6>
                                                         <div className='form-group card p-2'>
@@ -356,99 +414,91 @@ const ManagementWord = () => {
                                                             </div>
                                                             <div className='card-input mt-3'>
                                                                 <span>Hình ảnh</span>
-                                                                <img className='img-fluid' src={selectedWord.wordImg}></img>
+                                                                <img className='img-thumbnail w-50' src={selectedWord.wordImg}></img>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className='col-6'>
                                                         <h6>Thông tin mới</h6>
-                                                        <form className="form-group card p-2">
-                                                            <div className="card-input">
-                                                                <h6>Từ vựng</h6>
-                                                                <input
-                                                                    type="text"
-                                                                    value={selectedWord.eng}
-                                                                    name="englishCreate"
-                                                                    onChange={e => setWord({ ...word, eng: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className="card-input">
-                                                                <h6>Nghĩa</h6>
-                                                                <input
-                                                                    type="text"
-                                                                    value={selectedWord.vie}
-                                                                    name="vietNamCreate"
-                                                                    onChange={e => setWord({ ...word, vie: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className="card-input">
-                                                                <h6>Phát âm</h6>
-                                                                <input
-                                                                    type="text"
-                                                                    value={selectedWord.spelling}
-                                                                    name="spellingCreate"
-                                                                    onChange={e => setWord({ ...word, spelling: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            {/* <div className="card-input">
-                                                        <span>Loại từ</span>
-                                                        <select
-                                                            value={categoryCreate}
-                                                            onChange={e => this.handleChange(e)}
-                                                            name="categoryCreate" required>
-                                                            <option value="">- Chọn loại từ -</option>
-                                                            <option value="Danh từ">Danh từ</option>
-                                                            <option value="Tính từ">Tính từ</option>
-                                                            <option value="Động từ">Động từ</option>
-                                                            <option value="Trạng từ">Trạng từ</option>
-                                                        </select>
-                                                    </div> */}
-                                                            <div className="card-input row">
-                                                                <div className='col-5'>
-                                                                    <h6>Hình ảnh minh họa</h6>
-                                                                    <input
-                                                                        value=''
-                                                                        type="file"
-                                                                        accept="image/*"
-                                                                        name="imageCreate"
-                                                                        onChange={(e) => {
-                                                                            setWord({ ...word, image: e.target.files[0] })
-                                                                            const url = URL.createObjectURL(e.target.files[0]);
-                                                                            setTempImage(url);
-                                                                        }}
-                                                                    />
+                                                        <form className="form-group card p-2" id="edit-form" onSubmit={handleSubmit(submitEdit)}>
+                                                            <div>
+                                                                <div>Từ vựng</div>
+                                                                <div className="wrap-input100 mb-3">
+                                                                    <input className="input100" name="eng" placeholder='Nhập từ vựng' {...register('eng',
+                                                                        {
+                                                                            required: 'Từ vựng không được để trống'
+                                                                        })}
+                                                                        type="text"
+                                                                        id="eng"
+                                                                        defaultValue={selectedWord.eng}
+                                                                        autoComplete="off"
+                                                                    ></input>
+                                                                    {errors.eng && <div className='invalid'>{errors.eng.message}</div>}
                                                                 </div>
-                                                                <div className='col-6'>
-                                                                    <h6>Hình được chọn</h6>
-                                                                    <img className="img-fluid" src={tempImage} alt='Chưa chọn'></img>
+                                                                <div>Nghĩa</div>
+                                                                <div className="wrap-input100 mb-3">
+                                                                    <input className="input100" name="vie" placeholder='Nhập nghĩa từ vựng' {...register('vie',
+                                                                        {
+                                                                            required: 'Nghĩa của từ vựng không được để trống'
+                                                                        })}
+                                                                        type="text"
+                                                                        id="vie"
+                                                                        defaultValue={selectedWord.vie}
+                                                                        autoComplete="off"
+                                                                    ></input>
+                                                                    {errors.vie && <div className='invalid'>{errors.vie.message}</div>}
                                                                 </div>
+                                                                <div>Phiên âm</div>
+                                                                <div className="wrap-input100 mb-3">
+                                                                    <input className="input100" name="spelling" placeholder='Nhập phiên âm' {...register('spelling',
+                                                                        {
+                                                                            required: 'Phiên âm của từ vựng không được để trống'
+                                                                        })}
+                                                                        type="text"
+                                                                        id="spelling"
+                                                                        defaultValue={selectedWord.spelling}
+                                                                        autoComplete="off"
+                                                                    ></input>
+                                                                    {errors.spelling && <div className='invalid'>{errors.spelling.message}</div>}
+                                                                </div>
+                                                                <div>Ảnh minh họa</div>
+                                                                <div className="d-flex justify-content-between">
+                                                                    <div>
+                                                                        <input className="input100" name="file" placeholder='Chọn ảnh'
+                                                                            type="file"
+                                                                            id="image"
+                                                                            autoComplete="off"
+                                                                            defaultValue={null}
+                                                                            onChange={(e) => setWord({ ...word, image: e.target.files[0] })}
+                                                                        ></input>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div>Hình được chọn</div>
+                                                                        <img className="img-thumbnail preview-image" src={tempImage} alt='Chưa chọn'></img>
+                                                                    </div>
 
+                                                                </div>
+                                                                <div className='card-input p-2'>
+                                                                    <h6>Nhóm từ</h6>
+                                                                    <div className='categories-tab'>
+                                                                        <ul className="list-group list-group-flush checkbox-wrapper">
+                                                                            {wordCategories.map((category, index) =>
+                                                                                <li className="list-group-item border-0" key={index}>
+                                                                                    <div className="custom-control custom-checkbox">
+                                                                                        <input type="checkbox" className="custom-control-input top" onChange={(e) => editCategory(e, category)} checked={selectedWord.categories.some(cate => cate.id == category.id)}></input>
+                                                                                        <label className="custom-control-label">{category.categoryName}</label>
+                                                                                    </div>
+                                                                                </li>
+                                                                            )}
+                                                                        </ul>
+                                                                    </div>
+
+                                                                </div>
                                                             </div>
-
                                                         </form>
                                                     </div>
                                                     <hr></hr>
-                                                    <div className='card-input row p-2'>
-                                                        <div className='col-2'>
-                                                            <h6>Nhóm từ</h6>
-                                                        </div>
-                                                        <div className='col-10'>
-                                                            <ul className="list-group list-group-flush checkbox-wrapper">
-                                                                {wordCategories.map((category, index) =>
-                                                                    <li className="list-group-item border-0" key={index}>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input top" onChange={(e) => editCategory(e, category)} checked={selectedWord.categories.some(cate => cate.id == category.id)}></input>
-                                                                            <label className="custom-control-label">{category.categoryName}</label>
-                                                                        </div>
-                                                                    </li>
-                                                                )}
-                                                            </ul>
-                                                        </div>
 
-                                                    </div>
                                                 </div>
 
                                             </Modal.Body>
@@ -456,15 +506,22 @@ const ManagementWord = () => {
                                                 <Button variant="secondary" onClick={() => toggleModalEdit({})}>
                                                     Hủy
                                                 </Button>
-                                                <Button variant="primary" onClick={(e) => submitEdit(e)}>
+                                                <Button variant="primary" type="submit" form="edit-form">
                                                     Lưu lại
                                                 </Button>
                                             </Modal.Footer>
                                         </Modal>}
-                                        {Object.keys(selectedWord).length > 0 && <Modal centered show={modalDelete} onHide={() => toggleModalDelete({})} size="lg">
+                                        {Object.keys(selectedWord).length > 0 && <Modal centered show={modalDelete} onHide={() => toggleModalDelete({})} size="lg" dialogClassName='sweet-alert-modal'>
                                             <Modal.Body>
-                                                <h5 className='text-warning'>Bạn có chắc muốn xóa từ vựng này</h5>
-                                                <h6 className='text-danger'>Không thể hoàn tác</h6>
+                                                <div className='text-center'>
+                                                    <i className='fa fa-4x fa-warning text-danger'></i>
+                                                    <br></br>
+                                                    <br></br>
+                                                    <h3 className='text-info'>Bạn có chắc muốn xóa từ vựng này không ?</h3>
+                                                    <p className='text-danger'>
+                                                        Không thể hoàn tác
+                                                    </p>
+                                                </div>
                                             </Modal.Body>
                                             <Modal.Footer>
                                                 <Button variant="secondary" onClick={() => toggleModalDelete({})}>

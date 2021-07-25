@@ -14,6 +14,9 @@ import Paginate from "../pagination/Paginate";
 import QuestionPreview from "./QuestionPreview";
 import QuestionCreate from "./QuestionCreate";
 import Search from "../search/Search";
+import MapQuestionStatus, {
+  QuestionStatus,
+} from "../../constants/QuestionStatus";
 const initial = {
   content: "",
   preQuestion: "",
@@ -43,14 +46,16 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
   });
   const [analystic, setAnalystic] = useState({});
   const [filter, setFilter] = useState({
-    type: 'None',
+    type: "None",
     grammar: "",
   });
   const [sort, setSort] = useState({
     ascending: true,
   });
+  const [status, setStatus] = useState(QuestionStatus.FREE);
   const [modalCreate, setModalCreate] = useState(false);
   const [modalPreview, setModalPreview] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
   const [selectQuestion, setSelectQuestion] = useState({});
   const [livePreview, setLivePreview] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
@@ -60,12 +65,18 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
       currentPage: questions.currentPage,
       pageSize: questions.pageSize,
       type: filter.type,
+      status: status,
     };
     console.log(params);
     const result = await fetch(params, filter.grammar, query);
+    setQuestions(result);
+  }
+  useEffect(() => {
+   fetchAnalystic(); 
+  },[setAnalystic])
+  async function fetchAnalystic() {
     const analysticResult = await questionApiV2.getAnalystic();
     setAnalystic(analysticResult);
-    setQuestions(result);
   }
   useEffect(() => {
     fetchData();
@@ -74,6 +85,7 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
     questions.pageSize,
     filter.type,
     filter.grammar,
+    status,
     query,
   ]);
   useEffect(() => {
@@ -95,6 +107,10 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
       currentPage: 1,
     });
     setQuery(query);
+  }
+  function toggleModalDelete(question) {
+    setSelectQuestion(question);
+    setModalDelete(!modalDelete);
   }
   function sortByAnswerCount() {
     if (!sort.ascending) {
@@ -351,11 +367,25 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
     console.log(question);
     return question;
   }
+  const submitDelete = async () => {
+    const result = await questionApiV2.deleteQuestion(selectQuestion.id);
+    if (result.status == 200) {
+      toast("Xóa thành công", { type: "success" });
+      toggleModalDelete({});
+      setIsRefresh(true);
+    } else {
+      toast("Xóa thất bại", { type: "error" });
+    }
+  };
   return (
     <div>
       <div className="container-fluid">
         <div className="row">
-          <div className={`col-lg-10 col-md-10 col-10 ${!header ? 'p-0' : ''} border-0`}>
+          <div
+            className={`col-lg-10 col-md-10 col-10 ${
+              !header ? "p-0" : ""
+            } border-0`}
+          >
             <div className="card shadow mb-4">
               <div className="card-header py-3">
                 <div
@@ -407,16 +437,22 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
                             <FaSortAlphaUp></FaSortAlphaUp>
                           )}
                         </th>
+                        <th className="dokhoquiz pointer-card">Trạng thái</th>
                         <th className="table-function"></th>
                       </tr>
                     </thead>
                     <tbody>
                       {questions.items.map((question, index) => (
                         <tr key={index}>
-                          <td>{parse(question.preQuestion || "")}</td>
+                          <td className="cell-4">
+                            <span className="text-overflow">
+                              {parse(question.preQuestion || "")}
+                            </span>
+                          </td>
                           <td>{parse(question.content || "")}</td>
                           <td>{question.type}</td>
                           <td>{question.answers.length}</td>
+                          <td>{MapQuestionStatus(question.status)}</td>
                           <td>
                             <button
                               type="button"
@@ -437,6 +473,7 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
                             <button
                               type="button"
                               className="btn btn-danger btn-delete "
+                              onClick={() => toggleModalDelete(question)}
                             >
                               <i className="fa fa-trash"></i>
                             </button>
@@ -456,17 +493,17 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
             </div>
           </div>
           <div className="col-lg-2 col-md-2 col-2">
-            <div className="card">
+            <div className="card mb-3">
               <div className="card-header">
                 <h6>Phân loại</h6>
               </div>
               <div className="card-body">
                 <form className="form-group">
-                <input
+                  <input
                     type="radio"
                     name="type"
-                    value={'None'}
-                    checked={filter.type == 'None'}
+                    value={"None"}
+                    checked={filter.type == "None"}
                     onChange={(e) => typeChange(e)}
                   ></input>
                   <span>All</span>
@@ -537,12 +574,42 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
                 </form>
               </div>
             </div>
-            <br></br>
+            <div className="card mb-3">
+              <div className="card-header">
+                <h6>Trạng thái</h6>
+              </div>
+              <div className="card-body">
+                <input
+                  type="radio"
+                  name="type"
+                  value={QuestionStatus.FREE}
+                  checked={status == QuestionStatus.FREE}
+                  onChange={(e) => setStatus(e.target.value)}
+                ></input>{" "}
+                <span className="mr-1 text-dark">
+                  {MapQuestionStatus(QuestionStatus.FREE)}
+                </span>
+                <br></br>
+                <input
+                  type="radio"
+                  name="type"
+                  value={QuestionStatus.IN_USE}
+                  checked={status == QuestionStatus.IN_USE}
+                  onChange={(e) => setStatus(e.target.value)}
+                ></input>{" "}
+                <span className="mr-1 text-dark">
+                  {MapQuestionStatus(QuestionStatus.IN_USE)}
+                </span>
+                <br></br>
+                <p></p>
+              </div>
+            </div>
             <div className="card">
               <div className="card-header">
                 <h6>Thống kê</h6>
               </div>
               <div className="card-body">
+                <p>Tổng: {analystic.total}</p>
                 <p>Chưa sử dụng: {analystic.free}</p>
                 <p>Sử dụng cho quiz: {analystic.quizUsing}</p>
                 <p>Sử dụng cho exam: {analystic.examUsing}</p>
@@ -635,7 +702,13 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
         </Modal>
       )}
       {livePreview && Object.keys(selectQuestion).length > 0 && (
-        <Modal show={livePreview} animation backdrop="static" size="lg" centered>
+        <Modal
+          show={livePreview}
+          animation
+          backdrop="static"
+          size="lg"
+          centered
+        >
           <Modal.Body>
             <div
               id="content"
@@ -694,6 +767,32 @@ const ManagementQuestionComponent = ({ header, fetch }) => {
               </main>
             </div>
           </Modal.Body>
+        </Modal>
+      )}
+      {Object.keys(selectQuestion).length > 0 && (
+        <Modal
+          show={modalDelete}
+          onHide={() => toggleModalDelete({})}
+          dialogClassName="sweet-alert-modal rounded"
+          contentClassName="modal-basic-content"
+        >
+          <Modal.Body>
+            <div className="text-center">
+              <i className="fa fa-4x fa-warning text-danger"></i>
+              <br></br>
+              <br></br>
+              <h3 className="text-info">Bạn có chắc muốn xóa câu hỏi này</h3>
+              <p className="text-danger">Không thể hoàn tác</p>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => toggleModalDelete({})}>
+              Hủy
+            </Button>
+            <Button variant="danger" onClick={(e) => submitDelete()}>
+              Xác nhận
+            </Button>
+          </Modal.Footer>
         </Modal>
       )}
       <Link className="scroll-to-top rounded" to="#page-top">

@@ -1,8 +1,9 @@
 import React from "react";
 import HomePage from "./pages/HomePage/Home";
 import ThaoLuanPage from "./pages/ThaoLuanPage/ThaoLuanPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import ThaoLuanChiTietPage from "./pages/ThaoLuanPage/ThaoLuanChiTietPage";
-import CuaHangPage from "./pages/CuaHangPage/CuaHangPage";
 import TuDienPage from "./pages/XemThemPage/TuDienPage";
 import TuVungPage from "./pages/XemThemPage/TuVungPage";
 import SignInPage from "./pages/AuthPage/SignInPage";
@@ -13,9 +14,6 @@ import HocHinhAnh from "./pages/HocPage/HocHinhAnh";
 import Hoc from "./pages/HocPage/Hoc";
 // import CaiDatMatKhau from './pages/CaiDatPage/CaiDatMatKhau';
 // import CaiDatTaiKhoan from './pages/CaiDatPage/CaiDatTaiKhoan';
-import LandingPage from "./pages/LandingPage/LandingPage";
-import NapTienPage from "./pages/NapTienPage/NapTienPage";
-import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import FlashCardPage from "./pages/FlashCardPage/FlashCardPage";
 import ThemBaiViet from "./pages/ThaoLuanPage/ThemBaiViet";
 import KetQuaTraCuu from "./pages/XemThemPage/KetQuaTraCuu";
@@ -57,7 +55,6 @@ import Section from "./components/managementsections/Section";
 import ManagementGroupWord from "./pages/Admin/ManagementGroupWord";
 import GroupWord from "./components/managementgroup_word/GroupWord";
 import ProgressWord from "./pages/ProgressWord/ProgressWord";
-import { Chatbox } from "./pages/Chat/Chatbox";
 import ManagementCategories from "./pages/Admin/ManagementCategories";
 import SectionFlashcard from "./pages/FlashCard/SectionFlashcard";
 import SectionResult from "./pages/FlashCard/SectionResult";
@@ -90,6 +87,7 @@ import ManagementCertificate from "./pages/Admin/ManagementCertificate";
 import UserManagementCertificatae from "./pages/Admin/User/UserManagementCertificate";
 import CertificateExam from "./pages/Exam/CertificateExam";
 import ExamResult from "./pages/HocPage/ExamResult";
+import { Chatbox } from "./pages/Chat/Chatbox";
 const routes = [
   {
     path: "/splash",

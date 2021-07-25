@@ -1,9 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component, useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
 import { signUp } from "./../../actions/authActions"
-
-class SignUp extends Component {
-  state = {
+import { useForm } from "react-hook-form";
+import { Redirect, Link } from "react-router-dom";
+import accountApi from "../../api/accountApi";
+import { toast } from "react-toastify";
+const SignUp = ({ }) => {
+  const dispatch = useDispatch();
+  const init = {
     username: "",
     email: "",
     password: "",
@@ -13,147 +17,174 @@ class SignUp extends Component {
     phoneNumber: "",
     fullname: '',
     file: null,
-  };
-  onFileChange = event => {
-    this.setState({ file: event.target.files[0] });
+  }
+  const [data, setData] = useState(init)
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [submitted, setSubmitted] = useState(false);
+  const [samePass, setSamePass] = useState(true);
+  const onFileChange = event => {
+    setData({
+      ...data,
+      file: event.target.files[0]
+    })
 
   };
-  handleChange = (event) => {
-    this.setState({
+  const handleChange = (event) => {
+    setData({
+      ...data,
       [event.target.id]: event.target.value,
-    });
+    })
   };
-  handlePasswordChange = event => {
-    this.setState({
+  const handlePasswordChange = event => {
+    setData({
+      ...data,
       password: event.target.value,
     });
   };
-  handleConfirmPassword = event => {
-    this.setState({
+  const handleConfirmPassword = event => {
+    setData({
+      ...data,
       passwordConfirm: event.target.value,
     });
   };
-  handleSubmit = (event) => {
-    event.preventDefault();
-    var { id, email, password, passwordConfirm, username, dateOfBirth, address, phoneNumber, file, fullname } = this.state;
+  useEffect(() => {
+    if (data.password != data.passwordConfirm) {
+      setSamePass(false);
+    } else {
+      setSamePass(true);
+    }
+  }, [data.password, data.passwordConfirm])
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   var { id, email, password, passwordConfirm, username, dateOfBirth, address, phoneNumber, file, fullname } = this.state;
+  //   var user = {
+  //     id: id,
+  //     email: email,
+  //     password: password,
+  //     username: username,
+  //     fullname: fullname,
+  //     dateOfBirth: dateOfBirth,
+  //     address: address,
+  //     phone: phoneNumber,
+  //     passwordConfirm: passwordConfirm,
+  //     file: file,
+  //     roles: ["learner"]
+  //   };
+  //   this.props.signUp(user);
+  // };
+  const onSubmit = async (data) => {
+    console.log(data);
+    var { id, email, password, passwordConfirm, username, birthdate, address, phone, fullname } = data;
     var user = {
       id: id,
       email: email,
       password: password,
       username: username,
       fullname: fullname,
-      dateOfBirth: dateOfBirth,
+      dateOfBirth: birthdate || '1/1/0001',
       address: address,
-      phone: phoneNumber,
+      phone: phone,
       passwordConfirm: passwordConfirm,
-      file: file,
       roles: ["learner"]
     };
-    this.props.signUp(user);
+    const result = await accountApi.register(user);
+    if (result.status == 200) {
+      setSubmitted(true);
+    } else {
+      toast('Đăng ký thất bại', { type: 'error' })
+    }
+
   };
-  render() {
-    const { authError_Email, authError_Pass } = this.props
-    return (
-      <form className="login100-form validate-form"
+  return (
+    <>
+      {!submitted ? <form className="login100-form"
         autoComplete="off"
-        onSubmit={this.handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="wrap-input100 validate-input mb-3">
-          <span className="label-input100">Username</span>
-          <input className="input100" name="username" placeholder="Nhập tên tài khoản"
-            required
+        <div className="wrap-input100 mb-3">
+          <span className="label-input100">Username <span className='text-danger'>*</span></span>
+          <input className="input100" name="cc" placeholder='Nhập tên tài khoản' {...register('username',
+            {
+              required: 'Tên tài khoản không được để trống'
+              , minLength: { value: 8, message: 'Tên tài khoản tối thiểu 8 kí tự' },
+              maxLength: { value: 11, message: 'Tên tài khoản tối đa 11 kí tự' },
+              pattern: { value: /^(?=[a-zA-Z0-9._]{8,11}$)(?!.*[_.]{2})[^_.].*[^_.]$/, message: 'Không sử dụng kí tự đặc biệt' }
+            })}
             type="text"
             id="username"
-            onChange={this.handleChange}
+            autoComplete="off"
+            onChange={handleChange}
           ></input>
+          {errors.username && <div className='invalid'>{errors.username.message}</div>}
         </div>
-        <div className="wrap-input100 validate-input mb-3" data-validate="Username is required"> <span className="label-input100">Email</span>
+        <div className="wrap-input100 mb-3" data-validate="Username is required" > <span className="label-input100">Email <p className='text-danger'>*</p></span>
           <input className="input100" placeholder="Nhập email"
-            required
+            {...register('email', { required: 'Địa chỉ email không được để trống', pattern: { value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, message: 'Email không đúng chuẩn' } })}
             type="email"
             id="email"
-            onChange={this.handleChange}
+            onChange={handleChange}
           ></input>
         </div>
-        <div className="wrap-input100 validate-input mb-3" data-validate="Username is required"> <span className="label-input100">Họ và tên</span>
+        <div className="wrap-input100 mb-3" data-validate="Username is required"> <span className="label-input100">Họ và tên</span>
           <input className="input100" placeholder="Họ và tên"
-            required
+            {...register('fullname')}
             type="text"
             id="fullname"
-            onChange={this.handleChange}
+            onChange={handleChange}
           ></input>
         </div>
-        { authError_Email ? <p className="text-danger error">{authError_Email}</p> : null}
-        <div className="wrap-input100 validate-input mb-3" data-validate="Password is required"> <span className="label-input100">Mật khẩu</span>
+        <div className="wrap-input100 mb-3" data-validate="Password is required"> <span className="label-input100">Mật khẩu <p className='text-danger'>*</p></span>
           <input className="input100" type="password" name="pass" placeholder="Nhập mật khẩu"
-            minLength="6" maxLength="32" required
+            {...register('password', { required: 'Mật khẩu không được để trống' })}
+            minLength="6" maxLength="32"
             id="password"
-            onChange={this.handlePasswordChange}
+            onChange={handlePasswordChange}
           ></input>
         </div>
-        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">Nhập lại mật khẩu</span>
+        <div className="wrap-input100 mb-3"> <span className="label-input100">Nhập lại mật khẩu <p className='text-danger'>*</p></span>
           <input className="input100" type="password" name="pass" placeholder="Nhập lại mật khẩu"
-            minLength="6" maxLength="32" required
-            id="password"
-            onChange={this.handleConfirmPassword}
+            {...register('confirmPassword')}
+            minLength="6" maxLength="32"
+            id="confirmPassword"
+            onChange={handleConfirmPassword}
           ></input>
+          {!samePass && <div className='invalid'>Mật khẩu xác nhận không khớp</div>}
         </div>
-        { authError_Pass ? <p className="text-danger error">{authError_Pass}</p> : null}
 
-        <div className="wrap-input100 validate-input mb-3">
+        <div className="wrap-input100 mb-3">
           <span className="label-input100">Ngày sinh</span>
           <input className="input100" name="dateOfBirth"
-            required
-            type="datetime-local"
+            {...register('birthdate')}
+            type="date"
             id="dateOfBirth"
-            onChange={this.handleChange}
+            placeholder="tháng/ngày/năm"
+            onChange={handleChange}
           ></input>
         </div>
-        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">Địa chỉ</span>
+        <div className="wrap-input100 mb-3"> <span className="label-input100">Địa chỉ</span>
           <input className="input100" name="address" placeholder="Nhập địa chỉ"
-            required
+            {...register('address')}
             type="text"
             id="address"
-            onChange={this.handleChange}
+            onChange={handleChange}
           ></input>
         </div>
-        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">Số điện thoại</span>
+        <div className="wrap-input100 mb-3"> <span className="label-input100">Số điện thoại</span>
           <input className="input100" name="phoneNumber" placeholder="Nhập số điện thoại"
-            required
+            {...register('phone')}
             type="text"
             id="phoneNumber"
-            onChange={this.handleChange}
+            onChange={handleChange}
           ></input>
         </div>
-        <div className="wrap-input100 validate-input mb-3"> <span className="label-input100">Avatar</span>
-          <input className="input100" name="file"
-            required
-            type="file"
-            id="file"
-            onChange={this.onFileChange}
-          ></input>
+        <div className="container-login100-form-btn d-flex justify-content-center">
+          <input type="submit" className="btn btn-primary rounded-pill" value="Đăng ký" />
         </div>
-        <div className="container-login100-form-btn">
-          <button className="btn btn-primary"> Đăng Ký </button>
+        <Link to="/home" className="mt-2">Trang chủ</Link>
+      </form> : <Redirect to="/signin"></Redirect>}
 
-        </div>
-        <a href="/home" className="mt-2">Về trang chủ</a>
-      </form>
-
-    );
-  }
+    </>
+  );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    authError_Email: state.authError_Email,
-    authError_Pass: state.authError_Pass,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    signUp: (user) => dispatch(signUp(user)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default SignUp;

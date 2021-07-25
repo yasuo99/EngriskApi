@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import Sections from "../../components/sections/Sections";
 import { Link } from "react-router-dom";
 import Search from "../../components/search/Search";
-
+import { useForm } from "react-hook-form";
 const ManagementRoutes = () => {
     const defaultData = {
         title: '',
@@ -27,11 +27,11 @@ const ManagementRoutes = () => {
     })
     const [route, setRoute] = useState({})
     const [data, setData] = useState(defaultData)
-    const [query,setQuery] = useState('')
+    const [query, setQuery] = useState('')
     const [isRefresh, setIsRefresh] = useState(false);
     const tempRoutes = useRef(null);
-
-    async function fetchData(){
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    async function fetchData() {
         const params = {
             currentPage: routes.currentPage,
             pageSize: routes.pageSize,
@@ -42,7 +42,7 @@ const ManagementRoutes = () => {
     }
     useEffect(() => {
         fetchData();
-    }, [routes.currentPage,routes.pageSize, query])
+    }, [routes.currentPage, routes.pageSize, query])
     useEffect(() => {
         if (isRefresh) {
             fetchData();
@@ -52,6 +52,7 @@ const ManagementRoutes = () => {
     function toggleModalCreate() {
         setData(defaultData)
         setModalCreate(!modalCreate)
+        reset()
     }
     function toggleModalEdit(route) {
         setData(defaultData)
@@ -67,27 +68,25 @@ const ManagementRoutes = () => {
         setRoute(route)
         setModalSections(!modalSections);
     }
-    async function submitCreate() {
+    const submitCreate = async (source) => {
         console.log(data);
         var formData = new FormData();
-        formData.set('title', data.title);
-        formData.set('description', data.description);
+        formData.set('title', source.title);
+        formData.set('description', source.description);
         formData.set('image', data.image);
         const result = await routeApi.createRoute(formData);
         if (result.status == 200) {
             toast('Thêm thành công', { type: 'success' })
             setModalCreate(!modalCreate)
-            setRoutes([...routes, result.route])
             setIsRefresh(true);
         } else {
             toast('Thêm thất bại', { type: 'error' })
         }
     }
-    async function submitEdit() {
-        setModalEdit(!modalEdit)
+    const submitEdit = async (source) => {
         var formData = new FormData();
-        formData.set('title', data.title);
-        formData.set('description', data.description);
+        formData.set('title', source.title);
+        formData.set('description', source.description);
         formData.set('image', data.image);
         const result = await routeApi.updateRoute(route.id, formData);
         if (result.status == 200) {
@@ -95,7 +94,11 @@ const ManagementRoutes = () => {
             toggleModalEdit({})
             setIsRefresh(true);
         } else {
-            toast('Cập nhật thất bại', { type: 'error' })
+            if (result.status == 204) {
+                toast('Không cập nhật dữ liệu mới', {type: 'info'})
+            } else {
+                toast('Cập nhật thất bại', { type: 'error' })
+            }
         }
     }
     async function submitDelete() {
@@ -165,7 +168,7 @@ const ManagementRoutes = () => {
                                             {routes.items.map((route, index) =>
                                                 <tr key={index}>
                                                     <th>{route.title}</th>
-                                                    <th style={{width: '200px'}}>
+                                                    <th style={{ width: '200px' }}>
                                                         <img
                                                             className="img-fluid"
                                                             src={route.routeImage}
@@ -210,51 +213,48 @@ const ManagementRoutes = () => {
                         </div>
                     </div>
                 </div>
-                <Modal show={modalCreate} onHide={() => toggleModalCreate()} dialogClassName='sweet-alert-modal' contentClassName="modal-basic-content">
+                <Modal show={modalCreate} onHide={() => toggleModalCreate()} dialogClassName='sweet-alert-modal' contentClassName="modal-basic-content modal-background">
                     <Modal.Body>
-                    <div className='text-center'>
+                        <div className='text-center'>
                             <h3 className='text-info'> Thêm lộ trình mới</h3>
                         </div>
-                        <div className="form-group">
-                            <p className="titleInfo">Thông tin lộ trình</p>
-                            <div className="card-input mt-3">
-                                <span>Tiêu đề</span>
-                                <input
+                        <form id="create-form" className="form-group" onSubmit={handleSubmit(submitCreate)}>
+                            <div>Tiêu đề</div>
+                            <div className="wrap-input100 mb-3">
+                                <input className="input100" name="title" placeholder='Nhập tiêu đề' {...register('title',
+                                    {
+                                        required: 'Tiêu đề của lộ trình không được để trống'
+                                    })}
                                     type="text"
-                                    name="url"
-                                    onChange={(e) => setData({ ...data, title: e.target.value })}
-                                    required
-                                    placeholder="Tiêu đề của lộ trình..."
-                                />
+                                    id="title"
+                                    autoComplete="off"
+                                ></input>
+                                {errors.title && <div className='invalid'>{errors.title.message}</div>}
                             </div>
-                            <div className="card-input mt-3">
-                                <span>Hình ảnh</span>
-                                <input
-                                    type="file"
-                                    onChange={(e) => setData({ ...data, image: e.target.files[0] })}
-                                    required
-                                    accept="image/*"
-                                    placeholder="Hình ảnh của lộ trình..."
-                                />
+                            <div class="custom-file mb-3">
+                                <input type="file" class="custom-file-input" id="customFile" onChange={(e) => setData({ ...data, image: e.target.files[0] })} />
+                                <label class="custom-file-label" htmlFor="customFile">Chọn ảnh</label>
                             </div>
-                            <div className="card-input mt-3">
-                                <span>Mô tả</span>
-                                <input
+                            <div>Mô tả</div>
+                            <div className="wrap-input100">
+                                <textarea className="input100" name="description" placeholder='Nhập mô tả' {...register('description',
+                                    {
+                                        required: 'Mô tả của lộ trình không được để trống'
+                                    })}
                                     type="text"
-                                    name="url"
-                                    onChange={(e) => setData({ ...data, description: e.target.value })}
-                                    required
-                                    placeholder="Mô tả của lộ trình..."
-                                />
+                                    id="title"
+                                    autoComplete="off"
+                                ></textarea>
+                                {errors.description && <div className='invalid'>{errors.description.message}</div>}
                             </div>
-                        </div>
+                        </form>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={() => toggleModalCreate()}>
                             Hủy
                         </Button>
-                        <Button variant="primary" onClick={(e) => submitCreate()}>
-                            Thêm
+                        <Button variant="primary" type="submit" form="create-form">
+                            Thêm <i className='fa fa-save'></i>
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -300,30 +300,39 @@ const ManagementRoutes = () => {
                                         </div>
                                     </div>
                                     <div className="col-6">
-                                        <p className="titleInfo">Thông tin mới</p>
-                                        <div className="card-input mt-3">
-                                            <span>Tên nhóm</span>
-                                            <input
-                                                type="text"
-                                                name="url"
-                                                onChange={(e) => setData({ ...data, title: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="card-input mt-3">
-                                            <span>Hình ảnh</span>
-                                            <input
-                                                type="file"
-                                                onChange={(e) => setData({ ...data, image: e.target.files[0] })}
-                                            />
-                                        </div>
-                                        <div className="card-input mt-3">
-                                            <span>Mô tả</span>
-                                            <input
-                                                type="text"
-                                                name="url"
-                                                onChange={(e) => setData({ ...data, description: e.target.value })}
-                                            />
-                                        </div>
+                                        <form className='form-group' id="edit-form" onSubmit={handleSubmit(submitEdit)}>
+                                            <p className="titleInfo">Thông tin mới</p>
+                                            <div>Tiêu đề</div>
+                                            <div className="wrap-input100 mb-3">
+                                                <input className="input100" name="title" placeholder='Nhập tiêu đề' {...register('title',
+                                                    {
+                                                        required: 'Tiêu đề của lộ trình không được để trống'
+                                                    })}
+                                                    type="text"
+                                                    id="title"
+                                                    autoComplete="off"
+                                                    defaultValue={route.title}
+                                                ></input>
+                                                {errors.title && <div className='invalid'>{errors.title.message}</div>}
+                                            </div>
+                                            <div class="custom-file mb-3">
+                                                <input type="file" class="custom-file-input" id="customFile" onChange={(e) => setData({ ...data, image: e.target.files[0] })} />
+                                                <label class="custom-file-label" htmlFor="customFile">Chọn ảnh</label>
+                                            </div>
+                                            <div>Mô tả</div>
+                                            <div className="wrap-input100">
+                                                <textarea className="input100" name="description" placeholder='Nhập mô tả' {...register('description',
+                                                    {
+                                                        required: 'Mô tả của lộ trình không được để trống'
+                                                    })}
+                                                    type="text"
+                                                    id="title"
+                                                    autoComplete="off"
+                                                    defaultValue={route.description}
+                                                ></textarea>
+                                                {errors.title && <div className='invalid'>{errors.title.message}</div>}
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -333,7 +342,7 @@ const ManagementRoutes = () => {
                         <Button variant="secondary" onClick={() => toggleModalEdit({})}>
                             Hủy
                         </Button>
-                        <Button variant="primary" onClick={(e) => submitEdit()}>
+                        <Button variant="primary" form="edit-form" type='submit'>
                             Lưu
                         </Button>
                     </Modal.Footer>

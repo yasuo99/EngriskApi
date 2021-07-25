@@ -11,7 +11,7 @@ const routeApi = {
     getAllEngriskRoute: async (id) => {
         const url = `/routes/users/${id}`
         const headers = {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         }
         return await axiosClientv2.get(url, { headers })
     },

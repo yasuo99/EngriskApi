@@ -69,7 +69,7 @@ const SectionFlashcard = () => {
   const [isQuestionScreen, setIsQuestionScreen] = useState(false) //Screen check
   const [isQuestionLoop, setIsQuestionLoop] = useState(false);
   const [modalExit, setModalExit] = useState(false);
-  const [isFail,setIsFail] = useState(false);
+  const [isFail, setIsFail] = useState(false);
   useEffect(async () => {
     async function fetchData() {
       const result = await routeApi.routeLearn(routeId, sectionId, scriptId);
@@ -96,24 +96,29 @@ const SectionFlashcard = () => {
   }, [setData]);
   function start() {
     setIsStartPhaseScreen(false);
-    setWords(currentScript.words);
-    setQuestions(currentScript.questions);
-    if (currentScript.theory) {
-      setIsTheoryScreen(true);
-      setTheory(currentScript.theory)
-    } else {
-      if (currentScript.words.length > 0) {
-        setIsVocabularyScreen(true);
-
+    if (currentScript.words.length > 0 || currentScript.questions.length > 0) {
+      setWords(currentScript.words);
+      setQuestions(currentScript.questions);
+      if (currentScript.theory) {
+        setIsTheoryScreen(true);
+        setTheory(currentScript.theory)
       } else {
-        if (currentScript.questions.length > 0) {
-          setIsQuestionScreen(true);
+        if (currentScript.words.length > 0) {
+          setIsVocabularyScreen(true);
 
         } else {
-          finishScript();
-        }
+          if (currentScript.questions.length > 0) {
+            setIsQuestionScreen(true);
 
+          } else {
+            finishScript();
+          }
+
+        }
       }
+    }
+    else{
+      setBusy(true);
     }
   }
   useEffect(() => {
@@ -227,7 +232,7 @@ const SectionFlashcard = () => {
     if (question.type != QuestionTypes.Toeic) {
       setIsLastQuestion(false);
       setRemainQuestions([...remainQuestions.filter(q => q !== question), question])
-    }else{
+    } else {
       setIsFail(true);
     }
 
@@ -248,7 +253,7 @@ const SectionFlashcard = () => {
       })
       connection.on("ExamScriptFail", () => {
         setIsFinish(true);
-        toast('Bạn không hoàn thành bài kiểm tra này', {type: 'info'})
+        toast('Bạn không hoàn thành bài kiểm tra này', { type: 'info' })
       });
       connection.on("NextScript", (data) => {
         console.log(data);
@@ -404,7 +409,7 @@ const SectionFlashcard = () => {
                     </div>}
                   {isQuestionScreen && <NormalQuestion question={currentQuestion} addRemainQuestion={AddRemainQuestion} removeRemainQuestion={RemoveRemainQuestion} check={Check} answerCheck={SelectAnswer} isLastQuestion={isLastQuestion} />}
                   {answerCheck === 1 && <RightAnswer indexChange={questionIndexChange} isFinish={isFinish} sectionId={sectionId} />}
-                  {answerCheck === 0 && (currentQuestion.type == QuestionTypes.Toeic ? <WrongAnswer indexChange={questionIndexChange} isFinish={isFinish} sectionId={sectionId}/> : <WrongAnswer indexChange={questionIndexChange} />)}
+                  {answerCheck === 0 && (currentQuestion.type == QuestionTypes.Toeic ? <WrongAnswer indexChange={questionIndexChange} isFinish={isFinish} sectionId={sectionId} /> : <WrongAnswer indexChange={questionIndexChange} />)}
                 </div>
               </main>
             </div>
@@ -428,7 +433,7 @@ const SectionFlashcard = () => {
                     height={400}
                     width={400} />
                 </div>
-                <p className='d-flex justify-content-center'>Hiện nội dung section này chưa được thêm vào vui lòng thử lại sau!</p>
+                <p className='d-flex justify-content-center'>Hiện nội dung học này chưa được thêm vào vui lòng thử lại sau!</p>
               </div>
             </main>
           </div>

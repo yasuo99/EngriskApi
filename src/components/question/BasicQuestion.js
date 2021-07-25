@@ -9,10 +9,10 @@ const BasicQuestion = ({ question, switchAnswerDisplay, checkAnswer, renderAnswe
     }, [isLastQuestion])
     return (
         <div>
-            <img
+           {question.photoUrl && <img
                 className="responsive question-box-img img-fluid rounded mx-auto d-block ex-img mt-1"
-                src='https://cdn.busuu.com/media/resized/entity/1440/company_1528111874_1440.jpg'
-            ></img>
+                src={question.photoUrl}
+            ></img> } 
 
             <div className='text-dark font-weight-bold'>{parse(question.preQuestion || 'Chọn đáp án đúng')}</div>
             <div className='text-dark font-weight-bold mt-1'>{parse(question.content || '')} <span>{question.audio && !isReviewing && <div><img src="/image/sound.png" className="sound"></img> <ReactPlayer
