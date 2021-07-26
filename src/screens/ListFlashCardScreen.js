@@ -189,7 +189,7 @@ const ListFlashCardScreen = ({ navigation }) => {
                 renderItem={({ item }) => (
                     <View style={{ width: "90%", marginLeft: 20, marginTop: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
                         <View style={{ borderColor: "#ccc", borderWidth: 1, borderRadius: 10 }}>
-                            <Image source={item.categoryImage ? `${BaseApiUrl}/streaming/image?image=${item.categoryImage}` : require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                            <Image source={item.categoryImage ? { uri : `${ item.categoryImage.replace('http://localhost:5000/api/v2/streaming/image?image=','http://10.0.3.2:5000/')}`} : require('../assets/banner.jpg')} style={{ width: "100%", height: 100, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
                             <TouchableOpacity onPress={item.words.length == 0 ?  () => {inform()} : () => { navigation.navigate('FlashCard', { WordCategoryId: item.id }) }}><Text style={{ color: "#fff", fontSize: 24, marginLeft: 16, marginTop: 8, fontWeight: "bold" }}>Chủ đề: {item.categoryName}</Text></TouchableOpacity>
                             <Text style={{ color: "#ccc", fontSize: 21, marginLeft: 16, marginBottom: 10 }}>{item.words.length} từ vựng</Text>
                         </View>

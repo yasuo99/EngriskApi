@@ -221,29 +221,21 @@ const FlashCardScreen = ({ route, navigation }) => {
                 <View>
                   <Text style={styles.wordVie}>{word.vie}</Text>
                 </View>
-                <Image source={word.wordImg ? `${BaseApiUrl}/streaming/image?image=${word.wordImg}` : require('../assets/abideby.jpeg')} style={{ width: 200, height: 100 }}></Image>
+                <Image source={word.wordImg ? { uri : `${ word.wordImg.replace('http://localhost:5000/api/v2/streaming/image?image=','http://10.0.3.2:5000/')}`} : require('../assets/abideby.jpeg')} style={{ width: 200, height: 100 }}></Image>
                 <View style={{ flexDirection: "row" }}>
                   <Player
                     style={styles.player}
                     // onTogglePlayback={word.wordVoice ? togglePlayback( `${BaseApiUrl}/streaming/audio?audio=${word.wordVoice}`) : togglePlayback(localTrack)}
                     onTogglePlayback={
                       async () => {
-                        const currentTrack = await TrackPlayer.getCurrentTrack();
-                        if (currentTrack == null) {
                           await TrackPlayer.reset();
                           await TrackPlayer.add({
-                            id: index,
-                            url:`${BaseApiUrl}/streaming/audio?audio=${word.wordVoice}`
+                            id: index, 
+                            url:`${ word.wordVoice.replace('http://localhost:5000/api/v2/streaming/audio?audio=','http://10.0.3.2:5000/')}`
                             // url: localTrack
                           });
                           await TrackPlayer.play();
-                        } else {
-                          if (playbackState === TrackPlayer.STATE_PAUSED) {
-                            await TrackPlayer.play();
-                          } else {
-                            await TrackPlayer.pause();
-                          }
-                        }
+                        
 
                       }
                     }

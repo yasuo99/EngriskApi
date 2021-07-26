@@ -28,7 +28,7 @@ const NotificationItem = ({ item }) => (
         <Moment element={Text} format="YYYY/MM/DD" style={{ color: "#fff", marginTop: 5 }}>{item.createdDate}</Moment>
         {/* <Button onPress={sendMessage} title="Nhận thông báo"></Button> */}
         {/* <View style={styles.itemDate}>{item.createdDate}</View> */}
-        <Text style={styles.itemDetail}>{item.status}</Text>
+        {/* <Text style={styles.itemDetail}>{item.status}</Text> */}
       </View>
     </View>
 

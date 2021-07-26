@@ -15,7 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
-import Player from "../PlaySection";
+import Player from "../PlayQuizSort";
 import localTrack from "../../assets/pure.m4a";
 import QuestionSection from './QuestionSection';
 import ScriptActions from '../../redux/actions/script';
@@ -175,9 +175,21 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
             {isVocabularySreen && <View style={{ margin: 30 }}>
                 <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10, color: "#1DA1F2" }}>Đọc và nghe câu</Text>
                 <View style={{ alignItems: "center", backgroundColor: "#1DA1F2", borderRadius: 10 }}>
-                    <Image source={require('../../assets/abideby.jpeg')} style={{ width: 420, height: 200, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
+                    <Image source={currentWord?.wordImg ? { uri : `${ currentWord.wordImg.replace('http://localhost:5000/api/v2/streaming/image?image=','http://10.0.3.2:5000/')}`} : require('./../../assets/abideby.jpeg')} style={{ width: 420, height: 200, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}></Image>
                     <Player
-                        onTogglePlayback={togglePlayback}
+                       onTogglePlayback={
+                        async () => {
+                            await TrackPlayer.reset();
+                            await TrackPlayer.add({
+                              id: 1, 
+                              url:`${ currentWord.wordVoice.replace('http://localhost:5000/api/v2/streaming/audio?audio=','http://10.0.3.2:5000/')}`
+                              // url: localTrack
+                            });
+                            await TrackPlayer.play();
+                          
+  
+                        }
+                      }
                     />
                 </View>
 

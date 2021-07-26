@@ -15,7 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MenuDrawer from 'react-native-side-drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TrackPlayer, { reset, usePlaybackState } from "react-native-track-player";
-import Player from "../PlaySection";
+import Player from "../PlayQuizSort";
 import localTrack from "../../assets/pure.m4a";
 import Modal from 'react-native-modal';
 import QuestionActions from '../../redux/actions/questions';
@@ -111,12 +111,31 @@ const QuestionSection = ({ navigation, question, nextIndex, addRemainQuestion, r
     }
     return (
         <View style={styles.screenContainer}>
+            {
+                console.log(question)
+            }
             <StatusBar barStyle="light-content" />
             {question?.type == QuestionTypes.BASIC && <View style={{ margin: 30 }}>
                 <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16, color: "#1DA1F2" }}>{question?.preQuestion.replace(/(<([^>]+)>)/gi, "")}</Text>
+               
+                <View>
+                {
+                    question?.photoUrl &&  <Image source={{uri : `${ question.photoUrl.replace('http://localhost:5000/','http://10.0.3.2:5000/')}`}} style={{ width: "100%", height: 150 }}></Image>
+                }
+                </View>
                 <View style={{ alignItems: "center", backgroundColor: "#1DA1F2", borderRadius: 40 }}>
-                    {question?.audio && <Player
-                        onTogglePlayback={togglePlayback}
+                    {question?.audio &&  <Player
+                       onTogglePlayback={
+                        async () => {
+                            await TrackPlayer.reset();
+                            await TrackPlayer.add({
+                              id: 1, 
+                              url:`${ question.audio.replace('http://localhost:5000/','http://10.0.3.2:5000/')}`
+                              // url: localTrack
+                            });
+                            await TrackPlayer.play();
+                        }
+                      }
                     />}
                 </View>
                 <ScrollView style={{ height: 500 }}>

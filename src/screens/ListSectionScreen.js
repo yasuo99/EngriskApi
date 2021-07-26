@@ -80,7 +80,7 @@ const _renderHeader = (section) => {
                         <>
                             <MaterialIcons
                                 key={idx}
-                                name={script.isDone ? 'check-circle' : 'circle'}
+                                name={'check-circle'}
                                 size={32}
                                 color= {script.isDone ? '#28a745' : '#1DA1F2'}
                                 style={{marginRight:10}}>
@@ -90,7 +90,7 @@ const _renderHeader = (section) => {
                                 key={idx}
                                 name="check-circle"
                                 size={32}
-                                color="#ccc"
+                                color="#1DA1F2"
                                 style={{marginRight:10}}>
                             </MaterialIcons> */}
                             </>

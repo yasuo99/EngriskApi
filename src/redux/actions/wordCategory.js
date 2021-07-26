@@ -15,6 +15,7 @@ const getAll = async (currentPage) => {
         Authorization: `Bearer {token}`
     }
     const data = await axiosClient.get(url,{ params: { tag: "all", currentPage:currentPage} });
+    console.log(data)
     await AsyncStorage.setItem('wordCategories',JSON.stringify(data.items));
     return{
         type: WordCategoriesActionsTypes.GET_ALL,

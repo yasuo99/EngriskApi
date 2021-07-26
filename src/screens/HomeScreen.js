@@ -371,11 +371,10 @@ const HomeScreen = ({ navigation }) => {
             {!isBusy && homeData.quizzes.map((quiz, index) =>
               <View style={styles.box} key={index}>
                 <TouchableOpacity animation="fadeInLeft" onPress={quiz.questions.length == 0 ? () => { inform() } : () => navigation.navigate('Quiz', { quizId: quiz.id })}>
-                  <ScrollView style={{ height: 80 }}><Text style={styles.titleQuiz}>{quiz.quizName}</Text></ScrollView>
+                  <ScrollView style={{ height: 100 }}><Text style={styles.titleQuiz}>{quiz.quizName}</Text></ScrollView>
                 </TouchableOpacity>
                 <Text style={styles.question}>Số câu hỏi: {quiz.questions.length}</Text>
                 <Text style={styles.level}>Độ khó: {quiz.difficultLevel}</Text>
-                <Text style={styles.time}>Thời gian làm bài: Quiz 0 exam có</Text>
               </View>)
             }
           </ScrollView>
@@ -404,7 +403,7 @@ const HomeScreen = ({ navigation }) => {
                 </ScrollView>
                 {/* </TouchableOpacity> */}
                 <Text style={styles.spelling}>{word.spelling}</Text>
-                <Image source={word.wordImg ? `${BaseApiUrl}/streaming/image?image=${word.wordImg}` : require('../assets/abideby.jpeg')} style={{ width: 170, height: 100, justifyContent: "flex-end" }}></Image>
+                <Image source={word.wordImg ? { uri : `${ word.wordImg.replace('http://localhost:5000/api/v2/streaming/image?image=','http://10.0.3.2:5000/')}`} : require('../assets/abideby.jpeg')} style={{ width: 170, height: 100, justifyContent: "flex-end" }}></Image>
               </View>
             )}
           </ScrollView>
