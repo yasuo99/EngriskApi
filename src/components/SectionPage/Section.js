@@ -35,6 +35,7 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
     const [questionIndex, setQuestionIndex] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState({})
     const [isFinish, setIsFinish] = useState(false);
+    const [isFinishWord, setIsFinishWord] = useState(false);
     const [remainQuestions, setRemainQuestions] = useState([])
     const [isLastQuestion,setIsLastQuestion] = useState(false);
     useEffect(() => {
@@ -117,8 +118,9 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
             if (script.questions.length > 0) {
                 setIsQuestionScreen(true);
             } else {
-                setIsFinish(true);
+                setIsFinishWord(true);
             }
+            // setIsFinish(true);
         }
     }
     function questionIndexChange(){
@@ -205,7 +207,7 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
             {isVocabularySreen &&
                 <View style={styles.view}>
                     <TouchableOpacity onPress={() => vocabularyIndexChange()} style={bgColor === false ? styles.next : styles.nextActive}>
-                        <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }} >{isFinish ? 'Kết thúc' : 'Tiếp theo'} </Text>
+                        <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }} >{isFinishWord ? 'Kết thúc' : 'Tiếp theo'} </Text>
                     </TouchableOpacity>
                 </View>}
             {/* {isQuestionScreen && <View style={styles.view}>
@@ -213,10 +215,40 @@ const Section = ({ navigation, routeId, sectionId, scriptId }) => {
                     <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>{isFinish ? 'Kết thúc' : 'Tiếp theo'} </Text>
                 </TouchableOpacity>
             </View>} */}
-            {/* {isFinish && <View style={styles.view}>
+            {isFinishWord && <View style={styles.view}>
+            <View style={{ justifyContent: "center", alignItems: "center", top: "25%" }}>
+                    <View style={{ flexDirection: "row" }}>
+                        <MaterialIcons
+                            name="star"
+                            size={42}
+                            color="yellow"></MaterialIcons>
+                        <MaterialIcons
+                            name="star"
+                            size={42}
+                            color="yellow"></MaterialIcons>
+                        <MaterialIcons
+                            name="star"
+                            size={42}
+                            color="yellow"></MaterialIcons>
+                        <MaterialIcons
+                            name="star"
+                            size={42}
+                            color="yellow"></MaterialIcons>
+                        <MaterialIcons
+                            name="star"
+                            size={42}
+                            color="yellow"></MaterialIcons>
+                    </View>
+            </View>
+
+            <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}>
+                <Text style={{ color: "#1DA1F2", fontSize: 28, padding: 32, fontWeight: "bold", textAlign: "center", marginBottom: 200 }}>CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH ÔN TẬP</Text>
+
                 <TouchableOpacity onPress={() => navigation.navigate('Lesson', { routeId: routeId, sectionId: sectionId })} style={bgColor === false ? styles.next : styles.nextActive}>
-                    <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>Kết thúc </Text>
-                </TouchableOpacity></View>} */}
+                    <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>Tiếp tục ôn tập</Text>
+                </TouchableOpacity></View>
+            </View>
+                }
         </View>
     );
 };

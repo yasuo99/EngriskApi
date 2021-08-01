@@ -213,7 +213,7 @@ const FlashCardScreen = ({ route, navigation }) => {
         showsHorizontalScrollIndicator={false}>
         {
           wordCategories.vocabulary.map((word, index) =>
-            <View style={{ flexDirection: "column" }}>
+            <View style={{ flexDirection: "column" }} key={index}>
               <View style={styles.box}>
                 <View>
                   <Text style={styles.word}>{word.eng}</Text>

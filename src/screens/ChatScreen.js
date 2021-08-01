@@ -171,7 +171,7 @@ const ChatScreen = ({ route, navigation }) => {
             <Image source={require('../assets/avatar.png')} style={{ width: 70, height: 70 }}></Image>
           </View>
           <View style={styles.itemText}>
-            <Text style={styles.itemName}>{boxchat.title}</Text>
+            <Text style={styles.itemName}>{current.description}</Text>
             <Text style={styles.itemStatus}>Đang hoạt động</Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate('CreateMember')}>

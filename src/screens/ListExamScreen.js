@@ -18,6 +18,8 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import MenuDrawer from 'react-native-side-drawer'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ExamsActions from '../redux/actions/exams';
+import { useDispatch, useSelector } from 'react-redux';
+import HomeActions from '../redux/actions/home';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const ListExamScreen = ({ navigation }) => {
@@ -25,22 +27,31 @@ const ListExamScreen = ({ navigation }) => {
     const updateSearch = (search) => {
         setSearch({ search });
     };
+    const { account, token, loggedIn } = useSelector(state => state.auth);
     const [open, setOpen] = useState(false)
-    const [exams, setExams] = useState([])
+    const [homeData, setHomeData] = useState({
+      quizzes: [],
+    })
+    const [isBusy, setIsBusy] = useState(true);
     const checkConnection = async (state) =>{   
         if (state.isConnected) {
             try {
-                const data = await ExamsActions.getAll();
-                setExams(data.data)
+              const data = await HomeActions.getData(account.id);
+              setHomeData({
+                ...homeData,
+                quizzes: data.data.quizzes,
+               
+              });
+              setIsBusy(false);
             } catch (error) {
                 console.log(error);
             }
         } 
         else {
-          AsyncStorage.getItem('exams')
-          .then(exam => {
-            let data = JSON.parse(exam)
-            setExams(data)
+          AsyncStorage.getItem('home')
+          .then(home => {
+            let data = JSON.parse(home)
+            setQuizs(data.quizzes)
           })
           
         }
@@ -49,7 +60,7 @@ const ListExamScreen = ({ navigation }) => {
         NetInfoSub = NetInfo.addEventListener(
             checkConnection,
           )
-    }, [setExams])
+    },[account])
     const toggleOpen = () => {
         setOpen(!open);
     };
@@ -209,14 +220,14 @@ const ListExamScreen = ({ navigation }) => {
 
             </View>
             <ScrollView>
-                {exams.map((exam, index) =>
+                {!isBusy && homeData.quizzes.map((quiz, index) =>
                     <View style={styles.card} key={index}>
                         <View style={{ flexDirection: "row" }}>
                             <Image source={require('../assets/avatar2.png')} style={{ width: 48, height: 48, marginRight: 20 }}></Image>
                             <View style={{width:"78%"}}>
-                                <Text style={{ fontSize: 24, color: "#fff", fontWeight: "400" }}>{exam.title}</Text>
-                                <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Số câu hỏi: {exam.questions.length}</Text>
-                                <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Độ khó: {exam.difficultLevel}</Text>
+                                <Text style={{ fontSize: 24, color: "#fff", fontWeight: "400" }}>{quiz.quizName}</Text>
+                                <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Số câu hỏi: {quiz.questions.length}</Text>
+                                <Text style={{ fontSize: 18, color: "#ccc", marginTop: 5 }}>Độ khó: {quiz.difficultLevel}</Text>
                             </View>
                             <View>
                                 <TouchableOpacity>
@@ -230,8 +241,8 @@ const ListExamScreen = ({ navigation }) => {
 
                         </View>
                         <Image source={require('../assets/background.png')} style={{ width: "100%", marginTop: 10, height: 120 }}></Image>
-                        <Text style={{ fontSize: 18, marginTop: 10, color: "#ccc" }}>{exam.description}</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Quiz', { quizId: exams.id })}>
+                        <Text style={{ fontSize: 18, marginTop: 10, color: "#ccc" }}>{quiz.description}</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Quiz', { quizId: quiz.id })}>
                             <Text style={{ fontSize: 21, color: "#1DA1F2" }}>Làm ngay</Text>
                         </TouchableOpacity>
                     </View>

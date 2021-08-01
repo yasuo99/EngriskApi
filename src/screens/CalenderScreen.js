@@ -67,7 +67,6 @@ const CalenderScreen = ({ navigation }) => {
     })
   }
   const handleTime = (val) => {
-    console.log(val)
     // let date = val.toLocaleString('vi', { timeZone: 'America/New_York' })
     setData({
       ...data,
@@ -89,7 +88,6 @@ const CalenderScreen = ({ navigation }) => {
       checkTime: false,
     })
     let date = new Date(data.time);
-    console.log("hello", data.time)
     onDateChange(date);
   };
   const showModal = () => {

@@ -50,15 +50,13 @@ const FinishSection = ({ navigation, route }) => {
                             size={42}
                             color="yellow"></MaterialIcons>
                     </View>
-
-                    {/* <Text style={{ fontSize: 28, color: "#fff" }}>{'30%'}</Text> */}
             </View>
 
             <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 70 }}>
-                <Text style={{ color: "#1DA1F2", fontSize: 28, padding: 32, fontWeight: "bold", textAlign: "center", marginBottom: 100 }}>CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH ÔN TẬP</Text>
+                <Text style={{ color: "#1DA1F2", fontSize: 28, padding: 32, fontWeight: "bold", textAlign: "center", marginBottom: 200 }}>CHÚC MỪNG BẠN ĐÃ HOÀN THÀNH ÔN TẬP</Text>
 
                 <TouchableOpacity onPress={() => {if(routeId){navigation.navigate('ListSection')}else{navigation.navigate('Home')}} } style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", marginLeft: 50, marginRight: 50, borderRadius: 20 }}>
-                    <Text style={{ color: "#1DA1F2", fontSize: 21, padding: 16, fontWeight: "bold" }}>Hãy tiếp tục</Text>
+                    <Text style={{ color: "#1DA1F2", fontSize: 21, padding: 16, fontWeight: "bold" }}>Tiếp tục ôn tập</Text>
                 </TouchableOpacity>
             </View>
         </View>
