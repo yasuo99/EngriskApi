@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import HeaderClient from "../../components/client/HeaderClient";
 import SubMenuClient from "../../components/client/SubMenuClient";
-import { ProgressBar } from "react-bootstrap";
+import { Modal, ProgressBar } from "react-bootstrap";
 import { HubConnectionState } from "@microsoft/signalr";
 import sectionApi from "../../api/sectionApi";
 import { connection } from "../../signalR/createSignalRConnection";
@@ -11,8 +11,10 @@ import { connect } from "react-redux";
 import Footer from "../Footer/Footer";
 import sectionApiV2 from "../../api/2.0/sectionApi";
 import routeApi from "../../api/2.0/routeApi";
-import { getAll, selectRoute } from "../../actions/routeActions";
+import { getAll, selectRoute, toggle } from "../../actions/routeActions";
 import { ScriptTypes } from "../../constants/ScriptTypes";
+import { FaTimesCircle } from 'react-icons/fa';
+import { toggleSidenav } from "../../actions/sidenavAction";
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -26,10 +28,18 @@ class Home extends Component {
       hasMore: true,
       searchQuery: "",
       openRoute: false,
-      currentExpand: 0
+      currentExpand: 0,
+      modalCertificate: false,
+      certificateUsername: '',
+      modalViewCertificate: false,
+      modalRefuse: false,
+      refureReason: '',
+      certificate: ''
     };
     this.isComponentMounted = false;
+    this.myRef = createRef()
   }
+
   async componentDidMount() {
     console.log(this.props.route);
     this.isComponentMounted = true;
@@ -38,26 +48,36 @@ class Home extends Component {
       if (this.props.isLoggedIn) {
         if (connection.state == HubConnectionState.Disconnected) {
           connection.start();
+          
         }
-        const result = await routeApi.getAllEngriskRoute(this.props.account.id)
-        this.props.getAll(result)
-        if (result.lastRoute) {
-          this.props.selectRoute(result.lastRoute)
-        } else {
-          this.props.selectRoute(result.engrisk[0])
-        }
-        this.setState({
-          routes: result,
-        });
-      }
-      else {
-        const result = await routeApi.getAnonymousRoute();
-        this.setState({
-          routes: result,
+        connection.on('Refresh', async () => {
+          console.log('dkm');
+          await this.fetchData(this.props.account.id);
         })
-        this.props.getAll(result)
+      }
+      await this.fetchData(this.props.account.id);
+    }
+  }
+  fetchData = async (id) => {
+    if (this.props.isLoggedIn) {
+      const result = await routeApi.getAllEngriskRoute(id)
+      this.props.getAll(result)
+      if (result.lastRoute) {
+        this.props.selectRoute(result.lastRoute)
+      } else {
         this.props.selectRoute(result.engrisk[0])
       }
+      this.setState({
+        routes: result,
+      });
+    }
+    else {
+      const result = await routeApi.getAnonymousRoute();
+      this.setState({
+        routes: result,
+      })
+      this.props.getAll(result)
+      this.props.selectRoute(result.engrisk[0])
     }
   }
   searchSection = () => {
@@ -80,6 +100,38 @@ class Home extends Component {
     this.setState({
       openRoute: !this.state.openRoute
     })
+  }
+  checkStatus = async (id) => {
+    const result = await routeApi.requestCertificate(id);
+    console.log(result);
+    if (result.status == 200) {
+      this.setState({
+        ...this.state,
+        modalCertificate: true,
+        certificateUsername: ''
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        modalRefuse: true,
+        refureReason: result.content
+      })
+    }
+  }
+  receiveCertificate = async (id) => {
+    const params = {
+      signature: this.state.certificateUsername
+    }
+    const result = await routeApi.submitCertificateRequest(id, params);
+    console.log(result);
+    if (result) {
+      this.setState({
+        ...this.state,
+        modalCertificate: false,
+        modalViewCertificate: true,
+        certificate: result
+      })
+    }
   }
   render() {
     const renderSections = this.props.route.sections.map((section, index) => (
@@ -108,7 +160,7 @@ class Home extends Component {
             </div>
             <div className="col-md-8">
               <div className="contentLesson">
-                <h2 className="title">{section.sectionName}</h2>
+                <h2 className="title">{`Bài học ${index + 1}`}: {section.sectionName}</h2>
               </div>
             </div>
             <div className="col-md-3">
@@ -116,7 +168,7 @@ class Home extends Component {
                 <div className="progressLesson">
                   <ProgressBar
                     now={section.donePercent}
-                    variant="primary"
+                    variant="success"
                     animated
                   ></ProgressBar>
                   <span className="textProgress">
@@ -169,11 +221,7 @@ class Home extends Component {
                           >
                             <div className='activity-circle'>
                               <Link
-                                className={
-                                  section.isCurrentLocked && this.props.route.isSequentially
-                                    ? "logo nav-link disabled"
-                                    : "logo nav-link"
-                                }
+                                className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.CERTIFICATE).isDone ? 'bg-success border-success' : ''}`}
                                 to={`/certificate-review/${section.scripts.find(script => script.type == ScriptTypes.CERTIFICATE).examId}`}
                               >
                                 <span className="icon ">
@@ -191,7 +239,7 @@ class Home extends Component {
                       ))}
                       <i className='fa fa-chevron-right text-secondary'></i>
                       <div className='ml-2'>
-                        <span className="icon "><svg width="36" height="46" viewBox="0 0 36 46" xmlns="http://www.w3.org/2000/svg"><title>Artboard 7</title><g fill="none" fillRule="evenodd"><path fill="#F2F5F8" d="M2.375 43.832h31.25V2.168H2.375z"></path><path fill="#A7B0B7" d="M24.25 36.543h2.918l-5.211-5.211-2.914 2.918 5.207 5.207zm-12.5 0H8.832l5.211-5.211 2.914 2.918-5.207 5.207z"></path><path fill="#D6DEE6" d="M8.625 15.707h18.75v-4.164H8.625zm0 5.211h18.75v-2.086H8.625zM18 25.082c-2.918 0-5.207 2.293-5.207 5.211 0 2.914 2.289 5.207 5.207 5.207 2.918 0 5.207-2.293 5.207-5.207 0-2.918-2.289-5.211-5.207-5.211zm0 8.336c-1.77 0-3.125-1.356-3.125-3.125 0-1.773 1.355-3.125 3.125-3.125s3.125 1.352 3.125 3.125c0 1.769-1.355 3.125-3.125 3.125z"></path><path d="M1.332 1.125v43.75h33.336V1.125H1.332zm31.25 38.543c-1.77 0-3.125 1.352-3.125 3.125H6.543c0-1.773-1.355-3.125-3.125-3.125V6.332c1.77 0 3.125-1.352 3.125-3.125h22.914c0 1.773 1.355 3.125 3.125 3.125v33.336z" fill="#D6DEE6"></path></g></svg></span>
+                        <span onClick={() => this.checkStatus(this.props.route.id)} className="icon "><svg width="36" height="46" viewBox="0 0 36 46" xmlns="http://www.w3.org/2000/svg"><title>Artboard 7</title><g fill="none" fillRule="evenodd"><path fill="#F2F5F8" d="M2.375 43.832h31.25V2.168H2.375z"></path><path fill="#A7B0B7" d="M24.25 36.543h2.918l-5.211-5.211-2.914 2.918 5.207 5.207zm-12.5 0H8.832l5.211-5.211 2.914 2.918-5.207 5.207z"></path><path fill="#D6DEE6" d="M8.625 15.707h18.75v-4.164H8.625zm0 5.211h18.75v-2.086H8.625zM18 25.082c-2.918 0-5.207 2.293-5.207 5.211 0 2.914 2.289 5.207 5.207 5.207 2.918 0 5.207-2.293 5.207-5.207 0-2.918-2.289-5.211-5.207-5.211zm0 8.336c-1.77 0-3.125-1.356-3.125-3.125 0-1.773 1.355-3.125 3.125-3.125s3.125 1.352 3.125 3.125c0 1.769-1.355 3.125-3.125 3.125z"></path><path d="M1.332 1.125v43.75h33.336V1.125H1.332zm31.25 38.543c-1.77 0-3.125 1.352-3.125 3.125H6.543c0-1.773-1.355-3.125-3.125-3.125V6.332c1.77 0 3.125-1.352 3.125-3.125h22.914c0 1.773 1.355 3.125 3.125 3.125v33.336z" fill="#D6DEE6"></path></g></svg></span>
                       </div>
                     </div>
                   }
@@ -224,11 +272,7 @@ class Home extends Component {
                         >
                           <div className='activity-circle'>
                             <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
+                              className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.GRAMMAR).isDone ? 'bg-success border-success' : ''}`}
                               to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.GRAMMAR).id}`}
                             >
                               <span className="icon ">
@@ -278,11 +322,7 @@ class Home extends Component {
                         >
                           <div className='activity-circle'>
                             <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
+                             className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.VOCABULARY).isDone ? 'bg-success border-success' : ''}`}
                               to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.VOCABULARY).id}`}
                             >
                               <span className="icon ">
@@ -332,11 +372,7 @@ class Home extends Component {
                         <button className={`rounded-circle unit-row__activity`}>
                           <div className='activity-circle'>
                             <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
+                             className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.LISTENING).isDone ? 'bg-success border-success' : ''}`}
                               to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.LISTENING).id}`}
                             >
                               <span className="icon "><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
@@ -356,61 +392,7 @@ class Home extends Component {
                     ))
                   }
 
-                  {section.scripts.some(script => script.type == ScriptTypes.CONVERSATION) &&
-                    ["bottom"].map((placement) => (
-                      <OverlayTrigger
-                        key={placement}
-                        placement={placement}
-                        overlay={
-                          !section.isCurrentLocked ? (
-                            <Tooltip
-                              id={`tooltip-${placement}`}
-                              style={{ backgroundColor: "white" }}
-                            >
-                              Hội thoại
-                              <br />
-                              Học cách sử dụng từ ngữ vào ngữ cảnh
-                            </Tooltip>
-                          ) : this.props.isLoggedIn ? (
-                            <Tooltip id={`tooltip-${placement}`}>
-                              Hoàn thành bài học trước đó để mở khóa
-                            </Tooltip>
-                          ) : (
-                            <Tooltip id={`tooltip-${placement}`}>
-                              Đăng nhập để tiếp tục học
-                            </Tooltip>
-                          )
-                        }
-                      >
-                        <button
-                          className={`rounded-circle unit-row__activity`}
-                        >
-                          <div className='activity-circle'>
-                            <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
-                              to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.CONVERSATION).id}`}
-                            >
-                              <span className="icon ">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
-                                  <path fillRule='evenodd' d='M15.302 3.236c7.303 0 13.246 4.88 13.246 10.877 0 5.998-5.942 10.878-13.246 10.878-1.513 0-2.993-.207-4.404-.615l-7.105 3.297c-.462.22-.963-.273-.726-.745l2.66-5.296c-2.37-2.032-3.67-4.687-3.67-7.519 0-5.997 5.942-10.877 13.245-10.877zm-1.1 12.657a2.761 2.761 0 0 1-2.763 2.752.551.551 0 1 1 0-1.101 1.66 1.66 0 0 0 1.66-1.65v-1.102H9.231a.546.546 0 0 1-.549-.55V9.84a.546.546 0 0 1 .549-.55h4.415c.304 0 .552.246.555.55v6.053zm7.723 0a2.759 2.759 0 0 1-2.76 2.752.551.551 0 1 1 0-1.101c.913 0 1.656-.74 1.656-1.65v-1.102h-3.863a.546.546 0 0 1-.549-.55V9.84a.546.546 0 0 1 .549-.55h4.415c.305 0 .552.246.555.55l-.003 6.053zM9.787 10.39v3.302h3.311V10.39H9.787zm7.726 0v3.302h3.311V10.39h-3.31z'></path>
-                                </svg>
-                              </span>
-                              {section.scripts.find(script => script.type == ScriptTypes.CONVERSATION)?.isCurrentPosition && !section.isCurrentLocked && <span className="activity-spin"><span className="icon"><svg><circle cy="50%" cx="50%" r="45%" className=""></circle></svg></span></span>}
-                            </Link>
-                            {section.isCurrentLocked && (
-                              <span className="rounded">
-                                <i className="fa fa-lock lock-icon"></i>
-                              </span>
-                            )}</div>
-                        </button>
-
-                      </OverlayTrigger>
-                    ))
-                  }
+                 
                   {section.scripts.some(script => script.type == ScriptTypes.READING) &&
                     ["bottom"].map((placement) => (
                       <OverlayTrigger
@@ -441,11 +423,7 @@ class Home extends Component {
                           className={`rounded-circle unit-row__activity`}
                         ><div className='activity-circle'>
                             <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
+                              className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.READING).isDone ? 'bg-success border-success' : ''}`}
                               to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.READING).id}/`}
                             >
                               <span className="icon "><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 120 137">
@@ -465,7 +443,58 @@ class Home extends Component {
                       </OverlayTrigger>
                     ))
                   }
-                  {section.scripts.some(script => script.type == ScriptTypes.WRITING) &&
+                   {section.scripts.some(script => script.type == ScriptTypes.CONVERSATION) &&
+                    ["bottom"].map((placement) => (
+                      <OverlayTrigger
+                        key={placement}
+                        placement={placement}
+                        overlay={
+                          !section.isCurrentLocked ? (
+                            <Tooltip
+                              id={`tooltip-${placement}`}
+                              style={{ backgroundColor: "white" }}
+                            >
+                              Hội thoại
+                              <br />
+                              Học cách sử dụng từ ngữ vào ngữ cảnh
+                            </Tooltip>
+                          ) : this.props.isLoggedIn ? (
+                            <Tooltip id={`tooltip-${placement}`}>
+                              Hoàn thành bài học trước đó để mở khóa
+                            </Tooltip>
+                          ) : (
+                            <Tooltip id={`tooltip-${placement}`}>
+                              Đăng nhập để tiếp tục học
+                            </Tooltip>
+                          )
+                        }
+                      >
+                        <button
+                          className={`rounded-circle unit-row__activity`}
+                        >
+                          <div className='activity-circle'>
+                            <Link
+                              className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.CONVERSATION).isDone ? 'bg-success border-success' : ''}`}
+                              to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.CONVERSATION).id}`}
+                            >
+                              <span className="icon ">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+                                  <path fillRule='evenodd' d='M15.302 3.236c7.303 0 13.246 4.88 13.246 10.877 0 5.998-5.942 10.878-13.246 10.878-1.513 0-2.993-.207-4.404-.615l-7.105 3.297c-.462.22-.963-.273-.726-.745l2.66-5.296c-2.37-2.032-3.67-4.687-3.67-7.519 0-5.997 5.942-10.877 13.245-10.877zm-1.1 12.657a2.761 2.761 0 0 1-2.763 2.752.551.551 0 1 1 0-1.101 1.66 1.66 0 0 0 1.66-1.65v-1.102H9.231a.546.546 0 0 1-.549-.55V9.84a.546.546 0 0 1 .549-.55h4.415c.304 0 .552.246.555.55v6.053zm7.723 0a2.759 2.759 0 0 1-2.76 2.752.551.551 0 1 1 0-1.101c.913 0 1.656-.74 1.656-1.65v-1.102h-3.863a.546.546 0 0 1-.549-.55V9.84a.546.546 0 0 1 .549-.55h4.415c.305 0 .552.246.555.55l-.003 6.053zM9.787 10.39v3.302h3.311V10.39H9.787zm7.726 0v3.302h3.311V10.39h-3.31z'></path>
+                                </svg>
+                              </span>
+                              {section.scripts.find(script => script.type == ScriptTypes.CONVERSATION)?.isCurrentPosition && !section.isCurrentLocked && <span className="activity-spin"><span className="icon"><svg><circle cy="50%" cx="50%" r="45%" className=""></circle></svg></span></span>}
+                            </Link>
+                            {section.isCurrentLocked && (
+                              <span className="rounded">
+                                <i className="fa fa-lock lock-icon"></i>
+                              </span>
+                            )}</div>
+                        </button>
+
+                      </OverlayTrigger>
+                    ))
+                  }
+                  {/* {section.scripts.some(script => script.type == ScriptTypes.WRITING) &&
                     ["bottom"].map((placement) => (
                       <OverlayTrigger
                         key={placement}
@@ -495,11 +524,7 @@ class Home extends Component {
                           className={`rounded-circle unit-row__activity`}
                         ><div className='activity-circle'>
                             <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
+                              className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.WRITING).isDone ? 'bg-success border-success' : ''}`}
                               to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.WRITING).id}`}
                             >
                               <span className="icon "><svg width="30" height="30" viewBox="0 0 33 75" xmlns="http://www.w3.org/2000/svg"><title>lightning_bolt_filled</title>
@@ -516,7 +541,7 @@ class Home extends Component {
 
                       </OverlayTrigger>
                     ))
-                  }
+                  } */}
                   {section.scripts.some(script => script.type == ScriptTypes.MINIEXAM) &&
                     ["bottom"].map((placement) => (
                       <OverlayTrigger
@@ -547,11 +572,7 @@ class Home extends Component {
                           className={`rounded-circle unit-row__activity`}
                         ><div className='activity-circle'>
                             <Link
-                              className={
-                                section.isCurrentLocked && this.props.route.isSequentially
-                                  ? "logo no-transition nav-link disabled"
-                                  : "logo no-transition nav-link"
-                              }
+                              className={`logo nav-link ${ section.isCurrentLocked && this.props.route.isSequentially? 'disabled': ''} ${section.scripts.find(script => script.type == ScriptTypes.MINIEXAM).isDone ? 'bg-success border-success' : ''}`}
                               to={`/routes/${section.routeId}/sections/${section.id}/scripts/${section.scripts.find(script => script.type == ScriptTypes.MINIEXAM).id}`}
                             >
                               <span className='icon'><svg width='24' height='27' viewBox='0 0 24 27'>
@@ -606,9 +627,87 @@ class Home extends Component {
             </main>
             <Footer></Footer>
           </div>
+          <Modal show={this.state.modalCertificate} backdrop="static" dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
+            <Modal.Body>
+              <div className='text-center'>
+                <i className='fa fa-4x fa-check text-info'></i>
+                <br></br>
+                <br></br>
+                <h3 className='text-primary'>
+                  Chúc mừng bạn đã đủ điều kiện nhận chứng chỉ
+                </h3>
+                <p className='text-dark'>
+                  Điền thông tin để nhận ngay
+                </p>
+                <h5>Tên hiển thị</h5>
+                <div className="wrap-input100 mb-3" style={{ width: '50%', margin: '0 auto' }}>
+                  <input className="input100" name="title" placeholder='Nhập tên hiển thị...'
+                    type="text"
+                    id="title"
+                    autoComplete="off"
+                    value={this.state.certificateUsername}
+                    onChange={(e) => this.setState({ ...this.state, certificateUsername: e.target.value })}
+                  ></input>
+
+                </div>
+                <small className='text-info'>Để trống chúng tôi sẽ sử dụng tên tài khoản của bạn để in trên chứng chỉ</small>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => this.setState({ ...this.state, modalCertificate: false })}>
+                Hủy
+              </Button>
+              <Button variant="primary" onClick={(e) => this.receiveCertificate(this.props.route.id)}>
+                Nhận ngay
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal show={this.state.modalRefuse} backdrop="static" dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
+            <Modal.Body>
+              <div className='text-center'>
+                <FaTimesCircle size="150" className='text-warning'></FaTimesCircle>
+                <br></br>
+                <br></br>
+                <h3 className='text-warning'>
+                  {this.state.refureReason}
+                </h3>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => this.setState({ ...this.state, modalRefuse: false })}>
+                Đóng
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            show={this.state.modalViewCertificate}
+            onHide={() => this.setState({ ...this.state, modalViewCertificate: false })}
+            contentClassName="modal-basic-content"
+            dialogClassName='sweet-alert-modal'
+            animation
+          >
+            <Modal.Body>
+              <div className='text-center'>
+                <h5 className='text-center'>Chứng chỉ của bạn</h5>
+                <img src={this.state.certificate} className='img-fluid'></img>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={(e) => this.setState({ ...this.state, modalViewCertificate: false })}>
+                Đóng
+              </Button>
+              <Link to={`/nguoi-dung/${this.props.account.id}/quan-ly-chung-chi`} className='btn btn-primary'>Xem chứng chỉ</Link>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
     );
+  }
+  componentWillUnmount() {
+    if (connection.state == HubConnectionState.Connected) {
+      connection.off("Refresh");
+    }
+    this.props.toggle(false);
   }
 }
 const mapStateToProps = (state) => {
@@ -617,13 +716,14 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn: isLoggedIn,
     account: account,
-    route: route
+    route: route,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getAll: (routes) => dispatch(getAll(routes)),
-    selectRoute: (route) => dispatch(selectRoute(route))
+    selectRoute: (route) => dispatch(selectRoute(route)),
+    toggle: (collapse) => dispatch(toggle(collapse))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

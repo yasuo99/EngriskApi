@@ -76,7 +76,6 @@ import Word from "./components/managementwords/Word";
 import LearningHistory from "./pages/HistoryPage/LearningHistory";
 import { ScriptTypes } from "./constants/ScriptTypes";
 import CreateQuestion from "./components/question/CreateQuestion";
-import QuestionCreate from "./components/question/QuestionCreate";
 import ManagementQuestion from './pages/Admin/ManagementQuestion';
 import ExamCreate from "./pages/Exam/ExamCreate";
 import QuizCreate from "./pages/Quiz/QuizCreate";
@@ -88,7 +87,22 @@ import UserManagementCertificatae from "./pages/Admin/User/UserManagementCertifi
 import CertificateExam from "./pages/Exam/CertificateExam";
 import ExamResult from "./pages/HocPage/ExamResult";
 import { Chatbox } from "./pages/Chat/Chatbox";
+import VoiceQuestion from "./components/question/VoiceQuestion";
+import NewExamManagement from "./pages/Admin/ContentManagement/NewExamManagement";
+import NewExamCreate from "./pages/Exam/NewExamCreate";
+import ExamOverview from "./pages/Admin/Overview/ExamOverview";
+import RouteOverview from "./pages/Admin/Overview/RouteOverview";
+import QuestionCreate from "./components/managementquiz_exam/QuestionCreate";
+import RouteAnalyze from "./pages/Admin/Overview/RouteAnalyze";
+import QuizLearn from "./pages/LearnPage/QuizLearn";
 const routes = [
+  {
+    path: "/voice",
+    exact: true,
+    main: () => <VoiceQuestion />,
+    guard: false,
+    roles: [],
+  },
   {
     path: "/splash",
     exact: true,
@@ -134,7 +148,7 @@ const routes = [
   {
     path: "/admin/quan-ly-exam/them",
     exact: true,
-    main: () => <ExamCreate/>,
+    main: () => <NewExamCreate/>,
     guard: true,
     roles: ["superadmin", "manager"],
   },
@@ -142,7 +156,7 @@ const routes = [
     path: "/chat",
     exact: true,
     main: () => <Chatbox />,
-    guard: false,
+    guard: true,
     roles: [],
   },
   //Route cho phần học với script
@@ -178,7 +192,7 @@ const routes = [
     path: "/vocabulary/progress",
     exact: true,
     main: () => <ProgressWord />,
-    guard: false,
+    guard: true,
     roles: ["learner", "student"],
   },
   {
@@ -429,9 +443,16 @@ const routes = [
     roles: [],
   },
   {
-    path: "/exam",
+    path: "/luyen-tap",
     exact: true,
     main: () => <Exam />,
+    guard: false,
+    roles: [],
+  },
+  {
+    path: "/luyen-tap/quiz/:quizId",
+    exact: true,
+    main: () => <QuizLearn />,
     guard: false,
     roles: [],
   },
@@ -583,18 +604,53 @@ const routes = [
     roles: ["superadmin", "manager"],
   },
   {
-    path: "/admin/quan-ly-quiz",
+    path: "/admin/quan-ly-cau-hoi/:questionId/cap-nhat/:type",
     exact: true,
-    main: () => <ManagementQuiz />,
-    // guard: true,
-    // roles: ["superadmin", "manager"]
+    main: () => <QuestionCreate />,
+    guard: true,
+    roles: ["superadmin", "manager"],
   },
   {
-    path: "/admin/quan-ly-quiz-exam",
+    path: "/admin/quan-ly-cau-hoi/them/:type",
+    exact: true,
+    main: () => <QuestionCreate />,
+    guard: true,
+    roles: ["superadmin", "manager"],
+  },
+  {
+    path: "/admin/quan-ly-quiz",
     exact: true,
     main: () => <ManagementQuiz_Exam />,
-    // guard: true,
-    // roles: ["superadmin", "manager"]
+    guard: true,
+    roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-quiz/:quizId/cau-hoi/:type",
+    exact: true,
+    main: () => <QuestionCreate />,
+    guard: true,
+    roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-exam",
+    exact: true,
+    main: () => <NewExamManagement />,
+    guard: true,
+    roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-exam/:examId/cau-hoi/:type",
+    exact: true,
+    main: () => <QuestionCreate />,
+    guard: true,
+    roles: ["superadmin", "manager"]
+  },
+  {
+    path: "/admin/quan-ly-exam/:examId/overview",
+    exact: true,
+    main: () => <ExamOverview />,
+    guard: true,
+    roles: ["superadmin", "manager"]
   },
   {
     path: "/admin/quiz-exam",
@@ -602,13 +658,6 @@ const routes = [
     main: () => <Quiz_Exam />,
     // guard: true,
     // roles: ["superadmin", "manager"]
-  },
-  {
-    path: "/admin/quan-ly-exam",
-    exact: true,
-    main: () => <ManagementExam />,
-    guard: true,
-    roles: ["superadmin", "manager"],
   },
   {
     path: "/admin/quan-ly-bai-hoc",
@@ -621,6 +670,20 @@ const routes = [
     path: "/admin/quan-ly-lo-trinh",
     exact: true,
     main: () => <ManagementRoutes />,
+    guard: false,
+    roles: ["superadmin", "manager"],
+  },
+  {
+    path: "/admin/quan-ly-lo-trinh/:routeId/analyze",
+    exact: true,
+    main: () => <RouteAnalyze />,
+    guard: false,
+    roles: ["superadmin", "manager"],
+  },
+  {
+    path: "/admin/quan-ly-lo-trinh/overview",
+    exact: true,
+    main: () => <RouteOverview />,
     guard: false,
     roles: ["superadmin", "manager"],
   },

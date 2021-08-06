@@ -84,7 +84,8 @@ class QLListTaiKhoan extends Component {
         );
         return (
             <div>
-                {this.isComponentMounted && <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
+                {this.isComponentMounted && 
+                <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                     <thead>
                         <tr>
                             <th className="taikhoan">Tên tài khoản</th>

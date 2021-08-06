@@ -3,7 +3,7 @@ import SubMenu from '../../components/admin/SubMenu'
 import QLListTuVung from "../../components/managementwords/QLListTuVung";
 import { Link } from "react-router-dom";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
-import { Button, Tabs, Tab, Table, Modal } from "react-bootstrap";
+import { Button, Tabs, Tab, Table, Modal, Badge, ListGroup } from "react-bootstrap";
 import wordApiV2 from "../../api/2.0/wordApi";
 import Paginate from "../../components/pagination/Paginate";
 import Search from "../../components/search/Search";
@@ -12,6 +12,14 @@ import wordCategoryApi from './../../api/2.0/wordCategoryApi';
 import { useForm } from "react-hook-form";
 import CircleControls from "react-player-circle-controls";
 import "react-player-circle-controls/dist/styles.css";
+import { MapPublishStatus, PublishStatus } from "../../constants/PublishStatus";
+import { MapPublishStatusToBool } from './../../constants/PublishStatus';
+import { WordClass } from "../../constants/WordClass";
+import ImageUpload from 'image-upload-react'
+//important for getting nice style.
+import 'image-upload-react/dist/index.css'
+import questionApiV2 from "../../api/2.0/questionApi";
+import ThumbImage from "../../components/managementquiz_exam/ThumbImage";
 const ManagementWord = () => {
     const initWord = {
         eng: '',
@@ -24,9 +32,17 @@ const ManagementWord = () => {
     const [categories, setCategories] = useState([])
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
+    const [modalPublish, setModalPublish] = useState(false);
+    const [modalQuestion, setModalQuestion] = useState(false);
+    const [modalExample, setModalExample] = useState(false);
     const [selectedWord, setSelectedWord] = useState({})
+    const [selectedQuestion, setSelectedSection] = useState({})
+    const [addSelectedQuestion, setAddSelectedQuestion] = useState({})
+    const [addQuestionModal, setAddQuestionModal] = useState(false);
+    const [questions, setQuestions] = useState([]);
     const [tempImage, setTempImage] = useState({})
     const [word, setWord] = useState(initWord)
+    const [imageSrc, setImageSrc] = useState()
     const [words, setWords] = useState({
         currentPage: 1,
         pageSize: 5,
@@ -37,14 +53,17 @@ const ManagementWord = () => {
     const [query, setQuery] = useState('')
     const [isRefresh, setIsRefresh] = useState(false);
     const tempWords = useRef(null);
+    const [questionQuery, setQuestionQuery] = useState('')
     const { register, handleSubmit, formState: { errors, isSubmitSuccessful }, reset, unregister } = useForm();
     async function toggleModalAdd() {
+        reset();
+        unregister();
         setModalAdd(!modalAdd);
         setCategories([])
         setTempImage({});
     }
     function toggleModalEdit(word) {
-        reset();
+        console.log(word);
         setModalEdit(!modalEdit);
         setSelectedWord(word)
         setTempImage({});
@@ -55,6 +74,47 @@ const ManagementWord = () => {
         setSelectedWord(word)
         setTempImage({});
     }
+    function toggleModalPublish(word) {
+        setModalPublish(!modalPublish);
+        setSelectedWord(word)
+    }
+    async function toggleModalQuestion(word) {
+        setModalQuestion(!modalQuestion);
+        setSelectedWord(word);
+        var questions = await wordApiV2.getAllPracticeQuestion(word.id);
+        setQuestions(questions);
+        const params = {
+            type: 'none',
+            search: questionQuery
+        }
+        var availableQuestions = await questionApiV2.getFilterTwo(params);
+        setAvailableQuestions([...availableQuestions.filter((value) => questions.find((q) => q.id == value.id) == undefined)])
+    }
+    function toggleModalExample(word) {
+        reset();
+        unregister(['eng','vie','spelling']);
+        setSelectedWord(word);
+        setModalExample(!modalExample)
+    }
+    function queryQuestion(query) {
+        setQuestionQuery(query);
+    }
+    useEffect(() => {
+        async function fetch() {
+            const params = {
+                type: 'none',
+                search: questionQuery
+            }
+            var availableQuestions = await questionApiV2.getFilterTwo(params);
+            setAvailableQuestions([...availableQuestions.filter((value) => questions.find((q) => q.id == value.id) == undefined)])
+        }
+        if (addQuestionModal) {
+            fetch();
+        }
+    }, [questionQuery])
+    useEffect(() => {
+        reset();
+    }, [selectedWord])
     function renderImage() {
         if (Object.keys(word.image).length > 0) {
             var url = URL.createObjectURL(word.image)
@@ -107,6 +167,25 @@ const ManagementWord = () => {
             setTempImage(url)
         }
     }, [word.image])
+    const [availableQuestions, setAvailableQuestions] = useState([]);
+    const [newQuestions, setNewQuestions] = useState([])
+    function addQuestion(question) {
+        setNewQuestions([...newQuestions, question])
+    }
+    function removeQuestion(question) {
+        if (selectedQuestion == question) {
+            setSelectQuestion({});
+        }
+        setAvailableQuestions([...availableQuestions, question])
+        setQuestions([...questions.filter(q => q != question)])
+    }
+    function submitAdd() {
+        setAddSelectedQuestion({})
+        setQuestions([...questions, ...newQuestions]);
+        setAvailableQuestions([...availableQuestions.filter(val => !newQuestions.includes(val))]);
+        setNewQuestions([])
+
+    }
     async function submitCreate(e) {
         e.preventDefault();
         const data = new FormData();
@@ -120,23 +199,23 @@ const ManagementWord = () => {
         })
         const result = await wordApiV2.createWord(data);
         if (result.status == 200) {
-            toast('Thành công', { type: 'success' })
+            toast('Thành công', { type: 'success', autoClose: 2000 })
             setWord(initWord)
             setTempImage({});
             setCategories([])
             setIsRefresh(true)
         } else {
             if (result.status == 409) {
-                toast('Trùng từ vựng', { type: 'warning' })
+                toast('Trùng từ vựng', { type: 'warning', autoClose: 2000 })
             } else {
-                toast('Thất bại', { type: 'error' })
+                toast('Thất bại', { type: 'error', autoClose: 2000 })
             }
         }
     }
     async function submitDelete() {
         const result = await wordApiV2.deleteWord(selectedWord.id);
         if (result.status == 204) {
-            toast('Thành công', { type: 'success' })
+            toast('🤩🤩🤩 Thành công', { type: 'success', autoClose: 2000 })
             setWord(initWord)
             toggleModalDelete({});
             setTempImage({});
@@ -149,9 +228,9 @@ const ManagementWord = () => {
             setIsRefresh(true);
         } else {
             if (result.status == 404) {
-                toast('Không tìm thấy từ vựng', { type: 'warning' })
+                toast('😶😶😶 Không tìm thấy từ vựng', { type: 'warning', autoClose: 2000 })
             } else {
-                toast('Thất bại', { type: 'error' })
+                toast('😥😥😥 Thất bại', { type: 'error', autoClose: 2000 })
             }
         }
     }
@@ -180,6 +259,7 @@ const ManagementWord = () => {
         const body = new FormData();
         body.set('eng', data.eng);
         body.set('vie', data.vie);
+        body.set('class', data.class);
         body.set('spelling', data.spelling);
         body.set('engVoice', word.engVoice);
         body.set('image', word.image);
@@ -188,7 +268,7 @@ const ManagementWord = () => {
         })
         const result = await wordApiV2.createWord(body);
         if (result.status == 200) {
-            toast('Thành công', { type: 'success' })
+            toast('🤩🤩🤩 Thành công', { type: 'success', autoClose: 2000 })
             setWord(initWord)
             setTempImage({});
             setCategories([])
@@ -200,11 +280,12 @@ const ManagementWord = () => {
                 spelling: ''
             });
             unregister('file');
+            setImageSrc("")
         } else {
             if (result.status == 409) {
-                toast('Trùng từ vựng', { type: 'warning' })
+                toast('😐😐😐 Trùng từ vựng', { type: 'warning', autoClose: 2000 })
             } else {
-                toast('Thất bại', { type: 'error' })
+                toast('😥😣😣 Thất bại', { type: 'error', autoClose: 2000 })
             }
         }
     }
@@ -212,6 +293,7 @@ const ManagementWord = () => {
         const form = new FormData();
         form.set('eng', data.eng);
         form.set('vie', data.vie);
+        form.set('class', data.class);
         form.set('spelling', data.spelling);
         form.set('engVoice', word.engVoice);
         form.set('image', word.image);
@@ -221,18 +303,49 @@ const ManagementWord = () => {
         console.log(selectedWord.categories);
         const result = await wordApiV2.updateWord(selectedWord.id, form);
         if (result) {
-            toast('Thành công', { type: 'success' })
+            toast('🤩🤩🤩 Thành công', { type: 'success', autoClose: 2000 })
             setWord(initWord)
             toggleModalEdit({});
             setTempImage({});
             setCategories([])
             setIsRefresh(true);
+            setImageSrc("")
         } else {
             if (result.status == 409) {
-                toast('Trùng từ vựng', { type: 'warning' })
+                toast('😐😐😐 Trùng từ vựng', { type: 'warning', autoClose: 2000 })
             } else {
-                toast('Thất bại', { type: 'error' })
+                toast('😥😥😣 Thất bại', { type: 'error', autoClose: 2000 })
             }
+        }
+    }
+    async function submitChangeStatus() {
+        const status = selectedWord.publishStatus == PublishStatus.UNPUBLISHED ? PublishStatus.PUBLISHED : PublishStatus.UNPUBLISHED
+        const result = await wordApiV2.changeStatus(selectedWord.id, status);
+        if (result.status == 200) {
+            toast('🤩🤩🤩 Thành công', { type: 'success', autoClose: 2000 })
+            toggleModalPublish({});
+            setIsRefresh(true);
+        }
+        else {
+            toast('😥😥😣 Thất bại', { type: 'error', autoClose: 2000 })
+        }
+    }
+    const handleFocus = (event) => event.target.select();
+
+
+    const handleImageSelect = (e) => {
+        console.log(e.target.files[0]);
+        setWord({ ...word, image: e.target.files[0] })
+        setImageSrc(URL.createObjectURL(e.target.files[0]))
+    }
+    const submitCreateExample = async (data) => {
+        const result = await wordApiV2.createExample(selectedWord.id, data);
+        if(result.status == 200){
+            toast('🤩🤩🤩 Thành công', { type: 'success', autoClose: 2000 })
+            toggleModalExample({})
+            setIsRefresh(true);
+        }else{
+            toast('😥😥😣 Thất bại', { type: 'error', autoClose: 2000 })
         }
     }
     return (
@@ -250,8 +363,8 @@ const ManagementWord = () => {
                                 <div className="card-body">
                                     <div className="table-responsive">
                                         <div className='d-flex justify-content-between'>
-                                            <button variant="primary" className="btn btn-word mr-2 mb-3" onClick={() => toggleModalAdd()}><i className="fa fa-plus" /> Thêm từ vựng</button>
-                                            <Search queryFunction={querySearch}></Search>
+                                            <Search queryFunction={querySearch} placeholder="Tìm kiếm theo từ vựng, nghĩa từ vựng..."></Search>
+                                            <button variant="primary" className="btn btn-word mr-2 mb-3 rounded-pill" onClick={() => toggleModalAdd()}><i className="fa fa-plus" /> Thêm từ vựng</button>
                                         </div>
 
                                         {/* <Link variant="primary" className="btn btn-quizWord mr-2 mb-3" to="/quiz-tuvung"><i className="fa fa-plus" /> Thêm bài kiểm tra</Link> */}
@@ -261,10 +374,11 @@ const ManagementWord = () => {
                                                 <tr>
                                                     <th className="tuvung">Từ vựng</th>
                                                     <th className="loaitu">Nghĩa</th>
-                                                    <th className="loaitu">Từ loại</th>
-                                                    <th className="chude">Phiên âm</th>
+                                                    <th className="tuloai">Từ loại</th>
+                                                    <th className="phienam">Phiên âm</th>
                                                     <th className='table-image'>Hình ảnh</th>
-                                                    <th className="chucnang" />
+                                                    <th className='trangthai'>Trạng thái</th>
+                                                    <th className="chucnang-2" />
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -272,16 +386,24 @@ const ManagementWord = () => {
                                                     <tr key={index}>
                                                         <td>{word.eng}</td>
                                                         <td>{word.vie}</td>
-                                                        <td>{word.class}</td>
+                                                        <td>{word.class || 'Chưa thêm'}</td>
                                                         <td>{word.spelling}</td>
                                                         <td className='table-image'>
                                                             <img className='img-fluid' src={word.wordImg}></img>
                                                         </td>
+                                                        <td><h5><Badge variant={MapPublishStatus(word.publishStatus).variant}>{MapPublishStatus(word.publishStatus).text}</Badge></h5></td>
                                                         <td>
-                                                            <Button variant="success" className="btn btn-edit btn-delete mr-2" onClick={() => toggleModalEdit(word)} ><i className="fa fa-edit"></i></Button>
-                                                            <Button variant="primary" className="btn btn-delete mr-2"><Link to='/quiz-tuvung' className="fa fa-info" /></Button>
-                                                            <Button variant="danger" className="btn btn-delete mr-2" onClick={() => toggleModalDelete(word)}><i className="fa fa-trash" /></Button>
-
+                                                            <Button title="Thêm ví dụ" variant="info" className="btn btn-delete mr-2" onClick={() => toggleModalExample(word)} disabled={word.publishStatus == PublishStatus.PUBLISHED}><i className='fa fa-plus'></i></Button>
+                                                            <Button title="Cập nhật từ vựng" variant="success" className="btn btn-edit btn-delete mr-2" onClick={() => toggleModalEdit(word)} disabled={word.publishStatus == PublishStatus.PUBLISHED}><i className="fa fa-edit"></i></Button>
+                                                            {/* <Button variant="primary" className="btn btn-delete mr-2"><Link to='/quiz-tuvung' className="fa fa-info" /></Button> */}
+                                                            <Button title="Xóa từ vựng" variant="danger" className="btn btn-delete mr-2" onClick={() => toggleModalDelete(word)} disabled={word.publishStatus == PublishStatus.PUBLISHED}><i className="fa fa-trash" /></Button>
+                                                            <button
+                                                                className="btn btn-primary btn-delete ml-1"
+                                                                onClick={() => toggleModalPublish(word)}
+                                                                title="Chuyển trạng thái"
+                                                            >
+                                                                {word.publishStatus == PublishStatus.UNPUBLISHED ? <i className="fa fa-upload"></i> : <i className="fa fa-download"></i>}
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 )}
@@ -289,14 +411,14 @@ const ManagementWord = () => {
                                             </tbody>
                                         </Table>
                                         <Paginate currentPage={words.currentPage} pageSize={words.pageSize} totalPages={words.totalPages} change={wordsPaginationChange}></Paginate>
-                                        <Modal centered show={modalAdd} onHide={() => toggleModalAdd()} animation size="lg" dialogClassName="modal-90w" contentClassName="modal-90w-content">
+                                        {modalAdd && <Modal show={modalAdd} onHide={() => toggleModalAdd()} animation size="lg" dialogClassName="modal-90w" contentClassName="modal-90w-content">
                                             <Modal.Body>
-                                                <h5 className='text-center'>Thêm từ vựng</h5>
+                                                <h3 className='text-center text-dark'>Thêm từ vựng</h3>
                                                 <br></br>
-                                                <form id="create-form" className="form-group card p-2" onSubmit={handleSubmit(submit)}>
+                                                <form id="create-form" className="form-group card p-2 text-dark" onSubmit={handleSubmit(submit)}>
                                                     <div className='form-row script-panel'>
                                                         <div className='col border-right'>
-                                                            <div>Từ vựng</div>
+                                                            <div>Từ vựng *</div>
                                                             <div className="wrap-input100 mb-3">
                                                                 <input className="input100" name="cc" placeholder='Nhập từ vựng' {...register('eng',
                                                                     {
@@ -305,10 +427,11 @@ const ManagementWord = () => {
                                                                     type="text"
                                                                     id="eng"
                                                                     autoComplete="off"
+                                                                    onFocus={handleFocus}
                                                                 ></input>
                                                                 {errors.eng && <div className='invalid'>{errors.eng.message}</div>}
                                                             </div>
-                                                            <div>Nghĩa</div>
+                                                            <div>Nghĩa *</div>
                                                             <div className="wrap-input100 mb-3">
                                                                 <input className="input100" name="cc" placeholder='Nhập nghĩa từ vựng' {...register('vie',
                                                                     {
@@ -320,7 +443,7 @@ const ManagementWord = () => {
                                                                 ></input>
                                                                 {errors.vie && <div className='invalid'>{errors.vie.message}</div>}
                                                             </div>
-                                                            <div>Phiên âm</div>
+                                                            <div>Phiên âm *</div>
                                                             <div className="wrap-input100 mb-3">
                                                                 <input className="input100" name="cc" placeholder='Nhập phiên âm' {...register('spelling',
                                                                     {
@@ -332,24 +455,26 @@ const ManagementWord = () => {
                                                                 ></input>
                                                                 {errors.spelling && <div className='invalid'>{errors.spelling.message}</div>}
                                                             </div>
-                                                            <div>Ảnh minh họa</div>
-                                                            <div className="d-flex justify-content-between">
-
-                                                                <div>
-
-                                                                    <input className="input100" name="cc" placeholder='Chọn ảnh'
-                                                                        type="file"
-                                                                        id="image"
-                                                                        autoComplete="off"
-                                                                        onChange={(e) => setWord({ ...word, image: e.target.files[0] })}
-                                                                    ></input>
-                                                                    {errors.file && <div className='invalid'>{errors.file.message}</div>}
-                                                                </div>
-                                                                <div>
-                                                                    <div>Hình được chọn</div>
-                                                                    <img className="img-thumbnail preview-image" src={tempImage} alt='Chưa chọn'></img>
-                                                                </div>
-
+                                                            <div>Từ loại *</div>
+                                                            <div className="wrap-input100 mb-3">
+                                                                <select {...register('class')} className='pagination-select'>
+                                                                    {Object.keys(WordClass).map((key, idx) =>
+                                                                        <option key={idx}>{WordClass[key]}</option>
+                                                                    )}
+                                                                </select>
+                                                            </div>
+                                                            <div>Ảnh minh họa * (800 x 400)</div>
+                                                            <div className="wrap-input100">
+                                                                <ImageUpload
+                                                                    handleImageSelect={handleImageSelect}
+                                                                    imageSrc={imageSrc}
+                                                                    setImageSrc={setImageSrc}
+                                                                    style={{
+                                                                        width: 300,
+                                                                        height: 200,
+                                                                        background: 'gold'
+                                                                    }}
+                                                                />
                                                             </div>
                                                         </div>
                                                         <div className='col'>
@@ -389,13 +514,55 @@ const ManagementWord = () => {
 
                                                 </form>
                                             </Modal.Body>
-                                            <Modal.Footer>
-                                                <Button variant="secondary" onClick={() => toggleModalAdd()}>Hủy</Button>
-                                                <Button variant="primary" form="create-form" type="submit">Lưu lại</Button>
-                                            </Modal.Footer>
-                                        </Modal>
-                                        {Object.keys(selectedWord).length > 0 && <Modal centered show={modalEdit} onHide={() => toggleModalEdit({})} size="lg" dialogClassName="modal-90w" animation contentClassName="modal-90w-content">
+                                            <div className="d-flex">
+                                                <Button variant="light" className="btn-cancel rounded-0 modal-btn" onClick={() => toggleModalAdd()}>Hủy</Button>
+                                                <Button variant="success" className="rounded-0 modal-btn" form="create-form" type="submit">Lưu lại</Button>
+                                            </div>
+                                        </Modal>}
+                                        {modalExample && <Modal size="lg" show={modalExample} onHide={() => toggleModalExample({})}>
+
                                             <Modal.Body>
+                                                <h3 className='text-center text-dark'>Thêm ví dụ</h3>
+                                                <form className="form-group p-2 text-dark" id="exampleform" onSubmit={handleSubmit(submitCreateExample, (e) => console.log(e))}>
+                                                    <div className='form-row'>
+                                                        <div className='col'>
+                                                            <div>Ví dụ tiếng Anh *</div>
+                                                            <div className="wrap-input100 mb-3">
+                                                                <input className="input100" name="eeng" placeholder='Nhập từ vựng' {...register('eng',
+                                                                    {
+                                                                        required: 'Ví dụ tiếng anh không được để trống'
+                                                                    })}
+                                                                    type="text"
+                                                                    id="eeng"
+                                                                    autoComplete="off"
+                                                                    onFocus={handleFocus}
+                                                                ></input>
+                                                                {errors.end && <div className='invalid'>{errors.eng.message}</div>}
+                                                            </div>
+                                                            <div>Nghĩa *</div>
+                                                            <div className="wrap-input100 mb-3">
+                                                                <input className="input100" name="evie" placeholder='Nhập nghĩa từ vựng' {...register('vie',
+                                                                    {
+                                                                        required: 'Nghĩa của ví dụ không được để trống'
+                                                                    })}
+                                                                    type="text"
+                                                                    id="evie"
+                                                                    autoComplete="off"
+                                                                ></input>
+                                                                {errors.vie && <div className='invalid'>{errors.vie.message}</div>}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </Modal.Body>
+                                            <div className='d-flex'>
+                                                <Button variant="light" className="btn-cancel rounded-0 modal-btn" onClick={() => toggleModalExample({})}>Hủy</Button>
+                                                <Button variant="success" className="rounded-0 modal-btn" form="exampleform" type="submit">Lưu lại</Button>
+                                            </div>
+                                        </Modal>}
+                                        {Object.keys(selectedWord).length > 0 && modalEdit && <Modal show={modalEdit} onHide={() => toggleModalEdit({})} size="lg" dialogClassName="modal-90w" animation contentClassName="modal-90w-content">
+                                            <Modal.Body>
+                                                <h3 className="text-dark text-center">Cập nhật từ vựng</h3>
                                                 <div className='row script-panel'>
                                                     <div className='col-6'>
                                                         <h6>Thông tin cũ</h6>
@@ -411,6 +578,10 @@ const ManagementWord = () => {
                                                             <div className='card-input mt-3'>
                                                                 <span>Phát âm</span>
                                                                 <p>{selectedWord.spelling}</p>
+                                                            </div>
+                                                            <div className='card-input mt-3'>
+                                                                <span>Từ loại</span>
+                                                                <p>{selectedWord.class || 'Chưa thêm'}</p>
                                                             </div>
                                                             <div className='card-input mt-3'>
                                                                 <span>Hình ảnh</span>
@@ -461,22 +632,26 @@ const ManagementWord = () => {
                                                                     ></input>
                                                                     {errors.spelling && <div className='invalid'>{errors.spelling.message}</div>}
                                                                 </div>
+                                                                <div>Từ loại</div>
+                                                                <div className="wrap-input100 mb-3">
+                                                                    <select {...register('class')} defaultValue={selectedWord.class} className='pagination-select'>
+                                                                        {Object.keys(WordClass).map((key, idx) =>
+                                                                            <option key={idx}>{WordClass[key]}</option>
+                                                                        )}
+                                                                    </select>
+                                                                </div>
                                                                 <div>Ảnh minh họa</div>
-                                                                <div className="d-flex justify-content-between">
-                                                                    <div>
-                                                                        <input className="input100" name="file" placeholder='Chọn ảnh'
-                                                                            type="file"
-                                                                            id="image"
-                                                                            autoComplete="off"
-                                                                            defaultValue={null}
-                                                                            onChange={(e) => setWord({ ...word, image: e.target.files[0] })}
-                                                                        ></input>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div>Hình được chọn</div>
-                                                                        <img className="img-thumbnail preview-image" src={tempImage} alt='Chưa chọn'></img>
-                                                                    </div>
-
+                                                                <div className="wrap-input100">
+                                                                    <ImageUpload
+                                                                        handleImageSelect={handleImageSelect}
+                                                                        imageSrc={imageSrc}
+                                                                        setImageSrc={setImageSrc}
+                                                                        style={{
+                                                                            width: 300,
+                                                                            height: 200,
+                                                                            background: 'gold'
+                                                                        }}
+                                                                    />
                                                                 </div>
                                                                 <div className='card-input p-2'>
                                                                     <h6>Nhóm từ</h6>
@@ -532,6 +707,29 @@ const ManagementWord = () => {
                                                 </Button>
                                             </Modal.Footer>
                                         </Modal>}
+                                        {Object.keys(selectedWord).length > 0 && <Modal show={modalPublish} onHide={() => toggleModalPublish({})} dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
+                                            <Modal.Body>
+                                                <div className='text-center'>
+                                                    <i className='fa fa-4x fa-warning text-info'></i>
+                                                    <br></br>
+                                                    <br></br>
+                                                    <h3 className='text-primary'>
+                                                        {!MapPublishStatusToBool(selectedWord.publishStatus) ? 'Bạn có chắc muốn công khai lộ trình học này' : 'Bạn có chắc muốn ngừng công khai lộ trình học này'}
+                                                    </h3>
+                                                    <p className='text-info'>
+                                                        {`Người dùng sẽ ${!MapPublishStatusToBool(selectedWord.publishStatus) ? 'thấy và sử dụng được' : 'không thấy'}  lộ trình này`}
+                                                    </p>
+                                                </div>
+                                            </Modal.Body>
+                                            <Modal.Footer>
+                                                <Button variant="secondary" onClick={() => toggleModalPublish({})}>
+                                                    Hủy
+                                                </Button>
+                                                <Button variant="primary" onClick={(e) => submitChangeStatus()}>
+                                                    Xác nhận
+                                                </Button>
+                                            </Modal.Footer>
+                                        </Modal>}
                                     </div>
                                 </div>
                             </div>
@@ -543,7 +741,7 @@ const ManagementWord = () => {
                 <i className="fa fa-angle-up" />
             </Link>
 
-        </div>
+        </div >
     )
 }
 export default ManagementWord;

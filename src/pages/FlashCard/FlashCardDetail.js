@@ -33,7 +33,8 @@ class FlashCardDetail extends Component {
             wordIndex: 0,
             audioPlay: false,
             imgSrc: {},
-            selectedImg: {}
+            selectedImg: {},
+            audio: {}
         }
         this.isComponentMounted = false;
     }
@@ -44,10 +45,15 @@ class FlashCardDetail extends Component {
         console.log(params);
         let cardDetail = this.props.isLoggedIn ? await wordCategoryApi.getUserDetail(params.cardId) : await wordCategoryApi.getDetail(params.cardId);
         console.log(cardDetail);
+        var shuffle = localStorage.getItem(params.cardId);
+        if(shuffle){
+            cardDetail.vocabulary = cardDetail.vocabulary.sort(() => Math.random() - 0.5)
+        }
         if (this.isComponentMounted) {
             this.setState({
                 wordCategory: cardDetail,
-                currentWord: cardDetail.vocabulary[0]
+                currentWord: cardDetail.vocabulary[0],
+                audio: new Audio(cardDetail.vocabulary[0].wordVoice || "")
             })
             if (this.props.isLoggedIn) {
                 if (connection.state == HubConnectionState.Disconnected) {
@@ -115,27 +121,32 @@ class FlashCardDetail extends Component {
     nextWord = (e) => {
         console.log("dm");
         var nextWordIndex = this.state.wordIndex + 1;
+        var nextWord = this.state.wordCategory.vocabulary[nextWordIndex]
         if (nextWordIndex < this.state.wordCategory.vocabulary.length) {
             this.setState({
                 wordIndex: nextWordIndex,
-                currentWord: this.state.wordCategory.vocabulary[nextWordIndex],
-                audioPlay: false
+                currentWord: nextWord,
+                audioPlay: false,
+                audio: new Audio(nextWord.wordVoice || null)
             })
         }
     }
     prevWord = (e) => {
         console.log("dm");
         var prevWordIndex = this.state.wordIndex - 1;
+        var prevWord = this.state.wordCategory.vocabulary[prevWordIndex]
         if (prevWordIndex >= 0) {
             this.setState({
                 wordIndex: prevWordIndex,
-                currentWord: this.state.wordCategory.vocabulary[prevWordIndex],
-                audioPlay: false
+                currentWord: prevWord,
+                audioPlay: false,
+                audio: new Audio(prevWord.wordVoice || null)
             })
         }
     }
     playAudio = (e) => {
-        this.state.audioPlay ? this.setState({ audioPlay: false }) : this.setState({ audioPlay: true });
+        // this.state.audioPlay ? this.setState({ audioPlay: false }) : this.setState({ audioPlay: true });
+        this.state.audio.play();
     }
     shuffleCard = (e) => {
         localStorage.setItem(this.state.wordCategory.id, "shuffle");
@@ -181,19 +192,19 @@ class FlashCardDetail extends Component {
                     <div id="content">
                         <HeaderClient></HeaderClient>
                         <main id="flashcard-detail" className='mt-4'>
-                            <div className="container">
+                            <div className="container mt-4">
                                 <div className="row">
                                     <div className="col-md-3 kedoc">
                                         <Link to="/card" className="textReturn"><i className="fa fa-chevron-left"></i> Trở về</Link>
                                         <h4 className="title">Thẻ ghi nhớ</h4>
-                                        <ProgressBar className="mt-5 mb-2" variant="success" now={(this.state.wordIndex + 1) / this.state.wordCategory.vocabulary.length * 100} />
+                                        <ProgressBar className="mt-5 mb-2" variant="primary" animated now={(this.state.wordIndex + 1) / this.state.wordCategory.vocabulary.length * 100} />
                                         <div className="row">
                                             <div className="col-6 textProgress">TIẾN ĐỘ</div>
                                             <div className="col-6 textPoint">{this.state.wordIndex + 1}/{this.state.wordCategory.vocabulary.length}</div>
                                         </div>
                                         <Link to={`/vocabulary/review/flashcard`} className="btn btn-training" onClick={() => this.vocabularyPractice()}><img src="/image/training.png"></img> Luyện tập</Link>
                                         <button className="btn btn-test"><img src="/image/test1.png"></img> Test toeic</button>
-                                        <button className="btn btn-mix" onClick={this.shuffleCard}><img src="/image/rgb.png"></img> Trộn thẻ</button>
+                                        <button className="btn btn-mix active" onClick={this.shuffleCard}><img src="/image/rgb.png"></img> Trộn thẻ</button>
                                         <button className="btn btn-add"><img src="/image/plus2.png"></img> Thêm từ vựng</button>
                                     </div>
                                     {this.state.wordCategory.vocabulary.length > 0 && <div className="col-md-9">
@@ -201,17 +212,11 @@ class FlashCardDetail extends Component {
                                             <div className="col-10">
                                                 <div className="boxContent">
                                                     {this.state.currentWord.wordImg && <img src={this.state.currentWord.wordImg} className='img-fluid'></img>}
-                                                    <img onClick={this.playAudio} src="/image/sound.png" className="sound"></img>
+                                                    <h1 className="word">{this.state.currentWord.eng}  <small className='text-dark'>{this.state.currentWord.spelling}</small> <span> <img onClick={this.playAudio} src="/image/sound.png" className="sound"></img>
                                                     {this.state.currentWord.wordVoice !== null && <ReactPlayer config={{
-                                                        file: {
-                                                            attributes: {
-                                                                preload: 'none'
-                                                            }
-                                                        }
-                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={this.state.currentWord.wordVoice}></ReactPlayer>}
-                                                    <h1 className="word">{this.state.currentWord.eng}  <small className='text-dark'>{this.state.currentWord.spelling}</small></h1>
-                                                    <p className="synonym">({this.state.currentWord.vie})</p>
-                                                    <p className="typeWord">n</p>
+                                                    }} playing={this.state.audioPlay} height={0} width={0} onEnded={() => this.setState({ audioPlay: false })} url={this.state.currentWord.wordVoice}></ReactPlayer>}</span></h1>
+                                                    <p className="synonym">{this.state.currentWord.vie}</p>
+                                                    <p className="typeWord">{this.state.currentWord.class}</p>
                                                     {this.state.currentWord.memory != null && <div className="row">
                                                         <div className="row">
                                                             <div className="col">

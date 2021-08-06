@@ -33,7 +33,10 @@ class ThongBaoClient extends Component {
           connection.on('NewNotification', (data) => {
             var notification = JSON.parse(data);
             var filteredNotifications = this.state.notifications.filter(notify => notify.id != notification.id);
-            filteredNotifications.pop();
+            if (filteredNotifications.length >= 5) {
+              filteredNotifications.pop();
+            }
+            console.log('new', notification);
             if (this.isComponentMounted) {
               this.setState({
                 notifications: [notification, ...filteredNotifications]
@@ -67,7 +70,7 @@ class ThongBaoClient extends Component {
           connection.on('NewOffline', (data) => {
             this.props.newOffline(data);
           })
-          connection.on('NewMessage',(data) => {
+          connection.on('NewMessage', (data) => {
             const result = JSON.parse(data);
             this.props.unseenMessage(result);
           })
@@ -87,7 +90,7 @@ class ThongBaoClient extends Component {
     }
   }
   toggleYesnoModal = () => {
-    this.setState({yesnoModal: this.state.yesnoModal ? false : true})
+    this.setState({ yesnoModal: this.state.yesnoModal ? false : true })
   }
   fetchNotifications = async (id, params) => {
     try {
@@ -113,25 +116,28 @@ class ThongBaoClient extends Component {
   }
   seenNotification = async (id) => {
     const selectedNotification = this.state.notifications.find(notify => notify.id == id);
-    this.setState({selectNotification: selectedNotification});
-    if(selectedNotification.type === 3 && selectedNotification.status != 'Seen'){
+    this.setState({ selectNotification: selectedNotification });
+    if (selectedNotification.type === 3 && selectedNotification.status != 'Seen') {
       this.toggleYesnoModal();
     }
-    if (selectedNotification.status === 'Unseen') {
-      selectedNotification.status = 'Seen'
-      await notificationApiV2.seenNotification(this.props.account.id, id);
-      this.setState({
-        notifications: [...this.state.notifications.filter(notify => notify.id != id),selectedNotification]
-      })
+    else {
+      if (selectedNotification.status === 'Unseen') {
+        selectedNotification.status = 'Seen'
+        await notificationApiV2.seenNotification(this.props.account.id, id);
+        this.setState({
+          notifications: [...this.state.notifications.filter(notify => notify.id != id), selectedNotification]
+        })
+      }
     }
   }
   refuseInvite = async () => {
-    await accountApiV2.reponseInviteBoxchatRequest(this.props.account.id, this.state.selectNotification.id, "refuse");
+    await accountApiV2.responseInviteBoxchatRequest(this.props.account.id, this.state.selectNotification.id, "refuse");
     this.toggleYesnoModal();
   }
   acceptInvite = async () => {
-    await accountApiV2.reponseInviteBoxchatRequest(this.props.account.id, this.state.selectNotification.id, "accept");
+    await accountApiV2.responseInviteBoxchatRequest(this.props.account.id, this.state.selectNotification.id, "accept");
     this.toggleYesnoModal();
+    window.location.reload();
   }
   render() {
     const { notifications } = this.state;
@@ -143,8 +149,8 @@ class ThongBaoClient extends Component {
           </div>
         </div>
         <div>
-          <div className="small text-black-500 font-weight-bold">{notify.createdBy} {Moment(notify.createdDate).format("MMMM Do YYYY")}</div>
-          {notify.content} {notify.status}
+          <div className="small text-black-500 font-weight-bold"> {Moment(notify.createdDate).format("DD-MM-yyyy")}</div>
+          {notify.content}
         </div>
       </Link>
     )
@@ -169,15 +175,14 @@ class ThongBaoClient extends Component {
             </div></div>}
           <Link className="dropdown-item text-center small text-gray-500" to="/thongbao">Show All Alerts</Link>
         </div>
-        <Modal animation={true} show={this.state.yesnoModal} onHide={this.toggleYesnoModal}>
-          <Modal.Header closeButton onClick={this.toggleYesnoModal}>
-            <Modal.Title>Xác nhận tham gia</Modal.Title>
-          </Modal.Header>
+        <Modal animation={true} show={this.state.yesnoModal} onHide={this.toggleYesnoModal} animation dialogClassName="sweet-alert-modal">
           <Modal.Body>
-            Bạn có xác nhận với nội dung thông báo này
-                                </Modal.Body>
+            <div>
+              Bạn có xác nhận với lời mời tham gia nhóm chat từ {this.state.selectNotification.createdBy}
+            </div>
+          </Modal.Body>
           <Modal.Footer className='align-content-center'>
-            <Button variant="secondary" onClick={() => this.refuseInvite()}>Không đồng ý</Button>
+            <Button variant="secondary" onClick={() => this.refuseInvite()}>Từ chối</Button>
             <Button variant="primary" onClick={() => this.acceptInvite()}>Đồng ý</Button>
           </Modal.Footer>
         </Modal>

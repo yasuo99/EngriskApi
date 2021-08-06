@@ -118,7 +118,7 @@ const ListeningScript = ({ script, setListening }) => {
                 <div className="d-flex justify-content-between align-items-middle">
                   <p
                     onClick={() => setSelectQuestion(question)}
-                    className={`p-2 ${
+                    className={`p-2 col-10 ${
                       selectQuestion == question ? "text-white" : ""
                     }`}
                   >

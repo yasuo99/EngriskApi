@@ -13,6 +13,9 @@ import FillOutQuestionCreate from "../managementquiz_exam/FillOutQuestionCreate"
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import ArrangeQuestionCreate from "../managementquiz_exam/ArrangeQuestionCreate";
+import ImageUpload from "image-upload-react";
+//important for getting nice style.
+import "image-upload-react/dist/index.css";
 const initial = {
   content: "",
   preQuestion: "",
@@ -32,7 +35,16 @@ const initial = {
   firstUser: "",
   secondUser: "",
 };
-const QuestionCreate = ({values,setFieldValue, errors, touched}) => {
+const QuestionCreate = ({
+  values,
+  setFieldValue,
+  errors,
+  touched,
+  reset,
+  defaultTab,
+  isEdit,
+}) => {
+  const [type, setType] = useState(defaultTab);
   const [question, setQuestion] = useState({
     content: "",
     preQuestion: "",
@@ -42,9 +54,8 @@ const QuestionCreate = ({values,setFieldValue, errors, touched}) => {
     isMultipleAnswer: false,
   });
   useEffect(() => {
-
-  },[question])
-  const [type, setType] = useState(QuestionTypes.Basic);
+    setType(defaultTab);
+  }, [defaultTab]);
   const checkAnswer = (e, values) => {
     if (e.target.checked) {
       values.answers.forEach((value, index) => {
@@ -161,132 +172,200 @@ const QuestionCreate = ({values,setFieldValue, errors, touched}) => {
             {/* header: kết thúc */}
             <section className="main">
               <div>
-               
-               
-                 
-                      <div className='nav d-flex flex-column'></div>
-                      <Tab.Container
-                        id="left-tabs-example"
-                        defaultActiveKey={QuestionTypes.Basic}
-                        className="h-100"
-                        transition={false}
-                        onSelect={(e) => {setType(e); values.type = e}}
-                        mountOnEnter={true}
+                <div className="nav d-flex flex-column"></div>
+                <Tab.Container
+                  id="left-tabs-example"
+                  defaultActiveKey={defaultTab}
+                  className="h-100"
+                  transition={false}
+                  onSelect={(e) => {
+                    setType(e);
+                    values.type = e;
+                    reset();
+                  }}
+                  variant="pills"
+                >
+                  <Row className="script-panel-2">
+                    <Col sm={2} title="Kịch bản" className="col">
+                      <h5>Kịch bản</h5>
+                      <Nav
+                        variant="pills"
+                        title="Kịch bản"
+                        className="d-flex flex-column align-self-center sticky-top"
                       >
-                        <Row title="Loại câu hỏi" className="script-panel-2">
-                          <Col sm={2} title="Kịch bản" className="col">
-                            <h5>Kịch bản</h5>
-                            <Nav
-                              variant="pills"
-                              title="Kịch bản"
-                              className="d-flex flex-column align-self-center sticky-top"
-                            >
-                              <Nav.Item className="border rounded">
-                                <Nav.Link eventKey={QuestionTypes.Basic}>Câu hỏi mặc định</Nav.Link>
-                              </Nav.Item>
-                              <Nav.Item className="border rounded mt-2">
-                                <Nav.Link eventKey={QuestionTypes.Connection}>
-                                  Câu hỏi nối từ
-                                </Nav.Link>
-                              </Nav.Item>
-                              <Nav.Item className="border rounded mt-2">
-                                <Nav.Link eventKey={QuestionTypes.Arrange}>
-                                  Câu hỏi sắp xếp
-                                </Nav.Link>
-                              </Nav.Item>
-                              <Nav.Item className="border rounded mt-2">
-                                <Nav.Link eventKey={QuestionTypes.Select}>
-                                Câu hỏi điền - dạng 1
-                                </Nav.Link>
-                              </Nav.Item>
-                              <Nav.Item className="border rounded mt-2">
-                                <Nav.Link eventKey={QuestionTypes.FillOut}>
-                                  Câu hỏi điền - dạng 2
-                                </Nav.Link>
-                              </Nav.Item>
-                              <Nav.Item className="border rounded mt-2">
-                                <Nav.Link eventKey={QuestionTypes.Conversation}>
-                                  Câu hỏi hội thoại
-                                </Nav.Link>
-                              </Nav.Item>
-                              <Nav.Item className="border rounded mt-2">
-                                <Nav.Link eventKey={QuestionTypes.Toeic}>
-                                  Câu hỏi toeic
-                                  </Nav.Link>
-                              </Nav.Item>
-                            </Nav>
-                          </Col>
-                          <Col sm={10} className="col">
-                            <Tab.Content>
-                              <Tab.Pane eventKey={QuestionTypes.Basic}>
-                                {type == QuestionTypes.Basic && (
-                                  <BasicQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                    checkAnswer={checkAnswer}
-                                    touched={touched}
-                                    errors={errors}
-                                  ></BasicQuestionCreate>
-                                )}
-                                <div className="d-flex justify-content-end">
-                                  <p>(*) là phần bắt buộc</p>
-                                </div>
-                              </Tab.Pane>
-                              <Tab.Pane eventKey={QuestionTypes.Connection}>
-                                {type == QuestionTypes.Connection && (
-                                  <ConnectionQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                  ></ConnectionQuestionCreate>
-                                )}
-                              </Tab.Pane>
-                              <Tab.Pane eventKey={QuestionTypes.Arrange}>
-                                {type == QuestionTypes.Arrange && (
-                                  <ArrangeQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                  ></ArrangeQuestionCreate>
-                                )}
-                              </Tab.Pane>
-                              <Tab.Pane eventKey={QuestionTypes.Select}>
-                                {type == QuestionTypes.Select && (
-                                  <SelectQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                    checkAnswer={checkAnswer}
-                                  ></SelectQuestionCreate>
-                                )}
-                              </Tab.Pane>
-                              <Tab.Pane eventKey={QuestionTypes.FillOut}>
-                                {type == QuestionTypes.FillOut && (
-                                  <FillOutQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                  ></FillOutQuestionCreate>
-                                )}
-                              </Tab.Pane>
-                              <Tab.Pane eventKey={QuestionTypes.Toeic}>
-                                {type == QuestionTypes.Toeic && (
-                                  <ToeicQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                    checkAnswer={checkAnswer}
-                                  ></ToeicQuestionCreate>
-                                )}
-                              </Tab.Pane>
-                              <Tab.Pane eventKey={QuestionTypes.Conversation}>
-                                {type == QuestionTypes.Conversation && (
-                                  <ConversationQuestionCreate
-                                    values={values}
-                                    setFieldValue={setFieldValue}
-                                  ></ConversationQuestionCreate>
-                                )}
-                              </Tab.Pane>
-                            </Tab.Content>
-                          </Col>
-                        </Row>
-                      </Tab.Container>
-              
+                        <Nav.Item
+                          className="border rounded"
+                          disabled={isEdit && QuestionTypes.Basic != defaultTab}
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.Basic}
+                            disabled={
+                              isEdit && QuestionTypes.Basic != defaultTab
+                            }
+                          >
+                            Câu hỏi mặc định
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item
+                          className="border rounded mt-2"
+                          disabled={
+                            isEdit && QuestionTypes.Connection != defaultTab
+                          }
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.Connection}
+                            disabled={
+                              isEdit && QuestionTypes.Connection != defaultTab
+                            }
+                          >
+                            Câu hỏi nối từ
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item
+                          className="border rounded mt-2"
+                          disabled={
+                            isEdit && QuestionTypes.Arrange != defaultTab
+                          }
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.Arrange}
+                            disabled={
+                              isEdit && QuestionTypes.Arrange != defaultTab
+                            }
+                          >
+                            Câu hỏi sắp xếp
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item
+                          className="border rounded mt-2"
+                          disabled={
+                            isEdit && QuestionTypes.Select != defaultTab
+                          }
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.Select}
+                            disabled={
+                              isEdit && QuestionTypes.Select != defaultTab
+                            }
+                          >
+                            Câu hỏi lựa chọn
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item
+                          className="border rounded mt-2"
+                          disabled={
+                            isEdit && QuestionTypes.FillOut != defaultTab
+                          }
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.FillOut}
+                            disabled={
+                              isEdit && QuestionTypes.FillOut != defaultTab
+                            }
+                          >
+                            Câu hỏi điền
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item
+                          className="border rounded mt-2"
+                          disabled={
+                            isEdit && QuestionTypes.Conversation != defaultTab
+                          }
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.Conversation}
+                            disabled={
+                              isEdit && QuestionTypes.Conversation != defaultTab
+                            }
+                          >
+                            Câu hỏi hội thoại
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item
+                          className="border rounded mt-2"
+                          disabled={isEdit && QuestionTypes.Toeic != defaultTab}
+                        >
+                          <Nav.Link
+                            eventKey={QuestionTypes.Toeic}
+                            disabled={
+                              isEdit && QuestionTypes.Toeic != defaultTab
+                            }
+                          >
+                            Câu hỏi toeic
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </Col>
+                    <Col sm={10} className="col">
+                      <Tab.Content>
+                        <Tab.Pane eventKey={QuestionTypes.Basic}>
+                          {type == QuestionTypes.Basic && (
+                            <BasicQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                              checkAnswer={checkAnswer}
+                              touched={touched}
+                              errors={errors}
+                            ></BasicQuestionCreate>
+                          )}
+                          <div className="d-flex justify-content-end">
+                            <p>(*) là phần bắt buộc</p>
+                          </div>
+                        </Tab.Pane>
+                        <Tab.Pane eventKey={QuestionTypes.Connection}>
+                          {type == QuestionTypes.Connection && (
+                            <ConnectionQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                            ></ConnectionQuestionCreate>
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey={QuestionTypes.Arrange}>
+                          {type == QuestionTypes.Arrange && (
+                            <ArrangeQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                            ></ArrangeQuestionCreate>
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey={QuestionTypes.Select}>
+                          {type == QuestionTypes.Select && (
+                            <SelectQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                              checkAnswer={checkAnswer}
+                            ></SelectQuestionCreate>
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey={QuestionTypes.FillOut}>
+                          {type == QuestionTypes.FillOut && (
+                            <FillOutQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                            ></FillOutQuestionCreate>
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey={QuestionTypes.Toeic}>
+                          {type == QuestionTypes.Toeic && (
+                            <ToeicQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                              checkAnswer={checkAnswer}
+                            ></ToeicQuestionCreate>
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey={QuestionTypes.Conversation}>
+                          {type == QuestionTypes.Conversation && (
+                            <ConversationQuestionCreate
+                              values={values}
+                              setFieldValue={setFieldValue}
+                            ></ConversationQuestionCreate>
+                          )}
+                        </Tab.Pane>
+                      </Tab.Content>
+                    </Col>
+                  </Row>
+                </Tab.Container>
               </div>
             </section>
           </div>

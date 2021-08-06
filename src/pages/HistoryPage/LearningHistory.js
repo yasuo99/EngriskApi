@@ -68,6 +68,7 @@ const LearningHistory = () => {
     })
   }
   function renderProgressImage(amount) {
+    console.log(amount);
     switch (amount) {
       case 0:
         return '../../image/zero.png'

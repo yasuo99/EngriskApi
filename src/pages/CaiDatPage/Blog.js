@@ -68,7 +68,7 @@ class Blog extends Component {
                                     <section className="started">
                                         <div className="st-box" style={{ marginTop: "90px" }}>
                                             <div className="st-image"><img src={this.state.account.photoUrl || "/image/businessman.png"} alt="#" /></div>
-                                            <div className="st-title">{this.state.account.username} {this.props.online.some(onl => onl == this.state.account.username) && <i className='fa fa-circle fa-xs text-success'></i>}  </div> {this.props.account.id != this.state.account.id && <Badge key={this.state.account.id} style={{ cursor: "pointer" }} variant="primary" onClick={() => this.followUser(this.state.account.id)}>{this.props.account.following.some(following => following.accountId == this.state.account.id) ? "Following" : "Follow"}</Badge> } 
+                                           {this.props.isLoggedIn && <> <div className="st-title">{this.state.account.username} {this.props.online.some(onl => onl == this.state.account.username) && <i className='fa fa-circle fa-xs text-success'></i>}  </div> {this.props.account.id != this.state.account.id && <Badge key={this.state.account.id} style={{ cursor: "pointer" }} variant="primary" onClick={() => this.followUser(this.state.account.id)}>{this.props.account.following.some(following => following.accountId == this.state.account.id) ? "Following" : "Follow"}</Badge> } </> }
                                             <div className="st-subtitle">{this.state.account.fullname}</div>
                                             <div className="st-soc">
                                                 <a target="blank" href="#" className="btn_animated">
@@ -119,10 +119,11 @@ class Blog extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const { account, online } = state.auth;
+    const { account, online, isLoggedIn } = state.auth;
     return {
         account: account,
-        online: online
+        online: online,
+        isLoggedIn: isLoggedIn
     }
 }
 const mapDispatchToProps = (dispatch) => {

@@ -1,9 +1,9 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useCallback, useEffect, useState } from 'react'
 import SubMenu from '../../components/admin/SubMenu'
 import { Link } from "react-router-dom";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
 import { QLListSection } from '../../components/managementsections/QLListSection';
-import { Button, Tabs, Tab, Table, Modal, OverlayTrigger, Popover, Row, Col, Nav, Toast, ListGroup } from "react-bootstrap";
+import { Button, Tabs, Tab, Table, Modal, OverlayTrigger, Popover, Row, Col, Nav, Toast, ListGroup, Badge } from "react-bootstrap";
 import sectionApiV2 from '../../api/2.0/sectionApi';
 import Paginate from '../../components/pagination/Paginate';
 import Search from '../../components/search/Search';
@@ -22,6 +22,8 @@ import MiniExamScript from '../../components/script/MiniExamScript';
 import questionApiV2 from './../../api/2.0/questionApi';
 import CertificateScript from '../../components/script/CertificateScript';
 import { useForm } from 'react-hook-form';
+import { MapPublishStatus, MapPublishStatusToBool, PublishStatus } from './../../constants/PublishStatus';
+import axiosClientv2 from '../../config/axiosClientv2';
 const styles = {
     width: 250,
     display: 'inline-table',
@@ -53,6 +55,7 @@ const ManagementSection = () => {
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalScript, setModalScript] = useState(false);
+    const [modalPublish, setModalPublish] = useState(false);
     const [questionModal, setQuestionModal] = useState(false);
     const [vocabularyModal, setVocabularyModal] = useState(false);
     const [section, setSection] = useState({
@@ -71,6 +74,7 @@ const ManagementSection = () => {
     const [miniExam, setMiniExam] = useState({})
     const [certificate, setCertificate] = useState({})
     const [query, setQuery] = useState('')
+    const [isLoading, setIsLoading] = useState(true);
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     function toggleQuestionModal() {
         setQuestionModal(!questionModal)
@@ -93,6 +97,10 @@ const ManagementSection = () => {
         setModalDelete(!modalDelete)
         setSelectedSection(section)
     }
+    function toggleModalPublish(section) {
+        setModalPublish(!modalPublish);
+        setSelectedSection(section)
+    }
     async function toggleModalScript(section) {
         setModalScript(!modalScript);
         if (!modalScript) {
@@ -102,19 +110,32 @@ const ManagementSection = () => {
             setSelectedSection({})
         }
     }
-    useEffect(async () => {
-        const params = {
-            currentPage: sections.currentPage,
-            pageSize: sections.pageSize,
-            search: query
+    const fetchSections = async (controller) => {
+        try {
+            setIsLoading(true);
+            const params = {
+                currentPage: sections.currentPage,
+                pageSize: sections.pageSize,
+                search: query
+            }
+            const data = await sectionApiV2.getManage(params)
+            setSections(data);
+        } catch (error) {
+            if (error.name === "AbortError") console.log("Request abort");
+            else console.log(error);
+        } finally {
+            if (!controller.signal.aborted) setIsLoading(false);
         }
-        const data = await sectionApiV2.getManage(params)
-        setSections(data);
+    }
+    useEffect(async () => {
+        const controller = new AbortController();
+        fetchSections(controller);
+        return () => controller.abort();
     }, [sections.pageSize, sections.currentPage, query])
     useEffect(async () => {
         if (refresh) {
             const params = {
-                currentPage: 1,
+                currentPage: sections.currentPage,
                 pageSize: sections.pageSize
             }
             const data = await sectionApiV2.getManage(params)
@@ -240,6 +261,18 @@ const ManagementSection = () => {
     async function getSectionScriptEdit(section) {
         return await sectionApiV2.getScriptEdit(section.id);
     }
+    async function submitPublish() {
+        const status = selectedSection.publishStatus == PublishStatus.UNPUBLISHED ? PublishStatus.PUBLISHED : PublishStatus.UNPUBLISHED
+        const result = await sectionApiV2.publishChange(selectedSection.id, status);
+        if (result.status == 200) {
+            toast('Thành công', { type: 'success', autoClose: 2000 })
+            toggleModalPublish({});
+            setRefresh(true);
+        }
+        else {
+            toast('Thất bại', { type: 'error', autoClose: 2000 })
+        }
+    }
     return (
         <div>
             <div id="wrapper">
@@ -254,10 +287,10 @@ const ManagementSection = () => {
                                 </div>
                                 <div className="card-body">
                                     <div className='d-flex justify-content-between'>
-                                        <button className="btn btn-word mb-2" onClick={() => toggleModalCreate()}>
+                                        <Search queryFunction={querySearch}></Search>
+                                        <button className="btn btn-word mb-2 rounded-pill" onClick={() => toggleModalCreate()}>
                                             <i className='fa fa-plus'></i> Thêm bài học
                                         </button>
-                                        <Search queryFunction={querySearch}></Search>
                                     </div>
 
                                     <div className="table-responsive">
@@ -268,6 +301,7 @@ const ManagementSection = () => {
                                                     <th className="table-image">Ảnh</th>
                                                     <th className="tenbaiquiz">Mô tả</th>
                                                     <th className="dokhoquiz">Thuộc lộ trình</th>
+                                                    <th className='dokhoquiz'>Trạng thái</th>
                                                     <th className="table-function" ></th>
                                                 </tr>
                                             </thead>
@@ -299,11 +333,18 @@ const ManagementSection = () => {
                                                                 {section.route?.title || 'Free'}
                                                             </td>
                                                         </OverlayTrigger>
+                                                        <td><h5><Badge variant={MapPublishStatus(section.publishStatus).variant}>{MapPublishStatus(section.publishStatus).text}</Badge></h5></td>
                                                         <td>
-                                                            <button className='btn btn-primary btn-delete mr-1' onClick={() => toggleModalScript(section)}><i className='fa fa-bars'></i></button>
-                                                            <button className='btn btn-primary btn-delete mr-1'><i className='fa fa-info'></i></button>
-                                                            <button className='btn btn-success mr-1' onClick={() => toggleModalEdit(section)}><i className='fa fa-edit'></i></button>
-                                                            <button className='btn btn-danger btn-delete' onClick={() => toggleModalDelete(section)}><i className='fa fa-trash'></i></button>
+                                                            <button className='btn btn-primary btn-delete mr-1' onClick={() => toggleModalScript(section)} disabled={section.publishStatus == PublishStatus.PUBLISHED}><i className='fa fa-bars'></i></button>
+                                                            <button className='btn btn-success mr-1' onClick={() => toggleModalEdit(section)} disabled={section.publishStatus == PublishStatus.PUBLISHED}><i className='fa fa-edit' ></i></button>
+                                                            <button className='btn btn-danger btn-delete' onClick={() => toggleModalDelete(section)} disabled={section.publishStatus == PublishStatus.PUBLISHED}><i className='fa fa-trash' ></i></button>
+                                                            <button
+                                                                className="btn btn-primary btn-delete ml-1"
+                                                                onClick={() => toggleModalPublish(section)}
+                                                                title="Chuyển trạng thái"
+                                                            >
+                                                                {section.publishStatus == PublishStatus.UNPUBLISHED ? <i className="fa fa-upload"></i> : <i className="fa fa-download"></i>}
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 )}
@@ -412,9 +453,6 @@ const ManagementSection = () => {
                                                                 <Nav.Link eventKey="listening">Luyện nghe</Nav.Link>
                                                             </Nav.Item>
                                                             <Nav.Item className='border rounded mt-1'>
-                                                                <Nav.Link eventKey="writing">Luyện viết</Nav.Link>
-                                                            </Nav.Item>
-                                                            <Nav.Item className='border rounded mt-1'>
                                                                 <Nav.Link eventKey="exam">Mini exam</Nav.Link>
                                                             </Nav.Item>
                                                             {selectedSection.certificateScriptAvailable && <Nav.Item className='border rounded mt-1'>
@@ -427,9 +465,6 @@ const ManagementSection = () => {
                                                             <Tab.Pane eventKey="grammar">
                                                                 <GrammarScript setGrammar={setGrammar} script={selectedSection.scripts.find(script => script.type == ScriptTypes.GRAMMAR)} questionFilter={questionFilter} questionModal={questionModal} toggleQuestionModal={toggleQuestionModal}></GrammarScript>
                                                                 <div className='d-flex justify-content-end'><p>(*) là phần bắt buộc</p></div>
-                                                            </Tab.Pane>
-                                                            <Tab.Pane eventKey="writing">
-                                                                <WritingScript script={selectedSection.scripts.find(script => script.type == ScriptTypes.WRITING)} setWriting={setWriting}></WritingScript>
                                                             </Tab.Pane>
                                                             <Tab.Pane eventKey="reading">
                                                                 <ReadingScript script={selectedSection.scripts.find(script => script.type == ScriptTypes.READING)} setReading={setReading}></ReadingScript>
@@ -568,29 +603,35 @@ const ManagementSection = () => {
                                 <Button variant="primary" form="edit-form" type="submit">Xác nhận</Button>
                             </Modal.Footer>
                         </Modal>
+                        {Object.keys(selectedSection).length > 0 && <Modal show={modalPublish} onHide={() => toggleModalPublish({})} dialogClassName='sweet-alert-modal rounded' contentClassName="modal-basic-content">
+                            <Modal.Body>
+                                <div className='text-center'>
+                                    <i className='fa fa-4x fa-warning text-info'></i>
+                                    <br></br>
+                                    <br></br>
+                                    <h3 className='text-primary'>
+                                        {!MapPublishStatusToBool(selectedSection.publishStatus) ? 'Bạn có chắc muốn công khai bài học này' : 'Bạn có chắc muốn ngừng công khai bài học này'}
+                                    </h3>
+                                    <p className='text-info'>
+                                        {`Bài học sẽ ${!MapPublishStatusToBool(selectedSection.publishStatus) ? 'thấy và sử dụng được' : 'không thấy'}  bài học này tại trang quản lý lộ trình học`}
+                                    </p>
+                                </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={() => toggleModalPublish({})}>
+                                    Hủy
+                                </Button>
+                                <Button variant="primary" onClick={(e) => submitPublish()}>
+                                    Xác nhận
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>}
                     </div>
                 </div>
             </div>
             <Link className="scroll-to-top rounded" to="#page-top">
                 <i className="fa fa-angle-up" />
             </Link>
-            <div className="modal fade" id="logoutModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Bạn có chắc chắn muốn đăng xuất không?</h5>
-                            <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">Chọn "Đăng xuất" bên dưới nếu bạn đã sẵn sàng kết thúc phiên hiện tại của mình.</div>
-                        <div className="modal-footer">
-                            <button className="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                            <Link className="btn btn-primary" to="login.html">Đăng xuất</Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     )
 }

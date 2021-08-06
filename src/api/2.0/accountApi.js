@@ -85,13 +85,21 @@ const accountApiV2 = {
         }
         return await axiosClientv2.put(url, users, { headers });
     },
-    reponseInviteBoxchatRequest: async (id, notificationId, action) => {
+    responseInviteBoxchatRequest: async (id, notificationId, action) => {
         const url = `/accounts/${id}/notifications/${notificationId}/invite?action=${action}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.put(url, null, { headers })
     },
+    updateBoxchat: async (id,boxchatId,body) => {
+        const url = `/accounts/${id}/boxchats/${boxchatId}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,body, { headers });
+    }
+    ,
     vocabularyReview: async (id, type) => {
         const url = `/accounts/${id}/vocabulary/review?option=${type}`;
         const headers = {
@@ -117,7 +125,7 @@ const accountApiV2 = {
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url,{params})
+        return await axiosClientv2.get(url,{params,headers})
     },
     getUserCertificates: async (id,params) => {
         const url = `/accounts/${id}/certificates`;
@@ -145,6 +153,20 @@ const accountApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.put(url,null, {headers});
+    },
+    createBoxChat: async (id,body) => {
+        const url = `/accounts/${id}/boxchats`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.post(url,body, {headers});
+    },
+    deleteBoxchat: async (id,boxchatId) => {
+        const url = `/accounts/${id}/boxchats/${boxchatId}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.delete(url, {headers});
     }
 }
 export default accountApiV2;

@@ -250,7 +250,7 @@ class QLListThongBao extends Component {
                     </tbody>
                 </table>}
                 {/* Modal thêm */}
-                <Modal show={this.state.modalCreate}>
+                <Modal show={this.state.modalCreate} animation size="lg" backdrop="static">
                     <Modal.Header closeButton onClick={() => this.closeCreate()}>
                         <Modal.Title>Thêm thông báo</Modal.Title>
                     </Modal.Header>

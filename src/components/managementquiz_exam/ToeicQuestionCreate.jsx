@@ -1,15 +1,62 @@
 import { Field, ErrorMessage, FieldArray } from "formik";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ThumbAudio from "./ThumbAudio";
 import ThumbImage from "./ThumbImage";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { ToeicParts } from "../../constants/ToeicParts";
+import ImageUpload from "image-upload-react";
+//important for getting nice style.
+import "image-upload-react/dist/index.css";
+const part1 = [
+  { content: "A", isQuestionAnswer: true },
+  { content: "B", isQuestionAnswer: false },
+  { content: "C", isQuestionAnswer: false },
+  { content: "D", isQuestionAnswer: false },
+];
+const part2 = [
+  { content: "A", isQuestionAnswer: true },
+  { content: "B", isQuestionAnswer: false },
+  { content: "C", isQuestionAnswer: false },
+];
 const ToeicQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
+  const [toeic, setToeic] = useState(values.toeic || 1);
+  const [imageSrc, setImageSrc] = useState();
+  const handleImageSelect = (e) => {
+    console.log(e);
+    values.file = e.target.files[0];
+    setImageSrc(URL.createObjectURL(e.target.files[0]));
+  };
+  useEffect(() => {
+    if (values.file == "" && values.audio == "") {
+      values.toeic = toeic;
+      setImageSrc("");
+      audioFileRef.current.value = "";
+    }
+  }, [values.file, values.audio]);
+  useEffect(() => {
+    values.toeic = toeic;
+  }, [values]);
+  // useEffect(() => {
+  //   if(values.toeic == 2){
+  //     values.answers = part1
+  //   }
+  //   if(values.toeic == 1){
+  //     values.answers = part2
+  //   }
+  // },[toeic])
+  const audioFileRef = useRef();
   return (
-    <div className="container border">
-      <div className="question">
+    <div className="container card shadow-sm p-2">
+      <div className="question text-dark mt-2">
+        Thuộc part
         <select
-          onChange={(e) => (values.toeic = Number.parseInt(e.target.value))} className='pagination-select'
+          value={toeic}
+          onChange={(e) => {
+            values.toeic = Number.parseInt(e.target.value);
+            setToeic(e.target.value);
+          }}
+          className="ml-1 pagination-select"
         >
           <option value="1">1</option>
           <option value="2">2</option>
@@ -19,8 +66,8 @@ const ToeicQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
           <option value="6">6</option>
           <option value="7">7</option>
         </select>
-        <div className="border border-primary rounded p-2">
-          <h6>Câu hỏi (*)</h6>
+        <div className="border card shadow rounded p-2 mt-2">
+          <h6>Câu hỏi *</h6>
           <CKEditor
             config={{
               ckfinder: {
@@ -74,8 +121,8 @@ const ToeicQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
             }}
           />
         </div>
-        <div className="border border-primary rounded p-2 mt-2">
-          <h6>Nội dung</h6>
+        <div className="border card shadow rounded p-2 mt-2">
+          <h6>Nội dung </h6>
           <CKEditor
             config={{
               ckfinder: {
@@ -217,65 +264,60 @@ const ToeicQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
             }}
           />
         </div>
-
-        <div className="border border-secondary rounded p-2 mt-2">
-          <h6>File</h6>
-          <div className="row">
-            <div className="col-6">
-              <div className="boxImg">
-                <ThumbImage file={values.file || values.image} />
-                <div className="itemImg">
-                  <Field
-                    type="file"
-                    accept="image/*"
-                    className="item-question fa fa-camera "
-                    id="image"
-                    name="image"
-                    value={""}
-                    onChange={(event) => {
-                      setFieldValue("file", event.currentTarget.files[0]);
-                    }}
-                  />
-                  <img
-                    src="/image/delete1.png"
-                    className="img-question"
-                    onClick={() => {
-                      setFieldValue("file", null);
-                    }}
-                  ></img>
-                </div>
+        {(toeic < 5 || toeic == 7) && (
+          <div className="border card shadow rounded p-2 mt-2">
+            <h6>File</h6>
+            <div className="row p-2">
+              <div className="col-6">
+                <p>File ảnh (800 X 400)</p>
+                <ImageUpload
+                  handleImageSelect={handleImageSelect}
+                  imageSrc={imageSrc}
+                  setImageSrc={setImageSrc}
+                  style={{
+                    width: 300,
+                    height: 200,
+                    marginTop: 0,
+                  }}
+                />
               </div>
-            </div>
-            <div className="col-6">
-              <div className="boxImg">
-                <ThumbAudio file={values.audio} />
-                <div className="itemImg">
-                  <Field
-                    type="file"
-                    accept="audio/*"
-                    className="item-question fa fa-camera "
-                    id="audio"
-                    name="audio"
-                    value={""}
-                    onChange={(event) => {
-                      setFieldValue("audio", event.currentTarget.files[0]);
-                    }}
-                  />
-                  <img
-                    src="/image/delete1.png"
-                    className="img-question"
-                    onClick={() => {
-                      setFieldValue("audio", null);
-                    }}
-                  ></img>
+              {toeic < 5 && (
+                <div className="col">
+                  <p>File audio</p>
+                  <div className="form-group">
+                    <div className="input-group mb-3">
+                      <input
+                        ref={audioFileRef}
+                        type="file"
+                        name=""
+                        id="audio"
+                        accept="audio/*"
+                        className="form-control"
+                        placeholder="Chọn file nghe"
+                        onChange={(event) => {
+                          setFieldValue("audio", event.currentTarget.files[0]);
+                        }}
+                      />
+                      <div className="input-group-append">
+                        <img
+                          src="/image/delete1.png"
+                          className="img-question"
+                          style={{ width: "44px" }}
+                          onClick={() => {
+                            setFieldValue("audio", null);
+                            audioFileRef.current.value = "";
+                          }}
+                        ></img>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
-        </div>
-
+        )}
         {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-        <div className="answer answerText border border-primary rounded p-2 mt-2">
+        <div className="answer answerText border card shadow rounded p-2 mt-2 mb-3">
           <h6>Đáp án (*)</h6>
           <ol type="A">
             <FieldArray name="answers">
@@ -285,25 +327,23 @@ const ToeicQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
                     values.answers.map((answer, index) => {
                       return (
                         <div
-                          className="d-flex justify-content-center"
+                          className="d-flex justify-content-center mt-1"
                           key={index}
                         >
-                          <div className="itemAnswer answer-card">
+                          <div className="itemAnswer answer-card shadow border">
                             <div className="row">
                               <div className="col-1 d-flex justify-content-center">
-                                <li className="textOrder"></li>
+                                <li className="textOrder font-weight-bold"></li>
                               </div>
                               <div className="col-9">
                                 <Field
                                   name={`answers.${index}.content`}
                                   placeholder="Nhập đáp án..."
                                   type="text"
-                                  className={
-                                    "answerFile"
-                                   
-                                  }
+                                  className={"answerFile w-100"}
                                   id={`content${index}`}
                                   required
+                                  autoComplete="off"
                                 />
 
                                 <ErrorMessage
@@ -345,7 +385,7 @@ const ToeicQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
                   <div className="d-flex justify-content-center">
                     <button
                       type="button"
-                      className="btn btn-primary rounded mt-2"
+                      className="btn btn-primary rounded-pill mt-2"
                       onClick={() =>
                         push({
                           content: "",

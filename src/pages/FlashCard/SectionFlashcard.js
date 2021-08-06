@@ -70,19 +70,33 @@ const SectionFlashcard = () => {
   const [isQuestionLoop, setIsQuestionLoop] = useState(false);
   const [modalExit, setModalExit] = useState(false);
   const [isFail, setIsFail] = useState(false);
+  const [serverError, setServerError] = useState('')
   useEffect(async () => {
     async function fetchData() {
-      const result = await routeApi.routeLearn(routeId, sectionId, scriptId);
-      setBusy(false);
-      console.log(result);
-      setIsStartPhaseScreen(true);
-      setCurrentScript(result);
-      // if (result.scripts.length > 0) {
-      //   setBusy(false);
-      //   setData(result.scripts);
+      try {
+        const result = await routeApi.routeLearn(routeId, sectionId, scriptId);
+        console.log(result);
+        setIsStartPhaseScreen(true);
+        setCurrentScript(result);
+        // if (result.scripts.length > 0) {
+        //   setBusy(false);
+        //   setData(result.scripts);
 
-      setCurrentWord(result.words[wordIndex]);
-      setCurrentQuestion(result.questions[questionIndex]);
+        setCurrentWord(result.words[wordIndex]);
+        setCurrentQuestion(result.questions[questionIndex]);
+        setBusy(false);
+      } catch (error) {
+        setServerError(error.response.data.error)
+      }
+
+      // console.log(result);
+      // if (result.status == 400 || result.status == 404) {
+      //   setServerError(result.error)
+      // } else {
+
+      // };
+
+
     }
     fetchData();
     if (isLoggedIn) {
@@ -117,7 +131,7 @@ const SectionFlashcard = () => {
         }
       }
     }
-    else{
+    else {
       setBusy(true);
     }
   }
@@ -360,23 +374,25 @@ const SectionFlashcard = () => {
                   {isTheoryScreen && <TheoryScreen theory={theory} next={next} isFinish={isFinish} sectionId={sectionId} scriptId={scriptId}></TheoryScreen>}
                   {isVocabularyScreen &&
                     <div>
-                      <div className="mt-4">
-                        <h5>{currentWord.flashcardTitle}</h5>
-                        <img
-                          className="vocabulary-box-img img-fluid rounded mx-auto d-block ex-img fluid-content-item w-75"
-                          src={currentWord.wordImg || 'https://cdn.busuu.com/media/resized/entity/1440/company_1528111874_1440.jpg'}
-                        ></img>
-                        <h4 className="">
-                          {currentWord.eng}
-                          <span>{currentWord.wordVoice && <div className='d-flex justify-content-center'><AudioPlayer src={currentWord.wordVoice}></AudioPlayer></div>}</span>
+                      <div className="mt-4 page-wrap-2">
+                        <h5 className="mb-1">{currentWord.flashcardTitle}</h5>
+                        <div className='box-vocabulary' style={{position: 'relative'}}>
+                          <img
+                            className="vocabulary-box-img img-fluid rounded mx-auto d-block ex-img fluid-content-item w-100"
+                            src={currentWord.wordImg || 'https://cdn.busuu.com/media/resized/entity/1440/company_1528111874_1440.jpg'}
+                          ></img>
+                          {currentWord.wordVoice && <div className='d-flex justify-content-center vocabulary-audio'><AudioPlayer src={currentWord.wordVoice}></AudioPlayer></div>}
+                        </div>
+
+                        <h4 className="vocabulary-eng text-dark mb-3">
+                         <span className="">{currentWord.eng}</span> 
+
                         </h4>
-                        <br></br>
-                        <h4 className="">{currentWord.vie}</h4>
-                        <hr className="d-flex justify-content-center w-75"></hr>
-                        <div className="mt-2 example">
+                        <h5 className="vocabulary-eng vocabulary-vie text-dark">{currentWord.vie}</h5>
+                        <div className="mt-2 example vocabulary-vie text-dark">
                           <h5>Ví dụ</h5>
                           {currentWord.examples.map((example, idx) =>
-                            <h6 key={idx} className='text-dark'>{example.eng} ~ {example.vie}</h6>
+                            <h6 key={idx} className=''>{example.eng}<br></br>{example.vie}</h6>
                           )}
                         </div>
                       </div>
@@ -433,7 +449,7 @@ const SectionFlashcard = () => {
                     height={400}
                     width={400} />
                 </div>
-                <p className='d-flex justify-content-center'>Hiện nội dung học này chưa được thêm vào vui lòng thử lại sau!</p>
+                <p className='d-flex justify-content-center'>{serverError ? serverError : 'Hiện nội dung học này chưa được thêm vào vui lòng thử lại sau'}!</p>
               </div>
             </main>
           </div>

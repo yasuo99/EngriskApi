@@ -106,7 +106,8 @@ const ConnectionQuestion = ({ question, checkAnswer, isLastQuestion, isReviewing
         <div>
 
             <div className='container mt-4'>
-                <div>{parse(question.preQuestion)}</div>
+                <div className='font-weight-bold text-dark'>{parse(question.preQuestion || 'Nối đáp án chính xác')}</div>
+                <br></br>
                 <div className='row'>
                     <div className='col'>
                         {firstCol.map((word, index) =>

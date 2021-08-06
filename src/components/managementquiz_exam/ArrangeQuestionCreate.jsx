@@ -3,9 +3,11 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 const ArrangeQuestionCreate = ({ values, setFieldValue }) => {
   return (
-    <div className="container border">
+    <div className="container card border-0 shadow-sm">
       <div className="question">
-      <CKEditor
+        <div className="rounded p-2 card shadow mt-4">
+          <h6>Câu hỏi (*)</h6>
+          <CKEditor
             config={{
               ckfinder: {
                 // Upload the images to the server using the CKFinder QuickUpload command
@@ -43,7 +45,6 @@ const ArrangeQuestionCreate = ({ values, setFieldValue }) => {
             data={values.preQuestion || ""}
             onReady={(editor) => {
               // You can store the "editor" and use when it is needed.
-  
             }}
             onChange={(event, editor) => {
               const data = editor.getData();
@@ -57,21 +58,26 @@ const ArrangeQuestionCreate = ({ values, setFieldValue }) => {
             onUpload={(event, edito) => {
               console.log(event);
             }}
-          />
-        {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-        <div className="answerSort">
-          <h5>ĐÁP ÁN:</h5>
-          <Field
-            component="textarea"
-            name="content"
-            id="content"
-            type="text"
-            placeholder="Nhập từ/câu sử dụng để sắp xếp vd: Word, Hello how are you ?..."
-            className="textareaSort"
+            className="shadow"
           />
         </div>
+        {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
+      
         {/* <button class="btn btn-addAnswer"><img src="/image/plus (3).png"> Thêm đáp án</button> */}
       </div>
+      <div className="answer answerText card shadow rounded p-2 mt-4 mb-4">
+          <div className="answerSort">
+            <h5>Từ/câu dùng để sắp xếp</h5>
+            <Field
+              component="input"
+              name="content"
+              id="content"
+              type="text"
+              placeholder="Nhập từ/câu sử dụng để sắp xếp vd: Word, Hello how are you ?..."
+              className="textareaSort form-control"
+            />
+          </div>
+        </div>
     </div>
   );
 };

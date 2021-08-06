@@ -45,7 +45,6 @@ const HeaderAdmin = () => {
       </button>
       {/* <FormSearchAdmin></FormSearchAdmin> */}
       <ul className="navbar-nav ml-auto">
-        <ThongBaoAdmin></ThongBaoAdmin>
         <div className="topbar-divider d-none d-sm-block" />
         <TaiKhoanAdmin account={account}></TaiKhoanAdmin>
       </ul>

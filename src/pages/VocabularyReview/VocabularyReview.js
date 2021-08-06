@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import accountApiV2 from "../../api/2.0/accountApi";
-import { Modal, ProgressBar } from "react-bootstrap";
+import { Button, Modal, ProgressBar } from "react-bootstrap";
 import WrongAnswer from "../../components/questionresult/WrongAnswer";
 import RightAnswer from "../../components/questionresult/RightAnswer";
 import NormalQuestion from "../../components/typequestion/NormalQuestion";
@@ -26,9 +26,8 @@ const VocabularyReview = () => {
     const [isLastQuestion, setIsLastQuestion] = useState(false)
     const [answerCheck, setAnswerCheck] = useState(-1);
     const { words } = useSelector(state => state.word)
+    const [modalExit, setModalExit] = useState(false);
     useEffect(async () => {
-
-
         console.log(option);
         let result;
         switch (option) {
@@ -59,6 +58,9 @@ const VocabularyReview = () => {
             default:
                 break;
         }
+        if(isLoggedIn){
+            setIsDisplaySplash(true);
+        }
         if (result.length > 0) {
             setIsBusy(false);
             setCurrentQuestion(result[index])
@@ -70,11 +72,13 @@ const VocabularyReview = () => {
         if (!isDisplaySplash) {
             setIsDisplaySplash(true)
         }
-        if (remainQuestions.length > 0) {
-            setQuestions([...questions, ...remainQuestions])
-            setRemainQuestions([])
+        else {
+            if (remainQuestions.length > 0) {
+                setQuestions([...questions, ...remainQuestions])
+                setRemainQuestions([])
+            }
+            setIndex(index + 1);
         }
-        setIndex(index + 1);
     }
     useEffect(() => {
         if (index == questions.length - 1) {
@@ -106,18 +110,22 @@ const VocabularyReview = () => {
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content" style={{ overflow: "auto", height: "100vh" }}>
                             <main id="scroll">
-                                <div className="mt-2">
-                                    <div className="row">
-                                        <div className="offset-md-11 col-1">
-                                            <a className="btn btn-light rounded-circle" href="/home">
-                                                <i className="fa fa-remove"></i>
-                                            </a>
+                                <div className="d-flex align-items-center bg-primary learning-nav" >
+                                    <div className="container p-0">
+                                        <div className="d-flex justify-content-end">
+                                            <Link to={`${isFinish ? `/home` : '#'}`} onClick={() => setModalExit(!modalExit)}>
+                                                <i className="fa fa-2x fa-remove text-white"></i>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="container learning-layout">
-                                    {!isLoggedIn && !isDisplaySplash ? <AnonymousSplashPage /> : ''}
-                                    {currentQuestion && <NormalQuestion question={currentQuestion} addRemainQuestion={addRemainQuestion} removeRemainQuestion={removeRemainQuestion} check={setIsQuestionScreen} answerCheck={checkAnswer} isLastQuestion={isLastQuestion} />}
+
+                                <div className="container learning-layout p-4">
+                                    <div className='mt-1 mb-1 container'>
+                                       {isDisplaySplash && <><span><ProgressBar variant="primary" now={index + 1} max={questions.length} animated></ProgressBar></span>   </>} 
+                                    </div>
+                                    {(!isLoggedIn && !isDisplaySplash) && <AnonymousSplashPage />}
+                                    {isDisplaySplash && currentQuestion && <NormalQuestion question={currentQuestion} addRemainQuestion={addRemainQuestion} removeRemainQuestion={removeRemainQuestion} check={setIsQuestionScreen} answerCheck={checkAnswer} isLastQuestion={isLastQuestion} />}
                                     {!isLoggedIn && !isDisplaySplash && <div className="container">
                                         <div className="drawer-content">
                                             <div className="page-wrap">
@@ -145,6 +153,23 @@ const VocabularyReview = () => {
                                     {answerCheck === 0 && <WrongAnswer indexChange={indexChange} />}
                                 </div>
                             </main>
+                            <Modal show={modalExit} animation onHide={() => setModalExit(!modalExit)} centered size="lg" dialogClassName='sweet-alert-modal'>
+                                <Modal.Body>
+                                    <div className='text-center'>
+                                        <i className='fa fa-4x fa-warning text-danger'></i>
+                                        <br></br>
+                                        <br></br>
+                                        <h3 className='text-info'>Bạn có chắc muốn thoát</h3>
+                                        <p className='text-danger'>
+                                            Mọi kết quả có thể sẽ không được lưu!
+                                        </p>
+                                    </div>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={() => setModalExit(!modalExit)}>Hủy</Button>
+                                    <Link className='btn btn-danger' to={'/home'}>Xác nhận</Link>
+                                </Modal.Footer>
+                            </Modal>
                         </div>
                     </div>
                 </div>
@@ -155,8 +180,8 @@ const VocabularyReview = () => {
                             <div className="mt-2 container">
                                 <div className="row">
                                     <div className="offset-md-11 col-1">
-                                        <Link className="btn btn-light rounded-circle" to="/card">
-                                            <i className="fa fa-remove"></i>
+                                        <Link to="/card">
+                                            <i className="fa fa-2x fa-remove text-secondary"></i>
                                         </Link>
                                     </div>
                                 </div>
@@ -166,7 +191,7 @@ const VocabularyReview = () => {
                                         height={400}
                                         width={400} />
                                 </div>
-                                <p className='d-flex justify-content-center'>Hiện chưa có câu hỏi luyện tập cho các từ vựng này! <br/>Vui lòng thử lại sau</p>
+                                <p className='d-flex justify-content-center'>Hiện chưa có câu hỏi luyện tập cho các từ vựng này! <br />Vui lòng thử lại sau</p>
                             </div>
                         </main>
                     </div>

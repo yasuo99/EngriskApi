@@ -97,7 +97,7 @@ const ReadingScript = ({ script, setReading }) => {
                       className="p-2 text-dark border cursor-pointer mt-1"
                       onClick={() => addQuestion(question)}
                     >
-                      {question.preQuestion}: {question.content}
+                      {`${question.preQuestion ? question.preQuestion: 'Chọn đáp án đúng'}`}
                     </ListGroup.Item>
                   </OverlayTrigger>
                 ))}
@@ -117,11 +117,11 @@ const ReadingScript = ({ script, setReading }) => {
                 <div className="d-flex justify-content-between align-items-middle">
                   <p
                     onClick={() => setSelectQuestion(question)}
-                    className={`p-2 ${
+                    className={`p-2 col-10 reading ${
                       selectQuestion == question ? "text-white" : ""
                     }`}
                   >
-                    {question.preQuestion}: {question.content}
+                    {`${question.preQuestion ? question.preQuestion: 'Chọn đáp án đúng'}`}
                   </p>
                   <button
                     className="btn btn-light"

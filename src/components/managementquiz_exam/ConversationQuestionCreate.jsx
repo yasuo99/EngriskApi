@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Field, ErrorMessage, FieldArray } from "formik";
 import { Modal } from "react-bootstrap";
 import ConversationQuestion from "../question/ConversationQuestion";
@@ -10,15 +10,19 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
   const [modalDemo, setModalDemo] = useState(false);
   const [firstUser, setFirstUser] = useState("");
   const [secondUser, setSecondUser] = useState("");
+  const audioFileRef = useRef();
+  useEffect(() => {
+    audioFileRef.current.value = "";
+  },[values])
   const demoQuestion = {
     content: "",
     preQuestion: "",
     answers: [
       {
-        answer: "I <p>am</p> Thanh (0)",
-      },
-      {
-        answer: "We <p>are</p> Engrisk (1)",
+        answer: JSON.stringify({
+          firstLine: "I <p>am</p> Thanh (0)",
+          secondLine: "We <p>are</p> Engrisk (1)",
+        }),
       },
     ],
   };
@@ -27,11 +31,13 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
     console.log(value);
   }
   return (
-    <div className="container border">
+    <div className="container card shadow-sm p-2">
       <div className="d-flex justify-content-end">
         <button
-          className="btn btn-light rounded-circle"
-          onClick={() => setModalDemo(!modalDemo)}
+          onClick={(e) => {
+            e.preventDefault();
+            setModalDemo(!modalDemo);
+          }}
         >
           <i className="fa fa-question"></i>
         </button>
@@ -40,6 +46,7 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
         animation={true}
         show={modalDemo}
         onHide={() => setModalDemo(!modalDemo)}
+        size="lg"
       >
         <Modal.Body>
           <div>
@@ -58,8 +65,8 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
           </div>
         </Modal.Body>
       </Modal>
-      <div className="border border-primary rounded p-2">
-        <h6>Câu hỏi (*)</h6>
+      <div className="border card shadow rounded p-2">
+        <h6>Câu hỏi *</h6>
         <CKEditor
           config={{
             ckfinder: {
@@ -113,8 +120,37 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
           }}
         />
       </div>
-      <div className="border border-primary rounded p-2 mt-1">
-        <h6>Thoại (*)</h6>
+      <div className="border card shadow rounded p-2 mt-2">
+        <h6>File * (audio)</h6>
+        <div className="form-group">
+          <div class="input-group mb-3">
+            <input
+              ref={audioFileRef}
+              type="file"
+              name=""
+              id=""
+              accept="audio/*"
+              className="form-control"
+              onChange={(event) => {
+                setFieldValue("audio", event.currentTarget.files[0]);
+              }}
+            />
+            <div class="input-group-append">
+              <img
+                src="/image/delete1.png"
+                className="img-question"
+                onClick={() => {
+                  setFieldValue("audio", null);
+                  audioFileRef.current.value = "";
+                }}
+                style={{ width: "44px" }}
+              ></img>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="border card shadow rounded p-2 mt-2 mb-3 conversation">
+        <h6>Thoại *</h6>
         <FieldArray name="answers">
           {({ insert, remove, push }) => (
             <div>
@@ -123,16 +159,18 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
                   placeholder="Tên người A"
                   className="form-control input-conversation"
                   name="firstUser"
+                  autoComplete="off"
                 ></Field>
                 <Field
                   placeholder="Tên người B"
                   className="form-control input-conversation"
                   name="secondUser"
+                  autoComplete="off"
                 ></Field>
               </div>
 
               {values.answers.map((answer, index) => (
-                <div key={index} className="mt-4 border">
+                <div key={index} className="mt-4 border rounded p-2">
                   <div className="d-flex justify-content-start">
                     <img
                       src="https://www.w3schools.com/howto/img_avatar.png"
@@ -145,6 +183,7 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
                       className="form-control input-conversation"
                       name={`answers.${index}.firstLine`}
                       id="scriptFirst"
+                      autoComplete="off"
                     ></Field>
                   </div>
                   <div className="d-flex justify-content-end">
@@ -153,6 +192,7 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
                       placeholder="Câu thoại..."
                       name={`answers.${index}.secondLine`}
                       id="scriptSecond"
+                      autoComplete="off"
                     ></Field>
 
                     <img
@@ -175,7 +215,7 @@ const ConversationQuestionCreate = ({ values, setFieldValue }) => {
               <div className="d-flex justify-content-center">
                 <button
                   type="button"
-                  className="btn btn-primary rounded mt-2"
+                  className="btn btn-primary rounded-pill mt-2"
                   onClick={() =>
                     push({
                       content: "",

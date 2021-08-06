@@ -22,13 +22,28 @@ const examApiv2 = {
         }
         return await axiosClientv2.get(url, { headers });
     },
-    create: async (body, side) => {
-        const url = side ? "/exams" : `/exams/user/${JSON.parse(localStorage.getItem('account')).id}`;
+    getAnalyze: async (id) => {
+        const url = `/exams/${id}/analyze`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers });
+    },
+    create: async (body) => {
+        const url = "/exams"
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.post(url, body, { headers });
     },
+    createExamQuestion: async (id,body) => {
+        const url = `/exams/${id}/questions`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.post(url, body, { headers });
+    }
+    ,
     edit: async (id,body) => {
         const url = `/exams/${id}`
         const headers = {
@@ -74,6 +89,20 @@ const examApiv2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url, {params, headers });
+    },
+    publishChange: async (id,params) => {
+        const url = `/exams/${id}/publish/change`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,null, { params, headers });
+    },
+    delete: async (id) => {
+        const url = `/exams/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.delete(url, {headers });
     }
 }
 export default examApiv2;

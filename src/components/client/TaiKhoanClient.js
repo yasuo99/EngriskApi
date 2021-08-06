@@ -5,7 +5,7 @@ import { logOut } from '../../actions/authActions';
 
 const TaiKhoanClient = ({ status, account }) => {
     const dispatch = useDispatch();
-    const dispatchLogout = () => { dispatch(logOut()); window.location.reload()}
+    const dispatchLogout = () => { dispatch(logOut())}
     if (status === true) {
     return (
             <li className="nav-item dropdown no-arrow">

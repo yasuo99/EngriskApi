@@ -63,15 +63,20 @@ const ArrangeQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing })
     console.log(splitted);
     return (
         <div className='container'>
-            <div>{parse(question.preQuestion || 'Sắp xếp theo đúng thứ tự')}</div>
-            <div className='border rounded arrange-box mt-2'>
-                {arrange.map((answer, index) =>
-                    <button disabled={splitted.length == 0 && !isReviewing} key={index} className='missing-box mr-2 mt-2 mb-2' onClick={() => reArrange(answer, index)}>{answer}</button>
-                )}
+            <div className='ml-1 mt-4 excercise-group border-secondary'>
+                <div className='font-weight-bold text-dark text-center' style={{ fontSize: 25 }}>{parse(question.preQuestion || 'Sắp xếp theo đúng thứ tự')}</div>
+                <div className='text-center'>
+                    <small className='text-dark question-guide' style={{ fontSize: 15 }}>(Lựa chọn các từ/cụm từ để sắp xếp thành câu chính xác!)</small>
+                </div>
+                <div className='border rounded arrange-box bg-white mt-2'>
+                    {arrange.map((answer, index) =>
+                        <button disabled={splitted.length == 0 && !isReviewing} key={index} className='missing-box mr-2 mt-2 mb-2' onClick={() => reArrange(answer, index)}>{answer}</button>
+                    )}
+                </div>
             </div>
             <div className='arrange-box'>
                 {splitted.map((split, index) =>
-                    <button key={index} className='answer-card missing-box mr-2 mt-2 mb-2' onClick={() => selectSplit(split, index)}>{split}</button>
+                    <button key={index} className='answer-card missing-box mr-3 mt-2 mb-2' onClick={() => selectSplit(split, index)}>{split} <div className='keyboard-shortcut'><div className='key'>{index + 1}</div></div></button>
                 )}
             </div>
         </div>

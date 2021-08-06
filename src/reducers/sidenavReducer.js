@@ -1,12 +1,18 @@
 const initialState = {
-    collapse: true
+    collapse: true,
+    levelOne: '',
+    levelTwo: '',
 }
 const sidenavReducer = (state = initialState, action) => {
-    switch(action.type){
+    switch (action.type) {
         case "Collapse":
-            return {...state,collapse: true}
+            return { ...state, collapse: true }
         case "Expand":
-            return {...state,collapse: false}
+            return { ...state, collapse: false }
+        case "SelectLevelOne":
+            return { ...state, levelOne: action.data }
+        case "SelectLevelTwo":
+            return { ...state, levelTwo: action.data }
         default:
             return state;
     };

@@ -12,7 +12,9 @@ class ThumbImage extends Component {
       if (!nextProps.file) {
         return;
       }
-  
+      if(Object.keys(nextProps.file).length == 0){
+        return;
+      }
       this.setState({ loading: true }, () => {
         let reader = new FileReader();
   
@@ -27,7 +29,16 @@ class ThumbImage extends Component {
     render() {
       const { file } = this.props;
       const { thumb } = this.state;
-      if (!file) {
+      if(!file){
+        return (
+          <img
+            src="/image/picture (1).png"
+            alt="image"
+            className="display-ImgQuestion"
+          />
+        );
+      }
+      if (Object.keys(file).length == 0) {
         return (
           <img
             src="/image/picture (1).png"

@@ -187,7 +187,7 @@ const ManagementCategories = () => {
                       className="btn btn-primary mb-2"
                       onClick={toggleModalCreate}
                     >
-                      Thêm nhóm từ vựng
+                     <i className='fa fa-plus'></i> Thêm nhóm từ vựng
                     </button>
                     <Search queryFunction={search}></Search>
                   </div>

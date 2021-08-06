@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-browser-router";
 import { connect } from "react-redux";
 import { signIn } from "./../../actions/authActions"
 
@@ -61,8 +62,8 @@ class SignIn extends Component {
         <div className="container-login100-form-btn mt-2">
           <button className="btn btn-primary"> Đăng Nhập </button>
         </div>
-        <a href="/home" className="mt-2">Về trang chủ</a>
-        <a href="/quenmatkhau" className="mt-2">Quên mật khẩu</a>
+        <Link to="/home" className="mt-2">Về trang chủ</Link>
+        <Link to="/quenmatkhau" className="mt-2">Quên mật khẩu</Link>
       </form>
     )
   }

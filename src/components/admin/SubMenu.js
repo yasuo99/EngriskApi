@@ -1,12 +1,16 @@
 import React, { Component, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { appendScript } from "../../config/appendScript";
-import $ from 'jquery'; 
+import $ from 'jquery';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidenav } from "../../actions/sidenavAction";
+import { AiOutlineBarChart } from 'react-icons/ai'
+import { FaRoute } from 'react-icons/fa'
+import { MenuLevelOne, MenuLevelTwo } from "../../constants/MenuLevel";
 const SubMenu = () => {
   const [toggleSidebar, setToggleSideBar] = useState(false);
-  const {collapse} = useSelector(state => state.sidenav)
+  const { collapse } = useSelector(state => state.sidenav)
+  const {levelOne, levelTwo} = useSelector(state => state.sidenav);
   const dispatch = useDispatch();
   function toggle() {
     console.log(!collapse);
@@ -15,11 +19,12 @@ const SubMenu = () => {
   return (
     <ul
       className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${collapse ? "toggled" : ""}`}
-      id="accordionSidebar" style={{width: '7.5rem !important'}}
+      id="accordionSidebar" style={{ width: '7.5rem !important' }}
     >
       <Link
         className="sidebar-brand d-flex align-items-center justify-content-center"
-        to="#"
+        to="/admin"
+        onClick={() => dispatch({type: 'SelectLevelOne', data: MenuLevelOne.ADMIN})}
       >
         <div className="sidebar-brand-icon rotate-n-15">
           <i className="fa fa-smile-o" />
@@ -28,15 +33,16 @@ const SubMenu = () => {
       </Link>
       <hr className="sidebar-divider my-0" />
       <hr className="sidebar-divider" />
-      <div className="sidebar-heading">Interface</div>
+      <div className="sidebar-heading">Tài nguyên</div>
       <li className="nav-item">
         <Link
-          className="nav-link collapsed"
+          className="nav-link collapsed active"
           to="#"
           data-toggle="collapse"
           data-target="#collapseUtilities1"
           aria-expanded="true"
           aria-controls="collapseUtilities"
+          onClick={() => dispatch({type: 'SelectLevelOne', data: MenuLevelOne.CONTENT})}
         >
           <i className="fa fa-fw fa-database" />
           <span>Nội dung</span>
@@ -49,37 +55,65 @@ const SubMenu = () => {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <h6 className="collapse-header">Quản lý nội dung:</h6>
-            <Link className="collapse-item" to="/admin/quan-ly-tu-vung">
+            <Link className={`collapse-item ${levelTwo == MenuLevelTwo.VOCABULARY ? 'active' : ''}`} to="/admin/quan-ly-tu-vung" onClick={() => dispatch({type: 'SelectLevelTwo', data: MenuLevelTwo.VOCABULARY})}>
               Từ vựng
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-nhom-tu">
+            <Link className={`collapse-item ${levelTwo == MenuLevelTwo.CATEGORY ? 'active' : ''}`} to="/admin/quan-ly-nhom-tu" onClick={() => dispatch({type: 'SelectLevelTwo', data: MenuLevelTwo.CATEGORY})}>
               Nhóm từ
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-tag">
+            <Link className={`collapse-item ${levelTwo == MenuLevelTwo.TAG ? 'active' : ''}`} to="/admin/quan-ly-tag" onClick={() => dispatch({type: 'SelectLevelTwo', data: MenuLevelTwo.TAG})}>
               Tag
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-bai-viet">
+            <Link className={`collapse-item ${levelTwo == MenuLevelTwo.POST ? 'active' : ''}`} to="/admin/quan-ly-bai-viet" onClick={() => dispatch({type: 'SelectLevelTwo', data: MenuLevelTwo.POST})}>
               Bài viết
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-cau-hoi">
+            <Link className={`collapse-item ${levelTwo == MenuLevelTwo.QUESTIONBANK ? 'active' : ''}`} to="/admin/quan-ly-cau-hoi" onClick={() => dispatch({type: 'SelectLevelTwo', data: MenuLevelTwo.QUESTIONBANK})}>
               Ngân hàng câu hỏi
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-quiz-exam">
-              Quiz/Exam
-            </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-chung-chi">
+            <Link className={`collapse-item ${levelTwo == MenuLevelTwo.CERTIFICATE ? 'active' : ''}`} to="/admin/quan-ly-chung-chi" onClick={() => dispatch({type: 'SelectLevelTwo', data: MenuLevelTwo.CERTIFICATE})}>
               Chứng chỉ
-            </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-bai-hoc">
-              Bài học
-            </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-lo-trinh">
-              Lộ trình học
             </Link>
           </div>
         </div>
       </li>
+      <li className="nav-item">
+        <Link to="/admin/quan-ly-exam" className="nav-link collapsed" >
+          <i className="fa fa-fw fa-folder"></i>
+          <span>Exams</span>
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link to="/admin/quan-ly-quiz" className="nav-link collapsed" >
+          <i className="fa fa-fw fa-folder"></i>
+          <span>Quiz</span>
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link to="/admin/quan-ly-bai-hoc" className="nav-link collapsed">
+          <i className="fa fa-fw fa-folder"></i>
+          <span>Bài học</span>
+        </Link>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRoutes" aria-expanded="true" aria-controls="collapseRoutes">
+          <i className="fa fa-fw fa-folder"></i>
+          <span>Lộ trình học</span>
+        </a>
+        <div id="collapseRoutes" className="collapse" aria-labelledby="headingRoutes" data-parent="#accordionSidebar">
+          <div className="bg-white py-2 collapse-inner rounded">
+            <h6 className="collapse-header">Quản lý:</h6>
+            <Link className="collapse-item" to="/admin/quan-ly-lo-trinh">Danh sách</Link>
+            <div className="collapse-divider"></div>
+            <h6 className="collapse-header">Phân tích:</h6>
+            <Link className="collapse-item" to="/admin/quan-ly-lo-trinh/overview">Tổng quan</Link>
+          </div>
+        </div>
+      </li>
+      <hr className="sidebar-divider"></hr>
 
+      <div className="sidebar-heading">
+        Quản trị
+      </div>
       <li className="nav-item">
         <Link
           className="nav-link collapsed"
@@ -109,9 +143,6 @@ const SubMenu = () => {
             <Link className="collapse-item" to="/admin/quan-ly-phan-quyen">
               Phân quyền
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-bang-diem">
-              Quy đổi điểm
-            </Link>
           </div>
         </div>
       </li>
@@ -134,87 +165,17 @@ const SubMenu = () => {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <h6 className="collapse-header">Quản lý nội dung:</h6>
-            <Link className="collapse-item" to="/admin/quan-ly-noi-dung/quiz-exam">
-              Quiz/Exam
-            </Link>
+            <h6 className="collapse-header">Kiểm duyệt nội dung:</h6>
             <Link className="collapse-item" to="/admin/quan-ly-noi-dung/bai-viet-binh-luan">
               Post/Comment
             </Link>
             <Link className="collapse-item" to="/admin/quan-ly-noi-dung/the-ghi-nho">
               Thẻ nhớ
             </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-noi-dung/lo-trinh">
-              Lộ trình học
-            </Link>
-            <Link className="collapse-item" to="/admin/quan-ly-noi-dung/dong-gop">
-              Đóng góp
-            </Link>
           </div>
         </div>
       </li>
-      <li className="nav-item">
-        <Link
-          className="nav-link collapsed"
-          to="#"
-          data-toggle="collapse"
-          data-target="#collapseTwo"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
-          <i className="fa fa-fw fa-cog" />
-          <span>Giao diện</span>
-        </Link>
-        <div
-          id="collapseTwo"
-          className="collapse"
-          aria-labelledby="headingTwo"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white py-2 collapse-inner rounded">
-            <h6 className="collapse-header">Tùy chỉnh giao diện:</h6>
-            <Link className="collapse-item" to="#">
-              Banner
-            </Link>
-            <Link className="collapse-item" to="#">
-              Footer
-            </Link>
-          </div>
-        </div>
-      </li>
-      <hr className="sidebar-divider" />
-      <div className="sidebar-heading">Addons</div>
-      <li className="nav-item">
-        <Link
-          className="nav-link collapsed"
-          to="#"
-          data-toggle="collapse"
-          data-target="#collapsePages"
-          aria-expanded="true"
-          aria-controls="collapsePages"
-        >
-          <i className="fa fa-fw fa-folder" />
-          <span>Trang</span>
-        </Link>
-        <div
-          id="collapsePages"
-          className="collapse"
-          aria-labelledby="headingPages"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white py-2 collapse-inner rounded">
-            <Link className="collapse-item" to="#">
-              Trang 404
-            </Link>
-            <Link className="collapse-item" to="#">
-              Trang trống
-            </Link>
-            <Link className="collapse-item" to="#">
-              Trang lỗi
-            </Link>
-          </div>
-        </div>
-      </li>
+
       <div className="text-center d-none d-md-inline">
         <button onClick={() => toggle()}
           className={`rounded-circle border-0`}

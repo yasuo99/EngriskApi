@@ -97,7 +97,7 @@ const ConversationScript = ({ script, setConversation }) => {
                       className="p-2 text-dark border cursor-pointer mt-1"
                       onClick={() => addQuestion(question)}
                     >
-                      {question.preQuestion}: {question.content}
+                     {`${question.preQuestion ? question.preQuestion: 'Câu hỏi hội thoại'}`}
                     </ListGroup.Item>
                   </OverlayTrigger>
                 ))}
@@ -117,11 +117,11 @@ const ConversationScript = ({ script, setConversation }) => {
                 <div className="d-flex justify-content-between align-items-middle">
                   <p
                     onClick={() => setSelectQuestion(question)}
-                    className={`p-2 ${
+                    className={`p-2 col-10 ${
                       selectQuestion == question ? "text-white" : ""
                     }`}
                   >
-                    {question.preQuestion}: {question.content}
+                    {`${question.preQuestion ? question.preQuestion: 'Câu hỏi hội thoại'}`}
                   </p>
                   <button
                     className="btn btn-light"

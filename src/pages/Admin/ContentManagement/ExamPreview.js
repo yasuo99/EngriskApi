@@ -15,7 +15,7 @@ const ExamPreview = ({ exam, closeReview }) => {
                         <div className="container learning-layout">
                             <div className='text-center font-weight-bold'>
                                 <div>Bài thi: {exam.title}</div>
-                                <div>Kinh nghiệm: {exam.expGain}</div>
+                                <div>Số câu hỏi: {exam.questions.length}</div>
                                 <div>Thời gian làm bài: {exam.duration} phút</div>
                             </div>
 
@@ -32,7 +32,7 @@ const ExamPreview = ({ exam, closeReview }) => {
                                             Đáp án:
                                             <ol type="A" className="ml-4">
                                                 {question.answers.map((answer, index) =>
-                                                    <li>{answer.answer}</li>
+                                                    <li className={`${answer.isQuestionAnswer ? 'text-primary' : ''}`}>{answer.answer}</li>
                                                 )}
                                             </ol>
                                         </div>

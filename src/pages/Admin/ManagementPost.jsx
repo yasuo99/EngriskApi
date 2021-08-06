@@ -4,7 +4,8 @@ import HeaderAdmin from "./../../components/admin/HeaderAdmin";
 import { useEffect, useState } from "react";
 import Paginate from "../../components/pagination/Paginate";
 import postApiV2 from "../../api/2.0/postApi";
-import Search from './../../components/search/Search';
+import Search from "./../../components/search/Search";
+import { toast } from "react-toastify";
 
 const ManagementPost = ({}) => {
   const [posts, setPosts] = useState({
@@ -17,6 +18,7 @@ const ManagementPost = ({}) => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalLock, setModalLock] = useState(false);
   const [selectPost, setSelectPost] = useState({});
+  const [isRefresh,setIsRefresh] = useState(false);
   const [query, setQuery] = useState("");
   async function fetchData() {
     const params = {
@@ -25,11 +27,21 @@ const ManagementPost = ({}) => {
       search: query,
     };
     const result = await postApiV2.getManage(params);
-    setPosts(result)
+    setPosts(result);
   }
   useEffect(() => {
     fetchData();
   }, [posts.currentPage, posts.pageSize, query]);
+  useEffect(() => {
+    if(isRefresh){
+      setPosts({
+        ...posts,
+        currentPage: 1
+      })
+      fetchData();
+      setIsRefresh(false);
+    }
+  },[isRefresh])
   function toggleModalDelete() {}
   function toggleModalEdit() {}
   function toggleModalLock() {}
@@ -42,6 +54,20 @@ const ManagementPost = ({}) => {
       currentPage: currentPage,
       pageSize: pageSize,
     });
+  }
+  function toggleModalLock(post){
+    setSelectPost(post);
+    setModalLock(!modalLock);
+  }
+  async function submitLock(){
+    const result = await postApiV2.lockPost(selectPost.id);
+    if(result.status == 200){
+      toast('Thành công', {type: 'success', autoClose: 2000})
+      toggleModalLock({})
+      setIsRefresh(true);
+    }else{
+      toast('Thất bại', {type: 'error', autoClose: 2000})
+    }
   }
   return (
     <div>
@@ -66,11 +92,11 @@ const ManagementPost = ({}) => {
                     <Table striped bordered hover>
                       <thead>
                         <tr>
-                          <th className='nghia'>Tiêu đề bài viết</th>
-                          <th className='w-50'>Nội dung bài viết</th>
+                          <th className="nghia">Tiêu đề bài viết</th>
+                          <th className="w-50">Nội dung bài viết</th>
                           <th>Người tạo</th>
                           <th>Số bình luận</th>
-                          <th className='nghia'>Chức năng</th>
+                          <th className="nghia">Chức năng</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -81,18 +107,21 @@ const ManagementPost = ({}) => {
                             <td>{post.accountUserName}</td>
                             <td>{post.totalComment}</td>
                             <td>
-                              {post.isLocked ?  <button
-                                className="btn btn-primary btn-delete ml-1"
-                                onClick={() => toggleModalDelete(post)}
-                              >
-                              <i className="fa fa-unlock"></i>
-                              </button> :  <button
-                                className="btn btn-primary btn-delete ml-1"
-                                onClick={() => toggleModalDelete(post)}
-                              >
-                              <i className="fa fa-lock"></i>
-                              </button>}
-                             
+                              {post.isLocked ? (
+                                <button
+                                  className="btn btn-primary btn-delete ml-1"
+                                  onClick={() => toggleModalLock(post)}
+                                >
+                                  <i className="fa fa-unlock"></i>
+                                </button>
+                              ) : (
+                                <button
+                                  className="btn btn-primary btn-delete ml-1"
+                                  onClick={() => toggleModalLock(post)}
+                                >
+                                  <i className="fa fa-lock"></i>
+                                </button>
+                              )}
                             </td>
                           </tr>
                         ))}
@@ -112,88 +141,44 @@ const ManagementPost = ({}) => {
             </div>
           </div>
         </div>
-        {/* <Modal
-          show={modalEdit}
-          onHide={() => toggleModalEdit({})}
-          contentClassName="modal-basic-content"
-        >
-          <Modal.Header closeButton onClick={() => toggleModalEdit({})}>
-            <Modal.Title>Thêm nhóm từ vựng</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="form-group">
-              <div className="container">
-                <div className="row">
-                  <div className="col-6">
-                    <p className="titleInfo">Thông tin cũ</p>
-                    <div className="card-input mt-3">
-                      <span>Tên nhóm</span>
-                      <input
-                        type="text"
-                        name="url"
-                        value={selectPost.categoryName}
-                        readOnly
-                      />
-                    </div>
-                    <div className="card-input mt-3">
-                      <span>Hình ảnh</span>
-                      <img
-                        className="img-thumbnail"
-                        src={selectPost.categoryImage}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <p className="titleInfo">Thông tin mới</p>
-                    <div className="card-input mt-3">
-                      <span>Tên nhóm</span>
-                      <input
-                        type="text"
-                        name="url"
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                    <div className="card-input mt-3">
-                      <span>Hình ảnh</span>
-                      <input
-                        type="file"
-                        onChange={(e) => setImage(e.target.files[0])}
-                      />
-                    </div>
-                  </div>
-                </div>
+        {Object.keys(selectPost).length > 0 && (
+          <Modal
+            show={modalLock}
+            onHide={() => toggleModalLock({})}
+            dialogClassName="sweet-alert-modal rounded"
+            contentClassName="modal-basic-content"
+          >
+            <Modal.Body>
+              <div className="text-center">
+                <i className="fa fa-4x fa-warning text-info"></i>
+                <br></br>
+                <br></br>
+                <h3 className="text-primary">
+                  {!selectPost.isLocked
+                    ? "Bạn có chắc muốn khóa bài viết này"
+                    : "Bạn có chắc muốn mở khóa bài viết này"}
+                </h3>
+                <p className="text-info">
+                  {`Người dùng sẽ ${
+                    !selectPost.isLocked
+                      ? "thấy và thảo luận được"
+                      : "không thấy và thảo luận được"} trên bài viết này`}
+                </p>
               </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => toggleModalEdit({})}>
-              Trở lại
-            </Button>
-            <Button variant="primary" onClick={(e) => edit()}>
-              Lưu lại
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          show={modalDelete}
-          onHide={() => toggleModalDelete({})}
-          contentClassName="modal-basic-content"
-        >
-          <Modal.Header closeButton onClick={() => toggleModalDelete({})}>
-            <Modal.Title>Xác nhận xóa nhóm từ vựng</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Bạn có chắc chắn muốn xóa nhóm từ vựng này không?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => toggleModalDelete({})}>
-              Trở lại
-            </Button>
-            <Button variant="primary" onClick={(e) => submitDelete()}>
-              Lưu lại
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => toggleModalLock({})}
+              >
+                Hủy
+              </Button>
+              <Button variant="primary" onClick={(e) => submitLock()}>
+                Xác nhận
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
       </div>
     </div>
   );

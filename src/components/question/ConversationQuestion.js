@@ -1,10 +1,21 @@
 import React, { useEffect } from "react"
 import { useState } from "react"
 import parse from 'html-react-parser'
+import ReactPlayer from "react-player";
+import CircleControls from "react-player-circle-controls";
+import "react-player-circle-controls/dist/styles.css";
 const temp = [1, 2, 3, 4, 5, 6]
 const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewing }) => {
     const [conversation, setConversation] = useState([])
-
+    const [users, setUsers] = useState({
+        firstUser: '',
+        secondUser: ''
+    });
+    const [playing, setPlaying] = useState(false);
+    const [playerState, setPlayerState] = useState({
+        played: 0,
+        loaded: 0,
+    });
     function getHiddenText(text) {
         if (text) {
             var firstIndex = text.indexOf('<p>')
@@ -24,13 +35,19 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
         })
         console.log(question.answers);
         while (i < question.answers.length) {
+            const temp = JSON.parse(question.answers[i]?.answer);
+            console.log(temp);
+            setUsers({
+                firstUser: temp.firstUser,
+                secondUser: temp.secondUser
+            })
             const line = {
-                first: question.answers[i]?.answer,
+                first: temp.firstLine,
                 firstAnswer: '',
-                second: question.answers[i + 1]?.answer,
+                second: temp.secondLine,
                 secondAnswer: ''
             }
-            i += 2;
+            i += 1;
             lines.push(line)
         }
         console.log(lines);
@@ -46,7 +63,7 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
                 hidden.push(secondMissing)
             }
         }
-        setMissingBoxes([...hidden])
+        setMissingBoxes([...hidden.sort(() => Math.random() - 0.5)])
     }
     useEffect(() => {
         console.log('wtf');
@@ -82,11 +99,15 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
             var firstSubStr = line.substring(0, firstIndex);
             var secondSubStr = line.substring(secondIndex + 4, line.length);
             if (firstIndex != -1) {
-                const div = React.createElement('div', { key: index + 1 }, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar mr-1', key: index + 3 }), firstSubStr, React.createElement('button', { className: 'missing-box text-dark', onClick: () => removeFirstBox(index), key: index + 5, disabled: missingBoxes.length == 0 }, [conversation[index].firstAnswer ? conversation[index].firstAnswer : ''])], secondSubStr);
+                const div = React.createElement('div', { key: index + 1, className: 'd-flex' },
+                    [React.createElement('img', { src: "https://cdn.busuu.com/media/resized/character/98/alessandro_1578491741_98.jpg", className: 'chat-avatar mr-1', key: index + 3 }),
+                    [React.createElement('div', { className: 'ml-2 dialog-content' }, [React.createElement('div', { className: 'font-italic' }, users.firstUser), firstSubStr, React.createElement('button', { className: 'missing-box-2 text-dark', onClick: () => removeFirstBox(index), key: index + 5, disabled: missingBoxes.length == 0 }, [conversation[index].firstAnswer ? conversation[index].firstAnswer : '']), secondSubStr])],
+                    ],
+                );
                 return (div)
             }
             else {
-                const div = React.createElement('div', { key: index + 1, className: line.includes('<hidden></hidden>') ? 'hidden' : ''  }, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 3 }), line]);
+                const div = React.createElement('div', { key: index + 1, className: line.includes('<hidden></hidden>') ? 'hidden' : '' }, [React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 5 }), line]);
                 return (div)
             }
         }
@@ -100,11 +121,22 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
             var firstSubStr = line.substring(0, firstIndex);
             var secondSubStr = line.substring(secondIndex + 4, line.length);
             if (firstIndex != -1) {
-                const div = React.createElement('div', { key: index + 2 }, [firstSubStr, React.createElement('button', { className: 'missing-box text-dark', onClick: () => removeSecondBox(index), key: index + 4, disabled: missingBoxes.length == 0 }, [conversation[index].secondAnswer ? conversation[index].secondAnswer : ''])], secondSubStr, React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar', key: index + 6 }));
+                const div = React.createElement('div', { key: index + 2, className: 'd-flex' }, [
+                    React.createElement('div', { className: 'mr-2 dialog-content' }, [
+                        React.createElement('div', { className: 'd-flex justify-content-end font-italic' }, users.secondUser),
+                        firstSubStr,
+                        React.createElement('button', { className: 'missing-box-2 text-dark', onClick: () => removeSecondBox(index), key: index + 4, disabled: missingBoxes.length == 0 }, [conversation[index].secondAnswer ? conversation[index].secondAnswer : '']),
+                        secondSubStr
+                    ])
+                    ,
+                    React.createElement('img', { src: "https://cdn.busuu.com/v1.0/jpgunitsmall1/media/img/lauren_1470910544.jpg", className: 'chat-avatar', key: index + 6 })]);
                 return (div)
             }
             else {
-                const div = React.createElement('div', { key: index + 2, className: line.includes('<hidden></hidden>') ? 'hidden' : '' }, [line, React.createElement('img', { src: "https://www.w3schools.com/howto/img_avatar.png", className: 'chat-avatar ml-1', key: index + 4 })]);
+                const div = React.createElement('div', { key: index + 2, className: 'd-flex' }, [
+                    React.createElement('div', { className: 'mr-2 dialog-content' }, [
+                        React.createElement('div', { className: 'd-flex justify-content-end font-italic' }, users.secondUser),
+                        line]), React.createElement('img', { src: "https://cdn.busuu.com/v1.0/jpgunitsmall1/media/img/lauren_1470910544.jpg", className: 'chat-avatar', key: index + 6 })]);
                 return (div)
             }
         }
@@ -145,9 +177,26 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
     }
     return (
         <div className='container'>
-             <div className='container'>
-             <div>{parse(question.preQuestion || 'Điền vào đoạn hội thoại')}</div>
-             </div>
+            <div className='container'>
+                <div className='font-weight-bold text-dark'>{parse(question.preQuestion || 'Điền vào đoạn hội thoại')}</div>
+
+            </div>
+            <span>{question.audio && <div className="d-flex justify-content-center">
+                <ReactPlayer
+                    url={question.audio}
+                    playing={playing}
+                    height="0"
+                    width="0"
+                    onProgress={setPlayerState}
+                    onEnded={() => { setPlaying(false) }}
+                />
+                <CircleControls
+                    played={playerState.played}
+                    loaded={playerState.loaded}
+                    playing={playing}
+                    onTogglePlaying={() => { { setPlaying(!playing) } }}
+                />
+            </div>}</span>
             {conversation.map((script, index) =>
                 <div className='container mt-4 text-dark' key={index}>
                     <div className='d-flex justify-content-start'>
@@ -157,11 +206,16 @@ const ConversationQuestion = ({ question, isLastQuestion, checkAnswer, isReviewi
                 </div>
             )}
             <div className='container hidden-box mt-2'>
-                <div className='border'>
+                <div className='border rounded'>
                     <div className="page-wrap d-flex justify-content-center">
                         {missingBoxes.map((value, index) =>
-                            <button key={index} onClick={() => selectMissingBox(value, index)} className='missing-box mr-2 mt-2 mb-2'>
+                            <button key={index} onClick={() => selectMissingBox(value, index)} className='missing-box mr-3 mt-2 mb-2'>
                                 {value}
+                                <div className='keyboard-shortcut'>
+                                    <div className='key'>
+                                        {index + 1}
+                                    </div>
+                                </div>
                             </button>
                         )}
                     </div></div>

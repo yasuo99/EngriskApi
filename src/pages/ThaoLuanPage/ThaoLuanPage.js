@@ -14,6 +14,7 @@ import { Formik, Field, Form } from "formik";
 import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 import postApiV2 from '../../api/2.0/postApi';
 import Chatbox from "../../components/chatbot/Chatbox"
+import { toast } from 'react-toastify';
 const post = {
     title: '',
     content: '',
@@ -199,6 +200,12 @@ class ThaoLuanPage extends Component {
             formData.append('images', new Array());
         }
         var response = await postApi.createPost(formData);
+        if (response.status == 200) {
+            toast('Thêm bài viết thành công, chờ phê duyệt', { type: 'success', autoClose: 2000 });
+        }
+        else {
+            toast('Thất bại', { type: 'error', autoClose: 2000 });
+        }
         console.log(response);
     }
     removeImageSelected = () => {
@@ -235,18 +242,20 @@ class ThaoLuanPage extends Component {
                                             </div>}
                                         </div>
                                         <Tabs defaultActiveKey='hot' mountOnEnter>
-                                            <Tab eventKey='hot' title='Đang hot' tabClassName='font-weight-bold'>
-                                                <div className='container'>
+                                            <Tab eventKey='hot' title='Đang hot' tabClassName='font-weight-bold' mountOnEnter>
+                                                <Tab.Container>
                                                     {this.isComponentMounted && renderHotPosts}
-                                                </div>
+                                                </Tab.Container>
+
 
                                             </Tab>
-                                            <Tab eventKey='new' title='Mới' tabClassName='font-weight-bold'>
-                                                <div className='container'>
+                                            <Tab eventKey='new' title='Mới' tabClassName='font-weight-bold' mountOnEnter>
+                                                <Tab.Container>
                                                     {this.isComponentMounted && renderNewPost}
-                                                </div>
+                                                </Tab.Container>
                                             </Tab>
-                                            <Tab eventKey='share' title='Chia sẻ' tabClassName='font-weight-bold'>
+                                            <Tab eventKey='share' title='Chia sẻ' tabClassName='font-weight-bold' mountOnEnter>
+                                                <Tab.Container>
                                                 <div id="tabfour" role="tabpanel">
                                                     <div className="boxContent">
                                                         <img src={this.props.photoUrl || "/image/user.png"} className="img-user"></img>
@@ -254,7 +263,6 @@ class ThaoLuanPage extends Component {
                                                         <Formik
                                                             initialValues={post}
                                                             onSubmit={async (values, { resetForm }) => {
-                                                                await new Promise((r) => setTimeout(r, 500));
                                                                 // this.createPost(values);
                                                                 this.createPost(values);
                                                                 resetForm({})
@@ -330,6 +338,7 @@ class ThaoLuanPage extends Component {
                                                         </Formik>
                                                     </div>
                                                 </div>
+                                                </Tab.Container>
                                             </Tab>
                                         </Tabs>
 

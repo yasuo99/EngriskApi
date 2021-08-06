@@ -64,6 +64,16 @@ const sectionApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.put(url, scripts, { headers })
+    },
+    publishChange: async (id, status) => {
+        const url = `/sections/${id}/publish/change`;
+        const params = {
+            status: status
+        }
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url, null, { params, headers })
     }
 }
 export default sectionApiV2;

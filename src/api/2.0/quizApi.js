@@ -3,50 +3,79 @@ const clientUrl = `account/${JSON.parse(localStorage.getItem('account'))?.id}/qu
 const quizApi = {
     getAll: async (params) => {
         const adminUrl = '/quizzes'
-        return await axiosClientv2.get(adminUrl, {params})
+        return await axiosClientv2.get(adminUrl, { params })
     },
     get: async (id) => {
         const url = `/quizzes/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url, {headers});
+        return await axiosClientv2.get(url, { headers });
     },
-    edit: async (id,body) => {
+    edit: async (id, body) => {
         const url = `/quizzes/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.put(url,body, {headers});
+        return await axiosClientv2.put(url, body, { headers });
     },
     getUserQuizzes: async (id) => {
         const url = `/quizzes/user/${JSON.parse(localStorage.getItem('account')).id}`;
         return await axiosClientv2.get(url);
     },
-    create: async (quiz, side) => {
-        const url = side ? "/quizzes": `/quizzes/user/${JSON.parse(localStorage.getItem('account')).id}`;
+    create: async (quiz) => {
+        const url = "/quizzes";
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.post(url, quiz, {headers});
+        return await axiosClientv2.post(url, quiz, { headers });
     },
-    doQuiz: async (id) => {
-        const url = `/sections/${id}/learn`
+    createQuizQuestion: async (id,body) => {
+        const url = `/quizzes/${id}/questions`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url, {headers});
+        return await axiosClientv2.post(url, body, { headers });
+    }
+    ,
+    doQuiz: async (id) => {
+        const url = `/quizzes/${id}/do`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers });
+    },
+    doneQuiz: async (id) => {
+        const url = `/quizzes/${id}/done`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers });
     },
     checkAnswer: async (id, answer) => {
         const url = `/quizzes/${id}/do`
         return await axiosClientv2.post(url);
     },
-    getUserQuizzes: async (id,params) => {
+    getUserQuizzes: async (id, params) => {
         const url = `/quizzes/users/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url, {params,headers});
+        return await axiosClientv2.get(url, { params, headers });
     },
+    delete: async (id) => {
+        const url = `/quizzes/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.delete(url, { headers });
+    },
+    publishChange: async (id,params) => {
+        const url = `/quizzes/${id}/publish/change`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,null, { params, headers });
+    }
 }
 export default quizApi;

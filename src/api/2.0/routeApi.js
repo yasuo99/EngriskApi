@@ -8,6 +8,14 @@ const routeApi = {
         }
         return await axiosClientv2.get(url, { headers, params })
     },
+    getOverview: async () => {
+        const url = `/routes/overview`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers })
+    }
+    ,
     getAllEngriskRoute: async (id) => {
         const url = `/routes/users/${id}`
         const headers = {
@@ -26,7 +34,7 @@ const routeApi = {
         const url = `/routes/anonymous`;
         return await axiosClientv2.get(url)
     },
-    userGetAll: async (id,pagination, isPrivate ,status) => {
+    userGetAll: async (id, pagination, isPrivate, status) => {
         const url = `/routes/users/${id}/manage`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -37,7 +45,7 @@ const routeApi = {
             isPrivate: isPrivate,
             status: status
         }
-        return axiosClientv2.get(url, { headers,params });
+        return axiosClientv2.get(url, { headers, params });
     },
     shareRoute: async (id) => {
         const url = `/routes/users/${id}`;
@@ -53,30 +61,47 @@ const routeApi = {
         }
         return await axiosClientv2.get(url, { headers })
     },
+    getRouteAnalyze: async (id) => {
+        const url = `/routes/${id}/analyze`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers })
+    },
     createRoute: async (body) => {
         const url = `/routes`;
         return await axiosClientv2.post(url, body);
     },
-    updateRoute: async (id,body) => {
+    updateRoute: async (id, body) => {
         const url = `/routes/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.put(url,body, {headers})
+        return await axiosClientv2.put(url, body, { headers })
     },
     deleteRoute: async (id) => {
         const url = `/routes/${id}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.delete(url, {headers})
+        return await axiosClientv2.delete(url, { headers })
     },
-    changeRouteStatus: async (id,accountId) => {
+    changeRouteStatus: async (id, accountId) => {
         const url = `/routes/${id}/users/${accountId}/status`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.put(url, { headers });
+    },
+    publishRoute: async (id, status) => {
+        const url = `/routes/${id}/publish/change`;
+        const params = {
+            status: status
+        }
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url, null, { params, headers });
     },
     editSectionsRoute: async (id, sections) => {
         const url = `/routes/${id}/sections`;
@@ -86,11 +111,25 @@ const routeApi = {
         return await axiosClientv2.put(url, sections, { headers });
     },
     routeLearn: async (routeId, sectionId, scriptId) => {
-        const url  = `/routes/${routeId}/sections/${sectionId}/scripts/${scriptId}`;
+        const url = `/routes/${routeId}/sections/${sectionId}/scripts/${scriptId}`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
-        return await axiosClientv2.get(url,{headers});
+        return await axiosClientv2.get(url, { headers });
+    },
+    requestCertificate: async (routeId) => {
+        const url = `/routes/${routeId}/certificate/check`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, { headers });
+    },
+    submitCertificateRequest: async (routeId, params) => {
+        const url = `/routes/${routeId}/certificate/claim`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.get(url, {params, headers });
     }
 
 }

@@ -85,7 +85,7 @@ class ProgressWord extends Component {
                 <td><p style={{ paddingTop: 10, fontSize: 16 }}>{word.vie}</p></td>
                 <td>
                     <div className="box">
-                        {word.learnStatus == "weak" && <span class="icon "><svg width="16" height="16" viewBox="0 0 16 16">
+                        {word.learnStatus == "weak" && <span className="icon "><svg width="16" height="16" viewBox="0 0 16 16">
                             <g fill="none" fill-rule="nonzero">
                                 <path fill="#DDE0E3" d="M7.5 5h1A1.5 1.5 0 0 1 10 6.5v7A1.5 1.5 0 0 1 8.5 15h-1A1.5 1.5 0 0 1 6 13.5v-7A1.5 1.5 0 0 1 7.5 5zm5-4h1A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-11A1.5 1.5 0 0 1 12.5 1z"></path>
                                 <path fill="#E2222E" d="M2.5 9h1A1.5 1.5 0 0 1 5 10.5v3A1.5 1.5 0 0 1 3.5 15h-1A1.5 1.5 0 0 1 1 13.5v-3A1.5 1.5 0 0 1 2.5 9z"></path>
@@ -93,7 +93,7 @@ class ProgressWord extends Component {
                         </svg>
                         </span>}
 
-                        {word.learnStatus == "medium" && <span class="icon "><svg width="16" height="16" viewBox="0 0 16 16">
+                        {word.learnStatus == "medium" && <span className="icon "><svg width="16" height="16" viewBox="0 0 16 16">
                             <g fill="none" fill-rule="nonzero">
                                 <path fill="#DDE0E3" d="M7.5 5h1A1.5 1.5 0 0 1 10 6.5v7A1.5 1.5 0 0 1 8.5 15h-1A1.5 1.5 0 0 1 6 13.5v-7A1.5 1.5 0 0 1 7.5 5zm5-4h1A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-11A1.5 1.5 0 0 1 12.5 1z"></path>
                                 <path fill="#f0ad4e" d="M7.5 5h1A1.5 1.5 0 0 1 10 6.5v7A1.5 1.5 0 0 1 8.5 15h-1A1.5 1.5 0 0 1 6 13.5v-7A1.5 1.5 0 0 1 7.5 5z"></path>
@@ -102,7 +102,7 @@ class ProgressWord extends Component {
                         </svg></span>
                         }
                         {word.learnStatus == "strong" &&
-                            <span class="icon ">
+                            <span className="icon ">
                                 <svg width="16" height="16" viewBox="0 0 16 16">
                                     <g fill="none" fill-rule="nonzero">
                                         <path fill="#DDE0E3" d="M7.5 5h1A1.5 1.5 0 0 1 10 6.5v7A1.5 1.5 0 0 1 8.5 15h-1A1.5 1.5 0 0 1 6 13.5v-7A1.5 1.5 0 0 1 7.5 5zm5-4h1A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-11A1.5 1.5 0 0 1 12.5 1z"></path>

@@ -4,10 +4,10 @@ import { Field, ErrorMessage, FieldArray } from "formik";
 const SelectQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
   return (
     <div>
-      <div className="container border">
+      <div className="container border card p-2 shadow-sm">
         <div className="question">
           <div className="boxQuestion">
-            <div className="border border-primary rounded p-2">
+            <div className="border card shadow rounded p-2 mt-1">
               <h6>Câu hỏi (*)</h6>
               <CKEditor
                 config={{
@@ -61,15 +61,22 @@ const SelectQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
                   console.log(event);
                 }}
               />
-              <br className="mt-2"></br>
-              <label>Nội dung</label>
-              <Field type='text' name="content">
-
-              </Field>
+            </div>
+            <div className="border card shadow rounded p-2 mt-2">
+              <h6>Nội dung * <small className="text-info">(Sử dụng cặp {`<p></p>`} để chọn ví trí ẩn vd: {`<p></p>. How are you?`})</small></h6>
+              <Field
+                type="text"
+                name="content"
+                className="form-control"
+                autoComplete="off"
+              ></Field>
             </div>
           </div>
-          <div className="border border-primary rounded p-2 mt-1">
-            <h6>Đáp án (*)</h6>
+          <div className="border card shadow rounded p-2 mt-2 mb-3">
+            <h6>
+              Đáp án *{" "}
+              <small className="text-info">(Tối thiểu 2 đáp án)</small>
+            </h6>
             <div className="answer answerText">
               <ol type="A">
                 <FieldArray name="answers">
@@ -78,13 +85,13 @@ const SelectQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
                       {values.answers.length > 0 &&
                         values.answers.map((answer, index) => (
                           <div
-                            className="d-flex justify-content-center"
+                            className="d-flex justify-content-center mt-1"
                             key={index}
                           >
-                            <div className="itemAnswer answer-card">
+                            <div className="itemAnswer answer-card shadow-sm border">
                               <div className="row">
                                 <div className="col-1 d-flex justify-content-center">
-                                  <p className="textOrder">
+                                  <p className="textOrder font-weight-bold">
                                     <li></li>
                                   </p>
                                 </div>
@@ -132,20 +139,22 @@ const SelectQuestionCreate = ({ values, setFieldValue, checkAnswer }) => {
                             </div>
                           </div>
                         ))}
-                      <button
-                        type="button"
-                        className="btn btn-addAnswer fa fa-plus"
-                        onClick={() =>
-                          push({
-                            content: "",
-                            isQuestionAnswer: false,
-                            image: null,
-                            isAudioAnswer: false,
-                          })
-                        }
-                      >
-                        Thêm đáp án
-                      </button>
+                      <div className="d-flex justify-content-center">
+                        <button
+                          type="button"
+                          className="btn btn-primary rounded-pill mt-2"
+                          onClick={() =>
+                            push({
+                              content: "",
+                              isQuestionAnswer: false,
+                              image: null,
+                              isAudioAnswer: false,
+                            })
+                          }
+                        >
+                          Thêm đáp án <i className="fa fa-plus"></i>
+                        </button>
+                      </div>
                     </div>
                   )}
                 </FieldArray>

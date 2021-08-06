@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button, Modal } from 'react-bootstrap';
 import groupApiv2 from '../../api/2.0/groupApi';
+import { mapClassToString } from '../../constants/WordClass';
 
 class KetQuaTraCuu extends Component {
     constructor(props) {
@@ -127,7 +128,7 @@ class KetQuaTraCuu extends Component {
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
                         <HeaderClient></HeaderClient>
-                        <main id="ketquatracuu">
+                        <main id="ketquatracuu" className='text-dark'>
                             <div className="container">
                                 <div className="row">
                                     <div className="col-10 offset-1">
@@ -137,8 +138,9 @@ class KetQuaTraCuu extends Component {
                                 <div className="row">
                                     <div className="col-10 offset-1 mt-4">
                                         <div className="row">
-                                            <div className="col-8"><h2 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h2><h5>Từ loại: {result.word.wordCategory}</h5></div>
-                                            {this.props.isLoggedIn && <div className="col-4 mt-4 text-right">
+                                            <div className="col-8"><h2 className="kechan"><img src={result.direction === 'en' ? "/image/english-language.png" : "/image/vietnamxl.png"} /> {result.direction === 'en' ? result.word.eng : result.word.vie}</h2>
+                                            <h5>Từ loại: {mapClassToString(result.word.class)}</h5></div>
+                                            {/* {this.props.isLoggedIn && <div className="col-4 mt-4 text-right">
                                                 <div className="dropdown">
                                                     <button className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         Thêm vào danh sách</button>
@@ -147,7 +149,7 @@ class KetQuaTraCuu extends Component {
                                                         <a onClick={(e) => this.modalGroup(e)} className="dropdown-item" href="#">Thêm group</a>
                                                     </div>
                                                 </div>
-                                            </div>}
+                                            </div>} */}
                                         </div>
                                         <h5 className="text2 mt-2">BẢN DỊCH</h5>
                                         <h3 className="mt-3"><img src={result.direction === 'en' ? "/image/vietnamxl.png" : "/image/english-language.png"} className="mr-2" />{result.direction === 'en' ? result.word.vie : result.word.eng}</h3>

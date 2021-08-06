@@ -32,7 +32,7 @@ const DashBoard = () => {
             curve: 'straight'
           },
           title: {
-            text: 'Product Trends by Month',
+            text: 'Biểu đồ lưu lượng người dùng hệ thống',
             align: 'left'
           },
           grid: {
@@ -130,10 +130,6 @@ const DashBoard = () => {
             <div className="d-flex justify-content-center">
                 <div>
                     <div className="card shadow mb-4">
-                        <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 className="m-0 font-weight-bold text-primary">Biểu đồ tham gia hệ thống</h6>
-                        </div>
-
                         <div className="card-body">
                             <div className="chart-area">
                                 <Chart options={progressChart.options} series={progressChart.series} type="line" height={300} width={1000} />

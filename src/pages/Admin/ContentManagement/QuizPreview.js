@@ -5,6 +5,7 @@ import BasicQuestion from "../../../components/question/BasicQuestion";
 import ConnectionQuestion from "../../../components/question/ConnectionQuestion";
 import ConversationQuestion from "../../../components/question/ConversationQuestion";
 import FilloutQuestion from "../../../components/question/FilloutQuestion";
+import SelectQuestion from "../../../components/question/SelectQuestion";
 import { QuestionTypes } from "../../../constants/QuestionTypes";
 const QuizPreview = ({ quiz, closeReview }) => {
     const [index, setIndex] = useState(0)
@@ -38,6 +39,8 @@ const QuizPreview = ({ quiz, closeReview }) => {
                 return (<ConversationQuestion question={currentQuestion} isReviewing={true} />)
             case QuestionTypes.FillOut:
                 return (<FilloutQuestion question={currentQuestion} isReviewing={true} />)
+            case QuestionTypes.Select:
+                return( <SelectQuestion question={currentQuestion} isReviewing={true}></SelectQuestion>)
             default:
                 return <BasicQuestion switchAnswerDisplay={switchAnswerDisplay} question={currentQuestion} isReviewing={true} />
         }

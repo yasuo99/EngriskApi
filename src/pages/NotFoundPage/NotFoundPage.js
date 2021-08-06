@@ -8,8 +8,8 @@ class NotFoundPage extends Component {
         return (
             <div id="wrapper">
                 <div id="content-wrapper" className="d-flex flex-column">
-                    <div id="content">
-                        <div className="container mb-5 pb-5">
+                    <div id="content" className='mt-4'>
+                        <div className="container mb-5 pb-5 mt-4">
                             <div className="text-center">
                                 <div className="error mx-auto" data-text={404}>404</div>
                                 <p className="lead text-gray-800 mb-5">Trang không tìm thấy</p>

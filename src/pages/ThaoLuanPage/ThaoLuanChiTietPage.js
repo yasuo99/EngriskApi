@@ -106,8 +106,11 @@ class ThaoLuanChiTietPage extends Component {
             }
             let result = (await postApi.commentToPost(this.state.post.id, comment)).status;
             if (result === 200) {
+                const { match: { match: { params } } } = this.props;
+                const post = await this.fetchPostDetail(params.postId);
                 this.setState({
-                    comment: ''
+                    comment: '',
+                    post: post
                 })
             }
         }
@@ -199,7 +202,7 @@ class ThaoLuanChiTietPage extends Component {
                                     </div>
                                 </div>
                                 <ContentPost post={this.state.post}></ContentPost>
-                                {this.props.isLoggedIn && this.props.account.isBanned === false && <div className="binhluan">
+                                {this.props.isLoggedIn && this.props.account.isBanned === false && !this.state.post.isLocked && <div className="binhluan">
                                     <div className="row mt-5">
                                         <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.account.photoUrl || "/image/default-user-image.png"} /></div>
                                         <div className="col-md-11">

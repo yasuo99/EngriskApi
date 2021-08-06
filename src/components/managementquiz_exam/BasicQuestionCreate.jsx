@@ -1,30 +1,37 @@
 import { Field, ErrorMessage, FieldArray } from "formik";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ThumbAudio from "./ThumbAudio";
 import ThumbImage from "./ThumbImage";
-
+import { QuestionTypes } from "../../constants/QuestionTypes";
+import ImageUpload from "image-upload-react";
+//important for getting nice style.
+import "image-upload-react/dist/index.css";
 const BasicQuestionCreate = ({
   values,
   checkAnswer,
   setFieldValue,
-  errors,
-  touched,
+  defaultType,
 }) => {
-  function validateAnswer(value) {
-    let error;
-    if (!value) {
-      error = "Required";
+  const [imageSrc, setImageSrc] = useState();
+  values.type = defaultType;
+  useEffect(() => {
+    if (imageSrc == "") {
+      values.file = null;
     }
-    return error;
-  }
+  }, [imageSrc]);
+  const handleImageSelect = (e) => {
+    console.log(e);
+    values.file = e.target.files[0];
+    setImageSrc(URL.createObjectURL(e.target.files[0]));
+  };
   return (
-    <div className="container border">
+    <div className="container card border-0 shadow-sm p-2">
       <div className="question">
         <div className="boxQuestion">
-          <div className="border border-primary rounded p-2">
-            <h6>Câu hỏi (*)</h6>
+          <div className="border card shadow rounded p-2 mt-2">
+            <h6>Câu hỏi *</h6>
             <CKEditor
               config={{
                 ckfinder: {
@@ -78,8 +85,8 @@ const BasicQuestionCreate = ({
               }}
             />
           </div>
-          <div className="border border-primary rounded p-2 mt-2">
-            <h6>Nội dung</h6>
+          <div className="border card shadow rounded p-2 mt-2">
+            <h6>Nội dung *</h6>
             <CKEditor
               config={{
                 ckfinder: {
@@ -222,65 +229,60 @@ const BasicQuestionCreate = ({
               }}
             />
           </div>
-
-          <div className="border border-secondary rounded p-2 mt-2">
-            <h6>File</h6>
+          <div className="border card shadow rounded p-2 mt-2">
+            <h6>File (ảnh + audio)</h6>
             <div className="row">
-              <div className="col-6">
-                <div className="boxImg">
-                  <ThumbImage file={values.file || values.image} />
-                  <div className="itemImg">
-                    <Field
-                      type="file"
-                      accept="image/*"
-                      className="item-question fa fa-camera "
-                      id="image"
-                      name="image"
-                      value={""}
-                      onChange={(event) => {
-                        setFieldValue("file", event.currentTarget.files[0]);
-                      }}
-                    />
-                    <img
-                      src="/image/delete1.png"
-                      className="img-question"
-                      onClick={() => {
-                        setFieldValue("file", null);
-                      }}
-                    ></img>
+              {defaultType != QuestionTypes.Speaking && (
+                  <div className="col-6">
+                    <p>File ảnh (800 X 400)</p>
+                    <div className="boxImg">
+                      <ImageUpload
+                        handleImageSelect={handleImageSelect}
+                        imageSrc={imageSrc}
+                        setImageSrc={setImageSrc}
+                        style={{
+                          width: 300,
+                          height: 200,
+                          background: "gold",
+                          marginTop: 0,
+                        }}
+                      />
+                    </div>
+                  </div>
+              )}
+              {defaultType == QuestionTypes.Listening && (
+                <div className="col-6">
+                  <p>File audio</p>
+                  <div className="form-group">
+                    <div className="input-group mb-3">
+                      <input
+                        type="file"
+                        name=""
+                        id=""
+                        accept="audio/*"
+                        className="form-control"
+                        onChange={(event) => {
+                          setFieldValue("audio", event.currentTarget.files[0]);
+                        }}
+                      />
+                      <div className="input-group-append">
+                        <img
+                          src="/image/delete1.png"
+                          className="img-question"
+                          style={{ width: "44px" }}
+                          onClick={() => {
+                            setFieldValue("audio", null);
+                          }}
+                        ></img>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-6">
-                <div className="boxImg">
-                  <ThumbAudio file={values.audio} />
-                  <div className="itemImg">
-                    <Field
-                      type="file"
-                      accept="audio/*"
-                      className="item-question fa fa-camera "
-                      id="audio"
-                      name="audio"
-                      value={""}
-                      onChange={(event) => {
-                        setFieldValue("audio", event.currentTarget.files[0]);
-                      }}
-                    />
-                    <img
-                      src="/image/delete1.png"
-                      className="img-question"
-                      onClick={() => {
-                        setFieldValue("audio", null);
-                      }}
-                    ></img>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
-
           {/* <img src="/image/picture (1).png" alt="img-question" class="img-question"> */}
-          <div className="answer answerText border border-primary rounded p-2 mt-2">
+          <div className="answer answerText shadow border rounded p-2 mt-2 mb-3">
             <h6>Đáp án (*)</h6>
             <ol type="A">
               <FieldArray name="answers">
@@ -288,35 +290,22 @@ const BasicQuestionCreate = ({
                   <div>
                     {values.answers.length > 0 &&
                       values.answers.map((answer, index) => {
-                        const answerErrors =
-                          (errors?.answers?.length && errors.answers[index]) ||
-                          {};
-                        const answerTouched =
-                          (touched?.answers?.length &&
-                            touched.answers[index]) ||
-                          {};
                         return (
                           <div
-                            className="d-flex justify-content-center"
+                            className="d-flex justify-content-center mt-1"
                             key={index}
                           >
-                            <div className="itemAnswer answer-card">
+                            <div className="itemAnswer answer-card shadow-sm border">
                               <div className="row">
                                 <div className="col-1 d-flex justify-content-center">
-                                  <li className="textOrder"></li>
+                                  <li className="textOrder font-weight-bold"></li>
                                 </div>
                                 <div className="col-9">
                                   <Field
                                     name={`answers.${index}.content`}
                                     placeholder="Nhập đáp án..."
                                     type="text"
-                                    className={
-                                      "answerFile" +
-                                      (answerErrors.required &&
-                                      answerTouched.content
-                                        ? " is-invalid"
-                                        : "")
-                                    }
+                                    className={"answerFile w-100"}
                                     id={`content${index}`}
                                     required
                                   />
@@ -327,21 +316,23 @@ const BasicQuestionCreate = ({
                                     className="field-error"
                                   />
                                 </div>
-                                <div className="col-1">
-                                  <Field
-                                    name={`answers.${index}.isQuestionAnswer`}
-                                    className="radioAnswerFile"
-                                    type="checkbox"
-                                    id="isQuestionAnswer"
-                                    data-id={index}
-                                    onClick={(e) => checkAnswer(e, values)}
-                                  />
-                                  <ErrorMessage
-                                    name={`answers.${index}.name`}
-                                    component="div"
-                                    className="field-error"
-                                  />
-                                </div>
+                                {defaultType != QuestionTypes.Speaking && (
+                                  <div className="col-1">
+                                    <Field
+                                      name={`answers.${index}.isQuestionAnswer`}
+                                      className="radioAnswerFile"
+                                      type="checkbox"
+                                      id="isQuestionAnswer"
+                                      data-id={index}
+                                      onClick={(e) => checkAnswer(e, values)}
+                                    />
+                                    <ErrorMessage
+                                      name={`answers.${index}.name`}
+                                      component="div"
+                                      className="field-error"
+                                    />
+                                  </div>
+                                )}
                                 <div className="col-1">
                                   <button
                                     type="button"
@@ -360,13 +351,11 @@ const BasicQuestionCreate = ({
                     <div className="d-flex justify-content-center">
                       <button
                         type="button"
-                        className="btn btn-primary rounded mt-2"
+                        className="btn btn-primary rounded-pill mt-2"
                         onClick={() =>
                           push({
                             content: "",
                             isQuestionAnswer: false,
-                            image: null,
-                            isAudioAnswer: false,
                           })
                         }
                       >

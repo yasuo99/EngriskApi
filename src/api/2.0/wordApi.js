@@ -3,12 +3,22 @@ import axiosClientv2 from "../../config/axiosClientv2";
 const wordApiV2 = {
     getAll: async (params) => {
         const url = "/words";
-        return axiosClientv2.get(url, { params }).catch(err => {
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.get(url, { params, headers }).catch(err => {
             console.log(err);
         })
     },
     createWord: async (body) => {
         const url = `/words`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.post(url, body, { headers })
+    },
+    createExample: async (id, body) => {
+        const url = `/words/${id}/examples`;
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -70,6 +80,16 @@ const wordApiV2 = {
             search: query
         }
         return await axiosClientv2.get(url, { params, headers });
+    },
+    changeStatus: async (id, status) => {
+        const url = `/words/${id}/publish/change`;
+        const headers = {
+            Authorization: `bearer ${localStorage.getItem('token')}`
+        }
+        const params = {
+            status: status
+        }
+        return await axiosClientv2.put(url, null, { params, headers });
     }
 }
 export default wordApiV2;

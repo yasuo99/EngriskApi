@@ -5,6 +5,7 @@ import ConversationQuestion from "../../components/question/ConversationQuestion
 import FilloutQuestion from "../../components/question/FilloutQuestion";
 import { QuestionTypes } from "../../constants/QuestionTypes";
 import SelectQuestion from "./SelectQuestion";
+import VoiceQuestion from "./VoiceQuestion";
 const QuestionPreview = ({ question }) => {
   function switchAnswerDisplay(length) {
     if (length == 2) {
@@ -12,6 +13,7 @@ const QuestionPreview = ({ question }) => {
     }
     return "d-flex flex-column";
   }
+  console.log(question);
   function renderQuestion() {
     switch (question.type) {
       case QuestionTypes.Arrange:
@@ -34,6 +36,10 @@ const QuestionPreview = ({ question }) => {
         return(
           <SelectQuestion question={question} isReviewing={true}></SelectQuestion>
         )
+      case QuestionTypes.Speaking:
+        return(
+          <VoiceQuestion question={question} isReviewing={true}></VoiceQuestion>
+        )
       default:
         return (
           <BasicQuestion
@@ -45,6 +51,6 @@ const QuestionPreview = ({ question }) => {
     }
   }
 
-  return <div className="container">{question && renderQuestion()}</div>;
+  return <div className="container script-panel">{question && renderQuestion()}</div>;
 };
 export default QuestionPreview;

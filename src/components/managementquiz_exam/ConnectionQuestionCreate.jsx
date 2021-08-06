@@ -3,66 +3,67 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 const ConnectionQuestionCreate = ({ values, setFieldValue }) => {
   return (
-    <div className="container border">
+    <div className="container card p-2 shadow-sm">
       <div className="question">
-        <label>Câu hỏi</label>
-        <CKEditor
-          config={{
-            ckfinder: {
-              // Upload the images to the server using the CKFinder QuickUpload command
-              // You have to change this address to your server that has the ckfinder php connector
-              toolbar: [
-                {
-                  name: "document",
-                  items: [
-                    "Source",
+        <div className="border card shadow rounded p-2 mt-1">
+          <h6>Câu hỏi (*)</h6>
+          <CKEditor
+            config={{
+              ckfinder: {
+                // Upload the images to the server using the CKFinder QuickUpload command
+                // You have to change this address to your server that has the ckfinder php connector
+                toolbar: [
+                  {
+                    name: "document",
+                    items: [
+                      "Source",
+                      "-",
+                      "NewPage",
+                      "Preview",
+                      "-",
+                      "Templates",
+                    ],
+                  }, // Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+                  [
+                    "Cut",
+                    "Copy",
+                    "Paste",
+                    "PasteText",
+                    "PasteFromWord",
                     "-",
-                    "NewPage",
-                    "Preview",
-                    "-",
-                    "Templates",
-                  ],
-                }, // Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
-                [
-                  "Cut",
-                  "Copy",
-                  "Paste",
-                  "PasteText",
-                  "PasteFromWord",
-                  "-",
-                  "Undo",
-                  "Redo",
-                ], // Defines toolbar group without name.
-                "/", // Line break - next group will be placed in new line.
-                { name: "basicstyles", items: ["Bold", "Italic"] },
-              ],
-            },
-            placeholder:
-              "Nhập câu hỏi ví dụ: Điền vào chỗ trống/ Chọn đáp án đúng...",
-          }}
-          editor={ClassicEditor}
-          data={values.preQuestion || ""}
-          onReady={(editor) => {
-            // You can store the "editor" and use when it is needed.
-          }}
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            // setFieldValue("preQuestion", data);
-            values.preQuestion = data;
-          }}
-          event={(editor) => {
-            editor.on("fileUploadResponse", (data) => {
-              console.log(data);
-            });
-          }}
-          onUpload={(event, edito) => {
-            console.log(event);
-          }}
-        />
+                    "Undo",
+                    "Redo",
+                  ], // Defines toolbar group without name.
+                  "/", // Line break - next group will be placed in new line.
+                  { name: "basicstyles", items: ["Bold", "Italic"] },
+                ],
+              },
+              placeholder:
+                "Nhập câu hỏi ví dụ: Điền vào chỗ trống/ Chọn đáp án đúng...",
+            }}
+            editor={ClassicEditor}
+            data={values.preQuestion || ""}
+            onReady={(editor) => {
+              // You can store the "editor" and use when it is needed.
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              // setFieldValue("preQuestion", data);
+              values.preQuestion = data;
+            }}
+            event={(editor) => {
+              editor.on("fileUploadResponse", (data) => {
+                console.log(data);
+              });
+            }}
+            onUpload={(event, edito) => {
+              console.log(event);
+            }}
+          />
+        </div>
         <div className="answerSort mt-1">
-          <h5>ĐÁP ÁN:</h5>
-
-          <div className="answer answerText">
+          <div className="answer answerText border card shadow mb-3 rounded p-2 mt-2">
+            <h6>Đáp án (*)</h6>
             <ol type="1">
               <FieldArray name="answers">
                 {({ insert, remove, push }) => (
@@ -70,69 +71,38 @@ const ConnectionQuestionCreate = ({ values, setFieldValue }) => {
                     {values.answers.length > 0 &&
                       values.answers.map((answer, index) => (
                         <div
-                          className="d-flex justify-content-between mt-2"
+                          className="d-flex shadow justify-content-center mt-2 card"
                           key={index}
                         >
-                          <div className="itemAnswer item-answer-align mr-1">
-                            <div className="row">
-                              <div className="col-1">
-                                <p className="textOrder mr-2">{index}.</p>
-                              </div>
-                              <div className="col-9">
-                                <Field
-                                  name={`answers.${index}.contentLeft`}
-                                  placeholder="Nhập đáp án..."
-                                  type="text"
-                                  className="answerFile"
-                                  id="textAnswerLeft"
-                                />
-                                <ErrorMessage
-                                  name={`answers.${index}.name`}
-                                  component="div"
-                                  className="field-error"
-                                />
-                              </div>
-                              <div className="col-1">
-                                <button
-                                  type="button"
-                                  className="secondary"
-                                  onClick={() => remove(index)}
-                                  className="exit"
-                                >
-                                  <img src="/image/cross.png"></img>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="itemAnswer item-answer-align ml-1">
-                            <div className="row">
-                              <div className="col-1">
-                                <p className="textOrder">{index}.</p>
-                              </div>
-                              <div className="col-9">
-                                <Field
-                                  name={`answers.${index}.contentRight`}
-                                  placeholder="Nhập đáp án..."
-                                  type="text"
-                                  className="answerFile"
-                                  id="textAnswerRight"
-                                />
-                                <ErrorMessage
-                                  name={`answers.${index}.name`}
-                                  component="div"
-                                  className="field-error"
-                                />
-                              </div>
-                              <div className="col-1">
-                                <button
-                                  type="button"
-                                  className="secondary"
-                                  onClick={() => remove(index)}
-                                  className="exit"
-                                >
-                                  <img src="/image/cross.png"></img>
-                                </button>
-                              </div>
+                          <div class="input-group border-top-0 connection">
+                            <Field
+                              name={`answers.${index}.contentLeft`}
+                              placeholder="Cột trái..."
+                              type="text"
+                              className="form-control"
+                              id="textAnswerLeft"
+                              autoComplete="off"
+                              required
+                            />
+                            <span class="input-group-addon">-</span>
+                            <Field
+                              name={`answers.${index}.contentRight`}
+                              placeholder="Cột phải..."
+                              type="text"
+                              className="form-control"
+                              id="textAnswerRight"
+                              autoComplete="off"
+                              required
+                            />
+                            <div class="input-group-append mr-1">
+                              <button
+                                type="button"
+                                className="secondary mr-2"
+                                onClick={() => remove(index)}
+                                className="exit"
+                              >
+                                <img src="/image/cross.png"></img>
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -140,7 +110,7 @@ const ConnectionQuestionCreate = ({ values, setFieldValue }) => {
                     <div className="d-flex justify-content-center">
                       <button
                         type="button"
-                        className="btn btn-primary rounded mt-2"
+                        className="btn btn-primary rounded-pill mt-2"
                         onClick={() =>
                           push({
                             content: "",

@@ -113,7 +113,7 @@ const VocabularyScript = ({ script, setVocabulary }) => {
                     <div className="d-flex justify-content-between align-items-middle">
                       <p
                         onClick={() => setSelectWord(word)}
-                        className={`p-2 ${
+                        className={`p-2 col-10 ${
                           selectWord == word ? "text-white" : ""
                         }`}
                       >
@@ -145,35 +145,18 @@ const VocabularyScript = ({ script, setVocabulary }) => {
                   </div>
                   <ListGroup className="list-group-sm overflow-auto">
                     {availableWords.map((word, index) => (
-                      <OverlayTrigger
-                        key={index}
-                        trigger={["hover", "focus"]}
-                        placement="left"
-                        overlay={
-                          <Popover id="popover-basic" className="big">
-                            <Popover.Title as="h6">
-                              Thông tin câu hỏi
-                            </Popover.Title>
-                            <Popover.Content>{word.eng}</Popover.Content>
-                          </Popover>
-                        }
+                      <ListGroup.Item
+                        className="p-2 text-dark border cursor-pointer mt-1"
+                        onClick={() => addWord(word)}
                       >
-                        <ListGroup.Item
-                          className="p-2 text-dark border cursor-pointer mt-1"
-                          onClick={() => addWord(word)}
-                        >
-                          {word.eng}
-                        </ListGroup.Item>
-                      </OverlayTrigger>
+                        {word.eng}
+                      </ListGroup.Item>
                     ))}
                   </ListGroup>
                 </Toast.Body>
               </Toast>
             </Col>
-            <Col sm={3}>
-              {Object.keys(selectWord).length > 0 && <VocabularyPreview vocabulary={selectWord}></VocabularyPreview>}
-            </Col>
-            <Col sm={3}>
+            <Col sm={6}>
               {Object.keys(selectWord).length == 0 ? (
                 <div className="d-flex justify-content-center align-items-middle">
                   <p>Chọn từ vựng để xem câu hỏi luyện tập</p>

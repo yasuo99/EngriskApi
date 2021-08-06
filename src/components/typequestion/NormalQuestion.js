@@ -11,6 +11,7 @@ import SelectQuestion from "../question/SelectQuestion";
 import WritingQuestion from "../question/WritingQuestion";
 import ToeicQuestion from "../question/ToeicQuestion";
 import ToeicBasicQuestion from "../question/ToeicBasicQuestion";
+import VoiceQuestion from "../question/VoiceQuestion";
 const NormalQuestion = ({ question, check, answerCheck, addRemainQuestion, removeRemainQuestion, isLastQuestion }) => {
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
@@ -94,6 +95,8 @@ const NormalQuestion = ({ question, check, answerCheck, addRemainQuestion, remov
         return (<WritingQuestion question={question}></WritingQuestion>)
       case QuestionTypes.Toeic:
         return (<ToeicBasicQuestion question={ question} renderAnswerClass={RenderAnswerClass} checkAnswer={CheckAnswer} checked={checked}></ToeicBasicQuestion>)
+      case QuestionTypes.Speaking:
+        return(<VoiceQuestion question={question} checkAnswer={AnswerCheck} isLastQuestion={isLastQuestion}></VoiceQuestion>)
       default:
         return <BasicQuestion question={question} switchAnswerDisplay={SwitchAnswerDisplay} checkAnswer={CheckAnswer} renderAnswerClass={RenderAnswerClass} checked={checked} isLastQuestion={isLastQuestion} reset={ResetQuestion} />
     }

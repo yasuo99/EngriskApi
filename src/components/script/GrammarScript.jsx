@@ -42,7 +42,7 @@ const GrammarScript = ({ setGrammar, script }) => {
     });
   }, [questions, theory]);
   async function fetchQuestions() {
-    const result = await questionApiV2.getFilter(questionFilter, grammarFilter);
+    const result = await questionApiV2.getFilter(questionFilter, "None");
     console.log(questions);
     setAvailableQuestions(
       result.filter(
@@ -205,16 +205,25 @@ const GrammarScript = ({ setGrammar, script }) => {
                     checked={questionFilter == "select"}
                     onChange={(e) => setQuestionFilter(e.target.value)}
                   ></input>
+                  <span> Câu hỏi chọn</span>
+                  <br></br>
+                  <input
+                    type="radio"
+                    value="fillout"
+                    name="type"
+                    checked={questionFilter == "fillout"}
+                    onChange={(e) => setQuestionFilter(e.target.value)}
+                  ></input>
                   <span> Câu hỏi điền</span>
                   <br></br>
                   <input
                     type="radio"
-                    value="writing"
+                    value="arrange"
                     name="type"
-                    checked={questionFilter == "writing"}
+                    checked={questionFilter == "arrange"}
                     onChange={(e) => setQuestionFilter(e.target.value)}
                   ></input>
-                  <span> Câu hỏi writing</span>
+                  <span> Câu hỏi sắp xếp</span>
                   <br></br>
                   <input
                     type="radio"
@@ -246,7 +255,7 @@ const GrammarScript = ({ setGrammar, script }) => {
                       className="p-2 text-dark border cursor-pointer mt-1"
                       onClick={() => addQuestion(question)}
                     >
-                      {question.preQuestion}: {question.content}
+                      {`${question.preQuestion ? question.preQuestion: 'Chọn đáp án đúng'}`}
                     </ListGroup.Item>
                   </OverlayTrigger>
                 ))}
@@ -272,11 +281,11 @@ const GrammarScript = ({ setGrammar, script }) => {
                     <div className="d-flex justify-content-between align-items-middle">
                       <p
                         onClick={() => setSelectQuestion(question)}
-                        className={`p-2 ${
+                        className={`p-2 col-10 ${
                           selectQuestion == question ? "text-white" : ""
                         }`}
                       >
-                        {question.preQuestion}: {question.content}
+                        {`${question.preQuestion ? question.preQuestion: 'Chọn đáp án đúng'}`}
                       </p>
                       <button
                         className="btn btn-light"

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const RightAnswer = ({ indexChange, isFinish, sectionId }) => {
+const RightAnswer = ({ indexChange, isFinish, sectionId, url }) => {
   const {isLoggedIn} = useSelector(state => state.auth);
   return (
     <div className="container">
@@ -21,18 +21,18 @@ const RightAnswer = ({ indexChange, isFinish, sectionId }) => {
             }
           }}>
             Kế tiếp
-          </button> : (sectionId ? isLoggedIn ?  <Link
+          </button> : (isLoggedIn ? sectionId ?  <Link
             className="btn feedback-bar-btn"
-            to={`/sections/${sectionId}/finish`}
+            to={url || `/sections/${sectionId}/finish`}
+          >
+            Kết thúc
+          </Link> : <Link
+            className="btn feedback-bar-btn"
+            to={url || `/vocabulary/progress`}
           >
             Kết thúc
           </Link> : <Link className="btn feedback-bar-btn"
-            to={`/home`}>Kết thúc</Link> : <Link
-            className="btn feedback-bar-btn"
-            to={`/vocabulary/progress`}
-          >
-            Kết thúc
-          </Link>)}
+            to={url ||`/home`}>Kết thúc</Link> )}
         </div>
       </div>
     </div>

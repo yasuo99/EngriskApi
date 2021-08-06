@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Button, Modal } from 'react-bootstrap'
+import { Link } from "react-browser-router";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import postApi from "../../api/postApi";
@@ -69,7 +70,7 @@ class ContentPost extends Component {
                     <div className="col-md-1 nd-img"><img className="img-fluid d-block mb-4 img-chitietthaoluan" src={this.props.post.accountPhotoUrl || "/image/default-user-image.png"} /></div>
                     <div className="col-md-9 pt-3">
                         <h5>{this.props.post.title}</h5>
-                        <a href={"/blog?id=" + this.props.post.accountId}>{this.props.post.accountUsername} {this.props.post.accountVerified && <img src="/image/check.png" alt='check-img' />}</a>
+                        <Link to={"/blog?id=" + this.props.post.accountId}>{this.props.post.accountUsername} {this.props.post.accountVerified && <img src="/image/check.png" alt='check-img' />}</Link>
                         <hr />
                         <p className="mt-3 mb-3">{this.props.post.content}</p>
                         <div className="row">

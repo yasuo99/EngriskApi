@@ -38,9 +38,9 @@ const SectionResult = () => {
             <div className="mt-2">
               <div className="row">
                 <div className="offset-md-11 col-1">
-                  <a className="btn btn-light rounded-circle" href="/home">
+                  <Link className="btn btn-light rounded-circle" to="/home">
                     <i className="fa fa-remove"></i>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

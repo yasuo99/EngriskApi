@@ -35,10 +35,13 @@ const NewExamPage = ({ }) => {
     const [modalTimeUp, setModalTimeUp] = useState(false);
     const [firstTimeConfig, setFirstTimeConfig] = useState(false);
     const [start, setStart] = useState(Date.now())
+    const [exam, setExam] = useState({})
+    const [isSubmit, setIsSubmit] = useState(false);
     const { examId } = useParams();
     useEffect(() => {
         async function fetchQuestions() {
             const result = await examApiv2.doExam(examId);
+            setExam(result);
             const formatQuestions = result.questions.map((value, index) => ({ question: value, index: index + 1, answer: '', isListened: false }))
             setQuestions(formatQuestions);
             setCurrentQuestion(formatQuestions[index]);
@@ -68,9 +71,10 @@ const NewExamPage = ({ }) => {
             setCurrentPart(currentQuestion.question.toeic)
         }
     }, [currentQuestion])
-    useEffect(() => {
-        setCurrentQuestion(questions.filter(q => q.question.toeic == currentPart).shift())
-    }, [currentPart])
+    // useEffect(() => {
+    //     setCurrentQuestion(questions.filter(q => q.question.toeic == currentPart).shift())
+    //     setIndex(questions.filter(q => q.question.toeic == currentPart).shift().index - 1)
+    // }, [currentPart])
     function selectAnswer(answer) {
         console.log(answer);
         console.log(questions);
@@ -130,7 +134,7 @@ const NewExamPage = ({ }) => {
         }
     }
     function listenedAudio(question) {
-        const index = questions.findIndex(q => q == question);
+        const index = questions.findIndex(q => q.question.id == question.question.id);
         console.log(index);
         questions[index].isListened = true;
         setQuestions([...questions]);
@@ -140,7 +144,7 @@ const NewExamPage = ({ }) => {
         dispatch(doneExam(examId, answers));
         setIsFinish(true);
     }
-    console.log(examConfig);
+    console.log(index);
     return (
         <div>
             {!isBusy ? (<div id="wrapper">
@@ -187,7 +191,7 @@ const NewExamPage = ({ }) => {
                                         </Toast.Body>
                                     </Toast> */}
                                     <div>
-                                        <h5 className='text-dark'> <Countdown className='pt-2' date={start + 3 * 60 * 1000} onComplete={() => console.log('dkm')} />  <span>
+                                        <h5 className='text-dark'> <Countdown className='pt-2' date={start + exam.duration * 60 * 1000} onComplete={() => submitFinish()} />  <span>
                                             <button className='btn btn-warning font-weight-bold mr-2' onClick={() => setModalSubmit(!modalSubmit)}>Nộp bài</button>
                                             <button className='btn btn-light mr-2' onClick={() => setMenu(!menu)}>
                                                 <i className='fa fa-list'></i>
@@ -313,22 +317,22 @@ const NewExamPage = ({ }) => {
                             </div>
                             <div>
 
-                                <div style={{ position: 'absolute', left: '16%', top: '11%' }}>
-                                    <button className='btn btn-light rounded shadow-sm' onClick={() => { if (examConfig.grouped) { previousPart() } else { previousIndex() } }}>
+                                {index > 0 && <div style={{ position: 'absolute', left: '16%', top: '11%' }}>
+                                    <button className='btn btn-light rounded shadow-sm btn-exam' onClick={() => { if (examConfig.grouped) { previousPart() } else { previousIndex() } }}>
                                         <GrPrevious></GrPrevious>
                                     </button>
 
-                                </div>
+                                </div>}
                                 <div className="container learning-layout d-flex justify-content-center" style={{ marginTop: '1%' }}>
                                     {!isBusy && currentQuestion && !examConfig.grouped && <ToeicQuestion question={currentQuestion} selectAnswer={selectAnswer} audioLimit={examConfig?.audioLimit} audioPlayed={listenedAudio}></ToeicQuestion>}
                                     {examConfig.grouped && <ToeicPartQuestions questions={questions.filter(q => q.question.toeic == currentPart)} currentPart={currentPart} selectAnswer={selectAnswer} listenedAudio={listenedAudio} audioLimit={examConfig?.audioLimit}></ToeicPartQuestions>}
                                 </div>
                             </div>
-                            <div style={{ position: 'absolute', right: '16%', top: '11%' }}>
-                                <button className='btn btn-light rounded shadow-sm' onClick={() => { if (examConfig.grouped) { nextPart() } else { nextIndex() } }}>
+                            {index < questions.length - 1 && <div style={{ position: 'absolute', right: '16%', top: '11%' }}>
+                                <button className='btn btn-light rounded shadow-sm btn-exam' onClick={() => { if (examConfig.grouped) { nextPart() } else { nextIndex() } }}>
                                     <GrNext></GrNext>
                                 </button>
-                            </div>
+                            </div>}
                         </main>
                     </div>
                 </div>
@@ -357,20 +361,20 @@ const NewExamPage = ({ }) => {
                     </div>
                 </div>
             </div>}
-            <Modal show={modalSubmit} animation onHide={() => setModalSubmit(!modalSubmit)} centered size="md" dialogClassName='sweet-alert-modal' contentClassName='p-3'>
+            <Modal show={modalSubmit} animation onHide={() => { if (!isFinish) { setModalSubmit(!modalSubmit) } }} centered size="md" dialogClassName='sweet-alert-modal' contentClassName='p-3'>
                 <Modal.Body>
                     <div className='text-center'>
                         <i className='fa fa-4x fa-warning'></i>
                         <br></br>
                         <br></br>
-                        <h3>Bạn có chắc muốn nộp bài</h3>
-                        {questions.some(q => q.answer == '') && <p className='text-warning'>Vẫn có câu hỏi bạn chưa chọn đáp án</p>}
+                        <h3>{!isFinish ? 'Bạn có chắc muốn nộp bài' : 'Xem kết quả'}</h3>
+                        {questions.some(q => q.answer == '') && !isFinish && <p className='text-warning'>Vẫn có câu hỏi bạn chưa chọn đáp án</p>}
                     </div>
 
                 </Modal.Body>
                 <div className='d-flex justify-content-end mb-2'>
-                    <Button variant="secondary mr-2" onClick={() => setModalSubmit(!modalSubmit)}>Làm tiếp</Button>
-                    <Link className='btn btn-primary' onClick={() => submitFinish()} to={`/ketqua-exam/${examId}`}>Nộp bài</Link>
+                    {!isFinish && <Button variant="secondary mr-2" onClick={() => setModalSubmit(!modalSubmit)}>Làm tiếp</Button>}
+                    {!isFinish ? <Button className='btn btn-primary' onClick={() => submitFinish()} to={`/ketqua-exam/${examId}`}>Nộp bài</Button> : <Link className='btn btn-primary' to={`/ketqua-exam/${examId}`}>Kết quả</Link>}
                 </div>
             </Modal>
             <Modal show={modalTimeUp} animation backdrop='static' centered size="md" dialogClassName='sweet-alert-modal' contentClassName='p-3'>

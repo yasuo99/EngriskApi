@@ -15,6 +15,14 @@ const questionApiV2 = {
         }
         return axiosClientv2.get(url, { params, headers })
     },
+    getQuestion: async (id) => {
+        const url = `/questions/${id}`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.get(url, {headers })
+    }
+    ,
     getFilter: async (filter, grammar) => {
         const url = `/questions/all`
         const params = {
@@ -29,6 +37,14 @@ const questionApiV2 = {
         return axiosClientv2.get(url, { params, headers })
         console.log(params);
     },
+    getFilterTwo: async (params) => {
+        const url = `/questions/all`
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.get(url, { params, headers })
+    }
+    ,
     getManage: async (params, grammar, search) => {
         const url = `/questions/manage`;
         if (search) {
@@ -55,6 +71,13 @@ const questionApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return axiosClientv2.post(url, body, { headers })
+    },
+    updateQuestion: async (id,body) => {
+        const url = `/questions/${id}`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return axiosClientv2.put(url, body, { headers })
     },
     deleteQuestion: async (id) => {
         const url = `/questions/${id}`;

@@ -35,7 +35,7 @@ const HeaderClient = ({openRoute}) => {
   }, [isExpired]);
 
   return (
-    <nav id="nav" className="navbar navbar-expand navbar-light bg-white topbar static-top shadow sticky-top">
+    <nav id="nav" className="navbar navbar-expand navbar-light bg-white topbar static-top nav-shadow sticky-top">
       {location.pathname === '/home' && <span>
         <div className="cst d-flex" data-qa-xl-flag="en" onClick={() => dispatch(toggle(collapse))}>
           <div className="cst__course-title text-dark">

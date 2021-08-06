@@ -16,7 +16,7 @@ const ToeicQuestion = ({ question, selectAnswer, audioLimit, audioPlayed }) => {
   useEffect(() => {
     setIsPlayed(false);
     setPlaying(false);
-  }, [question]);
+  }, [question.question]);
   console.log(question);
   return (
     <div className="border question-box rounded" style={{ marginTop: "5%" }}>
@@ -26,11 +26,11 @@ const ToeicQuestion = ({ question, selectAnswer, audioLimit, audioPlayed }) => {
           src={question.question?.photoUrl}
         ></img>
       )}
-      <div className="text-dark font-weight-bold mt-4">
+      <div className="text-dark font-weight-bold mt-4 all-preQuestion">
         {parse(question.question?.preQuestion || "Chọn đáp án đúng")}
       </div>
       <br></br>
-      <div className="text-dark font-weight-bold">
+      <div className="all-question-content font-weight-bold">
         {question.index}. <span>{parse(question.question?.content || "")}</span>
         <span>
           {question.question?.audio && (
@@ -66,7 +66,7 @@ const ToeicQuestion = ({ question, selectAnswer, audioLimit, audioPlayed }) => {
                 answer.answer == question.answer ? "bg-primary text-white" : ""
               }`}
               data-id={index}
-              onClick={(e) => selectAnswer(answer)}
+              onClick={(e) => {e.preventDefault();selectAnswer(answer)}}
               autoFocus
             >
               {answer.answer}

@@ -14,6 +14,13 @@ const postApiV2 = {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
         return await axiosClientv2.get(url,{params,headers})
+    },
+    lockPost: async (id) => {
+        const url = `/posts/${id}/lock`;
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        return await axiosClientv2.put(url,null,{headers})
     }
 }
 export default postApiV2;
